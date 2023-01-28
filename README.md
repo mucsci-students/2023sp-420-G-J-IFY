@@ -52,6 +52,10 @@ Isaak Weidman
 - @IRWeidman
 - irweidma@millersville.edu
 
+Gaige Zakroski
+- @gmzakros
+- gmzakros@millersville.edu
+
 ## Version History
 ---
 
