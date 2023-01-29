@@ -60,10 +60,6 @@ Yah'hymbey Baruti Ali-Bey
 - @ybaruti
 - yabaruti@millersville.edu
 
-Jacob M Lovegren
-- @JMLovegren
-- jmlovegr@millersville.edu
-
 ## Version History
 ---
 
