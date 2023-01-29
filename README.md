@@ -56,7 +56,7 @@ Gaige Zakroski
 - @gmzakros
 - gmzakros@millersville.edu
 
-Yah'hymbey Baruti Ali-Be
+Yah'hymbey Baruti Ali-Bey
 - @ybaruti
 - yabaruti@millersville.edu
 
