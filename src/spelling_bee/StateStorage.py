@@ -19,11 +19,7 @@ def __Save(dict, fileName):
 #       : element - element to search for in dict
 # Searches a dictionary to find a specific element and returns true if it is found and false if it is not.
 def __SearchDict(dict, element):
-        for i in dict:
-            if i == element:
-                return True
-            else :
-                return False
+        return element in dict
         
 
 # Params: dict     - dictionary that will be saved to a json.
