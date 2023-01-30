@@ -64,6 +64,10 @@ Jacob M Lovegren
 - @JMLovegren
 - jmlovegr@millersville.edu
 
+Francesco Spagnolo 
+- @Frannyspag24
+- fnspagno@millersville.edu
+
 ## Version History
 ---
 
