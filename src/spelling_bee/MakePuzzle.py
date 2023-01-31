@@ -30,7 +30,7 @@ def isProperBaseWord(pangram):
     if len(pangram) < 7:
         raise ValueError("Pangrams must 7 letters or more")
         
-    # Checking for numbers
+    # Checking for anything that is not a letter
     if not pangram.isalpha():
         raise ValueError("Pangrams can only contain letters")
         
