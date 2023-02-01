@@ -13,6 +13,7 @@ def newPuzzle(baseWord):
     if baseWord == "":
         baseWord = findBaseWord()
     uniqueLetters = set(baseWord)
+    # Call function to determine key letter
     # Call Word List Generator
     # Shuffle the set
     # Call Show Puzzle
