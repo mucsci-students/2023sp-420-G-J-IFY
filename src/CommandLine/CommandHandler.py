@@ -1,3 +1,5 @@
+import makePuzzle
+
 
 def checkCommands(input):
     match input:
@@ -30,13 +32,8 @@ def checkCommands(input):
 
 def newPuzzle():
     print('Please enter a base word with exactly 7 unique characters. \n For auto-generated base word, press enter.')
-    input = input()
-    if input != '':
-        print("Creating from provided base word...")
-        # <newPuzzleFromBase()>
-    else:
-        print("Creating new puzzle")
-        # <newPuzzle()>
+    word = input()
+    makePuzzle.newPuzzle(word)
 
 def printPuzzle():
     print("Implementation Pending")
