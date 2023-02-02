@@ -6,26 +6,22 @@
 
 #Imports
 import json
+import sqlite3
 
 # Params: baseWord: takes a baseword that is either an empty string or a pangram and makes a puzzle from it
 # Finds legitimate base word and creates a puzzle based on that
 def newPuzzle(baseWord):
-    if baseWord == "":
+    if baseWord == '':
         baseWord = findBaseWord()
-    uniqueLetters = set(baseWord)
+    else:
+        if isProperBaseWord(baseWord):
+            newPuzzle(baseWord)
+    # Call the unique letters from the databese
     # Call function to determine key letter
     # Call Word List Generator
     # Shuffle the set
     # Call Show Puzzle
     # Show Status
-
-# Params: userWord: takes a word from the user and makes a puzzle
-# Takes a base word from the user and generates a new puzzle from that
-def newPuzzleFromBase(userWord):
-    # Check if the word is a pangram
-    if isProperBaseWord(userWord):
-    # Call new puzzle
-        newPuzzle(userWord)
 
 
 # Params: pangram: takes a suggested pangram and checks if it is a valid base word
@@ -48,10 +44,10 @@ def isProperBaseWord(pangram):
     return True
             
     
-# Finds a legitimate baseword to start puzzle with from a json file
+# Finds a legitimate baseword to start puzzle with from the database
 def findBaseWord():
-    # Gets list of from json file
-    # Finds length of the list
-    # picks a random word within the range
-    # returns that word
+    pass
+
+# Takes a set of letters and picks a letter from to make key letter
+def choseKeyLetter(uniqueLetters):
     pass
