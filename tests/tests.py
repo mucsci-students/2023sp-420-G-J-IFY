@@ -16,7 +16,7 @@ def makeRandomJsonName():
     for i in range(10):
         result += random.choice(letters)
 
-    return result + '.json'
+    return result
 
 # Params: fileName    - name of the file to check
 #       : dictToCheck -  the dictionary to comapre to the dictionary in the file
@@ -37,92 +37,103 @@ def checkIfExists(fileName):
 # meaning that only the baseWord and rhe manditory character is saved no other part of the game
 def testSavePuzzle1():
     fileName = makeRandomJsonName()
-    dict = {"baseWord" : "warlock", "maditoryChar" : 'a'}
+    fileNameJson = fileName + '.json'
+
+    dict = {'baseWord' : 'warlock', 'manditoryChar' : 'a'}
     StateStorage.savePuzzle(dict, fileName)
 
-    checkIfExists(fileName)
-    checkContents(fileName, {"baseWord" : "warlock", "manditoryChar" : 'a'})
+    checkIfExists(fileNameJson)
+    checkContents(fileNameJson, {"baseWord" : "warlock", "manditoryChar" : 'a'})
+    print("testSavePuzzle1: PASSED")
+
 
 # tests the savePuzzle function to see if the information saved is saved correctly
 # meaning that only the baseWord and rhe manditory character is saved no other part of the game
 def testSavePuzzle2():
     fileName = makeRandomJsonName()
-    dict = { "baseWord" : "warlock", "maditoryChar" : 'a', "foundWords" : ["lock", "clock", "warlock"], "level" : 10}
+    fileNameJson = fileName + '.json'
+    dict = { "baseWord" : "warlock", "manditoryChar" : 'a', "foundWords" : ["lock", "clock", "warlock"], "level" : 10}
     StateStorage.savePuzzle(dict, fileName)
 
-    checkIfExists(fileName)
-    checkContents(fileName, {"baseWord" : "warlock", "manditoryChar" : 'a'})
+    checkIfExists(fileNameJson)
+    checkContents(fileNameJson, {"baseWord" : "warlock", "manditoryChar" : 'a'})
 
     # file is removed
-    os.remove(fileName)
+    os.remove(fileNameJson)
+    print("testSavePuzzle2: PASSED")
 
 
 # test if we save an empty game and a file is not already created with the same name a new one is created and empty
 def testSaveCurrent1():
     fileName = makeRandomJsonName()
-    StateStorage.saveCurrent(fileName, {})
-    checkIfExists(fileName)
-    checkContents(fileName, {})
+    fileNameJson = fileName + ".json"
+    StateStorage.saveCurrent({}, fileName)
+    checkIfExists(fileNameJson)
+    checkContents(fileNameJson, {})
 
-    print ("testSaveCurrent1: Passed")
+    print ("testSaveCurrent1: PASSED")
 
     # file is removed
-    os.remove(fileName)
+    os.remove(fileNameJson)
 
 #test if we save  all the state remains and a file is created
 def testSaveCurrent2():
     dict = {'health' : 29, 'name' : 'Gaige'}
     fileName = makeRandomJsonName()
-    StateStorage.saveCurrent(fileName, dict)
+    fileNameJson = fileName + ".json"
+    StateStorage.saveCurrent(dict, fileName)
 
-    checkIfExists(fileName)
-    checkContents(fileName,dict)
+    checkIfExists(fileNameJson)
+    checkContents(fileNameJson,dict)
     print("testSaveCurrent2: PASSED")
     
     # file is removed
-    os.remove(fileName)
+    os.remove(fileNameJson)
 
 # test if we can overrite a save
 def testSaveCurrent3():
     fileName = makeRandomJsonName()
+    fileNameJson = fileName + ".json"
     dict = {'health' : 29, 'name' : 'Gaige'}
 
-    StateStorage.saveCurrent(fileName, {})
+    StateStorage.saveCurrent(fileNameJson, {})
 
-    checkIfExists(fileName)
-    checkContents(fileName, {})
+    checkIfExists(fileNameJson)
+    checkContents(fileNameJson, {})
 
-    StateStorage.saveCurrent(fileName, dict)
+    StateStorage.saveCurrent(dict, fileName)
 
-    checkIfExists(fileName)
-    checkContents(fileName, dict)
+    checkIfExists(fileNameJson)
+    checkContents(fileNameJson, dict)
     print("testSaveCurrent3: PASSED")
 
     # file is removed
-    os.remove(fileName)
+    os.remove(fileNameJson)
 
 # tests to see if when a puzzle is loaded that doest exist and exception is thrown
-def testLoadPuzzle():
+def test__Load1():
     fileName = makeRandomJsonName()
-
-    with StateStorage.assetRaises(Exception) as result:
-        StateStorage.loadPuzzle(fileName)
-    
-    assert(result == ".")
+    fileNameJson = fileName + ".json"
+    dict = {'baseWord' : "warlock", 'manditoryChar' : 'a' }
+    StateStorage.savePuzzle(dict, fileName)
+    loadedDict = StateStorage.__Load(fileName)
+    assert(dict == loadedDict)
     print("testLoadPuzzle1: PASSED")
 
-    os.remove(fileName)
+    os.remove(fileNameJson)
 
 # test if when we load a puzzle we get the correct information back if the file exists
-def testLoadPuzzle2():
+def test__Load2():
     fileName = makeRandomJsonName()
-    dict = dict = { "baseWord" : "warlock", "maditoryChar" : 'a', "foundWords" : ["lock", "clock", "warlock"], "level" : 10}
-    StateStorage.saveCurrent(fileName, dict)
+    fileNameJson = fileName + ".json"
+    dict = dict = { 'baseWord' : "warlock", 'manditoryChar' : 'a', "foundWords" : ["lock", "clock", "warlock"], "level" : 10}
+    StateStorage.savePuzzle(dict, fileName)
 
-    checkContents(fileName, dict)
-    print("testLoadPuzzle2: Passed")
+    loadedDict = StateStorage.__Load(fileName)
+    checkContents(fileNameJson, {'baseWord' : "warlock", 'manditoryChar' : 'a'})
+    print("testLoadPuzzle2: PASSED")
 
-    os.remove(fileName)
+    os.remove(fileNameJson)
 
 
 
