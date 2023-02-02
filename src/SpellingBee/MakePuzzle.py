@@ -5,19 +5,30 @@
 
 
 #Imports
-import json
 import sqlite3
+import random
+
+
+# SQLite Connections
+wordDict = sqlite3.connect('wordDict.db')
+
+# Used to execute SQL commands
+wordDictC = wordDict.cursor()
+
+
 
 # Params: baseWord: takes a baseword that is either an empty string or a pangram and makes a puzzle from it
 # Finds legitimate base word and creates a puzzle based on that
 def newPuzzle(baseWord):
     if baseWord == '':
-        baseWord = findBaseWord()
-    else:
-        if isProperBaseWord(baseWord):
-            newPuzzle(baseWord)
-    # Call the unique letters from the databese
+        # Finds baseword and its unique letters and puts them in a tuple
+        baseTuple = findBaseWord()
+        basWord = baseTuple[0]
+        uniqueLetters = set(baseTuple[1])
+    elif isProperBaseWord(baseWord):
+        uniqueLetters = set(baseWord)
     # Call function to determine key letter
+    keyLetter = choseKeyLetter(uniqueLetters)
     # Call Word List Generator
     # Shuffle the set
     # Call Show Puzzle
@@ -26,6 +37,7 @@ def newPuzzle(baseWord):
 
 # Params: pangram: takes a suggested pangram and checks if it is a valid base word
 # Checks if a word is a pangram
+# Returns a boolean
 def isProperBaseWord(pangram):
     
     if len(pangram) < 7:
@@ -45,9 +57,19 @@ def isProperBaseWord(pangram):
             
     
 # Finds a legitimate baseword to start puzzle with from the database
+# Returns a list
 def findBaseWord():
-    pass
+    # Grabs a random baseword from the list
+    wordDictC.execute(""" SELECT fullWord, uniqueLetters 
+                        FROM pangrams 
+                        ORDER BY RANDOM() 
+                        Limit 1
+                        """)
 
-# Takes a set of letters and picks a letter from to make key letter
+    return wordDictC.fetchone()
+
+# Params: uniqueLetters: set of uniqueLetters from a baseword
+# Takes a SET of letters and picks a letter from to make key letter
 def choseKeyLetter(uniqueLetters):
-    pass
+    return random.choice(uniqueLetters)
+
