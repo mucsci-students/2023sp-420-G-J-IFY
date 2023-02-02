@@ -1,3 +1,5 @@
+import CommandHandler.py
+
 
 def drawDblTxtBox (message, width):
     line = '+'

@@ -1,4 +1,5 @@
-import makePuzzle
+import MakePuzzle
+import StateStorage.py
 
 
 def checkCommands(input):
@@ -33,7 +34,7 @@ def checkCommands(input):
 def newPuzzle():
     print('Please enter a base word with exactly 7 unique characters. \n For auto-generated base word, press enter.')
     word = input()
-    makePuzzle.newPuzzle(word)
+    MakePuzzle.newPuzzle(word)
 
 def printPuzzle():
     print("Implementation Pending")
@@ -53,8 +54,9 @@ def saveGame():
     match input:
         case ['Y']:
             print("Saving game (generated puzzle only)...")
+            StateStorage.saveGame(dict, filename)
         case ['N']:
-            print("Saving current game progress")
+            StateStorage.saveGame(dict, filename)
 
 def loadGame():
     print("Implementation Pending")
