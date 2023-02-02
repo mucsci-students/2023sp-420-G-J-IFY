@@ -21,9 +21,10 @@ wordDictC = wordDict.cursor()
 # Finds legitimate base word and creates a puzzle based on that
 def newPuzzle(baseWord):
     if baseWord == '':
-        baseWord = findBaseWord()
-        # Query unique letters from database
-        uniqueLetters = grabUniquesFromBase(baseWord)
+        # Finds baseword and its unique letters and puts them in a tuple
+        baseTuple = findBaseWord()
+        basWord = baseTuple[0]
+        uniqueLetters = set(baseTuple[1])
     elif isProperBaseWord(baseWord):
         uniqueLetters = set(baseWord)
     # Call function to determine key letter
@@ -59,31 +60,16 @@ def isProperBaseWord(pangram):
 # Returns a list
 def findBaseWord():
     # Grabs a random baseword from the list
-    wordDictC.execute("""
-                        SELECT fullWord
-                        FROM wordDict
-                        ORDER BY RANDOM()
+    wordDictC.execute(""" SELECT fullWord, uniqueLetters 
+                        FROM pangrams 
+                        ORDER BY RANDOM() 
                         Limit 1
-                      """)
+                        """)
+
     return wordDictC.fetchone()
 
-# Grabs the unique characters given a baseword
-def grabUniquesFromBase(baseWord):
-    # Search Database for baseWord
-    # If found then grab unqiue letters
-    wordDictC.execute("""
-                        SELECT uniqueLetters
-                        FROM wordDict
-                        where fullWord = {baseWord}
-                      """)
-    print(wordDictC.fetchone())
-    return wordDictC.fetchone()
-
-# Takes a set of letters and picks a letter from to make key letter
+# Params: uniqueLetters: set of uniqueLetters from a baseword
+# Takes a SET of letters and picks a letter from to make key letter
 def choseKeyLetter(uniqueLetters):
     return random.choice(uniqueLetters)
 
-
-base = findBaseWord()
-print(base)
-print(grabUniquesFromBase(base))
