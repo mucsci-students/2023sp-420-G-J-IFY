@@ -27,7 +27,7 @@ class Puzzle:
     def wordListStorage(self):
        return generateSubset.getAllWordsFromPuzzle(self.pangram, self.keylett)
     
-    
+    sdfd
     # Returns a number
     def showMaxScore(self):
         return self.maxScore
