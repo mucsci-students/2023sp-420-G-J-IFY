@@ -30,7 +30,7 @@ def newPuzzle(baseWord):
         baseWord = baseTuple[0]
         uniqueLetters = set(baseTuple[1])
     keyLetter = choseKeyLetter(uniqueLetters)
-    NewPuzzle = saveState.Puzzle(keyLetter, baseWord)
+    NewPuzzle = saveState.Puzzle(keyLetter, uniqueLetters)
     # Call Word List Generator
     NewPuzzle.wordListStorage()
     # Gets Proper max score

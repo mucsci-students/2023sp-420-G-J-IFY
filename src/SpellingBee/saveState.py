@@ -8,9 +8,9 @@ import generateSubset
 
 class Puzzle:
     
-    def __init__(self, keyLett, pangram):
+    def __init__(self, keyLett, uniqueLett):
         self.keyLett = keyLett
-        self.pangram = pangram
+        self.uniqueLett = uniqueLett
         self.score = 0
         self.maxScore = 0
         self.foundWordList = []
@@ -19,13 +19,14 @@ class Puzzle:
     def showKeyLetter(self):
         return self.keyLett
     
+    # Returns the set of unique letters
     def showUniqueLetters(self):
-        return set(self.pangram)
+        return self.uniqueLett
     
     # Word List generated when given key letter and word
     # All words for current puzzle
     def wordListStorage(self):
-       return generateSubset.getAllWordsFromPuzzle(self.pangram, self.keylett)
+       return generateSubset.getAllWordsFromPuzzle(self.uniqueLett, self.keylett)
     
     
     # Returns a number
@@ -80,23 +81,5 @@ class Puzzle:
         conn.commit()
         conn.close()
     
-    # Params: pangram: takes a suggested pangram and checks if it is a valid base word
-    # Checks if a word is a pangram
-    # Returns a boolean
-    def isProperBaseWord(pangram):
-        if len(pangram) < 7:
-            return False
-        
-        # Checking for anything that is not a letter
-        if not pangram.isalpha():
-            return False
-        
-        # Puts each unique letter in a set
-        # Checks if the number of unique letters is bigger than 7
-        uniqueLetters = set(pangram)
-        if len(uniqueLetters) < 7:
-            return False
-    
-        return True
     
     
