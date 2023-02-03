@@ -1,4 +1,4 @@
-# Authors: Yah'hymbey Baruti-Bey, Jacob Lovegren
+# Authors: Yah'hymbey Baruti-Bey, Jacob Lovegren, Francesco Spagnolo
 # Course : CSCI 420
 # Modified Date: 2/2/2023
 # State structure for puzzles
