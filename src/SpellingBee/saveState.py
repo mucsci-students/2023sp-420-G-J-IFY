@@ -16,7 +16,6 @@ class Puzzle:
         self.foundWordList = []
         self.rank = ' '
         
-    
     def showKeyLetter(self):
         return self.keyLett
     
