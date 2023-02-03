@@ -35,7 +35,7 @@ def newPuzzle(baseWord):
     NewPuzzle.wordListStorage()
     # Gets Proper max score
     NewPuzzle.updateMaxScore(NewPuzzle.wordListStorage())
-    
+    change
     # Call Show Puzzle
     # Show Status
     
