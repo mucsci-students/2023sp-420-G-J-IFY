@@ -7,6 +7,7 @@
 #Imports
 import sqlite3
 import random
+import saveState
 
 
 # SQLite Connections
@@ -20,19 +21,24 @@ wordDictC = wordDict.cursor()
 # Params: baseWord: takes a baseword that is either an empty string or a pangram and makes a puzzle from it
 # Finds legitimate base word and creates a puzzle based on that
 def newPuzzle(baseWord):
+    # Add check if baseWord is in the database
+    
+    uniqueLetters = {}
     if baseWord == '':
         # Finds baseword and its unique letters and puts them in a tuple
         baseTuple = findBaseWord()
-        basWord = baseTuple[0]
+        baseWord = baseTuple[0]
         uniqueLetters = set(baseTuple[1])
-    elif isProperBaseWord(baseWord):
-        uniqueLetters = set(baseWord)
-    # Call function to determine key letter
     keyLetter = choseKeyLetter(uniqueLetters)
+    NewPuzzle = saveState.Puzzle(keyLetter, baseWord)
     # Call Word List Generator
-    # Shuffle the set
+    NewPuzzle.wordListStorage()
+    # Gets Proper max score
+    NewPuzzle.updateMaxScore(NewPuzzle.wordListStorage())
+    
     # Call Show Puzzle
     # Show Status
+    
     
     
 # Finds a legitimate baseword to start puzzle with from the database
