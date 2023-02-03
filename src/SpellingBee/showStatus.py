@@ -31,7 +31,7 @@ def showStatus(points, pointThresh):
     elif pointThresh[6] <= points < pointThresh[7]: 
         rank = "Exceptional"
         return rank 
-    elif pointThresh[7] <= points < pointThresh[8]: 
+    elif pointThresh[7] <= points < pointThresh[8]: #can remove last threshold
         rank = "Genius"
         return rank
     return rank #just in case, undershoot and stay at beginner
