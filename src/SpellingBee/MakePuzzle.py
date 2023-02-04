@@ -89,7 +89,7 @@ def choseKeyLetter(uniqueLetters):
 
 def shuffle(letters):
         
-    mainLetter = letters.first() #saving the main letter for before the shuffle
+    mainLetter = letters[0] #saving the main letter for before the shuffle
     random.shuffle(letters) 
         
     for main in letters: #looping through to find the main letter in shuffled list
