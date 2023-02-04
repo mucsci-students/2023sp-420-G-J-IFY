@@ -88,18 +88,15 @@ def drawProgressBar(size, val):
 # params:
 #   - letters: list, contains the 7 unique letters to be displayed
 #   - key: int, index of the key letter
-def drawPuzzle(letters, key):
-    out =  ''' 
-       ┌───┬───┐
-       │ {1} │ {2} │
-     ┌─┴─╥═╧═╥─┴─┐
-     │ {3} ║ {0} ║ {4} │
-     └─┬─╨═╤═╨─┬─┘
-       │ {5} │ {6} │
-       └───┴───┘  '''.format(letters)
+def drawPuzzle(letters):
+    out =  ' ┌───┬───┐ \ │ {0[1]} │ {0[2]} │ \ ┌─┴─╥─┴─╥─┴─┐ \ │ {0[3]} ║ {0[0]} ║ {0[4]} │ \ └─┬─╨─┬─╨─┬─┘ \ │ {0[5]} │ {0[6]} │ \ └───┴───┘ '.format(letters)
     
     return(out)
 
-    
-    
-    
+
+tier1 = 'Welcome to Spelling Bee! \ Presented by G(J)IFY'
+tier2 = 'Level: \ {} {} \ (8 more to \'Okay\')'.format('Novice', drawProgressBar(20, 0.35))
+tier3 = 'Discovered Words: \ {}'.format('ICING, ACING, AGING')
+tier4 = drawPuzzle(['I', 'O', 'A', 'N', 'G', 'X', 'C'])
+tier5 = 'Enter your guess, or type !help for a list of commands'
+drawTextBox([tier1, tier2, tier3, tier4, tier5], 39, '^')
