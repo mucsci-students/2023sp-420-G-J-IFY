@@ -1,4 +1,4 @@
-import saveState
+
 
 # params:
 #   - message: string list, stores text to be printed in text box
@@ -81,6 +81,7 @@ def drawTextBox(message, width, align):
 def drawProgressBar(size, val):
     fill = int(float(size-2) * val)
     remaining = (size - fill)
+    # print a string with fill number of =, and remaining number of -
     bar = 'x{0:=<{1}}{2:-<{3}}x'.format('', fill, '', remaining)
     return(bar)
 
@@ -89,14 +90,14 @@ def drawProgressBar(size, val):
 #   - letters: list, contains the 7 unique letters to be displayed
 #   - key: int, index of the key letter
 def drawPuzzle(letters):
+    # Pretty much just hard coded the output, letters are simple swapped in
     out =  ' ┌───┬───┐ \ │ {0[1]} │ {0[2]} │ \ ┌─┴─╥─┴─╥─┴─┐ \ │ {0[3]} ║ {0[0]} ║ {0[4]} │ \ └─┬─╨─┬─╨─┬─┘ \ │ {0[5]} │ {0[6]} │ \ └───┴───┘ '.format(letters)
-    
     return(out)
 
-
-tier1 = 'Welcome to Spelling Bee! \ Presented by G(J)IFY'
-tier2 = 'Level: \ {} {} \ (8 more to \'Okay\')'.format('Novice', drawProgressBar(20, 0.35))
-tier3 = 'Discovered Words: \ {}'.format('ICING, ACING, AGING')
-tier4 = drawPuzzle(['I', 'O', 'A', 'N', 'G', 'X', 'C'])
-tier5 = 'Enter your guess, or type !help for a list of commands'
-drawTextBox([tier1, tier2, tier3, tier4, tier5], 39, '^')
+# params:
+#   - list: list of strings, printed out nicely
+def drawList(list):
+    outstr = ' '
+    for l in list:
+        outstr += l.upper() + ' '
+    return outstr
