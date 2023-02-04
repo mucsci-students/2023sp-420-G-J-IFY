@@ -19,18 +19,22 @@ def newPuzzle(baseWord):
         baseTuple = findBaseWord()
         baseWord = baseTuple[0]
         uniqueLetters = set(baseTuple[1])
+        keyLetter = choseKeyLetter(uniqueLetters)
     
     # Checks if word from user is in database
     # and getts the unique letters if so
     elif checkDataBase(baseWord):
         uniqueLetters = set(baseWord)
+        keyLetter = input("Enter a letter from your word to use as the key letter: ")
+        while keyLetter not in uniqueLetters:
+            keyLetter = input("? is not part of ? - Please enter a letter from your word: "), keyLetter, baseWord
     
     # If not an empty string
     # and not in databasee raise and exception
     else:
         raise Exception("Word not in database.")
     
-    keyLetter = choseKeyLetter(uniqueLetters)
+    
     
     # Below Code Subject to Change
     NewPuzzle = saveState.Puzzle(keyLetter, uniqueLetters)
@@ -48,7 +52,7 @@ def newPuzzle(baseWord):
 # Returns a list
 def findBaseWord():
     # SQLite Connections
-    wordDict = sqlite3.connect('wordDict.db')
+    wordDict = sqlite3.connect('src/SpellingBee/wordDict.db')
 
     # Used to execute SQL commands
     wordDictC = wordDict.cursor()
@@ -56,31 +60,42 @@ def findBaseWord():
     wordDictC.execute(""" SELECT fullWord, uniqueLetters 
                         FROM pangrams 
                         ORDER BY RANDOM() 
-                        Limit 1
+                        Limit 1;
                         """)
-    wordDictC.commit()
-    wordDictC.close()
+    resultResult = wordDictC.fetchone
 
-    return wordDictC.fetchone()
+    print(type(resultResult))
+
+    wordDict.commit()
+    wordDict.close()
+
+    return resultResult
 
 # Checks if the given baseword is in the database
 # Returns a boolean true if the word is found in the database
 # False otherwise
 def checkDataBase(baseWord):
     # SQLite Connections
-    wordDict = sqlite3.connect('wordDict.db')
+    wordDict = sqlite3.connect('src/SpellingBee/wordDict.db')
     
     # Used to execute SQL commands
     wordDictC = wordDict.cursor()
     
     wordDictC.execute(""" SELECT fullWord
                         FROM pangrams 
-                        WHERE fullWord = 
-                        """ + baseWord)
-    wordDictC.commit()
-    wordDictC.close()
-    
-    return wordDictC.fetchone() > 0
+                        WHERE fullWord = '
+                        """ + baseWord + "';")
+    returnResult = wordDictC.fetchone()
+
+    #after result is caught, disconenct from DB
+    wordDict.commit()
+    wordDict.close()
+
+    #check against return type
+    if returnResult:
+        return True
+    else:
+        return False
 
 # Params: uniqueLetters: set of uniqueLetters from a baseword
 # Takes a SET of letters and picks a letter from to make key letter
@@ -125,3 +140,5 @@ def guess(wordList):
     conn.close()
           
     return points
+
+newPuzzle("")
