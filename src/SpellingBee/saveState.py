@@ -81,7 +81,7 @@ class Puzzle:
         elif self.rank < 1:
             self.rank == "Genius"
         else: #all words found
-            self.rank == "Quen Bee"
+            self.rank == "Queen Bee"
         
     
     #findMaxScore - this functions takes a list of words 
