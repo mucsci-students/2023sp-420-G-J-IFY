@@ -53,8 +53,36 @@ class Puzzle:
     def updateScore(self, pointIncrease):
         self.score += pointIncrease
     
+
+    # updateRank takes a puzzle object, checks its
+    # current score against the max score for the puzzle,
+    # and sets the rank field to the appropriate
+    # level
+    # @PRARM self - A puzzle object
+    # @RETURN string with appropriate rank
     def updateRank(self):
-        pass
+        currentPercent = self.score / self.maxScore
+        if currentPercent == 0:
+            self.rank = "Beginner"
+        elif currentPercent < 0.05:
+            self.rank ==  "Good Start"
+        elif currentPercent < 0.08:
+            self.rank == "Moving Up"
+        elif currentPercent < 0.15:
+            self.rank == "Good"
+        elif currentPercent < 0.25:
+            self.rank == "Solid"
+        elif self.rank < 0.4:
+            self.rank == "Nice"
+        elif self.rank < 0.51:
+            self.rank == "Great"
+        elif self.rank < 0.71:
+            self.rank == "Amazing"
+        elif self.rank < 1:
+            self.rank == "Genius"
+        else: #all words found
+            self.rank == "Quen Bee"
+        
     
     #findMaxScore - this functions takes a list of words 
     #for a game, quereies the DB for all words in the game,
