@@ -1,59 +1,4 @@
-# import CommandHandler.py
-
-'''
-def drawTxtBox (message, width):
-    
-    line = '+'
-    emptyBdy = '| '
-    message = message.split()
-
-    for i in range(width-2):
-        line = line + '-'
-
-    for word in message:
-        if (word.len() + emptyBdy.len()) < width - 2:
-            emptyBdy = emptyBdy + word
-        else:
-            emptyBdy = ''
-        
-
-    line = line + '+'
-    emptyBdy = emptyBdy + '|'
-
-    return(line + '\n' + emptyBdy + '\n' + line)
-'''
-
-# Print a text box to output that is 39 characters in total width
-def drawStaticBox (message):
-    # Build horizontal line starting and ending with + with 37 - in between
-    topBorder = '+{0:-<37}+'.format('')
-    body = ''
-    words = message.split()
-    lines = []
-
-    # While words list is not empty.
-    # After this loop, lines should be filled with the contents of each line of
-    # text in the text box such that there are no words split between lines and
-    # each line fits within the bounds of the box
-    line = ' '
-    for word in words:
-        if ((len(line) + len(word)+1) >= 37):
-            lines.append(line)
-            line = ' ' + word + ' '
-        elif word == '\\':
-            lines.append(line)
-            line = ' '
-        else:
-            line += word + ' '
-    
-    # Center each line of text within the body of the text box.
-    for line in lines:
-        # Begin each line of body with '| ', then center the line of text
-        # within the bounds of the box, followed by ' |' and a carriage return.
-        # Do this for each line to be printed within the box.
-        body += '|{0:^37s}|\n'.format(line)
-
-    return topBorder + '\n' + body + topBorder
+import saveState
 
 # params:
 #   - message: string list, stores text to be printed in text box
@@ -68,12 +13,12 @@ def drawStaticBox (message):
 #       > : right alligned
 #       ^ : center alligned
 #   - Example: drawTextBox(['testing \ testing', '123'], 15, '^')
-#       Output: +-------------+
-#               |   testing   |
-#               |   testing   |
-#               +-------------+
-#               |     123     |
-#               +-------------+
+#       Output: ╔═════════════╗
+#               ║   testing   ║
+#               ║   testing   ║
+#               ╟─────────────╢
+#               ║     123     ║
+#               ╚═════════════╝
 #       # A textbox 15 characters wide with two tiers.
 def drawTextBox(message, width, align):
 
@@ -127,3 +72,34 @@ def drawTextBox(message, width, align):
 
     # Print final product.
     print(txtBox)
+
+
+# params: 
+#   - size: int, width of the progress bar
+#   - val: float, percent value to be displayed
+#   - return: string, string containing progress bar
+def drawProgressBar(size, val):
+    fill = int(float(size-2) * val)
+    remaining = (size - fill)
+    bar = 'x{0:=<{1}}{2:-<{3}}x'.format('', fill, '', remaining)
+    return(bar)
+
+
+# params:
+#   - letters: list, contains the 7 unique letters to be displayed
+#   - key: int, index of the key letter
+def drawPuzzle(letters, key):
+    out =  ''' 
+       ┌───┬───┐
+       │ {1} │ {2} │
+     ┌─┴─╥═╧═╥─┴─┐
+     │ {3} ║ {0} ║ {4} │
+     └─┬─╨═╤═╨─┬─┘
+       │ {5} │ {6} │
+       └───┴───┘  '''.format(letters)
+    
+    return(out)
+
+    
+    
+    
