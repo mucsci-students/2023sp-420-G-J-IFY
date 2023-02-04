@@ -1,5 +1,6 @@
 import MakePuzzle
-import StateStorage.py
+import StateStorage
+import CLI
 
 
 def checkCommands(input):
@@ -37,7 +38,7 @@ def newPuzzle():
     MakePuzzle.newPuzzle(word)
 
 def printPuzzle():
-    print("Implementation Pending")
+    CLI.drawPuzzle()
 
 def printWords():
     print("Implementation Pending")
