@@ -14,6 +14,7 @@ class Puzzle:
         self.score = 0
         self.maxScore = 0
         self.foundWordList = []
+        self.allWordList = []
         self.rank = ' '
         
     def showKeyLetter(self):
@@ -26,8 +27,7 @@ class Puzzle:
     # Word List generated when given key letter and word
     # All words for current puzzle
     def wordListStorage(self):
-       return generateSubset.getAllWordsFromPuzzle(self.uniqueLett, self.keylett)
-    
+       self.allWordList = generateSubset.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
     
     # Returns a number
     def showMaxScore(self):
@@ -62,17 +62,20 @@ class Puzzle:
     #@PARAM listList, a list of strings containing all words in DB
     #   for given pangram 
     #@RETURN maxScore, the total possible score for a starting word
-    def updateMaxScore(self, listList):
+    def updateMaxScore(self):
         #connect to DB
         conn = sqlite3.connect('src/SpellingBee/wordDict.db')
         cursor = conn.cursor()
     
         ctr = 0
+
+        print(type(self.allWordList))
+
         #loop through list, querey DB for each word, aggregate values
-        for a in listList:
+        for a in self.allWordList:
             query = """select wordScore
             from dictionary
-            where fullWord = '""" + listList[ctr] + "';"
+            where fullWord = '""" + self.allWordList[ctr] + "';"
             cursor.execute(query)
             self.maxScore += cursor.fetchone()[0]
             ctr += 1
