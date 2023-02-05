@@ -18,37 +18,48 @@ def newPuzzle(baseWord):
         # Finds baseword and its unique letters and puts them in a tuple
         baseTuple = findBaseWord()
         baseWord = baseTuple[0]
-        uniqueLetters = set(baseTuple[1])
+        uniqueLetters = baseTuple[1]
+        keyLetter = choseKeyLetter(uniqueLetters)
     
     # Checks if word from user is in database
     # and getts the unique letters if so
-    elif checkDataBase(baseWord):
-        uniqueLetters = set(baseWord)
-    
-    # If not an empty string
-    # and not in databasee raise and exception
     else:
-        raise Exception("Word not in database.")
+        print("Made it to the else case! The word is " + baseWord)
+        returnTuple = checkDataBase(baseWord)
+        #returnTuple will be None if querey returns emptyy
+        if returnTuple == None:
+            raise Exception("Word not in database.")
+        uniqueLetters = returnTuple[1]
+        keyLetter = input("Enter a letter from your word to use as the key letter: ")
+        while keyLetter not in uniqueLetters:
+            keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
     
-    keyLetter = choseKeyLetter(uniqueLetters)
+        # If not an empty string
+        # and not in databasee raise and exception
+        #else:
+        #    raise Exception("Word not in database.")
     
+    
+    #shouldn't this all just be a set of constructors? We can talk about this more 
+    #during integration - Jacob Lovegren 2/4/23
+    """
     # Below Code Subject to Change
     NewPuzzle = saveState.Puzzle(keyLetter, uniqueLetters)
     # Call Word List Generator
     NewPuzzle.wordListStorage()
     # Gets Proper max score
-    NewPuzzle.updateMaxScore(NewPuzzle.wordListStorage())
+    NewPuzzle.updateMaxScore()
     # Call Show Puzzle
     NewPuzzle.showUniqueLetters()
     # Show Status
-    NewPuzzle.showRank()
+    NewPuzzle.showRank()"""
     
     
 # Finds a legitimate baseword to start puzzle with from the database
 # Returns a list
 def findBaseWord():
     # SQLite Connections
-    wordDict = sqlite3.connect('wordDict.db')
+    wordDict = sqlite3.connect('src/SpellingBee/wordDict.db')
 
     # Used to execute SQL commands
     wordDictC = wordDict.cursor()
@@ -56,36 +67,51 @@ def findBaseWord():
     wordDictC.execute(""" SELECT fullWord, uniqueLetters 
                         FROM pangrams 
                         ORDER BY RANDOM() 
-                        Limit 1
+                        Limit 1;
                         """)
-    wordDictC.commit()
-    wordDictC.close()
+    #catch return from querey
+    resultResult = (wordDictC.fetchone())
 
-    return wordDictC.fetchone()
+    #close DB
+    wordDict.commit()
+    wordDict.close()
+
+    #return tuple of result
+    return resultResult
 
 # Checks if the given baseword is in the database
-# Returns a boolean true if the word is found in the database
-# False otherwise
+# @PARAM baseWord: The user entered word to check the database for
+# @RETURN returnResult: a tuple with the query results OR
+# @RETURN false if word not in DB
 def checkDataBase(baseWord):
     # SQLite Connections
-    wordDict = sqlite3.connect('wordDict.db')
+    wordDict = sqlite3.connect('src/SpellingBee/wordDict.db')
     
     # Used to execute SQL commands
-    wordDictC = wordDict.cursor()
+    cursor = wordDict.cursor()
     
-    wordDictC.execute(""" SELECT fullWord
-                        FROM pangrams 
-                        WHERE fullWord = 
-                        """ + baseWord)
-    wordDictC.commit()
-    wordDictC.close()
-    
-    return wordDictC.fetchone() > 0
+    cursor.execute("SELECT *FROM pangrams WHERE fullWord = '" + baseWord + "';")
+    #grab tuple returned from querey
+    returnResult = cursor.fetchone()
 
-# Params: uniqueLetters: set of uniqueLetters from a baseword
-# Takes a SET of letters and picks a letter from to make key letter
+    #after result is caught, disconenct from DB
+    wordDict.commit()
+    wordDict.close()
+
+    #check if none
+    #if returnResult != None:
+    return returnResult
+    #else:
+    #    return False
+
+# Params: uniqueLetters: string of unique letters from base word
+# Takes a STRING of letters and picks a letter from to make key letter
+# Note from Jacob Loveren 2/4/23: Miscommunication on how unqique letters were stored.
+# easiest to just pick a random character from the string using RNG instead of trying
+# to treat this like a set
 def choseKeyLetter(uniqueLetters):
-    return random.choice(uniqueLetters)
+    from random import randrange
+    return uniqueLetters[randrange(1)]
 
 def shuffle(letters):
         
@@ -125,3 +151,7 @@ def guess(wordList):
     conn.close()
           
     return points
+
+#findBaseWord()
+#newPuzzle("")
+#checkDataBase("abdomen")
