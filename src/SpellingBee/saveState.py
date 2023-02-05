@@ -27,7 +27,7 @@ class Puzzle:
     # Word List generated when given key letter and word
     # All words for current puzzle
     def wordListStorage(self):
-       self.allWordList = generateSubset.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
+       self.allWordList = generateSubset.getAllWordsFromPangram(self)
     
     # Returns a number
     def showMaxScore(self):
@@ -37,6 +37,11 @@ class Puzzle:
     def showFoundWords(self):
         outStr = " "
         return outStr.join(self.foundWordList)
+
+    # Returns a string of all the valid words for a puzzle
+    def showAllWords(self):
+        outStr = " "
+        return outStr.join(self.allWordList)
     
     # Current User Score
     def showScore(self):
@@ -144,6 +149,9 @@ class Puzzle:
         conn.commit()
         conn.close()
 
-    
-    
-    
+
+#test Code
+#warlock = acklorw
+#newPuzz = Puzzle('a', 'acklorw')
+#newPuzz.wordListStorage()
+#print(newPuzz.showAllWords())
