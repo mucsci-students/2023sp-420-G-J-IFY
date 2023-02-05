@@ -1,4 +1,4 @@
-# Authors: Yah'hymbey Baruti-Bey, Jacob Lovegren, Francesco Spagnolo
+# Authors: Yah'hymbey Baruti-Bey, Jacob Lovegren, Francesco Spagnolo, Gaige Zakroski
 # Course : CSCI 420
 # Modified Date: 2/2/2023
 # State structure for puzzles
@@ -52,6 +52,38 @@ class Puzzle:
     
     def updateScore(self, pointIncrease):
         self.score += pointIncrease
+
+    # params: letter - the manditory character
+    # sets the key letter of the puzzle
+    def setKeyLetter(self, letter):
+        self.keyLett = letter
+    
+    # params: uniqueLetters - the set of unique letters
+    # sets the unique letters to a set of unique letters
+    def setUniqueLetters(self, uniqueLetters):
+        self.uniqueLett = uniqueLetters
+    
+    # params: gameScore - score of a game
+    # sets the score to a specified score
+    def setScore(self, gameScore):
+        self.score = gameScore
+    
+    # params: maxGameScore -  max score of a game
+    # sets the max score of a game
+    def setMaxScore(self, maxGameScore):
+        self.maxScore = maxGameScore
+
+    # params : foundWords - list of found words
+    # sets the foundWordList to another list of found words
+    def setFoundWords(self, foundWords):
+        self.foundWordList = foundWords
+    
+    # params : newRank - string of the rank
+    # sets the rank to the new rank
+    def setRank(self, newRank):
+        self.rank = newRank
+
+
     
 
     # updateRank takes a puzzle object, checks its
@@ -108,6 +140,7 @@ class Puzzle:
         #close DB
         conn.commit()
         conn.close()
+
     
     
     

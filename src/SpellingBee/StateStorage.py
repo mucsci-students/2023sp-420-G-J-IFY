@@ -8,6 +8,7 @@ import json
 import string
 import os.path
 from os import path
+import saveState
 
 # Params: dict     - dictionary that will be saved to a json
 #       : fileName - string that contains the file name that will be saved.
@@ -22,16 +23,36 @@ def __Save(dict, fileName):
 def __SearchDict(dict, element):
     dictionaryKeys = dict.keys()
     return element in dictionaryKeys
+
+
+#add comments.!!!!!!!
+def __makeDict(saveStateObj):
+    dict = {'keyLetter': saveStateObj.showKeyLetter(), 'uniqueLetters': saveStateObj.showUniqueLetters(), 
+            'currentScore': saveStateObj.showScore(), 'maxScore' : saveStateObj.showMaxScore(), 
+            'foundWordList' : saveStateObj.showFoundWords(), 'rank' : saveStateObj.showRank()}
+    return dict
+
+
+def __setFields(dict):
+    obj = saveState(dict['keyLetter'], dict['UniqueLetters'])
+    obj.setScore(dict['currentScore'])
+    obj.setMaxScore(dict['maxScore'])
+    obj.setFoundWords(dict['foundWordList'])
+    obj.setRank(dict['rank'])
+    
         
 
-# Params: dict     - dictionary that will be saved to a json.
-#       : fileName - string that contains the file name that will be saved.
+# Params: saveStateObj - The saveStateObj
+#       : fileName     - string that contains the file name that will be saved.
 # Saves a blank game no matter if ther was progress already established, the function only saves the puzzle no other game state.
 # If the file does not exist with the specified fileName then a new file will be created using that name.
 # if the file does exist with the specified fileName then the old file will be overwritten
 # if dict has a length that is not 1 and doesnt contain the element 'puzzleLetters' an error is raised
 # Precondition : dict the puzzle of x amount of letters. dict must not include any found words, rank.
-def savePuzzle(dict, fileName):
+def savePuzzle(saveStateObj, fileName):
+    # creates dict to be saved
+    dict = __makeDict(saveStateObj)
+
     if (__SearchDict('baseWord', dict)) and (__SearchDict('maditoryChar', dict)):
         dictToSave = {'baseWord' : dict['baseWord'], 'maditoryChar' : dict['maditoryChar']}
         __Save(dictToSave, fileName + ".json")
@@ -55,8 +76,9 @@ def __Load(fileName):
         # opens file
         file = open(fileName + ".json")
 
-        # returns a dictionary from file
-        return json.load(file)
+        # puts elements in the file in a dictionary
+        dict = json.load(file)
+        __setFields(dict)
     else:
 
         # if fileName does not exist then a FileNotFoundError is raised saying the file does not exist
