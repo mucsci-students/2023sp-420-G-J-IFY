@@ -6,6 +6,8 @@
 import sqlite3
 import generateSubset
 import random
+import MakePuzzle
+
 
 class Puzzle:
     
@@ -46,8 +48,9 @@ class Puzzle:
     #returns a list of all the words for a given puzzle
     def showAllWords(self):
         return self.allWordList
+
     
-    # Current User Score
+    # Current User Score int
     def showScore(self):
         return self.score
     
@@ -177,3 +180,4 @@ class Puzzle:
             ctr += 1
         #set the shuffleLetters field to the list rejoined to string
         self.setShuffleLetters(''.join(letters))
+

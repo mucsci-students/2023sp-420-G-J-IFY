@@ -82,7 +82,7 @@ def drawProgressBar(size, val):
     fill = int(float(size-2) * val)
     remaining = (size - fill)
     # print a string with fill number of =, and remaining number of -
-    bar = 'x{0:=<{1}}{2:-<{3}}x'.format('', fill, '', remaining)
+    bar = '<{0:=<{1}}{2:-<{3}}>'.format('', fill, '', remaining)
     return(bar)
 
 
