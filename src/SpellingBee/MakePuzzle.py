@@ -38,21 +38,7 @@ def newPuzzle(baseWord):
         # and not in databasee raise and exception
         #else:
         #    raise Exception("Word not in database.")
-    
-    
-    #shouldn't this all just be a set of constructors? We can talk about this more 
-    #during integration - Jacob Lovegren 2/4/23
-    """
-    # Below Code Subject to Change
-    NewPuzzle = saveState.Puzzle(keyLetter, uniqueLetters)
-    # Call Word List Generator
-    NewPuzzle.wordListStorage()
-    # Gets Proper max score
-    NewPuzzle.updateMaxScore()
-    # Call Show Puzzle
-    NewPuzzle.showUniqueLetters()
-    # Show Status
-    NewPuzzle.showRank()"""
+
     
     
 # Finds a legitimate baseword to start puzzle with from the database
