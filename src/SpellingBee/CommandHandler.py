@@ -3,30 +3,32 @@
 import CLI
 import saveState
 import MakePuzzle
-
+import StateStorage
+import os.path 
+from os import path
 
 # params:
 #   - input: string, user input. Check if input matches anythin in commands list
 #   - game: object, the currently active game
 def parse(input, game):
     match input:
-        case ['!new']:
+        case '!new':
             return newPuzzle()
-        case ['!puzzle']:
+        case '!puzzle':
             return printPuzzle()
-        case ['!found-words']:
+        case '!found-words':
             return printWords()
-        case ['!status']:
+        case '!status':
             return showStatus()
-        case ['!shuffle']:
+        case '!shuffle':
             game.shuffle()
-        case ['!save']:
-            return saveGame()
-        case ['!savePuzzle']:
-            return savePuzzle()
-        case ['!load']:
+        case '!save':
+            saveGame(game)
+        case '!savePuzzle':
+            savePuzzle(game)
+        case '!load':
             return loadGame()
-        case ['!help']:
+        case '!help':
             print('!new: Generates a new puzzle from a base word with exactly 7 unique characters','\n',
                 '!puzzle: Prints the current puzzle to the screen','\n',
                 '!found-words: prints the list of all discovered words','\n',
@@ -36,7 +38,7 @@ def parse(input, game):
                 '!load: load a previously saved game','\n',
                 '!help: show list of commands with brief description','\n',
                 '!exit: exit the game')
-        case ['!exit']:
+        case '!exit':
             exit()
         case _:
             print('Implentation Pending')
@@ -62,12 +64,13 @@ def showStatus(game):
     CLI.drawTextBox(['Level: \ ' + game.showRank() + ' ' + CLI.drawProgressBar(20, prog)], 40, '^')
 
 # saves overall game progress
-def saveGame():
+def saveGame(game):
+    handleSave(game, 0)
     print('Implementation Pending')
 
 # save puzzle (unique letters and words) only
-def savePuzzle():
-    print('Implementation Pending')
+def savePuzzle(game):
+    handleSave(game, 1)
 
 def loadGame():
     print("Implementation Pending")
@@ -75,3 +78,22 @@ def loadGame():
 def exit():
     print("Thank you for playing!")
     quit()
+
+# Params: game - the game object
+#       : num -  an integer value to determin if we are saving all the game progress or just the puzzle 0 for saveCurrent() and 1 for savePuzzle
+# saves the games state and handles input from the user to determine if they want to overwirte a file or not
+def handleSave(game, num):
+    fileName = input('Please enter the name of the file you would like to save for example "Game1": ')
+    if(path.isfile(fileName +'.json')):
+        yesOrNo = input('Would you like to overwrite the file ' + fileName + '?' '\n Enter Y for yes or N for no: ')
+        if(yesOrNo == 'Y'):
+            if(num == 0):
+                StateStorage.saveCurrent(game, fileName)
+            elif(num == 1):
+                StateStorage.savePuzzle(game, fileName)
+    else: 
+        if(num == 0):
+            StateStorage.saveCurrent(game, fileName)
+        elif(num == 1):
+            StateStorage.savePuzzle(game, fileName)
+    print('Save Complete')
