@@ -111,21 +111,8 @@ def checkDataBase(baseWord):
 # to treat this like a set
 def choseKeyLetter(uniqueLetters):
     from random import randrange
-    return uniqueLetters[randrange(1)]
+    return uniqueLetters[randrange(7)]
 
-def shuffle(letters):
-        
-    mainLetter = letters[0] #saving the main letter for before the shuffle
-    random.shuffle(letters) 
-        
-    for main in letters: #looping through to find the main letter in shuffled list
-        if mainLetter == letters[main]:
-            #removing main letter and swapping positions of letters to put main letter in the front
-            letters.remove(letters[main])
-            letters[main] = letters[0]
-            letters[0] = mainLetter 
-                
-    return letters
 
 def guess(wordList):
     
@@ -151,7 +138,3 @@ def guess(wordList):
     conn.close()
           
     return points
-
-#findBaseWord()
-#newPuzzle("")
-#checkDataBase("abdomen")
