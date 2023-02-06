@@ -2,6 +2,7 @@
 #import StateStorage
 import CLI
 import saveState
+import MakePuzzle
 
 
 # params:
@@ -10,21 +11,21 @@ import saveState
 def parse(input, game):
     match input:
         case ['!new']:
-            newPuzzle()
+            return newPuzzle()
         case ['!puzzle']:
-            printPuzzle()
+            return printPuzzle()
         case ['!found-words']:
-            printWords()
+            return printWords()
         case ['!status']:
-            showStatus()
+            return showStatus()
         case ['!shuffle']:
             game.shuffle()
         case ['!save']:
-            saveGame()
+            return saveGame()
         case ['!savePuzzle']:
-            savePuzzle()
+            return savePuzzle()
         case ['!load']:
-            loadGame()
+            return loadGame()
         case ['!help']:
             print('!new: Generates a new puzzle from a base word with exactly 7 unique characters','\n',
                 '!puzzle: Prints the current puzzle to the screen','\n',
@@ -37,11 +38,14 @@ def parse(input, game):
                 '!exit: exit the game')
         case ['!exit']:
             exit()
+        case _:
+            print('Implentation Pending')
+
 
 def newPuzzle():
     print('Please enter a base word with exactly 7 unique characters. \n For auto-generated base word, press enter.')
     word = input()
-    # MakePuzzle.newPuzzle(word)
+    return MakePuzzle.newPuzzle()
 
 # params:
 #   - game: object, the currently active game
