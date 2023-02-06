@@ -5,13 +5,16 @@
 
 import sqlite3
 import generateSubset
+import random
 import MakePuzzle
+
 
 class Puzzle:
     
     def __init__(self, keyLett, uniqueLett):
         self.keyLett = keyLett
         self.uniqueLett = uniqueLett
+        self.shuffleLett = uniqueLett
         self.score = 0
         self.maxScore = 0
         self.foundWordList = []
@@ -21,9 +24,13 @@ class Puzzle:
     def showKeyLetter(self):
         return self.keyLett
     
-    # Returns the set of unique letters
+    # Returns the string of unique letters
     def showUniqueLetters(self):
         return self.uniqueLett
+
+    # returns a string of the letters to shuffle freely
+    def showShuffleLetters(self):
+        return self.shuffleLett
     
     # Word List generated when given key letter and word
     # All words for current puzzle
@@ -34,9 +41,14 @@ class Puzzle:
     def showMaxScore(self):
         return self.maxScore
 
-    # Returns a string of all the words
+    # Returns a list of all the found words
     def showFoundWords(self):
-        return self.foundWordList()
+        return self.foundWordList
+
+    #returns a list of all the words for a given puzzle
+    def showAllWords(self):
+        return self.allWordList
+
     
     # Current User Score int
     def showScore(self):
@@ -58,11 +70,16 @@ class Puzzle:
     def setKeyLetter(self, letter):
         self.keyLett = letter
     
-    # params: uniqueLetters - the set of unique letters
-    # sets the unique letters to a set of unique letters
+    # params: uniqueLetters - the string of unique letters
+    # string the unique letters to a set of unique letters
     def setUniqueLetters(self, uniqueLetters):
         self.uniqueLett = uniqueLetters
     
+    #params: shuffle letters - the string of shuffled letters
+    #to be messed with freely, with shuffleLetters[0] being the key
+    def setShuffleLetters(self, shuffleLetters):
+        self.shuffleLett = shuffleLetters
+
     # params: gameScore - score of a game
     # sets the score to a specified score
     def setScore(self, gameScore):
@@ -144,5 +161,23 @@ class Puzzle:
         conn.commit()
         conn.close()
 
-    
-    
+    #shuffleChars reshuffles the string of letters to display to the user
+    #set shuffleLetters
+    def shuffleChars(self):
+        #strings are imutable, need a place to temporarily hold new shuffle pattern
+        #explode into list
+        letters = random.sample(self.showUniqueLetters(), len(self.showUniqueLetters()))
+
+        #looping through to find the main letter in shuffled list
+        ctr = 0    
+        while ctr < 7: 
+            if self.showKeyLetter() == letters[ctr]:
+                #copy whatever is in front of the line to later
+                letters[ctr] = letters[0]
+                #repalce first char with key letter
+                letters[0] = self.showKeyLetter() 
+                break
+            ctr += 1
+        #set the shuffleLetters field to the list rejoined to string
+        self.setShuffleLetters(''.join(letters))
+
