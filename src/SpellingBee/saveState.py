@@ -5,6 +5,7 @@
 
 import sqlite3
 import generateSubset
+import MakePuzzle
 
 class Puzzle:
     
@@ -35,10 +36,9 @@ class Puzzle:
 
     # Returns a string of all the words
     def showFoundWords(self):
-        outStr = " "
-        return outStr.join(self.foundWordList)
+        return self.foundWordList()
     
-    # Current User Score
+    # Current User Score int
     def showScore(self):
         return self.score
     
@@ -144,6 +144,5 @@ class Puzzle:
         conn.commit()
         conn.close()
 
-    
     
     

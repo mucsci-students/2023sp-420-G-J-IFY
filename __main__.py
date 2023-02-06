@@ -1,10 +1,13 @@
 from src.SpellingBee import CLI
 from src.SpellingBee import CommandHandler
+from src.SpellingBee import MakePuzzle
 import os
 
 CLI.drawTextBox(['Welcome to Spelling Bee! \ Presented by G(J)IFY',
-    'To start a new game, type \"!new\". \ To load a previous save, type \"!load\"',
-    'For a list of available commands, type \"!help\"'], 40, '^')
+    'To start a new game, type \"!new\". \ To load a previous save, type \"!load\"'], 40, '^')
+
+# TODO, restrict input to JUST !new, !load, and !exit
+puzzle = CommandHandler.parse(input())
 
 while 'True':
 

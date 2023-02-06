@@ -24,7 +24,6 @@ def newPuzzle(baseWord):
     # Checks if word from user is in database
     # and getts the unique letters if so
     else:
-        print("Made it to the else case! The word is " + baseWord)
         returnTuple = checkDataBase(baseWord)
         #returnTuple will be None if querey returns emptyy
         if returnTuple == None:

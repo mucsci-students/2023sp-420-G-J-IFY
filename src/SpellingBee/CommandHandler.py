@@ -1,24 +1,31 @@
 #import MakePuzzle
 #import StateStorage
-#import CLI
+import CLI
+import saveState
+import MakePuzzle
 
 
-def checkCommands(input):
+# params:
+#   - input: string, user input. Check if input matches anythin in commands list
+#   - game: object, the currently active game
+def parse(input, game):
     match input:
         case ['!new']:
-            newPuzzle()
+            return newPuzzle()
         case ['!puzzle']:
-            printPuzzle()
+            return printPuzzle()
         case ['!found-words']:
-            printWords()
+            return printWords()
         case ['!status']:
-            showStatus()
+            return showStatus()
         case ['!shuffle']:
-            shuffle()
+            game.shuffle()
         case ['!save']:
-            saveGame()
+            return saveGame()
+        case ['!savePuzzle']:
+            return savePuzzle()
         case ['!load']:
-            loadGame()
+            return loadGame()
         case ['!help']:
             print('!new: Generates a new puzzle from a base word with exactly 7 unique characters','\n',
                 '!puzzle: Prints the current puzzle to the screen','\n',
@@ -31,38 +38,40 @@ def checkCommands(input):
                 '!exit: exit the game')
         case ['!exit']:
             exit()
+        case _:
+            print('Implentation Pending')
+
 
 def newPuzzle():
     print('Please enter a base word with exactly 7 unique characters. \n For auto-generated base word, press enter.')
     word = input()
-    # MakePuzzle.newPuzzle(word)
+    return MakePuzzle.newPuzzle()
 
-def printPuzzle():
-    #CLI.drawPuzzle()
-    print("Implementation Pending")
+# params:
+#   - game: object, the currently active game
+def printPuzzle(game):
+    CLI.drawTextBox([CLI.drawPuzzle(game.showUniqueLetters())], 40, '^')
 
-def printWords():
-    print("Implementation Pending")
+def printWords(game):
+    CLI.drawTextBox(['Found Words: \ ' + game.showFoundWords()], 40, '^')
 
-def showStatus():
-    print("Implementation Pending")
+def showStatus(game):
+    score = game.showScore()
+    max = game.showMaxScore()
+    prog = score/max
+    CLI.drawTextBox(['Level: \ ' + game.showRank() + ' ' + CLI.drawProgressBar(20, prog)], 40, '^')
 
-def shuffle():
-    print("Implementation Pending")
-
+# saves overall game progress
 def saveGame():
-    print("Would you like to save only the generated puzzle?")
-    input = input().upper()
-    match input:
-        case ['Y']:
-            print("Saving game (generated puzzle only)...")
-            # StateStorage.saveGame(dict, filename)
-        case ['N']:
-            print("Saving game progress...")
-            # StateStorage.saveGame(dict, filename)
+    print('Implementation Pending')
+
+# save puzzle (unique letters and words) only
+def savePuzzle():
+    print('Implementation Pending')
 
 def loadGame():
     print("Implementation Pending")
 
 def exit():
-    print("Implementation Pending")
+    print("Thank you for playing!")
+    quit()
