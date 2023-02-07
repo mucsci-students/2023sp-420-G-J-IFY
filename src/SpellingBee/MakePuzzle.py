@@ -107,7 +107,7 @@ def guess(puzzle, input):
     cursor = conn.cursor()
         
     #check for every case in the user's guess to give points or output error
-    if input in puzzle.showAllWordList(): #checks words in the word list to see if it is valid for the puzzle
+    if input in puzzle.showAllWords(): #checks words in the word list to see if it is valid for the puzzle
         if input in puzzle.showFoundWords(): #check if it is already found
             print("Already Found")
         else:

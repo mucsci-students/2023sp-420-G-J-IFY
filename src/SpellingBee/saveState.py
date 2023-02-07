@@ -35,7 +35,7 @@ class Puzzle:
     # Word List generated when given key letter and word
     # All words for current puzzle
     def wordListStorage(self):
-       self.allWordList = generateSubset.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
+       self.allWordList = generateSubset.getAllWordsFromPangram(self)
     
     # Returns a number
     def showMaxScore(self):
@@ -181,3 +181,8 @@ class Puzzle:
         #set the shuffleLetters field to the list rejoined to string
         self.setShuffleLetters(''.join(letters))
 
+
+
+puzzPuzz = Puzzle('w', 'warlock')
+puzzPuzz.wordListStorage()
+print(puzzPuzz.showAllWords())
