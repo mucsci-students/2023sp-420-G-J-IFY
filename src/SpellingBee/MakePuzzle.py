@@ -99,27 +99,39 @@ def choseKeyLetter(uniqueLetters):
     return uniqueLetters[randrange(7)]
 
 
-def guess(wordList):
+#params: puzzle object, input that the user gave
+#checks the database for valid words, already found words and words that do not exist
+def guess(puzzle, input):
     
     conn = sqlite3.connect('src/SpellingBee/wordDict.db')
     cursor = conn.cursor()
-    
-    input = input()
-    points
         
-    #check for every case in the user's guess to give points or have them input again
-    for word in wordList:
-        if input.length() < 4:
-            print("Too Short")
-        elif input != word:
-            print("Not a word in word List")
-        #elif input == foundWords:
-            #print("Already Found")
-        query = "select wordScore from dictionary where fullWord = '" + [input] + "';"
-        cursor.execute(query)
-        points = cursor.fetchone()[0]
-        
+    #check for every case in the user's guess to give points or output error
+    if input in puzzle.showAllWordList(): #checks words in the word list to see if it is valid for the puzzle
+        if input in puzzle.showFoundWords(): #check if it is already found
+            print("Already Found")
+        else:
+            #query the database to see how many points to give
+            query = "select wordScore from dictionary where fullWord = '" + [input] + "';"
+            cursor.execute(query)
+            puzzle.updatePoints(cursor.fetchone()[0])
+    elif len(input) < 4: #if the word is not in the list check the size
+        print("Too short")
+    else:
+        #query the database to see if it is a word at all
+        query1 = "select uniqueLetters from dictionary where fullWord = '" + [input] + "';"
+        response = cursor.execute(query1)
+        if response == None:
+            print("Not a word in word list")
+        elif set(response[0]).issubset(set(puzzle.showUniqueLetters())): #check if the letters contain the center letter
+            print("Missing center letter")
+        else:
+            #must be letters not in the puzzle in this case
+            print("Bad letters")
+            
     conn.commit()
     conn.close()
-          
-    return points
+
+test = saveState.Puzzle('a', 'warlock')
+
+guess(test, 'warlock')
