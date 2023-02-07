@@ -16,6 +16,7 @@
 #Author Jacob Lovegren
 #2/2/23
 #revised 2/5/23
+#rerevised 2/7/23
 
 import sqlite3
 import itertools

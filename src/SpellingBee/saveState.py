@@ -220,4 +220,7 @@ print(newPuzz.showFoundWords())
 MakePuzzle.guess(newPuzz, 'warlock')
 print(newPuzz.showScore())
 print(newPuzz.showFoundWords())
+
+
+print(need to make a change)
 """

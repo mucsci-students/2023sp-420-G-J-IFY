@@ -119,7 +119,7 @@ def guess(puzzle, input):
             #
             # this is where python is giving me guff. For whatever reason, 
             # it doesn't like that we're passing in a string to append it
-            # to a list. 
+            # to a list. I can help trouble shoot this later
             #
             #
             puzzle.updateFoundWords(input)
