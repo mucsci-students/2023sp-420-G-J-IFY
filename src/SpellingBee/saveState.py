@@ -35,7 +35,7 @@ class Puzzle:
     # Word List generated when given key letter and word
     # All words for current puzzle
     def wordListStorage(self):
-       self.allWordList = generateSubset.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
+       self.allWordList = generateSubset.getAllWordsFromPangram(self)
     
     # Returns a number
     def showMaxScore(self):
@@ -181,3 +181,46 @@ class Puzzle:
         #set the shuffleLetters field to the list rejoined to string
         self.setShuffleLetters(''.join(letters))
 
+
+
+#puzzPuzz = Puzzle('w', 'warlock')
+#puzzPuzz.wordListStorage()
+#print(puzzPuzz.showAllWords())
+
+"""
+newPuzz = Puzzle('a', 'acklorw')
+newPuzz.wordListStorage()
+print(newPuzz.showAllWords())
+#correct guess
+MakePuzzle.guess(newPuzz, 'warlock')
+print(newPuzz.showScore())
+print(newPuzz.showFoundWords())
+#bad letter
+MakePuzzle.guess(newPuzz, 'wart')
+print(newPuzz.showScore())
+#too short
+MakePuzzle.guess(newPuzz, 'war')
+print(newPuzz.showScore())
+#missing key
+MakePuzzle.guess(newPuzz, 'cork')
+print(newPuzz.showScore())
+#double guess
+MakePuzzle.guess(newPuzz, 'warlock')
+print(newPuzz.showScore())
+print(newPuzz.showFoundWords())
+#double guess
+MakePuzzle.guess(newPuzz, 'warlock')
+print(newPuzz.showScore())
+print(newPuzz.showFoundWords())
+#double guess
+MakePuzzle.guess(newPuzz, 'warlock')
+print(newPuzz.showScore())
+print(newPuzz.showFoundWords())
+#double guess
+MakePuzzle.guess(newPuzz, 'warlock')
+print(newPuzz.showScore())
+print(newPuzz.showFoundWords())
+
+
+print(need to make a change)
+"""

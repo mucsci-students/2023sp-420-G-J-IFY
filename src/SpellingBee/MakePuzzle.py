@@ -7,7 +7,7 @@
 #Imports
 import sqlite3
 import random
-import saveState
+#import saveState
 
 
 # Params: baseWord: takes a baseword that is either an empty string or a pangram and makes a puzzle from it
@@ -107,20 +107,30 @@ def guess(puzzle, input):
     cursor = conn.cursor()
         
     #check for every case in the user's guess to give points or output error
-    if input in puzzle.showAllWordList(): #checks words in the word list to see if it is valid for the puzzle
+    if input in puzzle.showAllWords(): #checks words in the word list to see if it is valid for the puzzle
         if input in puzzle.showFoundWords(): #check if it is already found
             print("Already Found")
         else:
             #query the database to see how many points to give
-            query = "select wordScore from dictionary where fullWord = '" + [input] + "';"
+            query = "select wordScore from dictionary where fullWord = '" + input + "';"
             cursor.execute(query)
-            puzzle.updatePoints(cursor.fetchone()[0])
+            puzzle.updateScore(cursor.fetchone()[0])
+            #
+            #
+            # this is where python is giving me guff. For whatever reason, 
+            # it doesn't like that we're passing in a string to append it
+            # to a list. I can help trouble shoot this later
+            #
+            #
+            puzzle.updateFoundWords(input)
+            print(input + ' is one of the words!')
     elif len(input) < 4: #if the word is not in the list check the size
         print("Too short")
     else:
         #query the database to see if it is a word at all
-        query1 = "select uniqueLetters from dictionary where fullWord = '" + [input] + "';"
-        response = cursor.execute(query1)
+        query1 = "select uniqueLetters from dictionary where fullWord = '" + input + "';"
+        cursor.execute(query1)
+        response = cursor.fetchone()
         if response == None:
             print("Not a word in word list")
         elif set(response[0]).issubset(set(puzzle.showUniqueLetters())): #check if the letters contain the center letter
@@ -131,7 +141,3 @@ def guess(puzzle, input):
             
     conn.commit()
     conn.close()
-
-test = saveState.Puzzle('a', 'warlock')
-
-guess(test, 'warlock')
