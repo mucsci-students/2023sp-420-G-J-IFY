@@ -101,27 +101,34 @@ def shuffle(letters):
                 
     return letters
 
-def guess(wordList):
+def guess(puzzle, input):
     
     conn = sqlite3.connect('src/SpellingBee/wordDict.db')
     cursor = conn.cursor()
-    
-    input = input()
-    points
         
     #check for every case in the user's guess to give points or have them input again
-    if input.length() < 4:
-        raise Exception("Too Short")
-    elif input not in wordList:
-        raise Exception("Not a word in word List")
-    #elif input == foundWords:
-        #raise Exeption("Already Found")
-
-    query = "select wordScore from dictionary where fullWord = '" + [input] + "';"
-    cursor.execute(query)
-    points = cursor.fetchone()[0]
-        
+    if input in puzzle.showAllWordList():
+        if input in puzzle.showFoundWords():
+            print("Already Found")
+        else:
+            query = "select wordScore from dictionary where fullWord = '" + [input] + "';"
+            cursor.execute(query)
+            puzzle.updatePoints(cursor.fetchone()[0])
+    elif len(input) < 4:
+        print("Too short")
+    else:
+        query1 = "select uniqueLetters from dictionary where fullWord = '" + [input] + "';"
+        response = cursor.execute(query1)
+        if response == None:
+            print("Not a word in word list")
+        elif set(response[0]).issubset(set(puzzle.showUniqueLetters())):
+            print("Missing center letter")
+        else:
+            print("Bad letters")
+            
     conn.commit()
     conn.close()
-          
-    return points
+
+test = saveState.Puzzle('a', 'warlock')
+
+guess(test, 'warlock')
