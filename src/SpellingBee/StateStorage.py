@@ -24,21 +24,29 @@ def __SearchDict(dict, element):
     dictionaryKeys = dict.keys()
     return element in dictionaryKeys
 
-
-#add comments.!!!!!!!
+# Params: saveStateObj - a saveState object
+# takes a saveState objects fields and puts them into a dictionary to make saving easier
+# Return: Returns a dictionary of all fields of a saveState object
 def __makeDict(saveStateObj):
     dict = {'keyLetter': saveStateObj.showKeyLetter(), 'uniqueLetters': saveStateObj.showUniqueLetters(), 
-            'currentScore': saveStateObj.showScore(), 'maxScore' : saveStateObj.showMaxScore(), 
-            'foundWordList' : saveStateObj.showFoundWords(), 'rank' : saveStateObj.showRank()}
+            'shuffleLetters': saveStateObj.showShuffleLetters(), 'currentScore': saveStateObj.showScore(), 'maxScore' : saveStateObj.showMaxScore(), 
+            'foundWordList' : saveStateObj.showFoundWords(), 'allWordList': saveStateObj.showAllWords(), 'rank' : saveStateObj.showRank()}
     return dict
 
-
+# Params: dict - a dictionary that contains the values of each feild of a saveState Object
+# sets the fields of the saveState object to the corisponing value in the dictionary
+# Returns: returns a saveState Object with all its fields set
 def __setFields(dict):
-    obj = saveState(dict['keyLetter'], dict['UniqueLetters'])
+    obj = saveState.Puzzle(dict['keyLetter'], dict['uniqueLetters'])
+    obj.setShuffleLetters(dict['shuffleLetters'])
     obj.setScore(dict['currentScore'])
     obj.setMaxScore(dict['maxScore'])
     obj.setFoundWords(dict['foundWordList'])
+
+    #need to add this function to saveState
+    obj.setAllWords(dict['allWordsList'])
     obj.setRank(dict['rank'])
+    return obj
     
         
 
@@ -51,15 +59,10 @@ def __setFields(dict):
 # Precondition : dict the puzzle of x amount of letters. dict must not include any found words, rank.
 def savePuzzle(saveStateObj, fileName):
     # creates dict to be saved
-    dict = __makeDict(saveStateObj)
-
-    if (__SearchDict('baseWord', dict)) and (__SearchDict('maditoryChar', dict)):
-        dictToSave = {'baseWord' : dict['baseWord'], 'maditoryChar' : dict['maditoryChar']}
-        __Save(dictToSave, fileName + ".json")
-    else : 
-        # raises a value error is a dictionary does not include a baseWord and a manditory char
-        raise ValueError("Dictionary must include at least 2 elements named baseWord that is an string and manditoryChar which is the manditory character")
-
+    newObj = saveState.Puzzle(saveStateObj.showKeyLetter(), saveStateObj.showUniqueLetters())
+    dict = __makeDict(newObj)
+    __Save(dict, fileName + ".json")
+   
 # Params: fileName is the name of the file
 # checks to see if a file exists in the current directory
 # returns: true if file does exist and false otherwise
@@ -78,7 +81,8 @@ def __Load(fileName):
 
         # puts elements in the file in a dictionary
         dict = json.load(file)
-        __setFields(dict)
+        obj = __setFields(dict)
+        return obj
     else:
 
         # if fileName does not exist then a FileNotFoundError is raised saying the file does not exist
