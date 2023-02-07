@@ -110,16 +110,16 @@ def guess(wordList):
     points
         
     #check for every case in the user's guess to give points or have them input again
-    for word in wordList:
-        if input.length() < 4:
-            print("Too Short")
-        elif input != word:
-            print("Not a word in word List")
-        #elif input == foundWords:
-            #print("Already Found")
-        query = "select wordScore from dictionary where fullWord = '" + [input] + "';"
-        cursor.execute(query)
-        points = cursor.fetchone()[0]
+    if input.length() < 4:
+        raise Exception("Too Short")
+    elif input not in wordList:
+        raise Exception("Not a word in word List")
+    #elif input == foundWords:
+        #raise Exeption("Already Found")
+
+    query = "select wordScore from dictionary where fullWord = '" + [input] + "';"
+    cursor.execute(query)
+    points = cursor.fetchone()[0]
         
     conn.commit()
     conn.close()
