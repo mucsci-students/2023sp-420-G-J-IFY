@@ -87,21 +87,6 @@ def checkDataBase(baseWord):
 def choseKeyLetter(uniqueLetters):
     return random.choice(uniqueLetters)
 
-#params: letters is a list of the letters
-#shuffles letters but keeps the center letter at the front of the list
-def shuffle(letters):
-        
-    mainLetter = letters[0] #saving the main letter for before the shuffle
-    random.shuffle(letters) 
-        
-    for main in letters: #looping through to find the main letter in shuffled list
-        if mainLetter == letters[main]:
-            #removing main letter and swapping positions of letters to put main letter in the front
-            letters.remove(letters[main])
-            letters[main] = letters[0]
-            letters[0] = mainLetter 
-                
-    return letters
 
 #params: puzzle object, input that the user gave
 #checks the database for valid words, already found words and words that do not exist
