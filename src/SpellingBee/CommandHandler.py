@@ -1,5 +1,3 @@
-#import MakePuzzle
-#import StateStorage
 import CLI
 import saveState
 import MakePuzzle
@@ -12,20 +10,28 @@ def parse(input, game):
     match input:
         case ['!new']:
             return newPuzzle()
+
         case ['!puzzle']:
-            return printPuzzle()
+            return printPuzzle(game)
+
         case ['!found-words']:
-            return printWords()
+            return printWords(game)
+
         case ['!status']:
-            return showStatus()
+            return showStatus(game)
+
         case ['!shuffle']:
             game.shuffle()
+
         case ['!save']:
             return saveGame()
+
         case ['!savePuzzle']:
             return savePuzzle()
+
         case ['!load']:
             return loadGame()
+
         case ['!help']:
             print('!new: Generates a new puzzle from a base word with exactly 7 unique characters','\n',
                 '!puzzle: Prints the current puzzle to the screen','\n',
@@ -36,10 +42,24 @@ def parse(input, game):
                 '!load: load a previously saved game','\n',
                 '!help: show list of commands with brief description','\n',
                 '!exit: exit the game')
+
         case ['!exit']:
-            exit()
+            print('Are you sure? all unsaved progress will be lost. [Y/N]')
+            input = input().upper()
+            match input:
+                case 'Y':
+                    quit()
+                case 'N':
+                    return
+                case _:
+                    print('Input Invalid')
+                    parse('!exit', game) # recursively calls until valid input provided.
+
         case _:
-            print('Implentation Pending')
+            if input.startswith('!'):
+                print('Command not recognized. Type \"!help\" for a list of valid commands...')
+            else:
+                print('implementation pending')
 
 
 def newPuzzle():

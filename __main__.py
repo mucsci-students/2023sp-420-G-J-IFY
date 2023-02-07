@@ -7,13 +7,11 @@ CLI.drawTextBox(['Welcome to Spelling Bee! \ Presented by G(J)IFY',
     'To start a new game, type \"!new\". \ To load a previous save, type \"!load\"'], 40, '^')
 
 # TODO, restrict input to JUST !new, !load, and !exit
-puzzle = CommandHandler.parse(input())
+puzzle = CommandHandler.parse(input('> '))
+
+os.system('clear')
 
 while 'True':
-
-    userInput = input('> ').lower()
-    CommandHandler.checkCommands(userInput)
-    os.system('clear')
 
     # The following is just a placeholder, mainly just to showcase the idea.
     tier1 = 'Welcome to Spelling Bee! \ Presented by G(J)IFY'
@@ -23,4 +21,4 @@ while 'True':
     tier5 = 'Enter your guess, or type \'!help\' for a list of commands.'
     CLI.drawTextBox([tier1, tier2, tier3, tier4, tier5], 40, '^')
 
-    print()
+    CommandHandler.parse(input('> '), puzzle)
