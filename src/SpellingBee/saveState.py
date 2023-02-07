@@ -183,6 +183,12 @@ class Puzzle:
 
 
 
-puzzPuzz = Puzzle('w', 'warlock')
-puzzPuzz.wordListStorage()
-print(puzzPuzz.showAllWords())
+#puzzPuzz = Puzzle('w', 'warlock')
+#puzzPuzz.wordListStorage()
+#print(puzzPuzz.showAllWords())
+
+#test Code
+#warlock = acklorw
+#newPuzz = Puzzle('a', 'acklorw')
+#newPuzz.wordListStorage()
+#print(newPuzz.showAllWords())
