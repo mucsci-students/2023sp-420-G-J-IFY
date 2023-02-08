@@ -101,3 +101,4 @@ src/SpellingBee/__pycache__/generateSubset.cpython-310.pyc
 src/SpellingBee/__pycache__/saveState.cpython-310.pyc
 src/SpellingBee/__pycache__/generateSubset.cpython-310.pyc
 src/SpellingBee/__pycache__/saveState.cpython-310.pyc
+*.pyc
