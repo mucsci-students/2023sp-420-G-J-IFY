@@ -94,10 +94,16 @@ class Puzzle:
     def setFoundWords(self, foundWords):
         self.foundWordList = foundWords
     
+    # Params: wordList - list of all posible words for puzzle
+    # sets the allWordList to a given word list
+    def setAllWordList(self, wordList):
+        self.allWordList = wordList
+    
     # params : newRank - string of the rank
     # sets the rank to the new rank
     def setRank(self, newRank):
         self.rank = newRank
+    
 
     # updateRank takes a puzzle object, checks its
     # current score against the max score for the puzzle,
