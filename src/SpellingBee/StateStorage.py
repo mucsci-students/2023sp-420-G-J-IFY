@@ -1,6 +1,6 @@
 # Authors: Gaige Zakroski, 
 # Course : CSCI 420
-# Modified Date: 2/2/2023
+# Last Modified Date: 2/7/2023
 # A Module that contains many functions that will be capable of saving 
 # and loading the state of a game from a json file
 
@@ -9,6 +9,8 @@ import string
 import os.path
 from os import path
 import saveState
+import MakePuzzle
+from pathlib import Path
 
 # Params: dict     - dictionary that will be saved to a json
 #       : fileName - string that contains the file name that will be saved.
@@ -42,9 +44,7 @@ def __setFields(dict):
     obj.setScore(dict['currentScore'])
     obj.setMaxScore(dict['maxScore'])
     obj.setFoundWords(dict['foundWordList'])
-
-    #need to add this function to saveState
-    obj.setAllWords(dict['allWordsList'])
+    obj.setAllWordList(dict['allWordsList'])
     obj.setRank(dict['rank'])
     return obj
     
@@ -60,30 +60,51 @@ def __setFields(dict):
 def savePuzzle(saveStateObj, fileName):
     # creates dict to be saved
     newObj = saveState.Puzzle(saveStateObj.showKeyLetter(), saveStateObj.showUniqueLetters())
+    newObj.setMaxScore(saveStateObj.showMaxScore())
+    newObj.setAllWordList(saveStateObj.showAllWords())
+    newObj.updateRank()
+
     dict = __makeDict(newObj)
     __Save(dict, fileName + ".json")
    
-# Params: fileName is the name of the file
+# Params: pathToFile path to a specified file
 # checks to see if a file exists in the current directory
 # returns: true if file does exist and false otherwise
-def __checkFileExists(fileName):
-    return path.isFile(fileName)
+def __checkFileExists(pathToFile):
+    p = pathToFile
+    if(not p.exists()):
+        raise FileNotFoundError('file not Found')
+    else:
+        return p.exists()
 
-# Params: fileName is the name of the file
+# Params: fileName is the name of the file ex 'help'
 # loads the file and creates a dictionary that will be returned
 # returns: a dictionary that contains all the game data
 def __Load(fileName):
     # checks if file exists
-    if (__checkFileExists(fileName + ".json")):
+    try:
+        newFileName = fileName + '.json'
+        # create a path to the current directory
+        path1 = Path(Path.cwd())
+        # append the file in question to the path
+        a = path1 / newFileName
+        __checkFileExists(a)
 
         # opens file
-        file = open(fileName + ".json")
+        file = open(newFileName)
 
         # puts elements in the file in a dictionary
         dict = json.load(file)
         obj = __setFields(dict)
         return obj
-    else:
+    except FileNotFoundError:
 
         # if fileName does not exist then a FileNotFoundError is raised saying the file does not exist
-        raise FileNotFoundError("The file" + fileName + ".json does not exist in this directory")
+       print ("The file " + newFileName + "does not exist in this directory")
+
+       
+
+
+
+
+
