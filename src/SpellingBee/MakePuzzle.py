@@ -6,8 +6,8 @@
 
 #Imports
 import sqlite3
-import random
-#import saveState
+from random import randrange
+import saveState
 
 
 # Params: baseWord: takes a baseword that is either an empty string or a pangram and makes a puzzle from it
@@ -22,7 +22,7 @@ def newPuzzle(baseWord):
         keyLetter = choseKeyLetter(uniqueLetters)
     
     # Checks if word from user is in database
-    # and getts the unique letters if so
+    # and gets the unique letters if so
     else:
         returnTuple = checkDataBase(baseWord)
         #returnTuple will be None if querey returns emptyy
@@ -32,11 +32,25 @@ def newPuzzle(baseWord):
         keyLetter = input("Enter a letter from your word to use as the key letter: ")
         while keyLetter not in uniqueLetters:
             keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
-    
+            
         # If not an empty string
         # and not in databasee raise and exception
         #else:
         #    raise Exception("Word not in database.")
+        
+    # Creates the puzzle for users to solve
+    puzzle = saveState.Puzzle(keyLetter, uniqueLetters)
+    # Populates the puzzles wordlist
+    puzzle.wordListStorage()
+    # Generates a max score
+    puzzle.updateMaxScore()
+    # Generates rank
+    puzzle.updateRank()
+    
+    return puzzle
+    
+    
+        
 
     
     
@@ -94,8 +108,7 @@ def checkDataBase(baseWord):
 # Note from Jacob Loveren 2/4/23: Miscommunication on how unqique letters were stored.
 # easiest to just pick a random character from the string using RNG instead of trying
 # to treat this like a set
-def choseKeyLetter(uniqueLetters):
-    from random import randrange
+def choseKeyLetter(uniqueLetters):    
     return uniqueLetters[randrange(7)]
 
 
@@ -115,13 +128,6 @@ def guess(puzzle, input):
             query = "select wordScore from dictionary where fullWord = '" + input + "';"
             cursor.execute(query)
             puzzle.updateScore(cursor.fetchone()[0])
-            #
-            #
-            # this is where python is giving me guff. For whatever reason, 
-            # it doesn't like that we're passing in a string to append it
-            # to a list. I can help trouble shoot this later
-            #
-            #
             puzzle.updateFoundWords(input)
             print(input + ' is one of the words!')
     elif len(input) < 4: #if the word is not in the list check the size
