@@ -59,7 +59,7 @@ def parse(input, game):
             if input.startswith('!'):
                 print('Command not recognized. Type \"!help\" for a list of valid commands...')
             else:
-                print('implementation pending')
+                MakePuzzle.guess(input)
 
 
 def newPuzzle():
