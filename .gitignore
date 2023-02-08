@@ -95,10 +95,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,windows,linux
-src/SpellingBee/__pycache__/saveState.cpython-310.pyc
-src/SpellingBee/__pycache__/MakePuzzle.cpython-310.pyc
-src/SpellingBee/__pycache__/generateSubset.cpython-310.pyc
-src/SpellingBee/__pycache__/saveState.cpython-310.pyc
-src/SpellingBee/__pycache__/generateSubset.cpython-310.pyc
-src/SpellingBee/__pycache__/saveState.cpython-310.pyc
-*.pyc
+src/SpellingBee/__pycache__/

@@ -101,3 +101,17 @@ def drawList(list):
     for l in list:
         outstr += l.upper() + ' '
     return outstr
+
+def drawGameBox(game):
+
+    # calculate game progression
+    score = game.showScore()
+    max = game.showMaxScore()
+    prog = score/max
+
+    tier1 = 'Welcome to Spelling Bee! \ Presented by G(J)IFY'
+    tier2 = 'Level: \ {lvl} {pBar}'.format(lvl = game.showRank(), pBar = drawProgressBar(20, prog))
+    tier3 = 'Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())
+    tier4 = drawPuzzle(game.showShuffleLetters())
+    tier5 = 'Enter your guess, or type \'!help\' for a list of commands.'
+    drawTextBox([tier1, tier2, tier3, tier4, tier5], 40, '^')
