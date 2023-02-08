@@ -6,7 +6,7 @@
 import sqlite3
 import generateSubset
 import random
-import MakePuzzle
+
 
 
 class Puzzle:
@@ -49,7 +49,6 @@ class Puzzle:
     def showAllWords(self):
         return self.allWordList
 
-    
     # Current User Score int
     def showScore(self):
         return self.score
@@ -99,9 +98,6 @@ class Puzzle:
     # sets the rank to the new rank
     def setRank(self, newRank):
         self.rank = newRank
-
-
-    
 
     # updateRank takes a puzzle object, checks its
     # current score against the max score for the puzzle,
@@ -183,44 +179,3 @@ class Puzzle:
 
 
 
-#puzzPuzz = Puzzle('w', 'warlock')
-#puzzPuzz.wordListStorage()
-#print(puzzPuzz.showAllWords())
-
-"""
-newPuzz = Puzzle('a', 'acklorw')
-newPuzz.wordListStorage()
-print(newPuzz.showAllWords())
-#correct guess
-MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
-#bad letter
-MakePuzzle.guess(newPuzz, 'wart')
-print(newPuzz.showScore())
-#too short
-MakePuzzle.guess(newPuzz, 'war')
-print(newPuzz.showScore())
-#missing key
-MakePuzzle.guess(newPuzz, 'cork')
-print(newPuzz.showScore())
-#double guess
-MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
-#double guess
-MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
-#double guess
-MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
-#double guess
-MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
-
-
-print(need to make a change)
-"""
