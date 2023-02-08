@@ -6,7 +6,7 @@
 import sqlite3
 import generateSubset
 import random
-import MakePuzzle
+
 
 
 class Puzzle:
@@ -35,7 +35,7 @@ class Puzzle:
     # Word List generated when given key letter and word
     # All words for current puzzle
     def wordListStorage(self):
-       self.allWordList = generateSubset.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
+       self.allWordList = generateSubset.getAllWordsFromPangram(self)
     
     # Returns a number
     def showMaxScore(self):
@@ -49,7 +49,6 @@ class Puzzle:
     def showAllWords(self):
         return self.allWordList
 
-    
     # Current User Score int
     def showScore(self):
         return self.score
@@ -95,12 +94,15 @@ class Puzzle:
     def setFoundWords(self, foundWords):
         self.foundWordList = foundWords
     
+    # Params: wordList - list of all posible words for puzzle
+    # sets the allWordList to a given word list
+    def setAllWordList(self, wordList):
+        self.allWordList = wordList
+    
     # params : newRank - string of the rank
     # sets the rank to the new rank
     def setRank(self, newRank):
         self.rank = newRank
-
-
     
 
     # updateRank takes a puzzle object, checks its
@@ -180,4 +182,6 @@ class Puzzle:
             ctr += 1
         #set the shuffleLetters field to the list rejoined to string
         self.setShuffleLetters(''.join(letters))
+
+
 

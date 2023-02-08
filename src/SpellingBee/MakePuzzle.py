@@ -6,7 +6,7 @@
 
 #Imports
 import sqlite3
-import random
+from random import randrange
 import saveState
 
 
@@ -22,7 +22,7 @@ def newPuzzle(baseWord):
         keyLetter = choseKeyLetter(uniqueLetters)
     
     # Checks if word from user is in database
-    # and getts the unique letters if so
+    # and gets the unique letters if so
     else:
         returnTuple = checkDataBase(baseWord)
         #returnTuple will be None if querey returns emptyy
@@ -32,11 +32,25 @@ def newPuzzle(baseWord):
         keyLetter = input("Enter a letter from your word to use as the key letter: ")
         while keyLetter not in uniqueLetters:
             keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
-    
+            
         # If not an empty string
         # and not in databasee raise and exception
         #else:
         #    raise Exception("Word not in database.")
+        
+    # Creates the puzzle for users to solve
+    puzzle = saveState.Puzzle(keyLetter, uniqueLetters)
+    # Populates the puzzles wordlist
+    puzzle.wordListStorage()
+    # Generates a max score
+    puzzle.updateMaxScore()
+    # Generates rank
+    puzzle.updateRank()
+    
+    return puzzle
+    
+    
+        
 
     
     
@@ -94,32 +108,42 @@ def checkDataBase(baseWord):
 # Note from Jacob Loveren 2/4/23: Miscommunication on how unqique letters were stored.
 # easiest to just pick a random character from the string using RNG instead of trying
 # to treat this like a set
-def choseKeyLetter(uniqueLetters):
-    from random import randrange
+def choseKeyLetter(uniqueLetters):    
     return uniqueLetters[randrange(7)]
 
 
-def guess(wordList):
+#params: puzzle object, input that the user gave
+#checks the database for valid words, already found words and words that do not exist
+def guess(puzzle, input):
     
     conn = sqlite3.connect('src/SpellingBee/wordDict.db')
     cursor = conn.cursor()
-    
-    input = input()
-    points
         
-    #check for every case in the user's guess to give points or have them input again
-    for word in wordList:
-        if input.length() < 4:
-            print("Too Short")
-        elif input != word:
-            print("Not a word in word List")
-        #elif input == foundWords:
-            #print("Already Found")
-        query = "select wordScore from dictionary where fullWord = '" + [input] + "';"
-        cursor.execute(query)
-        points = cursor.fetchone()[0]
-        
+    #check for every case in the user's guess to give points or output error
+    if input in puzzle.showAllWords(): #checks words in the word list to see if it is valid for the puzzle
+        if input in puzzle.showFoundWords(): #check if it is already found
+            print("Already Found")
+        else:
+            #query the database to see how many points to give
+            query = "select wordScore from dictionary where fullWord = '" + input + "';"
+            cursor.execute(query)
+            puzzle.updateScore(cursor.fetchone()[0])
+            puzzle.updateFoundWords(input)
+            print(input + ' is one of the words!')
+    elif len(input) < 4: #if the word is not in the list check the size
+        print("Too short")
+    else:
+        #query the database to see if it is a word at all
+        query1 = "select uniqueLetters from dictionary where fullWord = '" + input + "';"
+        cursor.execute(query1)
+        response = cursor.fetchone()
+        if response == None:
+            print("Not a word in word list")
+        elif set(response[0]).issubset(set(puzzle.showUniqueLetters())): #check if the letters contain the center letter
+            print("Missing center letter")
+        else:
+            #must be letters not in the puzzle in this case
+            print("Bad letters")
+            
     conn.commit()
     conn.close()
-          
-    return points
