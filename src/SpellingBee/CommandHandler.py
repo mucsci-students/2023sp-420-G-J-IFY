@@ -14,9 +14,9 @@ def parse(usrinput, game):
         case '!puzzle':
             return printPuzzle(game)
         case '!found-words':
-            return printWords()
+            return printWords(game)
         case '!status':
-            return showStatus()
+            return showStatus(game)
         case '!shuffle':
             game.shuffleChars()
         case '!save':
@@ -42,10 +42,10 @@ def parse(usrinput, game):
 
         case '!exit':
             print('Are you sure? all unsaved progress will be lost. [Y/N]')
-            usrinput = usrinput('> ').upper()
+            usrinput = input('> ').upper()
             match usrinput:
                 case 'Y':
-                    quit()
+                    exit()
                 case 'N':
                     return
                 case _:
@@ -57,11 +57,11 @@ def parse(usrinput, game):
                 print('Command not recognized. Type \"!help\" for a list of valid commands...')
             else:
                 MakePuzzle.guess(game, usrinput)
-                input('Press enter to continute. . .')
 
 
 def newPuzzle():
-    print('Please enter a base word with exactly 7 unique characters. \n For auto-generated base word, press enter.')
+    print('Please enter a base word with exactly 7 unique characters. \n' +
+    'For auto-generated base word, press enter.')
     word = input('> ')
     out = MakePuzzle.newPuzzle(word.lower())
     out.shuffleChars()
@@ -79,7 +79,9 @@ def showStatus(game):
     score = game.showScore()
     max = game.showMaxScore()
     prog = score/max
-    CLI.drawTextBox(['Level: \ ' + game.showRank() + ' ' + CLI.drawProgressBar(20, prog)], 40, '^')
+    bar = game.showRank() + ' ' + CLI.drawProgressBar(20, prog)
+    stats = 'Score: {} \ Progress: {}%'.format(score, int(prog*100))
+    CLI.drawTextBox(['Level: \ ' + bar + ' \ ' + stats], 40, '^')
 
 # saves overall game progress
 def saveGame(game):
@@ -103,17 +105,26 @@ def exit():
 #       : num -  an integer value to determin if we are saving all the game progress or just the puzzle 0 for saveCurrent() and 1 for savePuzzle
 # saves the games state and handles input from the user to determine if they want to overwirte a file or not
 def handleSave(game, num):
+    saveStatus = False
     fileName = input('Please enter the name of the file you would like to save for example "Game1"\n> ')
     if(path.isfile(fileName +'.json')):
         yesOrNo = input('Would you like to overwrite the file ' + fileName + '?' '\n Enter Y for yes or N for no\n> ')
         if(yesOrNo == 'Y'):
             if(num == 0):
-                StateStorage.saveCurrent(game, fileName)
+                print('Implementation pending')
+                saveStatus = False
             elif(num == 1):
                 StateStorage.savePuzzle(game, fileName)
+                saveStatus = False
     else: 
         if(num == 0):
-            StateStorage.saveCurrent(game, fileName)
+            print('Implementation Pending')
+            saveStatus = False
         elif(num == 1):
             StateStorage.savePuzzle(game, fileName)
-    print('Save Complete')
+            saveStatus = True
+    
+    if saveStatus:
+        print('Save Complete!')
+    else:
+        print('Game could not be saved.')
