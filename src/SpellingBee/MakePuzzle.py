@@ -29,7 +29,7 @@ def newPuzzle(baseWord):
         if returnTuple == None:
             raise Exception("Word not in database.")
         uniqueLetters = returnTuple[1]
-        keyLetter = input("Enter a letter from your word to use as the key letter: ")
+        keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
         while keyLetter not in uniqueLetters:
             keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
             
