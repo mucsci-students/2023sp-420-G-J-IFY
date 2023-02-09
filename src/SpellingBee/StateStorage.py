@@ -1,6 +1,6 @@
 # Authors: Gaige Zakroski, 
 # Course : CSCI 420
-# Last Modified Date: 2/7/2023
+# Last Modified Date: 2/8/2023
 # A Module that contains many functions that will be capable of saving 
 # and loading the state of a game from a json file
 
@@ -11,6 +11,7 @@ from os import path
 import saveState
 import MakePuzzle
 from pathlib import Path
+import shutil
 
 # Params: dict     - dictionary that will be saved to a json
 #       : fileName - string that contains the file name that will be saved.
@@ -18,6 +19,9 @@ from pathlib import Path
 def __Save(dict, fileName):
     with open(fileName, 'w') as file:
         json.dump(dict, file)
+
+    
+
 
 # Params: dict    - dictionary to search
 #       : element - element to search for in dict
@@ -44,7 +48,7 @@ def __setFields(dict):
     obj.setScore(dict['currentScore'])
     obj.setMaxScore(dict['maxScore'])
     obj.setFoundWords(dict['foundWordList'])
-    obj.setAllWordList(dict['allWordsList'])
+    obj.setAllWordList(dict['allWordList'])
     obj.setRank(dict['rank'])
     return obj
     
@@ -75,7 +79,7 @@ def loadPuzzle(fileName):
 # Params: filename: name of the file you are loading 
 #         puzzle: object you want to be saved     
 # saves a current iteration of the puzzle
-def saveCurrent(fileName, puzzle):
+def saveCurrent(puzzle, fileName):
     __Save(__makeDict(puzzle), fileName + ".json")
     
 # Params: pathToFile path to a specified file
@@ -112,14 +116,3 @@ def __Load(fileName):
 
         # if fileName does not exist then a FileNotFoundError is raised saying the file does not exist
        print ("The file " + newFileName + "does not exist in this directory")
-
-       
-
-
-
-"""
-Puzzle = MakePuzzle.newPuzzle("warlock")
-saveCurrent("random", Puzzle)
-LoadPuzzle = loadPuzzle("random")
-print(__makeDict(LoadPuzzle))
-"""
