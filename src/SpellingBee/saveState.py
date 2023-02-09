@@ -116,23 +116,23 @@ class Puzzle:
         if currentPercent == 0:
             self.rank = "Beginner"
         elif currentPercent < 0.05:
-            self.rank ==  "Good Start"
+            self.rank =  "Good Start"
         elif currentPercent < 0.08:
-            self.rank == "Moving Up"
+            self.rank = "Moving Up"
         elif currentPercent < 0.15:
-            self.rank == "Good"
+            self.rank = "Good"
         elif currentPercent < 0.25:
-            self.rank == "Solid"
+            self.rank = "Solid"
         elif self.rank < 0.4:
-            self.rank == "Nice"
+            self.rank = "Nice"
         elif self.rank < 0.51:
-            self.rank == "Great"
+            self.rank = "Great"
         elif self.rank < 0.71:
-            self.rank == "Amazing"
+            self.rank = "Amazing"
         elif self.rank < 1:
-            self.rank == "Genius"
+            self.rank = "Genius"
         else: #all words found
-            self.rank == "Queen Bee"
+            self.rank = "Queen Bee"
         
     
     #findMaxScore - this functions takes a list of words 
