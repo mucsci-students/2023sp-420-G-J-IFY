@@ -66,7 +66,18 @@ def savePuzzle(saveStateObj, fileName):
 
     dict = __makeDict(newObj)
     __Save(dict, fileName + ".json")
-   
+    
+# Params: filename: name of the file you are loading      
+# loads the puzzle given a file name
+def loadPuzzle(fileName):
+    return __Load(fileName)
+
+# Params: filename: name of the file you are loading 
+#         puzzle: object you want to be saved     
+# saves a current iteration of the puzzle
+def saveCurrent(fileName, puzzle):
+    __Save(__makeDict(puzzle), fileName + ".json")
+    
 # Params: pathToFile path to a specified file
 # checks to see if a file exists in the current directory
 # returns: true if file does exist and false otherwise
@@ -107,4 +118,7 @@ def __Load(fileName):
 
 
 
-
+Puzzle = MakePuzzle.newPuzzle("warlock")
+saveCurrent("random", Puzzle)
+LoadPuzzle = loadPuzzle("random")
+print(__makeDict(LoadPuzzle))
