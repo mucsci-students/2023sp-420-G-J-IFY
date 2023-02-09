@@ -133,6 +133,7 @@ def guess(puzzle, input):
             query = "select wordScore from dictionary where fullWord = '" + input + "';"
             cursor.execute(query)
             puzzle.updateScore(cursor.fetchone()[0])
+            puzzle.updateRank()
             puzzle.updateFoundWords(input)
             print(input + ' is one of the words!')
     elif len(input) < 4: #if the word is not in the list check the size
