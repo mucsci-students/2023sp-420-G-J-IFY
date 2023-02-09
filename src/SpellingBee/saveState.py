@@ -157,6 +157,7 @@ class Puzzle:
             self.maxScore += cursor.fetchone()[0]
             ctr += 1
 
+
         #close DB
         conn.commit()
         conn.close()

@@ -116,6 +116,8 @@ def choseKeyLetter(uniqueLetters):
 #checks the database for valid words, already found words and words that do not exist
 def guess(puzzle, input):
     
+    input = input.lower()
+
     conn = sqlite3.connect('src/SpellingBee/wordDict.db')
     cursor = conn.cursor()
         
