@@ -93,7 +93,7 @@ def savePuzzle(game):
 
 def loadGame():
     fileName = input('Please enter the name of the game you are looking for.\n> ')
-    StateStorage.loadPuzzle(fileName)
+    return StateStorage.loadPuzzle(fileName)
 
 def showSaves():
     print("Implementation Pending")
@@ -112,15 +112,15 @@ def handleSave(game, num):
         yesOrNo = input('Would you like to overwrite the file ' + fileName + '?' '\n Enter Y for yes or N for no\n> ')
         if(yesOrNo == 'Y'):
             if(num == 0):
-                print('Implementation pending')
-                saveStatus = False
+                StateStorage.saveCurrent(game, fileName)
+                saveStatus = True
             elif(num == 1):
                 StateStorage.savePuzzle(game, fileName)
-                saveStatus = False
+                saveStatus = True
     else: 
         if(num == 0):
-            print('Implementation Pending')
-            saveStatus = False
+            StateStorage.saveCurrent(game, fileName)
+            saveStatus = True
         elif(num == 1):
             StateStorage.savePuzzle(game, fileName)
             saveStatus = True
