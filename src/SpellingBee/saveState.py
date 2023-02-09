@@ -148,8 +148,6 @@ class Puzzle:
     
         ctr = 0
 
-        print(type(self.allWordList))
-
         #loop through list, querey DB for each word, aggregate values
         for a in self.allWordList:
             query = """select wordScore
