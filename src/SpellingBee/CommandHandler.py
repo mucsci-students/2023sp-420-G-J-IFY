@@ -73,7 +73,7 @@ def printPuzzle(game):
     CLI.drawTextBox([CLI.drawPuzzle(game.showUniqueLetters())], 40, '^')
 
 def printWords(game):
-    CLI.drawTextBox(['Found Words: \ ' + game.showFoundWords()], 40, '^')
+    CLI.drawTextBox(['Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())], 40, '^')
 
 def showStatus(game):
     score = game.showScore()
@@ -92,7 +92,8 @@ def savePuzzle(game):
     handleSave(game, 1)
 
 def loadGame():
-    print("Implementation Pending")
+    fileName = input('Please enter the name of the game you are looking for.\n> ')
+    StateStorage.loadPuzzle(fileName)
 
 def showSaves():
     print("Implementation Pending")

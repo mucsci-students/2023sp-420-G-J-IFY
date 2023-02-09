@@ -117,8 +117,9 @@ def __Load(fileName):
 
 
 
-
+"""
 Puzzle = MakePuzzle.newPuzzle("warlock")
 saveCurrent("random", Puzzle)
 LoadPuzzle = loadPuzzle("random")
 print(__makeDict(LoadPuzzle))
+"""
