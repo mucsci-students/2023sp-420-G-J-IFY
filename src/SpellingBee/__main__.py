@@ -32,3 +32,4 @@ while True:
     CLI.drawGameBox(puzzle)
     usrinput = input('> ')
     CommandHandler.parse(usrinput, puzzle)
+    input("Press enter to continue. . .")
