@@ -96,3 +96,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,windows,linux
 src/SpellingBee/__pycache__/
+src/__pycache__/

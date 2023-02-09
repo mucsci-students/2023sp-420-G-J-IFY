@@ -7,18 +7,18 @@ from os import path
 # params:
 #   - input: string, user input. Check if input matches anythin in commands list
 #   - game: object, the currently active game
-def parse(input, game):
-    match input:
+def parse(usrinput, game):
+    match usrinput:
         case '!new':
             return newPuzzle()
         case '!puzzle':
-            return printPuzzle()
+            return printPuzzle(game)
         case '!found-words':
             return printWords()
         case '!status':
             return showStatus()
         case '!shuffle':
-            game.shuffle()
+            game.shuffleChars()
         case '!save':
             saveGame(game)
         case '!savePuzzle':
@@ -28,21 +28,22 @@ def parse(input, game):
         case '!save-list':
             showSaves()
         case '!help':
-            print('''!new: Generates a new puzzle from a base word with exactly 7 unique characters\n
-                !puzzle: Prints the current puzzle to the screen\n
-                !found-words: prints the list of all discovered words\n
-                !status: prints the users level for current game (novice, beginner, pro, etc)\n
-                !shuffle: shuffles puzzle\n
-                !save: save the game\n
-                !load: load a previously saved game\n
-                !save-list: shows a list of all available game saves\n
-                !help: show list of commands with brief description\n
-                !exit: exit the game''')
+            print('!new: Generates a new puzzle from a base word with exactly 7 unique characters\n' + 
+                '!puzzle: Prints the current puzzle to the screen\n' +
+                '!found-words: prints the list of all discovered words\n' +
+                '!status: prints the users level for current game (novice, beginner, pro, etc)\n' +
+                '!shuffle: shuffles puzzle\n' +
+                '!save: save the game\n' +
+                '!load: load a previously saved game\n' +
+                '!save-list: shows a list of all available game saves\n' +
+                '!help: show list of commands with brief description\n' +
+                '!exit: exit the game')
+            input('press enter to continute')
 
         case '!exit':
             print('Are you sure? all unsaved progress will be lost. [Y/N]')
-            input = input('> ').upper()
-            match input:
+            usrinput = usrinput('> ').upper()
+            match usrinput:
                 case 'Y':
                     quit()
                 case 'N':
@@ -52,16 +53,19 @@ def parse(input, game):
                     parse('!exit', game) # recursively calls until valid input provided.
 
         case _:
-            if input.startswith('!'):
+            if usrinput.startswith('!'):
                 print('Command not recognized. Type \"!help\" for a list of valid commands...')
             else:
-                MakePuzzle.guess(input)
+                MakePuzzle.guess(game, usrinput)
+                input('Press enter to continute. . .')
 
 
 def newPuzzle():
     print('Please enter a base word with exactly 7 unique characters. \n For auto-generated base word, press enter.')
     word = input('> ')
-    return MakePuzzle.newPuzzle()
+    out = MakePuzzle.newPuzzle(word.lower())
+    out.shuffleChars()
+    return out
 
 # params:
 #   - game: object, the currently active game

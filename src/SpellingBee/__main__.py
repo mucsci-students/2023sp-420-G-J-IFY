@@ -1,5 +1,5 @@
-from src.SpellingBee import CLI
-from src.SpellingBee import CommandHandler
+import CLI
+import CommandHandler
 import os
 
 CLI.drawTextBox(['Welcome to Spelling Bee! \ Presented by G(J)IFY',
@@ -7,11 +7,11 @@ CLI.drawTextBox(['Welcome to Spelling Bee! \ Presented by G(J)IFY',
 
 # TODO, restrict input to JUST !new, !load, and !exit
 
-input = input('> ')
+usrinput = input('> ')
 validIn = False
 
 while not validIn:
-    match input:
+    match usrinput:
         case '!new':
             puzzle = CommandHandler.newPuzzle()
             validIn = True
@@ -24,10 +24,11 @@ while not validIn:
             os.system('clear')
             CLI.drawTextBox(['Command Not recognized. Please try again.',
                     'To start a new game, type \"!new\". \ To load a previous save, type \"!load\"'], 40, '^')
-            input = input('> ')
+            usrinput = input('> ')
 
 while True:
 
     os.system('clear')
     CLI.drawGameBox(puzzle)
-    CommandHandler.parse(input('> '), puzzle)
+    usrinput = input('> ')
+    CommandHandler.parse(usrinput, puzzle)
