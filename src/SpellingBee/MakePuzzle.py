@@ -27,9 +27,12 @@ def newPuzzle(baseWord):
         returnTuple = checkDataBase(baseWord)
         #returnTuple will be None if querey returns emptyy
         if returnTuple == None:
+            #Need to catch this exception, this is a known problem that will be addressed before end of sprint 1
             raise Exception("Word not in database.")
         uniqueLetters = returnTuple[1]
+        #need to catch if user enters more than one letter. This is a known probnlem that will be addressed before end of sprint 1
         keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
+        keyLetter = keyLetter.lower()
         while keyLetter not in uniqueLetters:
             keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
             
