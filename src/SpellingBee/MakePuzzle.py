@@ -61,7 +61,7 @@ def newPuzzle(baseWord):
 # Returns a list
 def findBaseWord():
     # SQLite Connections
-    wordDict = sqlite3.connect('src/SpellingBee/wordDict.db')
+    wordDict = sqlite3.connect('wordDict.db')
 
     # Used to execute SQL commands
     wordDictC = wordDict.cursor()
@@ -87,7 +87,7 @@ def findBaseWord():
 # @RETURN false if word not in DB
 def checkDataBase(baseWord):
     # SQLite Connections
-    wordDict = sqlite3.connect('src/SpellingBee/wordDict.db')
+    wordDict = sqlite3.connect('wordDict.db')
     
     # Used to execute SQL commands
     cursor = wordDict.cursor()
@@ -121,7 +121,7 @@ def guess(puzzle, input):
     
     input = input.lower()
 
-    conn = sqlite3.connect('src/SpellingBee/wordDict.db')
+    conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
         
     #check for every case in the user's guess to give points or output error
