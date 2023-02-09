@@ -73,7 +73,7 @@ def printPuzzle(game):
     CLI.drawTextBox([CLI.drawPuzzle(game.showUniqueLetters())], 40, '^')
 
 def printWords(game):
-    CLI.drawTextBox(['Found Words: \ ' + game.showFoundWords()], 40, '^')
+    CLI.drawTextBox(['Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())], 40, '^')
 
 def showStatus(game):
     score = game.showScore()
@@ -92,7 +92,8 @@ def savePuzzle(game):
     handleSave(game, 1)
 
 def loadGame():
-    print("Implementation Pending")
+    fileName = input('Please enter the name of the game you are looking for.\n> ')
+    return StateStorage.loadPuzzle(fileName)
 
 def showSaves():
     print("Implementation Pending")
@@ -111,15 +112,15 @@ def handleSave(game, num):
         yesOrNo = input('Would you like to overwrite the file ' + fileName + '?' '\n Enter Y for yes or N for no\n> ')
         if(yesOrNo == 'Y'):
             if(num == 0):
-                print('Implementation pending')
-                saveStatus = False
+                StateStorage.saveCurrent(game, fileName)
+                saveStatus = True
             elif(num == 1):
                 StateStorage.savePuzzle(game, fileName)
-                saveStatus = False
+                saveStatus = True
     else: 
         if(num == 0):
-            print('Implementation Pending')
-            saveStatus = False
+            StateStorage.saveCurrent(game, fileName)
+            saveStatus = True
         elif(num == 1):
             StateStorage.savePuzzle(game, fileName)
             saveStatus = True
