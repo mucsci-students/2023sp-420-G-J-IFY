@@ -1,4 +1,5 @@
 import CLI
+import saveState
 import CommandHandler
 import os
 
@@ -10,6 +11,7 @@ CLI.drawTextBox(['Welcome to Spelling Bee! \ Presented by G(J)IFY',
 
 usrinput = input('> ')
 validIn = False
+puzzle = saveState.Puzzle('', '')
 
 while not validIn:
     match usrinput:
@@ -20,6 +22,7 @@ while not validIn:
             puzzle = CommandHandler.loadGame()
             validIn = True
         case '!exit':
+            print('Goodbye!')
             quit()
         case _:
             os.system('clear')
@@ -29,13 +32,12 @@ while not validIn:
 
 os.system('clear')
 CLI.drawGameBox(puzzle)
-print('{:═<40}'.format(''))
 usrinput = input('> ')
 
 while True:
     os.system('clear')
     print('{:═<40}'.format(''))
-    CommandHandler.parse(usrinput, puzzle)
+    puzzle = CommandHandler.parse(usrinput, puzzle)
     print('{:═<40}'.format(''))
     CLI.drawGameBox(puzzle)
     usrinput = input('> ')

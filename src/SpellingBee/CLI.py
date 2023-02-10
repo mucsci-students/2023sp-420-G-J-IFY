@@ -80,7 +80,7 @@ def drawTextBox(message, width, align):
 #   - return: string, string containing progress bar
 def drawProgressBar(size, val):
     fill = int(float(size-2) * val)
-    remaining = (size - fill)
+    remaining = ((size-2) - fill)
     # print a string with fill number of =, and remaining number of -
     bar = '<{0:=<{1}}{2:-<{3}}>'.format('', fill, '', remaining)
     return(bar)
