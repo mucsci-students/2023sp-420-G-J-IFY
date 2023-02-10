@@ -2,6 +2,7 @@ import CLI
 import CommandHandler
 import os
 
+os.system('clear')
 CLI.drawTextBox(['Welcome to Spelling Bee! \ Presented by G(J)IFY',
     'To start a new game, type \"!new\". \ To load a previous save, type \"!load\"'], 40, '^')
 
@@ -23,13 +24,18 @@ while not validIn:
         case _:
             os.system('clear')
             CLI.drawTextBox(['Command Not recognized. Please try again.',
-                    'To start a new game, type \"!new\". \ To load a previous save, type \"!load\"'], 40, '^')
+                    'To start a new game, type "!new". \ To load a previous save, type "!load"'], 40, '^')
             usrinput = input('> ')
 
-while True:
+os.system('clear')
+CLI.drawGameBox(puzzle)
+print('{:═<40}'.format(''))
+usrinput = input('> ')
 
+while True:
     os.system('clear')
-    CLI.drawGameBox(puzzle)
-    usrinput = input('> ')
+    print('{:═<40}'.format(''))
     CommandHandler.parse(usrinput, puzzle)
-    input("Press enter to continue. . .")
+    print('{:═<40}'.format(''))
+    CLI.drawGameBox(puzzle)ß
+    usrinput = input('> ')
