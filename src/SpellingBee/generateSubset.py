@@ -51,7 +51,7 @@ def getAllWordsFromPangram(puzz):
     querey += ";"    
 
     #connect to DB, run querey
-    conn = sqlite3.connect('src/SpellingBee/wordDict.db')
+    conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
     cursor.execute(querey)
     

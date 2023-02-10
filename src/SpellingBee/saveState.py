@@ -143,7 +143,7 @@ class Puzzle:
     #@RETURN maxScore, the total possible score for a starting word
     def updateMaxScore(self):
         #connect to DB
-        conn = sqlite3.connect('src/SpellingBee/wordDict.db')
+        conn = sqlite3.connect('wordDict.db')
         cursor = conn.cursor()
     
         ctr = 0

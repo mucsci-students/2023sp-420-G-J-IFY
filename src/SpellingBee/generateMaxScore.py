@@ -12,7 +12,7 @@ import sqlite3
 #@RETURN maxScore, the total possible score for a starting word
 def findMaxScore(listList):
     #connect to DB
-    conn = sqlite3.connect('src/SpellingBee/wordDict.db')
+    conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
     
     ctr = 0
