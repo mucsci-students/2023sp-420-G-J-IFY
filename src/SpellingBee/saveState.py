@@ -123,16 +123,17 @@ class Puzzle:
             self.rank = "Good"
         elif currentPercent < 0.25:
             self.rank = "Solid"
-        elif self.rank < 0.4:
+        elif currentPercent < 0.4:
             self.rank = "Nice"
-        elif self.rank < 0.51:
+        elif currentPercent < 0.51:
             self.rank = "Great"
-        elif self.rank < 0.71:
+        elif currentPercent < 0.71:
             self.rank = "Amazing"
-        elif self.rank < 1:
+        elif currentPercent < 1:
             self.rank = "Genius"
         else: #all words found
             self.rank = "Queen Bee"
+            #can place flag here for when all words found
         
     
     #findMaxScore - this functions takes a list of words 
