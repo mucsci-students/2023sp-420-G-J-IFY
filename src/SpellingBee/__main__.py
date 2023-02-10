@@ -37,5 +37,5 @@ while True:
     print('{:═<40}'.format(''))
     CommandHandler.parse(usrinput, puzzle)
     print('{:═<40}'.format(''))
-    CLI.drawGameBox(puzzle)ß
+    CLI.drawGameBox(puzzle)
     usrinput = input('> ')
