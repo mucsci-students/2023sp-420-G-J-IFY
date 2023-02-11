@@ -30,7 +30,7 @@ def newPuzzle(baseWord):
             if not baseWord.isalpha():
                 raise BadQueryException
             #querey DB for word
-            returnTuple = checkDataBase(baseWord)
+            returnTuple = checkDataBase(baseWord.lower())
             #returnTuple will be None if querey returns emptyy
             if returnTuple == None:
                 #Need to catch this exception, this is a known problem that will be addressed before end of sprint 1
