@@ -38,8 +38,15 @@ def parse(usrinput, game):
             return game
         case _:
             if usrinput.startswith('!'):
-                print('Command not recognized. Type \"!help\" for a list of valid commands...')
+                print('Command not recognized. Type \"!help\" for a list of '
+                      'valid commands...')
                 return game
+
+            elif not usrinput.isalpha():
+                print('Input not accepted:\n'
+                      '\t~Guesses should only contain alphabetical characters.')
+                return game
+                
             else:
                 MakePuzzle.guess(game, usrinput)
                 return game
@@ -56,10 +63,13 @@ def newPuzzle():
 # params:
 #   - game: object, the currently active game
 def printPuzzle(game):
-    CLI.drawTextBox([CLI.drawPuzzle(game.showShuffleLetters().upper())], 40, '^')
+    CLI.drawTextBox([CLI.drawPuzzle(game.showShuffleLetters().upper())], 
+                    40, '^')
 
 def printWords(game):
-    CLI.drawTextBox(['Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())], 40, '^')
+    CLI.drawTextBox(
+        ['Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())], 
+        40, '^')
 
 def showStatus(game):
     score = game.showScore()
@@ -78,7 +88,8 @@ def savePuzzle(game):
     handleSave(game, 1)
 
 def loadGame():
-    fileName = input('Please enter the name of the game you are looking for.\n> ')
+    fileName = input('Please enter the name of the game you are looking for.'
+                     '\n> ')
     return StateStorage.loadPuzzle(fileName)
 
 def help(game):
@@ -129,13 +140,18 @@ def exit(game):
             parse('!exit', game) # recursively calls until valid input provided.
 
 # Params: game - the game object
-#       : num -  an integer value to determin if we are saving all the game progress or just the puzzle 0 for saveCurrent() and 1 for savePuzzle
-# saves the games state and handles input from the user to determine if they want to overwirte a file or not
+#       : num -  an integer value to determin if we are saving all the game 
+#                progress or just the puzzle 0 for saveCurrent() and 1 for 
+#                savePuzzle
+# saves the games state and handles input from the user to determine if they 
+# want to overwirte a file or not
 def handleSave(game, num):
     saveStatus = False
-    fileName = input('Please enter the name of the file you would like to save for example "Game1"\n> ')
+    fileName = input('Please enter the name of the file you would like to save '
+                     'for example "Game1"\n> ')
     if(path.isfile(fileName +'.json')):
-        yesOrNo = input('Would you like to overwrite the file ' + fileName + '?' '\n Enter Y for yes or N for no\n> ')
+        yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
+                        '\n Enter Y for yes or N for no\n> ')
         if(yesOrNo == 'Y'):
             if(num == 0):
                 StateStorage.saveCurrent(game, fileName)
