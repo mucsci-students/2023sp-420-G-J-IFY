@@ -39,9 +39,14 @@ def newPuzzle(baseWord):
             #need to catch if user enters more than one letter. This is a known probnlem that will be addressed before end of sprint 1
             keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
             keyLetter = keyLetter.lower()
-            while keyLetter not in uniqueLetters:
-                keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
-            
+                        #test to see if keyletter is valid
+            while keyLetter not in uniqueLetters or keyLetter == "":
+                #catch if they enter nothing
+                if keyLetter == "":
+                    keyLetter = input("Must enter character from" + baseWord + ": ")
+                else:
+                    keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
+                    
         # Creates the puzzle for users to solve
         puzzle = saveState.Puzzle(keyLetter, uniqueLetters)
         # Populates the puzzles wordlist
