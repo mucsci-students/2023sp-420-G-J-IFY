@@ -106,7 +106,7 @@ def help(game):
                 'Load a previously saved game \ '
                 '!help: \ '
                 'Show the list of all available commands with a brief '
-                "description. (You're here now!) "
+                "description. (You're here now!) \ "
                 '!exit: \ '
                 'Exit the game ')
     
