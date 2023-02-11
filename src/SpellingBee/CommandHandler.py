@@ -56,7 +56,7 @@ def newPuzzle():
 # params:
 #   - game: object, the currently active game
 def printPuzzle(game):
-    CLI.drawTextBox([CLI.drawPuzzle(game.showUniqueLetters())], 40, '^')
+    CLI.drawTextBox([CLI.drawPuzzle(game.showShuffleLetters().upper())], 40, '^')
 
 def printWords(game):
     CLI.drawTextBox(['Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())], 40, '^')
