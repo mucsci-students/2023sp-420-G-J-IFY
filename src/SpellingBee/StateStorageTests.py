@@ -39,7 +39,7 @@ def checkIfExists(fileName):
 # meaning that only the baseWord and rhe manditory character is saved no other part of the game
 def testSavePuzzle1(obj):
     try:
-        fileName = "MeetingGame.json"
+        fileName = "MeetingGame"
         dictionary = StateStorage.loadPuzzle(fileName)
         StateStorage.savePuzzle(dict, fileName)
         dict = {"keyLetter": "a", "uniqueLetters": "acklorw", "shuffleLetters": "aklrowc", "currentScore": 0, "maxScore": 323, "foundWordList": [], 'allWordList' : [], 'rank' : "Beginner"}
@@ -49,40 +49,43 @@ def testSavePuzzle1(obj):
         print("testSavePuzzle1: PASSED")
     except:
         "testSavePuzzle1: Failed (puzzle that is saved does not match a empty puzzle)"
+    os.remove(fileName + '.json')
 
 # test if we save an empty game and a file is not already created with the same name a new one is created and empty
-def testSaveCurrent1(obj):
+def testSaveCurrent1():
     try:
         fileName = makeRandomJsonName()
         fileNameJson = fileName + ".json"
-        StateStorage.saveCurrent({}, fileNameJson)
+        dict = {"keyLetter": "a", "uniqueLetters": "warlock", "shuffleLetters": "warlock", "currentScore": 0, "maxScore": 0, "foundWordList": [], "allWordList": [], "rank": " "}
+        obj = saveState.Puzzle('a','warlock')
+        StateStorage.saveCurrent(obj, fileName)
         checkIfExists(fileNameJson)
-        checkContents(fileNameJson, {})
+        checkContents(fileNameJson, dict)
        # os.remove(fileName + '.json')
         print ("testSaveCurrent1: PASSED")
     except:
             print("testSaveCurrent1: FAILED (new file was not created)")
     # file is removed
+    os.remove(fileNameJson)
     
 
 #test if we save  all the state remains and a file is created
 def testSaveCurrent2(obj):
     try:
-
-        dict = {'health' : 29, 'name' : 'Gaige'}
         fileName = makeRandomJsonName()
         fileNameJson = fileName + ".json"
-        StateStorage.saveCurrent(dict, fileName)
-
+        StateStorage.saveCurrent(obj, fileName)
+        #dictionary representing obj
+        dict = StateStorage.__makeDict(obj)
         checkIfExists(fileNameJson)
         checkContents(fileNameJson,dict)
-        #os.remove(fileNameJson)
         print("testSaveCurrent2: PASSED")
     
     except:
         print("testSaveCurrent2: FAILED (what was saved and what was loaded are different)")
     
     # file is removed
+    os.remove(fileNameJson)
   
 
 # test if we can overrite a save
@@ -90,37 +93,35 @@ def testSaveCurrent3(obj):
     try:
         fileName = makeRandomJsonName()
         fileNameJson = fileName + ".json"
-        dict = {'health' : 29, 'name' : 'Gaige'}
+        
 
-        StateStorage.saveCurrent(fileNameJson, {})
-
+        StateStorage.saveCurrent(obj, fileName)
+        dict1 = StateStorage.__makeDict(obj)    
         checkIfExists(fileNameJson)
-        checkContents(fileNameJson, {})
-
-        StateStorage.saveCurrent(dict, fileName)
-
+        checkContents(fileNameJson, dict1)
+        MakePuzzle.guess(obj, 'acock')
+        StateStorage.saveCurrent(obj, fileName)
+        dict2 = StateStorage.__makeDict(obj)
         checkIfExists(fileNameJson)
-        checkContents(fileNameJson, dict)
+        checkContents(fileNameJson, dict2)
         print("testSaveCurrent3: PASSED")
 
     except:
         print("testSaveCurrent3: FAILED (file was not overwritten)")
-
-    # file is removed
+    
     os.remove(fileNameJson)
 
-def testLoadGame1(fileName):
+def testLoadGame1(obj):
     try:
         fileName = makeRandomJsonName()
         fileNameJson = fileName + ".json"
-        obj1 = MakePuzzle.newPuzzle('warlock')
-        MakePuzzle.guess(obj1, "warlock")
-        MakePuzzle.guess(obj1, "wrack")
-        MakePuzzle.guess(obj1, "alcool")
-        StateStorage.saveCurrent(obj1, fileNameJson)
-        obj2 = StateStorage.loadGame(fileNameJson)
-
-        assert(obj1 == obj2)
+    
+        MakePuzzle.guess(obj, 'wall')
+        StateStorage.saveCurrent(obj, fileName)
+        obj2 = StateStorage.loadPuzzle(fileName)
+        dict1 = StateStorage.__makeDict(obj)
+        dict2 = StateStorage.__makeDict(obj2)
+        assert(dict1 == dict2)
         print("testLoadPuzzle1: PASSED")
     
     except:
@@ -130,7 +131,7 @@ def testLoadGame1(fileName):
 
 
 
-
+print("for the following prompt enter only the character a for testing purposes")
 obj = MakePuzzle.newPuzzle("warlock")
 MakePuzzle.guess(obj, "warlock")
 MakePuzzle.guess(obj, "warlock")
@@ -138,7 +139,7 @@ MakePuzzle.guess(obj, "wrack")
 MakePuzzle.guess(obj, "alcool")
 
 testSavePuzzle1(obj)
-testSaveCurrent1(obj)
+testSaveCurrent1()
 testSaveCurrent2(obj)
 testSaveCurrent3(obj)
-testLoadGame1()
+testLoadGame1(obj)
