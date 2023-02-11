@@ -38,8 +38,15 @@ def parse(usrinput, game):
             return game
         case _:
             if usrinput.startswith('!'):
-                print('Command not recognized. Type \"!help\" for a list of valid commands...')
+                print('Command not recognized. Type \"!help\" for a list of '
+                      'valid commands...')
                 return game
+
+            elif not usrinput.isalpha():
+                print('Input not accepted:\n'
+                      '\t~Guesses should only contain alphabetical characters.')
+                return game
+                
             else:
                 MakePuzzle.guess(game, usrinput)
                 return game
