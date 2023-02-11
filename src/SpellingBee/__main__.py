@@ -3,9 +3,10 @@ import saveState
 import CommandHandler
 import os
 
-os.system('clear')
-CLI.drawTextBox(['Welcome to Spelling Bee! \ Presented by G(J)IFY',
-    'To start a new game, type \"!new\". \ To load a previous save, type \"!load\"'], 40, '^')
+CLI.drawTextBox(['Welcome to Spelling Bee! \ '
+                 'Presented by G(J)IFY',
+                 'To start a new game, type \"!new\". \ '
+                 'To load a previous save, type \"!load\"'], 40, '^')
 
 # TODO, restrict input to JUST !new, !load, and !exit
 
@@ -27,7 +28,8 @@ while not validIn:
         case _:
             os.system('clear')
             CLI.drawTextBox(['Command Not recognized. Please try again.',
-                    'To start a new game, type "!new". \ To load a previous save, type "!load"'], 40, '^')
+                    'To start a new game, type \"!new\". \ To load a previous '
+                    'save, type \"!load\"'], 40, '^')
             usrinput = input('> ')
 
 CLI.clear()
