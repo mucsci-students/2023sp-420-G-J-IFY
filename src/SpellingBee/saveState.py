@@ -6,6 +6,7 @@
 import sqlite3
 import generateSubset
 import random
+import CommandHandler
 
 
 
@@ -20,6 +21,7 @@ class Puzzle:
         self.foundWordList = []
         self.allWordList = []
         self.rank = ' '
+        self.finishedFlag = False
         
     def showKeyLetter(self):
         return self.keyLett
@@ -56,6 +58,10 @@ class Puzzle:
     # Display the current rank
     def showRank(self):
         return self.rank
+    
+    #display the finished flag
+    def showFinishedFlag(self):
+        return self.finishedFlag
     
     # Updates the list of found words
     def updateFoundWords(self, word):
@@ -103,6 +109,11 @@ class Puzzle:
     # sets the rank to the new rank
     def setRank(self, newRank):
         self.rank = newRank
+
+    # Params : update - the new status of the flag
+    #sets the finished flag to the update
+    def setFinishedFlag(self, update):
+        self.finishedFlag = update
     
 
     # updateRank takes a puzzle object, checks its
@@ -133,7 +144,9 @@ class Puzzle:
             self.rank = "Genius"
         else: #all words found
             self.rank = "Queen Bee"
-            #can place flag here for when all words found
+            #set final flag
+            self.setFinishedFlag(True)
+
         
     
     #findMaxScore - this functions takes a list of words 

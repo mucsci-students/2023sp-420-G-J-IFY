@@ -42,4 +42,7 @@ while True:
     puzzle = CommandHandler.parse(usrinput, puzzle)
     print('{:═<40}'.format(''))
     CLI.drawGameBox(puzzle)
+    #final function goes here
+    if puzzle.showFinishedFlag():
+        CommandHandler.finalGame(puzzle)
     usrinput = input('> ')

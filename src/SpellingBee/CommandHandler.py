@@ -173,3 +173,7 @@ def handleSave(game, num):
         print('Save Complete!')
     else:
         print('Game could not be saved.')
+
+def finalGame(finishedPuzzle):
+    showStatus(finishedPuzzle)
+    print("Congratulations!!!!\nYou have found all of the\nwords for this puzzle!")
