@@ -91,7 +91,13 @@ def drawProgressBar(size, val):
 #   - key: int, index of the key letter
 def drawPuzzle(letters):
     # Pretty much just hard coded the output, letters are simple swapped in
-    out =  ' ┌───┬───┐ \ │ {0[1]} │ {0[2]} │ \ ┌─┴─╥─┴─╥─┴─┐ \ │ {0[3]} ║ {0[0]} ║ {0[4]} │ \ └─┬─╨─┬─╨─┬─┘ \ │ {0[5]} │ {0[6]} │ \ └───┴───┘ '.format(letters)
+    out =  (' ┌───┬───┐ \ '
+            '│ {0[1]} │ {0[2]} │ \ '
+            '┌─┴─╥─┴─╥─┴─┐ \ '
+            '│ {0[3]} ║ {0[0]} ║ {0[4]} │ \ '
+            '└─┬─╨─┬─╨─┬─┘ \ '
+            '│ {0[5]} │ {0[6]} │ \ '
+            '└───┴───┘ ').format(letters)
     return(out)
 
 # params:
@@ -110,7 +116,8 @@ def drawGameBox(game):
     prog = score/max
 
     tier1 = 'Welcome to Spelling Bee! \ Presented by G(J)IFY'
-    tier2 = 'Level: \ {lvl} {pBar}'.format(lvl = game.showRank(), pBar = drawProgressBar(20, prog))
+    tier2 = 'Level: \ {lvl} {pBar}'.format(lvl = game.showRank(), 
+                                           pBar = drawProgressBar(20, prog))
     tier3 = 'Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())
     tier4 = drawPuzzle(game.showShuffleLetters().upper())
     tier5 = 'Enter your guess, or type \'!help\' for a list of commands.'
