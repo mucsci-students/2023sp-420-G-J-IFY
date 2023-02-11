@@ -30,7 +30,7 @@ def parse(usrinput, game):
             savePuzzle(game)
             return game
         case '!load':
-            return loadGame()
+            return loadGame(game)
         case '!save-list':
             print ('Implementation Pending...')
         case '!help':
@@ -89,10 +89,13 @@ def saveGame(game):
 def savePuzzle(game):
     handleSave(game, 1)
 
-def loadGame():
+def loadGame(game):
     fileName = input('Please enter the name of the game you are looking for.'
                      '\n> ')
-    return StateStorage.loadPuzzle(fileName)
+    newGame =  StateStorage.loadPuzzle(fileName)
+    if newGame != None:
+        game = newGame
+    return(game)
 
 def help(game):
     descHead = ('How to play: \ ')
