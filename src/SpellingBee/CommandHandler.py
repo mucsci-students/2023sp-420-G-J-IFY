@@ -1,5 +1,4 @@
 import CLI
-import saveState
 import MakePuzzle
 import StateStorage
 from os import path
@@ -12,58 +11,38 @@ def parse(usrinput, game):
         case '!new':
             return newPuzzle()
         case '!puzzle':
-            return printPuzzle(game)
+            printPuzzle(game)
+            return game
         case '!found-words':
-            return printWords(game)
+            printWords(game)
+            return game
         case '!status':
-            return showStatus(game)
+            showStatus(game)
+            return game
         case '!shuffle':
-            game.shuffleChars()
+            return game.shuffleChars()
         case '!save':
             saveGame(game)
+            return game
         case '!savePuzzle':
             savePuzzle(game)
+            return game
         case '!load':
             return loadGame()
         case '!save-list':
-            showSaves()
+            print ('Implementation Pending...')
         case '!help':
-            print('!new: Generates a new puzzle from a base word with exactly '
-                    '7 unique characters\n'
-                '!puzzle: Prints the current puzzle to the screen\n'
-                '!found-words: prints the list of all discovered words\n'
-                '!status: prints the users level for current game (novice, '
-                    'beginner, pro, etc)\n'
-                '!shuffle: shuffles puzzle\n'
-                '!save: save the game\n'
-                '!load: load a previously saved game\n'
-                '!save-list: shows a list of all available game saves\n'
-                '!help: show list of commands with brief description\n'
-                '!exit: exit the game')
-            input('press enter to continute')
-
+            return help(game)
         case '!exit':
-            print('Are you sure? all unsaved progress will be lost. [Y/N]')
-            usrinput = input('> ').upper()
-            match usrinput:
-                case 'Y':
-                    exit()
-                case 'N':
-                    return
-                case _:
-                    print('Input Invalid')
-                    # recursively calls until valid input provided.
-                    parse('!exit', game) 
-
+            exit(game)
+            return game
         case _:
             if usrinput.startswith('!'):
-                print('Command not recognized. Type \"!help\" for a list of '
-                      'valid commands...')
-            elif not usrinput.isalpha():
-                print('Guess not accepted. Guesses must only contain '
-                      'alphabetical characters.')
+                print('Command not recognized. Type \"!help\" for a list of valid commands...')
+                return game
             else:
                 MakePuzzle.guess(game, usrinput)
+                return game
 
 
 def newPuzzle():
@@ -72,7 +51,7 @@ def newPuzzle():
     word = input('> ')
     out = MakePuzzle.newPuzzle(word.lower())
     out.shuffleChars()
-    return out
+    return(out)
 
 # params:
 #   - game: object, the currently active game
@@ -106,12 +85,52 @@ def loadGame():
                      '\n> ')
     return StateStorage.loadPuzzle(fileName)
 
-def showSaves():
-    print("Implementation Pending")
+def help(game):
+    descHead = ('How to play: \ ')
+    descBody = ("Simply type a word after the '> ' prompt and press enter "
+                "to submit a guess. \ \ "
+                "To enter a command, simply type '!' followed by the command "
+                "you wish to use.")
 
-def exit():
-    print("Thank you for playing!")
-    quit()
+    commHead = ('Available Commands: \ ')
+    commBody = ('!new: \ '
+                'Generates a new puzzle from a base word with exactly 7 '
+                'unique characters, or an auto-generated base word. \ '
+                '!puzzle: \ '
+                'Prints the current puzzle to the screen \ '
+                '!found-words: \ '
+                'Displays the list of all discovered words \ '
+                '!status: \ '
+                'Prints your achieved level for the active game \ '
+                '!shuffle: \ '
+                'Shuffle the order of the active puzzle for a fresh view \ '
+                '!save: \ '
+                'Create a new save for the current game \ '
+                '!load: \ '
+                'Load a previously saved game \ '
+                '!help: \ '
+                'Show the list of all available commands with a brief '
+                "description. (You're here now!) "
+                '!exit: \ '
+                'Exit the game ')
+    
+    CLI.drawTextBox([descHead, descBody], 40, '<')
+    CLI.drawTextBox([commHead, commBody], 40, '<')
+
+    return game
+
+def exit(game):
+    print('Are you sure? all unsaved progress will be lost. [Y/N]')
+    usrinput = input('> ').upper()
+    match usrinput:
+        case 'Y':
+            print("Thank you for playing!")
+            quit()
+        case 'N':
+            return
+        case _:
+            print('Input Invalid')
+            parse('!exit', game) # recursively calls until valid input provided.
 
 # Params: game - the game object
 #       : num -  an integer value to determin if we are saving all the game 

@@ -1,4 +1,4 @@
-
+from os import system, name
 
 # params:
 #   - message: string list, stores text to be printed in text box
@@ -80,7 +80,7 @@ def drawTextBox(message, width, align):
 #   - return: string, string containing progress bar
 def drawProgressBar(size, val):
     fill = int(float(size-2) * val)
-    remaining = (size - fill)
+    remaining = ((size-2) - fill)
     # print a string with fill number of =, and remaining number of -
     bar = '<{0:=<{1}}{2:-<{3}}>'.format('', fill, '', remaining)
     return(bar)
@@ -122,3 +122,9 @@ def drawGameBox(game):
     tier4 = drawPuzzle(game.showShuffleLetters().upper())
     tier5 = 'Enter your guess, or type \'!help\' for a list of commands.'
     drawTextBox([tier1, tier2, tier3, tier4, tier5], 40, '^')
+
+def clear():
+    if name == 'nt':
+        _ = system('cls')
+    else:
+        _ = system('clear')
