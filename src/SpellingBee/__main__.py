@@ -13,10 +13,10 @@ puzzle = saveState.Puzzle('', '')
 while not validIn:
     CLI.drawTextBox(['Welcome to Spelling Bee! \ '
                      'Presented by G(J)IFY',
-                     'To start a new game, type "new". To load a previous save,'
+                     'To start a new game, type "!new". To load a previous save,'
                      ' type "!load"'], 40, '^')
     usrinput = input('> ')
-    CLI.clear()
+    #CLI.clear()
     match usrinput:
         case '!new':
             puzzle = CommandHandler.newPuzzle()
@@ -31,11 +31,7 @@ while not validIn:
             print('Goodbye!')
             quit()
         case _:
-            os.system('clear')
-            CLI.drawTextBox(['Command Not recognized. Please try again.',
-                    'To start a new game, type \"!new\". \ To load a previous '
-                    'save, type \"!load\"'], 40, '^')
-            usrinput = input('> ')
+            print(usrinput + " is not a valid command")
 
 
 CLI.clear()
@@ -48,4 +44,6 @@ while True:
     puzzle = CommandHandler.parse(usrinput, puzzle)
     print('{:═<40}'.format(''))
     CLI.drawGameBox(puzzle)
+    if puzzle.showFinishedFlag():
+        CommandHandler.finalGame(puzzle)
     usrinput = input('> ')
