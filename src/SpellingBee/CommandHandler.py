@@ -20,7 +20,9 @@ def parse(usrinput, game):
             showStatus(game)
             return game
         case '!shuffle':
-            return game.shuffleChars()
+            game.shuffleChars()
+            print('Shuffling letters...')
+            return game
         case '!save':
             saveGame(game)
             return game
