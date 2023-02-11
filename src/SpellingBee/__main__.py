@@ -30,12 +30,12 @@ while not validIn:
                     'To start a new game, type "!new". \ To load a previous save, type "!load"'], 40, '^')
             usrinput = input('> ')
 
-os.system('clear')
+CLI.clear()
 CLI.drawGameBox(puzzle)
 usrinput = input('> ')
 
 while True:
-    os.system('clear')
+    CLI.clear()
     print('{:═<40}'.format(''))
     puzzle = CommandHandler.parse(usrinput, puzzle)
     print('{:═<40}'.format(''))
