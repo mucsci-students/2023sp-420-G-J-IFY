@@ -63,7 +63,7 @@ def __setFields(dict):
 # Precondition : dict the puzzle of x amount of letters. dict must not include any found words, rank.
 def savePuzzle(saveStateObj, fileName):
     # creates dict to be saved
-    newObj = saveState.Puzzle(saveStateObj.showKeyLetter(), saveStateObj.showUniqueLetters())
+    newObj = saveState.Puzzle(saveStateObj.keyLett, saveStateObj.uniqueLett)
     newObj.setMaxScore(saveStateObj.showMaxScore())
     newObj.setAllWordList(saveStateObj.showAllWords())
     newObj.updateRank()
