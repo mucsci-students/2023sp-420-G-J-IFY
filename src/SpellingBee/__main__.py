@@ -3,25 +3,30 @@ import saveState
 import CommandHandler
 import os
 
-CLI.drawTextBox(['Welcome to Spelling Bee! \ '
-                 'Presented by G(J)IFY',
-                 'To start a new game, type \"!new\". \ '
-                 'To load a previous save, type \"!load\"'], 40, '^')
 
 # TODO, restrict input to JUST !new, !load, and !exit
 
-usrinput = input('> ')
+usrinput = ' '
 validIn = False
 puzzle = saveState.Puzzle('', '')
 
 while not validIn:
+    CLI.drawTextBox(['Welcome to Spelling Bee! \ '
+                     'Presented by G(J)IFY',
+                     'To start a new game, type "new". To load a previous save,'
+                     ' type "!load"'], 40, '^')
+    usrinput = input('> ')
+    CLI.clear()
     match usrinput:
         case '!new':
             puzzle = CommandHandler.newPuzzle()
             validIn = True
         case '!load':
-            puzzle = CommandHandler.loadGame()
-            validIn = True
+            puzzle = CommandHandler.loadGame(puzzle)
+            if puzzle.maxScore == 0:
+                validIn = False
+            else:
+                validIn = True
         case '!exit':
             print('Goodbye!')
             quit()
@@ -31,6 +36,7 @@ while not validIn:
                     'To start a new game, type \"!new\". \ To load a previous '
                     'save, type \"!load\"'], 40, '^')
             usrinput = input('> ')
+
 
 CLI.clear()
 CLI.drawGameBox(puzzle)
