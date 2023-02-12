@@ -1,20 +1,23 @@
-# 2023sp-420-G-J-IFY
+# SpellingBee by G-J-IFY
 
 ## Description
 ---
+Welcome to SpellingBee by G-J-IFY. 
 
-An in-depth paragraphg about your project and overview of use.
+This is an homage to the New York Times word puzzle, Spelling Bee. Users are
+prompted to build words using only the seven letters in their puzzle, and each
+word must include the center letter. Letters can be repeated within a word. 
 
-## Getting Started
----
+Can you guess all the words and become the Queen Bee you're meant to be?
 
 ### Dependencies
 
-- Describe any prerequisites, libraries, OS version, etc., needed before installing the program.
-- Examples
+This application runs on the following operating systems
   - Windows 10, 11
-  - macOS 12.6.2
-  - Linux
+  - macOS
+
+Before running the program, you must have Python installed 
+  (3.11.2 at the time). (https://www.python.org/downloads/)
 
 ### Installing
 
@@ -24,7 +27,7 @@ An in-depth paragraphg about your project and overview of use.
 git clone "https://github.com/mucsci-students/2023sp-420-G-J-IFY.git"
 ```
 
-- Then, navigate to `./2023sp-420-G-J-IFY/` and run the following command:
+- Then, navigate to `./GitHub/2023sp-420-G-J-IFY/` and run the following command:
 
 ```
 pip install -e .
@@ -32,19 +35,24 @@ pip install -e .
 
 ### Executing program
 
-- To run, the program, navigate to `./GitHub/2023sp-420-G-J-IFY/` and run:
-
+- To run, the program, run:
+Windows:
 ```
 python SpellingBee
 ```
-
-## Help
----
-
-Any advise for common problems or issues
-
+macOS:
 ```
-command to run if program contains helper info
+python3 SpellingBee
+```
+
+- To run tests, run:
+Windows:
+```
+python tests/allTests.py
+```
+macOS:
+```
+python3 tests/allTests.py
 ```
 
 ## Authors
@@ -74,18 +82,10 @@ Francesco Spagnolo
 
 ## Version History
 ---
-
-- 0.2
- - Various bug fixes and optimizations
-- 0.1
-  - Initial Release
+- 1.0.0
+  - Initial CLI release
 
 ## License
 ---
 
-This project is licensed under the `<name here>` License - see the `LICENSE.md` file for details.
-
-## Acknowledgments
----
-
-Inspiration, code snippets, etc.
+This project is licensed under the `MIT` License - see the `LICENSE.md` file for details.
