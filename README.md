@@ -20,7 +20,7 @@ This application runs on the following operating systems
 Before running the program, you must have Python installed 
   (3.11.2 at the time). (https://www.python.org/downloads/)
 
-Also be sure to insteall pytest to run the unit tests.
+Also be sure to install pytest to run the unit tests.
 ```
 pip install pytest
 ```
