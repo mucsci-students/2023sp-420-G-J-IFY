@@ -1,5 +1,7 @@
 # authors: Gaige Zakroski
 # test file to tie all test together
+import pytest
+
 
 print('{str:-^{num}}'.format(str = 'Testing', num = 21))
 import saveStateTests
