@@ -10,7 +10,6 @@ import json
 import unittest
 import saveState 
 import MakePuzzle
-import pytest
 
 class StateStorageTests(unittest.TestCase):
     # Creates a random string of length 10
