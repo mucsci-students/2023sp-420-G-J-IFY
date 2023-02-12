@@ -15,9 +15,15 @@ Can you guess all the words and become the Queen Bee you're meant to be?
 This application runs on the following operating systems
   - Windows 10, 11
   - macOS
+  - Linux
 
 Before running the program, you must have Python installed 
   (3.11.2 at the time). (https://www.python.org/downloads/)
+
+Also be sure to insteall pytest to run the unit tests.
+```
+pip install pytest
+```
 
 ### Installing
 
@@ -40,7 +46,7 @@ Windows:
 ```
 python SpellingBee
 ```
-macOS:
+macOS/Linux:
 ```
 python3 SpellingBee
 ```
@@ -50,7 +56,7 @@ Windows:
 ```
 python tests/allTests.py
 ```
-macOS:
+macOS/Linux:
 ```
 python3 tests/allTests.py
 ```
