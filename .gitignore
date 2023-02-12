@@ -99,7 +99,7 @@ $RECYCLE.BIN/
 # default python .gitignore config - Jacob Lovegren
 
 # Byte-compiled / optimized / DLL files
-/src/SpellingBee/__pycache__/
+/SpellingBee/__pycache__/
 __pycache__/
 *.py[cod]
 
