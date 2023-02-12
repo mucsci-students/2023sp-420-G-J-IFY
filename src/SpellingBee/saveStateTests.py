@@ -1,7 +1,6 @@
 # authors: Gaige Zakroski
 import saveState 
 import unittest
-import pytest
 
 # tests the constuctor
 class testSaveState(unittest.TestCase):
