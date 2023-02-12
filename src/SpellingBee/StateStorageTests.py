@@ -12,7 +12,7 @@ import saveState
 import MakePuzzle
 
 class StateStorageTests(unittest.TestCase):
-    # Creates a random string of length 10
+    # Creates a random string of length 10 
     def makeRandomJsonName():
         letters = string.ascii_lowercase
         result = ""
