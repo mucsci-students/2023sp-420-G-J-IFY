@@ -43,7 +43,7 @@ def newPuzzle(baseWord):
             while keyLetter not in uniqueLetters or keyLetter == "":
                 #catch if they enter nothing
                 if keyLetter == "":
-                    keyLetter = input("Must enter character from" + baseWord + ": ")
+                    keyLetter = input("Must enter character from " + baseWord + ": ")
                 else:
                     keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
                     
