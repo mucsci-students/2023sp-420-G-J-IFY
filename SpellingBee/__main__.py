@@ -10,11 +10,12 @@ usrinput = ' '
 validIn = False
 puzzle = saveState.Puzzle('', '')
 
+# inital user initialization of game
 while not validIn:
     CLI.drawTextBox(['Welcome to Spelling Bee! \ '
                      'Presented by G(J)IFY',
-                     'To start a new game, type "!new". To load a previous save,'
-                     ' type "!load"'], 40, '^')
+                     'To start a new game, type "!new". To load a previous '
+                     'save, type "!load"'], 40, '^')
     usrinput = input('> ')
     #CLI.clear()
     match usrinput:

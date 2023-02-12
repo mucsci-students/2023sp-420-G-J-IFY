@@ -18,20 +18,24 @@ An in-depth paragraphg about your project and overview of use.
 
 ### Installing
 
-- How/where to download your program
-- Any modifications needed to be made to files/folders
+- First, clone repository with:
 
 ```
 git clone "https://github.com/mucsci-students/2023sp-420-G-J-IFY.git"
 ```
 
-### Executing program
-
-- How to run the program
-- Step-by-step bullets
+- Then, navigate to `./2023sp-420-G-J-IFY/` and run the following command:
 
 ```
-code blocks for commands
+pip install -e .
+```
+
+### Executing program
+
+- To run, the program, navigate to `./GitHub/2023sp-420-G-J-IFY/` and run:
+
+```
+python SpellingBee
 ```
 
 ## Help
