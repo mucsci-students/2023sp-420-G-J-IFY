@@ -11,6 +11,7 @@ import CommandHandler
 class MakePuzzleTests(unittest.TestCase):
     
     # testing if make puzzle correctly produces a new game
+    print("for the following prompt enter the letter i for testing purposes")
     obj = MakePuzzle.newPuzzle('friends')
     assert(obj.keyLett == 'i')
     assert(obj.uniqueLett == 'definrs')
