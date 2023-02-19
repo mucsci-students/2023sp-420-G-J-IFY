@@ -12,11 +12,14 @@
 #Updated version of generateSubset. getAllWordsFrom Pangram
 #takes in a puzzle object and pulls its needed info from there. 
 #it also returns the word list to a field in that object
+#
+#Updated 2/13/23 - uses temp table and join instead of gross query
 
 #Author Jacob Lovegren
 #2/2/23
 #revised 2/5/23
 #rerevised 2/7/23
+#revised 2/13/23
 
 import sqlite3
 import itertools
@@ -33,27 +36,31 @@ def getAllWordsFromPangram(puzz):
     cleanSet = []
 
     #remove sets from powerset to produce subset with keyletter
-    ctr = 0
-    while ctr < len(pSet):
-        if puzz.showKeyLetter() in pSet[ctr]:
-            cleanSet.append(sortStrToAlphabetical(''.join(pSet[ctr])))
-        ctr += 1
+    for a in pSet:
+        if puzz.showKeyLetter() in a:
+            cleanSet.append(sortStrToAlphabetical(''.join(a)))
+      
     #Time to querey the DB   
-    #first, generate initial querey for DB
-    querey = "select fullWord from dictionary where uniqueLetters is '" + cleanSet[0] + "' "
-    #next, append onto this a gross number of conditions which
-    #are just the subset of the powerset of unique letters that 
-    #include the subset
-    ctr = 1
-    while ctr < len(cleanSet):
-        querey += " or uniqueLetters is '" + cleanSet[ctr] + "' "
-        ctr += 1
-    querey += ";"    
-
-    #connect to DB, run querey
     conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
+
+    #create temp table to use for natural joins soon
+    tempTable = "create temporary table validLetters (uniLetts);"
+    cursor.execute(tempTable)
+   
+    #Build out tempTable for join later
+    querey = "insert into validLetters (uniLetts) values ('"
+    for a in cleanSet:
+        querey += a + "'), ('"
+    querey += "');"
     cursor.execute(querey)
+    
+    #build out query using joins
+    join = """
+            select fullWord from dictionary join validLetters 
+            on dictionary.uniqueLetters is validLetters.uniLetts;
+            """
+    cursor.execute(join)
     
     #catch return form query
     tuples = (cursor.fetchall())
