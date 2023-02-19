@@ -1,12 +1,3 @@
-data/
-    db/
-        Words/
-            LenFinder.py
-            pangramFinalList.json
-            setupDataBase.py
-            validWordsDictionary.json
-        wordDict.db
-    saves/
 src/
     __init__.py
     __main__.py
@@ -37,5 +28,19 @@ src/
         __init__.py
         class Puzzle
             helper_functions()
+    data/
+        db/
+            Words/
+                LenFinder.py
+                pangramFinalList.json
+                setupDataBase.py
+                validWordsDictionary.json
+                wordDict.db
+        save/
+            babyMode.json
+            extremeMode.json
+            MeetingGame.json
+            MeetingGame1.json
+            NameOfSavedGames.json
 tests/
     __init__.py
