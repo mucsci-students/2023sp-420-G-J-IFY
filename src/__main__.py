@@ -1,6 +1,6 @@
-import CLI
-import saveState
-import CommandHandler
+from src.cview import CLI
+from src.model import saveState
+from src.controller import CommandHandler
 import os
 
 

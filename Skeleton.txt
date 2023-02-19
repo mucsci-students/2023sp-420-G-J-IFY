@@ -1,0 +1,41 @@
+data/
+    db/
+        Words/
+            LenFinder.py
+            pangramFinalList.json
+            setupDataBase.py
+            validWordsDictionary.json
+        wordDict.db
+    saves/
+src/
+    __init__.py
+    __main__.py
+    assets/
+        .icons/
+    controller/
+        CommandHandler.py
+            parse()
+            helper_functions()
+        GController.py
+            class SpellingBee
+    cview/
+        __init__.py
+        CLI.py
+            main()
+    gview/
+        __init__.py
+        ButtonCluster.py
+            class HexButton
+            class ButtonCluster
+        MainWindow.py
+            class MainWindow
+            main()
+        WordsWidget.py
+            class ProgressBar
+            class WordsWidget
+    model/
+        __init__.py
+        class Puzzle
+            helper_functions()
+tests/
+    __init__.py
