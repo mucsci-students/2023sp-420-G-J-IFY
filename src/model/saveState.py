@@ -35,7 +35,7 @@ class Puzzle:
     
     # Word List generated when given key letter and word
     # All words for current puzzle
-    def wordListStorage(self):
+    def findAllWords(self):
        self.allWordList = generateSubset.getAllWordsFromPangram(self)
     
     # Returns a number
@@ -145,33 +145,6 @@ class Puzzle:
             #set final flag
             self.setFinishedFlag(True)
         
-    
-    #findMaxScore - this functions takes a list of words 
-    #for a game, quereies the DB for all words in the game,
-    #and adds together the total possible points for the given pangram
-    #@PARAM listList, a list of strings containing all words in DB
-    #   for given pangram 
-    #@RETURN maxScore, the total possible score for a starting word
-    def updateMaxScore(self):
-        #connect to DB
-        conn = sqlite3.connect('wordDict.db')
-        cursor = conn.cursor()
-    
-        ctr = 0
-
-        #loop through list, querey DB for each word, aggregate values
-        for a in self.allWordList:
-            query = """select wordScore
-            from dictionary
-            where fullWord = '""" + self.allWordList[ctr] + "';"
-            cursor.execute(query)
-            self.maxScore += cursor.fetchone()[0]
-            ctr += 1
-
-
-        #close DB
-        conn.commit()
-        conn.close()
 
     #shuffleChars reshuffles the string of letters to display to the user
     #set shuffleLetters

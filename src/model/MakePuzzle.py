@@ -13,15 +13,18 @@ from controller import CommandHandler
 
 # Params: baseWord: takes a baseword that is either an empty string or a pangram and makes a puzzle from it
 # Finds legitimate base word and creates a puzzle based on that
+# Update 2/20/23 updated how maxScore is handled to querey DB. Done in single
+# querey in the empty case, but a little more hands on for the user input version
 def newPuzzle(baseWord):    
     try:
         uniqueLetters = {}
         if baseWord == '':
             # Finds baseword and its unique letters and puts them in a tuple
             baseTuple = findBaseWord()
-            baseWord = baseTuple[0]
-            uniqueLetters = baseTuple[1]
-            keyLetter = choseKeyLetter(uniqueLetters)
+            #baseWord = baseTuple[0]
+            uniqueLetters = baseTuple[0]
+            keyLetter = baseTuple[1]
+            maxScore = baseTuple[2]
         
         # Checks if word from user is in database
         # and gets the unique letters if so
@@ -45,14 +48,24 @@ def newPuzzle(baseWord):
                 if keyLetter == "":
                     keyLetter = input("Must enter character from " + baseWord + ": ")
                 else:
-                    keyLetter = input(keyLetter + " is not part of " + baseWord + " - Please enter a letter from your word: ")
+                    keyLetter = input(keyLetter + " is not part of " + baseWord + 
+                                      " - Please enter a letter from your word: ")
+            #now that the input has been validated, go find the max score for this game
+            conn = sqlite3.connect('wordDict.db')
+            cursor = conn.cursor()
+            cursor.execute("select score from allGames where uniqueLetters = '" +
+                           uniqueLetters + "' and keyLetter = '" + keyLetter + "';")
+            maxScore = cursor.fetchone()[0]
+            #close DB
+            conn.commit()
+            conn.close()
                     
         # Creates the puzzle for users to solve
         puzzle = saveState.Puzzle(keyLetter, uniqueLetters)
         # Populates the puzzles wordlist
-        puzzle.wordListStorage()
+        puzzle.findAllWords()
         # Generates a max score
-        puzzle.updateMaxScore()
+        puzzle.setMaxScore(maxScore)
         # Generates rank
         puzzle.updateRank()
         
@@ -70,7 +83,7 @@ class BadQueryException(Exception):
     
     
 # Finds a legitimate baseword to start puzzle with from the database
-# Returns a list
+# Returns a tuple of (uniqueLetters, keyLetter, score)
 def findBaseWord():
     # SQLite Connections
     wordDict = sqlite3.connect('wordDict.db')
@@ -78,8 +91,8 @@ def findBaseWord():
     # Used to execute SQL commands
     wordDictC = wordDict.cursor()
     # Grabs a random baseword from the list
-    wordDictC.execute(""" SELECT fullWord, uniqueLetters 
-                        FROM pangrams 
+    wordDictC.execute(""" SELECT *
+                        FROM allGames 
                         ORDER BY RANDOM() 
                         Limit 1;
                         """)
@@ -112,19 +125,8 @@ def checkDataBase(baseWord):
     wordDict.commit()
     wordDict.close()
 
-    #check if none
-    #if returnResult != None:
     return returnResult
-    #else:
-    #    return False
 
-# Params: uniqueLetters: string of unique letters from base word
-# Takes a STRING of letters and picks a letter from to make key letter
-# Note from Jacob Loveren 2/4/23: Miscommunication on how unqique letters were stored.
-# easiest to just pick a random character from the string using RNG instead of trying
-# to treat this like a set
-def choseKeyLetter(uniqueLetters):    
-    return uniqueLetters[randrange(7)]
 
 
 #params: puzzle object, input that the user gave
