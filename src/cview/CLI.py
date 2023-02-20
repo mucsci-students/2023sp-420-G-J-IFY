@@ -1,3 +1,17 @@
+################################################################################
+# CLI.py
+# Author: Isaak Weidman
+# Date of Creation: -
+# Functions:
+#   drawTextBox(message, width, alight)
+# Imports:
+#   os.system
+#   os.name
+################################################################################
+
+"""Handles string formatting and output for CLI view
+"""
+
 from os import system, name
 
 # params:
