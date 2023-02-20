@@ -7,8 +7,8 @@
 #Imports
 import sqlite3
 from random import randrange
-import saveState
-import CommandHandler
+import model.saveState as saveState
+from controller import CommandHandler
 
 
 # Params: baseWord: takes a baseword that is either an empty string or a pangram and makes a puzzle from it

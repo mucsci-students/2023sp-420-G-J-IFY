@@ -8,8 +8,7 @@ import json
 import string
 import os.path
 from os import path
-import saveState
-import MakePuzzle
+import model.saveState as saveState
 from pathlib import Path
 import shutil
 

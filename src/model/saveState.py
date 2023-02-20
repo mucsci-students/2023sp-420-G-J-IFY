@@ -3,11 +3,10 @@
 # Modified Date: 2/2/2023
 # State structure for puzzles
 
-import sqlite3
-import generateSubset
-import random
-import CommandHandler
 
+import sqlite3
+import model.generateSubset as generateSubset
+import random
 
 
 class Puzzle:

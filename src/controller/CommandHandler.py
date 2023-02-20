@@ -1,6 +1,5 @@
-import CLI
-import MakePuzzle
-import StateStorage
+from cview import CLI
+from model import MakePuzzle, StateStorage
 from os import path
 
 # params:
