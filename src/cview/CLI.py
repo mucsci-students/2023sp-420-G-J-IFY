@@ -1,26 +1,50 @@
+#!/usr/bin/env
+
+################################################################################
+# CLI.py
+# AUTHOR: Isaak Weidman
+# DATE OF CREATION: -
+# 
+# DESCRIPTION:
+#   Multi-line descripiton pending
+#
+# FUNCTIONS:
+#   drawTextBox(message : str, width : int, align : str) -> None
+#     - draws a text box containing message, width wide, and alignment align.
+#   drawProgressBox(size : int, val : float) -> str
+#     - draws a progress bar of size width and displaying float %
+#   drawPuzzle(letters : list[str]) -> str
+#     - Draws a hex pattern of 7 letters
+#   drawGameBox(game : object) -> None
+#     - Formats and prints game data stored in object
+#   clear() -> None
+#     - Checks os and calls applicable console clear command
+################################################################################
+
 from os import system, name
 
-# params:
-#   - message: string list, stores text to be printed in text box
-#       format: ['Tier one: \ this is the text in the first tier of box',
-#               'Tier two: \ the backslash sylbol is used to denote a new
-#               line character.', 'Tier three: \ each element in this list of
-#               strings is a separate tier of the box. If the list contains
-#               only one element, then the box will have only one tier.']
-#   - width: int, the width of the box, including the borders.
-#   - align: string, Left, right, or center alignment of the text.
-#       < : left alligned
-#       > : right alligned
-#       ^ : center alligned
-#   - Example: drawTextBox(['testing \ testing', '123'], 15, '^')
-#       Output: ╔═════════════╗
-#               ║   testing   ║
-#               ║   testing   ║
-#               ╟─────────────╢
-#               ║     123     ║
-#               ╚═════════════╝
-#       # A textbox 15 characters wide with two tiers.
-def drawTextBox(message, width, align):
+################################################################################
+# drawTextBox(message : str, width : int, align : str) -> None
+#
+# DESCRIPTION:
+#   Draws a box of a specified size around a list of strings where each element
+#   in the list is another tier in the box. Text is alligned according to
+#   given alignment string.
+# 
+# PARAMETERS:
+#   message : list[str]
+#     - List of message to be printed within the text box. use " \ " to define
+#       carriage return. Each element in the list will be drawn in the next
+#       tier below the last.
+#   width : int
+#     - Overall width of the textbox in characters, including border.
+#   align : str
+#     - A single character that defines the alignment of text in the textbox.
+#       '<' => left alignment
+#       '>' => right alignment
+#       '^' => center alignment
+################################################################################
+def drawTextBox(message : list[str], width : int, align : str) -> None:
 
     # Build ceiling, wall, and floor of text box based on given width.
     # Ceiling is the top of the box, floor is the bottom of the box, and wall
@@ -60,6 +84,7 @@ def drawTextBox(message, width, align):
     # Remove first block and format it properly
     for line in blocks.pop(0):
         txtBox += '║{:{}{}}║\n'.format(line, align, width-2)
+
     # Now format remaining blocks
     for block in blocks:
         # Begin each block with a separator wall
@@ -67,6 +92,7 @@ def drawTextBox(message, width, align):
         # Format each like according to parameters
         for line in block:
             txtBox += '║{:{}{}}║\n'.format(line, align, width-2)
+
     # Finally, add floor of text box
     txtBox += floor + '\n'
 
@@ -74,11 +100,23 @@ def drawTextBox(message, width, align):
     print(txtBox)
 
 
-# params: 
-#   - size: int, width of the progress bar
-#   - val: float, percent value to be displayed
-#   - return: string, string containing progress bar
-def drawProgressBar(size, val):
+################################################################################
+# drawProgressBar(size : int, val : float) -> str
+#
+# DESCRIPTION:
+#   Draws a progress bar displaying a provided percentage, of a specific width
+#
+# PARAMETERS:
+#   size : int
+#     - the number of characters wide to draw the text box
+#   val : float
+#     - percent to be displayed on ptrogress bar
+#
+# RETURNS:
+#   str
+#     - a formatted string containing the resulting progress bar.
+################################################################################
+def drawProgressBar(size : int, val : float) -> str:
     fill = int(float(size-2) * val)
     remaining = ((size-2) - fill)
     # print a string with fill number of =, and remaining number of -
@@ -86,10 +124,22 @@ def drawProgressBar(size, val):
     return(bar)
 
 
-# params:
-#   - letters: list, contains the 7 unique letters to be displayed
-#   - key: int, index of the key letter
-def drawPuzzle(letters):
+
+################################################################################
+# drawPuzzle(letters : list) -> str:
+#
+# DESCRIPTION:
+#   formats a string representing a hex pattern of 7 characters.
+#
+# PARAMETERS:
+#   letters : list
+#     - list of 7 characters
+#
+# RETURNS:
+#   str:
+#     - formatted string containing the puzzle representation
+################################################################################
+def drawPuzzle(letters : list) -> str:
     # Pretty much just hard coded the output, letters are simple swapped in
     out =  (' ┌───┬───┐ \ '
             '│ {0[1]} │ {0[2]} │ \ '
@@ -100,15 +150,18 @@ def drawPuzzle(letters):
             '└───┴───┘ ').format(letters)
     return(out)
 
-# params:
-#   - list: list of strings, printed out nicely
-def drawList(list):
-    outstr = ' '
-    for l in list:
-        outstr += l.upper() + ' '
-    return outstr
 
-def drawGameBox(game):
+################################################################################
+# drawGameBox(game : object) -> None:
+# 
+# DESCRIPTION:
+#   Draws game information stored in game object to the screen for gameplay
+#
+# PARAMETERS:
+#   game : object
+#     - puzzle object storing current game state
+################################################################################
+def drawGameBox(game : object) -> None:
 
     # calculate game progression
     score = game.showScore()
@@ -123,7 +176,14 @@ def drawGameBox(game):
     tier5 = 'Enter your guess, or type \'!help\' for a list of commands.'
     drawTextBox([tier1, tier2, tier3, tier4, tier5], 40, '^')
 
-def clear():
+
+################################################################################
+# clear() -> None
+#
+# DESCRIPTION:
+#   calls appliciable clear console command depending on operating system.
+################################################################################
+def clear() -> None:
     if name == 'nt':
         _ = system('cls')
     else:
