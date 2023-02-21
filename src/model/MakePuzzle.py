@@ -17,31 +17,26 @@ import model.saveState as saveState
 from controller import CommandHandler
 
 
-# Params: baseWord: takes a baseword that is either an empty string or a pangram and makes a puzzle from it
-# Finds legitimate base word and creates a puzzle based on that
-# Update 2/20/23 updated how maxScore is handled to querey DB. Done in single
-# querey in the empty case, but a little more hands on for the user input version
 ################################################################################
-# functionName(arg1 : int, arg2='defaultVal' : str) -> bool
+# newPuzzle(baseWord: str) -> Puzzle Obj
 #
 # DESCRIPTION:
-#   A description of the function
+#   Finds legitimate base word and creates a puzzle based on that 
 #
 # PARAMETERS:
-#  arg1 : int
-#   an example integer parameter
-#  arg2 : int, optional
-#   an example string parameter
+#  baseWord : str
+#   takes a baseword that is either an empty string or a pangram and makes a puzzle from it
 #
 # RETURNS:
-#  bool
-#   a boolean return type
+#  puzzle
+#   empty game object
 #
 # RAISES:
-#  Exception
-#   if arg1 is less than or equal to o
+#  BadQueryException
+#   if check is baseword contains nonalphas
+#   if word is in the database
 ################################################################################
-def newPuzzle(baseWord):    
+def newPuzzle(baseWord: str):    
     try:
         uniqueLetters = {}
         if baseWord == '':
@@ -55,17 +50,17 @@ def newPuzzle(baseWord):
         # Checks if word from user is in database
         # and gets the unique letters if so
         else:
-            #catch if nonalphas before querey is made to prevent SQL injection
+            #catch if nonalphas before query is made to prevent SQL injection
             if not baseWord.isalpha():
                 raise BadQueryException
-            #querey DB for word
+            #query DB for word
             returnTuple = checkDataBase(baseWord.lower())
-            #returnTuple will be None if querey returns emptyy
+            #returnTuple will be None if query returns emptyy
             if returnTuple == None:
                 #Need to catch this exception, this is a known problem that will be addressed before end of sprint 1
                 raise BadQueryException
             uniqueLetters = returnTuple[1]
-            #need to catch if user enters more than one letter. This is a known probnlem that will be addressed before end of sprint 1
+            #need to catch if user enters more than one letter. This is a known problem that will be addressed before end of sprint 1
             keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
             keyLetter = keyLetter.lower()
                         #test to see if keyletter is valid
@@ -107,28 +102,19 @@ class BadQueryException(Exception):
     #raised when user has a bad starting word
     pass
     
-    
-# Finds a legitimate baseword to start puzzle with from the database
-# Returns a tuple of (uniqueLetters, keyLetter, score)
+
 ################################################################################
-# functionName(arg1 : int, arg2='defaultVal' : str) -> bool
+# findBaseWord() -> tuple
 #
 # DESCRIPTION:
-#   A description of the function
+#   Finds a legitimate baseword to start puzzle with from the database
 #
 # PARAMETERS:
-#  arg1 : int
-#   an example integer parameter
-#  arg2 : int, optional
-#   an example string parameter
+#  none
 #
 # RETURNS:
-#  bool
-#   a boolean return type
-#
-# RAISES:
-#  Exception
-#   if arg1 is less than or equal to o
+#  resultResult
+#   tuple of (uniqueLetters, keyLetter, score)
 ################################################################################
 def findBaseWord():
     # SQLite Connections
@@ -152,31 +138,22 @@ def findBaseWord():
     #return tuple of result
     return resultResult
 
-# Checks if the given baseword is in the database
-# @PARAM baseWord: The user entered word to check the database for
-# @RETURN returnResult: a tuple with the query results OR
-# @RETURN false if word not in DB
+
 ################################################################################
-# functionName(arg1 : int, arg2='defaultVal' : str) -> bool
+# checkDataBase(baseWord: str) -> tuple
 #
 # DESCRIPTION:
-#   A description of the function
+#  Checks if the given baseword is in the database
 #
 # PARAMETERS:
-#  arg1 : int
+#  baseWord : str
 #   an example integer parameter
-#  arg2 : int, optional
-#   an example string parameter
 #
 # RETURNS:
-#  bool
-#   a boolean return type
-#
-# RAISES:
-#  Exception
-#   if arg1 is less than or equal to o
+#  returnResult
+#   tuple with query results or false if word not in DB
 ################################################################################
-def checkDataBase(baseWord):
+def checkDataBase(baseWord: str):
     # SQLite Connections
     wordDict = sqlite3.connect('wordDict.db')
     
@@ -195,29 +172,20 @@ def checkDataBase(baseWord):
 
 
 
-#params: puzzle object, input that the user gave
-#checks the database for valid words, already found words and words that do not exist
+
 ################################################################################
-# functionName(arg1 : int, arg2='defaultVal' : str) -> bool
+# guess(puzzle, input: str)
 #
 # DESCRIPTION:
-#   A description of the function
+#   checks the database for valid words, already found words and words that do not exist
 #
 # PARAMETERS:
-#  arg1 : int
-#   an example integer parameter
-#  arg2 : int, optional
-#   an example string parameter
-#
-# RETURNS:
-#  bool
-#   a boolean return type
-#
-# RAISES:
-#  Exception
-#   if arg1 is less than or equal to o
+#  puzzle : Obj
+#   puzzle object of current played game space
+#  input : str
+#   user input 
 ################################################################################
-def guess(puzzle, input):
+def guess(puzzle, input: str):
     
     input = input.lower()
 
