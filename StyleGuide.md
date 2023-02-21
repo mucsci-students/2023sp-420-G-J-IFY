@@ -4,7 +4,8 @@
 
 ### Formatting Description
 
-Begin module with a single "shebang" (`#!`) line specifying to python the enterpereter. The line `#!/usr/bin/env` should be sufficient.
+Begin module with a single "shebang" (`#!`) line specifying to python the
+enterpereter. The line `#!/usr/bin/env` should be sufficient.
 
 ### Header Block
 
@@ -29,13 +30,13 @@ Begin module with a single "shebang" (`#!`) line specifying to python the enterp
 #
 # (Global, public) functions:
 #   function1(param1 : int) -> bool
-#       - one-line description
+#
 #   function2(param1='default' : str, param2 : bool) -> int
-#       - one-line desciption
+#
 #   function3() -> None
-#       - one-line desciption
+#
 #   function4() -> None
-#       - one-line desciption
+#
 ################################################################################
 ```
 
@@ -48,7 +49,8 @@ Public methods use standard camel case, and
 
 1. Have parameters and description at the top of the function
 2. Function names in camel case
-3. If functions have similar functionality within them create a general helper function.
+3. If functions have similar functionality within them create a general helper
+function.
 4. Utilize exception handling for code that can take bad input
 
 ### Example
@@ -61,18 +63,18 @@ Public methods use standard camel case, and
 #   A description of the function
 #
 # PARAMETERS:
-#  arg1 : int
-#   an example integer parameter
-#  arg2 : int, optional
-#   an example string parameter
+#   arg1 : int
+#     - an example integer parameter
+#   arg2 : int, optional
+#     - an example string parameter
 #
 # RETURNS:
-#  bool
-#   a boolean return type
+#   bool
+#     - a boolean return type
 #
 # RAISES:
-#  Exception
-#   if arg1 is less than or equal to o
+#   Exception
+#     - if arg1 is less than or equal to o
 ################################################################################
 def functionName(arg1 : int, arg2='defaultVal' : str) -> bool:
     if arg1 > 0:
@@ -102,15 +104,15 @@ def functionName(arg1 : int, arg2='defaultVal' : str) -> bool:
 #   arg2=3 : int, optional
 #   arg3='default' : str, optional
 #
-# (Public) Attributes:
+# <public> Attributes:
 #   attribute1 : float
 #   attribute2 : int
 #   attribute3 : str
 #   attribute4 : int
 #
-# (Public) Functions:
+# <public> Functions:
 #   function1(param1=5 : int, param2 : bool) ->
-#       - one-line description:
+#     - one-line description:
 ################################################################################
 class ClassName():
     __init__(self, arg1, arg2=3, arg3='default'):
