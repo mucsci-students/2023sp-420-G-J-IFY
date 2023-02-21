@@ -5,7 +5,7 @@
 
 
 import sqlite3
-import model.generateSubset as generateSubset
+import model
 import random
 
 
@@ -36,7 +36,7 @@ class Puzzle:
     # Word List generated when given key letter and word
     # All words for current puzzle
     def findAllWords(self):
-       self.allWordList = generateSubset.getAllWordsFromPangram(self)
+       self.allWordList = model.getAllWordsFromPangram(self)
     
     # Returns a number
     def showMaxScore(self):

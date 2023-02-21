@@ -3,12 +3,21 @@
 # Last Modified Date: 2/8/2023
 # A Module that contains many functions that will be capable of saving 
 # and loading the state of a game from a json file
+import sys
+import os
+
+
+current = os.path.dirname(os.path.realpath(__file__))
+
+parent = os.path.dirname(current)
+
+sys.path.append(parent)
 
 import json
 import string
 import os.path
 from os import path
-import model.saveState as saveState
+import model
 from pathlib import Path
 import shutil
 
@@ -42,7 +51,7 @@ def __makeDict(saveStateObj):
 # sets the fields of the saveState object to the corisponing value in the dictionary
 # Returns: returns a saveState Object with all its fields set
 def __setFields(dict):
-    obj = saveState.Puzzle(dict['keyLetter'], dict['uniqueLetters'])
+    obj = model.Puzzle(dict['keyLetter'], dict['uniqueLetters'])
     obj.setShuffleLetters(dict['shuffleLetters'])
     obj.setScore(dict['currentScore'])
     obj.setMaxScore(dict['maxScore'])
@@ -62,7 +71,7 @@ def __setFields(dict):
 # Precondition : dict the puzzle of x amount of letters. dict must not include any found words, rank.
 def savePuzzle(saveStateObj, fileName):
     # creates dict to be saved
-    newObj = saveState.Puzzle(saveStateObj.keyLett, saveStateObj.uniqueLett)
+    newObj = model.Puzzle(saveStateObj.showKeyLetter(), saveStateObj.showUniqueLetters())
     newObj.setMaxScore(saveStateObj.showMaxScore())
     newObj.setAllWordList(saveStateObj.showAllWords())
     newObj.updateRank()
