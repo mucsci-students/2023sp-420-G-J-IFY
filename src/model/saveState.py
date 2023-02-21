@@ -30,52 +30,52 @@ import random
 #   finishedFlag: bool
 #
 # <public> Functions:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
-#   function1(param1=5 : int, param2 : bool) ->
-#     - one-line description:
+#   getKeyLetter() -> str
+#     - returns the key letter of the puzzle
+#   getUniqueLetters() -> set
+#     - returns the set of unique letters
+#   getShuffleLetters() -> set
+#     - returns the set of uniques letters that can be shuffled
+#   getMaxScore() -> int
+#     - returns the max possible score for the puzzle
+#   getFoundWords() -> list
+#     - returns a list of the found words
+#   getAllWords() -> list
+#     - returns a list of all possible words for the puzzle
+#   getScore() -> int
+#     - returns the current score of the game
+#   getRank() -> str
+#     - returns the a current rank of the player
+#   getFinishedFlag() -> bool
+#     - returns whether the game is finished or not
+#   setKeyLetter(letter: str)
+#     - takes a given key letter and set to a key letter in the puzzle
+#   setUniqueLetters(uniqueLetters: set)
+#     - takes a set of uniques letters and set to unique letters in puzzle
+#   setShuffleLetters(shuffleLetters: set)
+#     - sets given shuffleLetters set to shuffleLettes in puzzle
+#   setScore(gameScore: int)
+#     - takes a score and sets it to the score in puzzle 
+#   setMaxScore(maxGameScore: int)
+#     - sets max score of the game
+#   setFoundWords(foundWords: list)
+#     - sets the found words list
+#   setAllWordList(wordList: list)
+#     - sets the availiable word list
+#   setRank(newRank: str)
+#     - sets the rank of the puzzle
+#   setFinishedFlag(update: bool)
+#     - sets the finished flag in puzzle
+#   findAllWords()
+#     - generates a list of valid guessable words
+#   updateFoundWords(word: str)
+#     - adds a word to the found word list
+#   updateScore(pointIncrease: int)
+#     - adds pointIncrease to the score
+#   updateRank()
+#     - updates puzzle rank based off score
+#   shuffleChars()
+#     - shuffles the order or shuffle letter list
 ################################################################################
 class Puzzle:
     
@@ -101,11 +101,6 @@ class Puzzle:
     def showShuffleLetters(self):
         return self.shuffleLett
     
-    # Word List generated when given key letter and word
-    # All words for current puzzle
-    def findAllWords(self):
-       self.allWordList = generateSubset.getAllWordsFromPangram(self)
-    
     # Returns a number
     def showMaxScore(self):
         return self.maxScore
@@ -129,13 +124,6 @@ class Puzzle:
     #display the finished flag
     def showFinishedFlag(self):
         return self.finishedFlag
-
-    # Updates the list of found words
-    def updateFoundWords(self, word):
-        self.foundWordList.append(word)
-    
-    def updateScore(self, pointIncrease):
-        self.score += pointIncrease
 
     # params: letter - the manditory character
     # sets the key letter of the puzzle
@@ -178,9 +166,21 @@ class Puzzle:
         self.rank = newRank
 
     # Params : update - the new status of the flag
-    #sets the finished flag to the update
+    # sets the finished flag to the update
     def setFinishedFlag(self, update):
         self.finishedFlag = update
+
+    # Word List generated when given key letter and word
+    # All words for current puzzle
+    def findAllWords(self):
+       self.allWordList = generateSubset.getAllWordsFromPangram(self)
+
+    # Updates the list of found words
+    def updateFoundWords(self, word):
+        self.foundWordList.append(word)
+    
+    def updateScore(self, pointIncrease):
+        self.score += pointIncrease
 
     # updateRank takes a puzzle object, checks its
     # current score against the max score for the puzzle,
