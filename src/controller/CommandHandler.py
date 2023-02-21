@@ -32,8 +32,17 @@
 #
 #   finalGame(finishedPuzzle : object) -> None
 ################################################################################
+import sys
+import os
 
-from cview import CLI
+
+current = os.path.dirname(os.path.realpath(__file__))
+
+parent = os.path.dirname(current)
+
+sys.path.append(parent)
+
+import cview
 from model import MakePuzzle, StateStorage
 from os import path
 
