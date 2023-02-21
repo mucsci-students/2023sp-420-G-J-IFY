@@ -3,7 +3,8 @@
 # Author: Jacob Lovegren
 # Date of Creation: 2-2-23
 #   Generate max score from wordlist
-# Multi-line description of what a module does.
+#
+# Used to generate max score (Probabaly gonna move later)
 #
 # (Global, public) functions:
 #   findMaxScore(listList : list) -> int
