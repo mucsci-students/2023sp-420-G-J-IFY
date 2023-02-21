@@ -1,3 +1,5 @@
+#!/usr/bin/env
+
 ################################################################################
 # CLI.py
 # Author: Isaak Weidman
@@ -103,7 +105,7 @@ def drawProgressBar(size, val):
 # params:
 #   - letters: list, contains the 7 unique letters to be displayed
 #   - key: int, index of the key letter
-def drawPuzzle(letters):
+def drawPuzzle(letters : list) -> str:
     # Pretty much just hard coded the output, letters are simple swapped in
     out =  (' ┌───┬───┐ \ '
             '│ {0[1]} │ {0[2]} │ \ '
