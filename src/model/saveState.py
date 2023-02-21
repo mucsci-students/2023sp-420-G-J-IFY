@@ -1,7 +1,17 @@
-# Authors: Yah'hymbey Baruti-Bey, Jacob Lovegren, Francesco Spagnolo, Gaige Zakroski
-# Course : CSCI 420
-# Modified Date: 2/2/2023
-# State structure for puzzles
+################################################################################
+# StateStorage.py
+# Author: Yah'hymbey Baruti-Bey, Jacob Lovegren, Francesco Spagnolo, Gaige Zakroski
+# Date of Creation: 2-2-2023
+#
+#
+# (Global, public) functions:
+#   savePuzzle(saveStateObj: Obj, fileName : str)
+#       - saves a blank puzzle state
+#   loadPuzzle(fileName : str) -> Puzzle Obj
+#       - loads a saved puzzle
+#   saveCurrent(puzzle: Obj, fileName : str)
+#       - saves a current state of a puzzle
+################################################################################
 
 
 import sqlite3
