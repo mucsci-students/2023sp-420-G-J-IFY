@@ -30,7 +30,7 @@ clean:
 
 else
 
-all:run
+all:run clean
 
 
 setup:
@@ -49,14 +49,15 @@ run: tests
 tests: setup
 	python3 tests
 
-deactivate:
+deactivate: cleanVenv
 	deactivate
 
-clean:
-	rm .venv/Scripts
-	rm .venv/Include
-	rm .venv/Lib
+cleanVenv: 
+	rm -r ./.venv/include
+	rm -r .venv/lib
+	rm -r .venv/bin
 	rm .venv/pyvenv.cfg
-	rm *.json
+clean:
+	rm -r *.json
 
 endif
