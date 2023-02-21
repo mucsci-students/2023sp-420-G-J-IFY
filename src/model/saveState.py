@@ -6,8 +6,9 @@
 
 
 import sqlite3
-import model.generateSubset as generateSubset
+#import model.generateSubset as generateSubset
 import random
+import model.MakePuzzle as makePuzzle
 
 ################################################################################
 # class Puzzle()
@@ -100,7 +101,7 @@ class Puzzle:
     # returns a string of the letters to shuffle freely
     def showShuffleLetters(self):
         return self.shuffleLett
-    
+
     # Returns a number
     def showMaxScore(self):
         return self.maxScore
@@ -173,7 +174,7 @@ class Puzzle:
     # Word List generated when given key letter and word
     # All words for current puzzle
     def findAllWords(self):
-       self.allWordList = generateSubset.getAllWordsFromPangram(self)
+       self.allWordList = makePuzzle.getAllWordsFromPangram(self)
 
     # Updates the list of found words
     def updateFoundWords(self, word):
