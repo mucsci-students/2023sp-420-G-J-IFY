@@ -1,10 +1,16 @@
-# Authors: Yah'hymbey Baruti-Bey, Francesco Spagnolo 
-# Course : CSCI 420
-# Modified Date: 2/2/2023
-# A module for making a new puzzle 
+################################################################################
+# MakePuzzle.py
+# Author: Jacob Lovegren, Yah'hymbey Baruti-Bey, Francesco Spagnolo
+# Date of Creation: 2-2-2023
+#
+# Makes a basic puzzle game object after being given a baseword
+#
+# (Global, public) functions:
+#   newPuzzle(baseWord : str) -> Puzzle Obj
+#       - Makes a basic puzzle
+################################################################################
 
 
-#Imports
 import sqlite3
 from random import randrange
 import model.saveState as saveState
@@ -15,6 +21,26 @@ from controller import CommandHandler
 # Finds legitimate base word and creates a puzzle based on that
 # Update 2/20/23 updated how maxScore is handled to querey DB. Done in single
 # querey in the empty case, but a little more hands on for the user input version
+################################################################################
+# functionName(arg1 : int, arg2='defaultVal' : str) -> bool
+#
+# DESCRIPTION:
+#   A description of the function
+#
+# PARAMETERS:
+#  arg1 : int
+#   an example integer parameter
+#  arg2 : int, optional
+#   an example string parameter
+#
+# RETURNS:
+#  bool
+#   a boolean return type
+#
+# RAISES:
+#  Exception
+#   if arg1 is less than or equal to o
+################################################################################
 def newPuzzle(baseWord):    
     try:
         uniqueLetters = {}
@@ -84,6 +110,26 @@ class BadQueryException(Exception):
     
 # Finds a legitimate baseword to start puzzle with from the database
 # Returns a tuple of (uniqueLetters, keyLetter, score)
+################################################################################
+# functionName(arg1 : int, arg2='defaultVal' : str) -> bool
+#
+# DESCRIPTION:
+#   A description of the function
+#
+# PARAMETERS:
+#  arg1 : int
+#   an example integer parameter
+#  arg2 : int, optional
+#   an example string parameter
+#
+# RETURNS:
+#  bool
+#   a boolean return type
+#
+# RAISES:
+#  Exception
+#   if arg1 is less than or equal to o
+################################################################################
 def findBaseWord():
     # SQLite Connections
     wordDict = sqlite3.connect('wordDict.db')
@@ -110,6 +156,26 @@ def findBaseWord():
 # @PARAM baseWord: The user entered word to check the database for
 # @RETURN returnResult: a tuple with the query results OR
 # @RETURN false if word not in DB
+################################################################################
+# functionName(arg1 : int, arg2='defaultVal' : str) -> bool
+#
+# DESCRIPTION:
+#   A description of the function
+#
+# PARAMETERS:
+#  arg1 : int
+#   an example integer parameter
+#  arg2 : int, optional
+#   an example string parameter
+#
+# RETURNS:
+#  bool
+#   a boolean return type
+#
+# RAISES:
+#  Exception
+#   if arg1 is less than or equal to o
+################################################################################
 def checkDataBase(baseWord):
     # SQLite Connections
     wordDict = sqlite3.connect('wordDict.db')
@@ -131,6 +197,26 @@ def checkDataBase(baseWord):
 
 #params: puzzle object, input that the user gave
 #checks the database for valid words, already found words and words that do not exist
+################################################################################
+# functionName(arg1 : int, arg2='defaultVal' : str) -> bool
+#
+# DESCRIPTION:
+#   A description of the function
+#
+# PARAMETERS:
+#  arg1 : int
+#   an example integer parameter
+#  arg2 : int, optional
+#   an example string parameter
+#
+# RETURNS:
+#  bool
+#   a boolean return type
+#
+# RAISES:
+#  Exception
+#   if arg1 is less than or equal to o
+################################################################################
 def guess(puzzle, input):
     
     input = input.lower()
