@@ -2,15 +2,6 @@
 # StateStorage.py
 # Author: Yah'hymbey Baruti-Bey, Jacob Lovegren, Francesco Spagnolo, Gaige Zakroski
 # Date of Creation: 2-2-2023
-#
-#
-# (Global, public) functions:
-#   savePuzzle(saveStateObj: Obj, fileName : str)
-#       - saves a blank puzzle state
-#   loadPuzzle(fileName : str) -> Puzzle Obj
-#       - loads a saved puzzle
-#   saveCurrent(puzzle: Obj, fileName : str)
-#       - saves a current state of a puzzle
 ################################################################################
 
 
@@ -18,7 +9,74 @@ import sqlite3
 import model.generateSubset as generateSubset
 import random
 
-
+################################################################################
+# class Puzzle()
+# Description:
+#   A description of the class
+#
+# Arguments:
+#   keyLett : str
+#   uniqueLett : set
+#
+# <public> Attributes:
+#   keyLett : str
+#   uniqueLett : set
+#   shuffleLett : set
+#   score : int
+#   maxScore : int
+#   foundWordList: list
+#   allWordList: list
+#   rank: str
+#   finishedFlag: bool
+#
+# <public> Functions:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+#   function1(param1=5 : int, param2 : bool) ->
+#     - one-line description:
+################################################################################
 class Puzzle:
     
     def __init__(self, keyLett, uniqueLett):

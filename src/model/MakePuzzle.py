@@ -36,7 +36,7 @@ from controller import CommandHandler
 #   if check is baseword contains nonalphas
 #   if word is in the database
 ################################################################################
-def newPuzzle(baseWord: str):    
+def newPuzzle(baseWord: str) -> object:    
     try:
         uniqueLetters = {}
         if baseWord == '':
