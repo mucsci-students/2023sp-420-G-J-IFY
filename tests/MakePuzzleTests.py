@@ -5,8 +5,6 @@ import unittest
 import MakePuzzle
 import sqlite3
 from random import randrange
-import saveState
-import CommandHandler
 
 class MakePuzzleTests(unittest.TestCase):
     

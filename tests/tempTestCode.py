@@ -1,6 +1,6 @@
 
 import MakePuzzle
-import saveState
+import puzzle
 
 
 # Test Cases for new puzzle

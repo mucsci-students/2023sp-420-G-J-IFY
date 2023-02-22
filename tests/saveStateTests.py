@@ -1,12 +1,12 @@
 # authors: Gaige Zakroski
-import saveState 
+import puzzle
 import unittest
 import pytest
 
 # tests the constuctor
 class testSaveState(unittest.TestCase):
     #test constuctor
-    obj = saveState.Puzzle('a', 'warlock')
+    obj = puzzle.Puzzle('a', 'warlock')
     assert(obj.keyLett == 'a')
     assert(obj.uniqueLett == 'warlock')
     assert(obj.shuffleLett == 'warlock')

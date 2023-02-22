@@ -8,7 +8,7 @@ import random
 import StateStorage
 import json
 import unittest
-import saveState 
+import puzzle 
 import MakePuzzle
 import pytest
 
@@ -59,7 +59,7 @@ class StateStorageTests(unittest.TestCase):
     fileName = makeRandomJsonName()
     fileNameJson = fileName + ".json"
     dict = {"keyLetter": "a", "uniqueLetters": "warlock", "shuffleLetters": "warlock", "currentScore": 0, "maxScore": 0, "foundWordList": [], "allWordList": [], "rank": " "}
-    obj = saveState.Puzzle('a','warlock')
+    obj = puzzle.Puzzle('a','warlock')
     StateStorage.saveCurrent(obj, fileName)
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict)

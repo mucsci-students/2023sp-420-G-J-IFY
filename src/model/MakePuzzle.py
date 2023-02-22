@@ -13,7 +13,7 @@
 
 import sqlite3
 from random import randrange
-import model.saveState as saveState
+import model.puzzle as saveState
 from controller import CommandHandler
 import itertools
 
