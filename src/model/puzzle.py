@@ -92,7 +92,7 @@ class Puzzle:
         self.finishedFlag = False
     
     ############################################################################
-    # showKeyLetter() -> str
+    # getKeyLetter() -> str
     #
     # Description:
     #   displays the key letter of the puzzle
@@ -104,11 +104,11 @@ class Puzzle:
     #   self.keyLett
     #       the puzzles key letter
     ############################################################################
-    def showKeyLetter(self):
+    def getKeyLetter(self):
         return self.keyLett
     
     ############################################################################
-    # showUniqueLetters() -> str
+    # getUniqueLetters() -> str
     #
     # Description:
     #   Returns the string of unique letters
@@ -120,11 +120,11 @@ class Puzzle:
     #   self.uniqueLett
     #       string of unique letters in the puzzle
     ############################################################################
-    def showUniqueLetters(self):
+    def getUniqueLetters(self):
         return self.uniqueLett
 
     ############################################################################
-    # showShuffleLetters() -> str
+    # getShuffleLetters() -> str
     #
     # Description:
     #   returns a string of the unique letters to shuffle freely
@@ -136,11 +136,11 @@ class Puzzle:
     #   self.shuffleLett
     #       string of unique letters
     ############################################################################
-    def showShuffleLetters(self):
+    def getShuffleLetters(self):
         return self.shuffleLett
 
     ############################################################################
-    # showMaxScore() -> int
+    # getMaxScore() -> int
     #
     # Description:
     #   returns max score for the puzzle
@@ -152,11 +152,11 @@ class Puzzle:
     #   self.maxScore
     #       integer
     ############################################################################
-    def showMaxScore(self):
+    def getMaxScore(self):
         return self.maxScore
 
     ############################################################################
-    # showFoundWords() -> list
+    # getFoundWords() -> list
     #
     # Description:
     #   Returns a list of all the found words guessed by user
@@ -168,12 +168,12 @@ class Puzzle:
     #   self.foundWordList
     #       list of found words
     ############################################################################
-    def showFoundWords(self):
+    def getFoundWords(self):
         return self.foundWordList
 
     #
     ############################################################################
-    # showAllWords() -> list
+    # getAllWords() -> list
     #
     # Description:
     #   returns a list of all the words for a given puzzle
@@ -185,11 +185,11 @@ class Puzzle:
     #   self.allWordList
     #       list of all available guessable words
     ############################################################################
-    def showAllWords(self):
+    def getAllWords(self):
         return self.allWordList
 
     ############################################################################
-    # showScore() -> int
+    # getScore() -> int
     #
     # Description:
     #   current user scores
@@ -201,11 +201,11 @@ class Puzzle:
     #   self.score
     #       user score
     ############################################################################
-    def showScore(self):
+    def getScore(self):
         return self.score
 
     ############################################################################
-    # showRank() -> str
+    # getRank() -> str
     #
     # Description:
     #   returns a string with the current rank
@@ -217,7 +217,7 @@ class Puzzle:
     #   self.rank
     #       current rank
     ############################################################################
-    def showRank(self):
+    def getRank(self):
         return self.rank
     
     ############################################################################
@@ -233,7 +233,7 @@ class Puzzle:
     #   self.finishedFlag
     #       bool value
     ############################################################################
-    def showFinishedFlag(self):
+    def getFinishedFlag(self):
         return self.finishedFlag
 
     ############################################################################
@@ -440,16 +440,16 @@ class Puzzle:
     def shuffleChars(self):
         #strings are imutable, need a place to temporarily hold new shuffle pattern
         #explode into list
-        letters = random.sample(self.showUniqueLetters(), len(self.showUniqueLetters()))
+        letters = random.sample(self.getUniqueLetters(), len(self.getUniqueLetters()))
 
         #looping through to find the main letter in shuffled list
         ctr = 0    
         while ctr < 7: 
-            if self.showKeyLetter() == letters[ctr]:
+            if self.getKeyLetter() == letters[ctr]:
                 #copy whatever is in front of the line to later
                 letters[ctr] = letters[0]
                 #repalce first char with key letter
-                letters[0] = self.showKeyLetter() 
+                letters[0] = self.getKeyLetter() 
                 break
             ctr += 1
         #set the shuffleLetters field to the list rejoined to string

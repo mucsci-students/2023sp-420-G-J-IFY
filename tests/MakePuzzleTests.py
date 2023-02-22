@@ -15,9 +15,9 @@ class MakePuzzleTests(unittest.TestCase):
     assert(obj.uniqueLett == 'definrs')
     assert(obj.shuffleLett == 'definrs')
     assert(obj.score == 0)
-    assert(obj.maxScore == obj.showMaxScore())
+    assert(obj.maxScore == obj.getMaxScore())
     assert(obj.foundWordList == [])
-    assert(obj.allWordList == obj.showAllWords())
+    assert(obj.allWordList == obj.getAllWords())
     assert(obj.rank == 'Beginner')
     print("MakePuzzle: PASSED")
     
@@ -37,9 +37,9 @@ class MakePuzzleTests(unittest.TestCase):
     
     #test guess
     MakePuzzle.guess(obj, 'friend')
-    assert(obj.showFoundWords() == ['friend'])
-    assert(obj.showScore() == 6)
-    assert(obj.showRank() == 'Good Start')
+    assert(obj.getFoundWords() == ['friend'])
+    assert(obj.getScore() == 6)
+    assert(obj.getRank() == 'Good Start')
     print("guess: PASSED")
     
     

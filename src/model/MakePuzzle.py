@@ -197,8 +197,8 @@ def guess(puzzle, input: str):
     #check for only containing alphabetical characters
     if not input.isalpha():
         print(input + " contains non alphabet characters")
-    elif input in puzzle.showAllWords(): #checks words in the word list to see if it is valid for the puzzle
-        if input in puzzle.showFoundWords(): #check if it is already found
+    elif input in puzzle.getAllWords(): #checks words in the word list to see if it is valid for the puzzle
+        if input in puzzle.getFoundWords(): #check if it is already found
             print(input.upper() + " was already found!")
         else:
             #query the database to see how many points to give
@@ -217,11 +217,11 @@ def guess(puzzle, input: str):
         response = cursor.fetchone()
         if response == None:
             print(input.upper() + " isn't a word in the dictionary")
-        elif set(response[0]).issubset(set(puzzle.showUniqueLetters())): #check if the letters contain the center letter
-            print(input.upper() + " is missing center letter, " + puzzle.showKeyLetter().upper())
+        elif set(response[0]).issubset(set(puzzle.getUniqueLetters())): #check if the letters contain the center letter
+            print(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
         else:
             #must be letters not in the puzzle in this case
-            print(input.upper() + " contains letters not in " + puzzle.showShuffleLetters().upper())
+            print(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
             
     conn.commit()
     conn.close()
@@ -241,12 +241,12 @@ def guess(puzzle, input: str):
 ################################################################################
 def getAllWordsFromPangram(puzz) -> list: #unclear how to add the puzzle type to this line
     #create powerset of letters from baseword
-    pSet = list(powerset(puzz.showUniqueLetters()))
+    pSet = list(powerset(puzz.getUniqueLetters()))
     cleanSet = []
 
     #remove sets from powerset to produce subset with keyletter
     for a in pSet:
-        if puzz.showKeyLetter() in a:
+        if puzz.getKeyLetter() in a:
             cleanSet.append(sortStrToAlphabetical(''.join(a)))
       
     #Time to querey the DB   

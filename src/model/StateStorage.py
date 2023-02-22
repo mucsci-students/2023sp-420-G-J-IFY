@@ -76,9 +76,9 @@ def __SearchDict(dict, element):
 #   Returns a dictionary of all fields of a saveState object
 ################################################################################
 def __makeDict(saveStateObj):
-    dict = {'keyLetter': saveStateObj.showKeyLetter(), 'uniqueLetters': saveStateObj.showUniqueLetters(), 
-            'shuffleLetters': saveStateObj.showShuffleLetters(), 'currentScore': saveStateObj.showScore(), 'maxScore' : saveStateObj.showMaxScore(), 
-            'foundWordList' : saveStateObj.showFoundWords(), 'allWordList': saveStateObj.showAllWords(), 'rank' : saveStateObj.showRank()}
+    dict = {'keyLetter': saveStateObj.getKeyLetter(), 'uniqueLetters': saveStateObj.getUniqueLetters(), 
+            'shuffleLetters': saveStateObj.getShuffleLetters(), 'currentScore': saveStateObj.getScore(), 'maxScore' : saveStateObj.getMaxScore(), 
+            'foundWordList' : saveStateObj.getFoundWords(), 'allWordList': saveStateObj.getAllWords(), 'rank' : saveStateObj.getRank()}
     return dict
 
 ################################################################################
@@ -130,8 +130,8 @@ def __setFields(dict):
 def savePuzzle(saveStateObj, fileName):
     # creates dict to be saved
     newObj = saveState.Puzzle(saveStateObj.keyLett, saveStateObj.uniqueLett)
-    newObj.setMaxScore(saveStateObj.showMaxScore())
-    newObj.setAllWordList(saveStateObj.showAllWords())
+    newObj.setMaxScore(saveStateObj.getMaxScore())
+    newObj.setAllWordList(saveStateObj.getAllWords())
     newObj.updateRank()
 
     dict = __makeDict(newObj)

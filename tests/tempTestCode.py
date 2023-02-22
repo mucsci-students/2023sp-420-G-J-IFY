@@ -7,33 +7,33 @@ import puzzle
 
 newPuzz = Puzzle('a', 'acklorw')
 newPuzz.wordListStorage()
-print(newPuzz.showAllWords())
+print(newPuzz.getAllWords())
 #correct guess
 MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
+print(newPuzz.getScore())
+print(newPuzz.getFoundWords())
 #bad letter
 MakePuzzle.guess(newPuzz, 'wart')
-print(newPuzz.showScore())
+print(newPuzz.getScore())
 #too short
 MakePuzzle.guess(newPuzz, 'war')
-print(newPuzz.showScore())
+print(newPuzz.getScore())
 #missing key
 MakePuzzle.guess(newPuzz, 'cork')
-print(newPuzz.showScore())
+print(newPuzz.getScore())
 #double guess
 MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
+print(newPuzz.getScore())
+print(newPuzz.getFoundWords())
 #double guess
 MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
+print(newPuzz.getScore())
+print(newPuzz.getFoundWords())
 #double guess
 MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
+print(newPuzz.getScore())
+print(newPuzz.getFoundWords())
 #double guess
 MakePuzzle.guess(newPuzz, 'warlock')
-print(newPuzz.showScore())
-print(newPuzz.showFoundWords())
+print(newPuzz.getScore())
+print(newPuzz.getFoundWords())

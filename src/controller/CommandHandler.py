@@ -64,19 +64,19 @@ def newPuzzle():
 # params:
 #   - game: object, the currently active game
 def printPuzzle(game):
-    CLI.drawTextBox([CLI.drawPuzzle(game.showShuffleLetters().upper())], 
+    CLI.drawTextBox([CLI.drawPuzzle(game.getShuffleLetters().upper())], 
                     40, '^')
 
 def printWords(game):
     CLI.drawTextBox(
-        ['Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())], 
+        ['Discovered Words: \ {wrds}'.format(wrds = game.getFoundWords())], 
         40, '^')
 
 def showStatus(game):
-    score = game.showScore()
-    max = game.showMaxScore()
+    score = game.getScore()
+    max = game.getMaxScore()
     prog = score/max
-    bar = game.showRank() + ' ' + CLI.drawProgressBar(20, prog)
+    bar = game.getRank() + ' ' + CLI.drawProgressBar(20, prog)
     stats = 'Score: {} \ Progress: {}%'.format(score, int(prog*100))
     CLI.drawTextBox(['Level: \ ' + bar + ' \ ' + stats], 40, '^')
 

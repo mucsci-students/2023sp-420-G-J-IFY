@@ -18,36 +18,36 @@ class testSaveState(unittest.TestCase):
     print("testConstructor: PASSED")
             
         
-    #test show keyLetter
-    assert(obj.showKeyLetter() == obj.keyLett)
-    print("testShowKeyLetter: PASSED")
+    #test get keyLetter
+    assert(obj.getKeyLetter() == obj.keyLett)
+    print("testgetKeyLetter: PASSED")
         
-    # test ShowUniqueLetters
-    assert(obj.showUniqueLetters() == obj.uniqueLett)
-    print("testShowUniqueLetters: PASSED")
+    # test getUniqueLetters
+    assert(obj.getUniqueLetters() == obj.uniqueLett)
+    print("testgetUniqueLetters: PASSED")
         
-    # test ShowShuffleLetters
-    assert(obj.showShuffleLetters() == obj.shuffleLett)
-    print("testShowShuffleLetters: PASSED")
+    # test getShuffleLetters
+    assert(obj.getShuffleLetters() == obj.shuffleLett)
+    print("testgetShuffleLetters: PASSED")
 
-    # test ShowMaxScore
-    assert(obj.showMaxScore() == obj.maxScore )
-    print("testShowMaxScore: PASSED")
+    # test getMaxScore
+    assert(obj.getMaxScore() == obj.maxScore )
+    print("testgetMaxScore: PASSED")
         
-    # testShowFoundWords
-    assert(obj.showFoundWords() == obj.foundWordList)
-    print("testShowFoundWords: PASSED")
-    # test showAllWords
-    assert(obj.showAllWords() == obj.allWordList)
-    print("testshowAllWords: PASSED")
+    # testgetFoundWords
+    assert(obj.getFoundWords() == obj.foundWordList)
+    print("testgetFoundWords: PASSED")
+    # test getAllWords
+    assert(obj.getAllWords() == obj.allWordList)
+    print("testgetAllWords: PASSED")
     
-    # testShowScore
-    assert(obj.showScore() == obj.score)
-    print("testShowScore: PASSED")
+    # testgetScore
+    assert(obj.getScore() == obj.score)
+    print("testgetScore: PASSED")
     
-    # test ShowRank
-    assert(obj.showRank() == obj.rank)
-    print("testShowScore: PASSED")
+    # test getRank
+    assert(obj.getRank() == obj.rank)
+    print("testgetScore: PASSED")
 
     # testUpdateFoundWords
     obj.updateFoundWords('warlock')
@@ -92,7 +92,7 @@ class testSaveState(unittest.TestCase):
     # test SetFoundWords
     list = ["warlock", "wrack", "alcool", "arrack", "wallaroo"]
     obj.setFoundWords(list)
-    assert(obj.showFoundWords() == ["warlock", "wrack", "alcool", "arrack", "wallaroo"])
+    assert(obj.getFoundWords() == ["warlock", "wrack", "alcool", "arrack", "wallaroo"])
     print("testSetFoundWords: PASSED")
        
     # test SetAllWordList

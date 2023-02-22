@@ -111,15 +111,15 @@ def drawList(list):
 def drawGameBox(game):
 
     # calculate game progression
-    score = game.showScore()
-    max = game.showMaxScore()
+    score = game.getScore()
+    max = game.getMaxScore()
     prog = score/max
 
     tier1 = 'Welcome to Spelling Bee! \ Presented by G(J)IFY'
-    tier2 = 'Level: \ {lvl} {pBar}'.format(lvl = game.showRank(), 
+    tier2 = 'Level: \ {lvl} {pBar}'.format(lvl = game.getRank(), 
                                            pBar = drawProgressBar(20, prog))
-    tier3 = 'Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())
-    tier4 = drawPuzzle(game.showShuffleLetters().upper())
+    tier3 = 'Discovered Words: \ {wrds}'.format(wrds = game.getFoundWords())
+    tier4 = drawPuzzle(game.getShuffleLetters().upper())
     tier5 = 'Enter your guess, or type \'!help\' for a list of commands.'
     drawTextBox([tier1, tier2, tier3, tier4, tier5], 40, '^')
 
