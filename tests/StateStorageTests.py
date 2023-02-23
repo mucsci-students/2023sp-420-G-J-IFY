@@ -5,11 +5,11 @@ import os.path
 from os import path
 import string
 import random
-import StateStorage
+import model.StateStorage as StateStorage
 import json
 import unittest
-import puzzle 
-import MakePuzzle
+import model.puzzle as puzzle
+import model.MakePuzzle as MakePuzzle
 import pytest
 
 class StateStorageTests(unittest.TestCase):

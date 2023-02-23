@@ -129,7 +129,7 @@ def __setFields(dict):
 ################################################################################
 def savePuzzle(saveStateObj, fileName):
     # creates dict to be saved
-    newObj = saveState.Puzzle(saveStateObj.keyLett, saveStateObj.uniqueLett)
+    newObj = saveState.Puzzle(saveStateObj.getKeyLetter(), saveStateObj.getUniqueLetters())
     newObj.setMaxScore(saveStateObj.getMaxScore())
     newObj.setAllWordList(saveStateObj.getAllWords())
     newObj.updateRank()

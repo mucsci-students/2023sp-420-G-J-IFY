@@ -1,5 +1,5 @@
 # authors: Gaige Zakroski
-import puzzle
+import model.puzzle as puzzle
 import unittest
 import pytest
 
