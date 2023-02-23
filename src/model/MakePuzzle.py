@@ -26,7 +26,8 @@ import itertools
 #
 # PARAMETERS:
 #  baseWord : str
-#   takes a baseword that is either an empty string or a pangram and makes a puzzle from it
+#   takes a baseword that is either an empty string or a pangram and makes a 
+#   puzzle from it
 #
 # RETURNS:
 #  puzzle
@@ -58,19 +59,23 @@ def newPuzzle(baseWord: str) -> object:
             returnTuple = checkDataBase(baseWord.lower())
             #returnTuple will be None if query returns emptyy
             if returnTuple == None:
-                #Need to catch this exception, this is a known problem that will be addressed before end of sprint 1
+                # Need to catch this exception, this is a known problem that will
+                # be addressed before end of sprint 1
                 raise BadQueryException
             uniqueLetters = returnTuple[1]
-            #need to catch if user enters more than one letter. This is a known problem that will be addressed before end of sprint 1
+            # need to catch if user enters more than one letter. This is a known 
+            # problem that will be addressed before end of sprint 1
             keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
             keyLetter = keyLetter.lower()
                         #test to see if keyletter is valid
             while keyLetter not in uniqueLetters or keyLetter == "":
                 #catch if they enter nothing
                 if keyLetter == "":
-                    keyLetter = input("Must enter character from " + baseWord + ": ")
+                    keyLetter = input("Must enter character from " 
+                                      + baseWord + ": ")
                 else:
-                    keyLetter = input(keyLetter + " is not part of " + baseWord + 
+                    keyLetter = input(keyLetter + " is not part of " 
+                                      + baseWord + 
                                       " - Please enter a letter from your word: ")
             #now that the input has been validated, go find the max score for this game
             conn = sqlite3.connect('wordDict.db')
@@ -178,7 +183,8 @@ def checkDataBase(baseWord: str):
 # guess(puzzle, input: str)
 #
 # DESCRIPTION:
-#   checks the database for valid words, already found words and words that do not exist
+#   checks the database for valid words, already found words and 
+#   words that do not exist
 #
 # PARAMETERS:
 #  puzzle : Obj
@@ -197,8 +203,11 @@ def guess(puzzle, input: str):
     #check for only containing alphabetical characters
     if not input.isalpha():
         print(input + " contains non alphabet characters")
-    elif input in puzzle.getAllWords(): #checks words in the word list to see if it is valid for the puzzle
-        if input in puzzle.getFoundWords(): #check if it is already found
+        
+    # checks words in the word list to see if it is valid for the puzzle
+    elif input in puzzle.getAllWords(): 
+        #check if it is already found
+        if input in puzzle.getFoundWords(): 
             print(input.upper() + " was already found!")
         else:
             #query the database to see how many points to give
@@ -217,7 +226,8 @@ def guess(puzzle, input: str):
         response = cursor.fetchone()
         if response == None:
             print(input.upper() + " isn't a word in the dictionary")
-        elif set(response[0]).issubset(set(puzzle.getUniqueLetters())): #check if the letters contain the center letter
+        #check if the letters contain the center letter
+        elif set(response[0]).issubset(set(puzzle.getUniqueLetters())): 
             print(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
         else:
             #must be letters not in the puzzle in this case

@@ -240,6 +240,7 @@ def __Load(fileName):
         return obj
     except FileNotFoundError:
 
-        # if fileName does not exist then a FileNotFoundError is raised saying the file does not exist
+        # if fileName does not exist then a FileNotFoundError is 
+        # raised saying the file does not exist
        print ("The file " + newFileName + " does not exist in this directory\n"
               "Returning to game...")
