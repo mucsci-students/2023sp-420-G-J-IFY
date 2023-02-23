@@ -1,5 +1,5 @@
 import cview.CLI as CLI
-import model.saveState as saveState
+import model.puzzle as puzzle
 import controller.CommandHandler as CommandHandler
 import os
 
@@ -8,7 +8,7 @@ import os
 
 usrinput = ' '
 validIn = False
-puzzle = saveState.Puzzle('', '')
+puzzle = puzzle.Puzzle('', '')
 
 # inital user initialization of game
 while not validIn:
@@ -45,6 +45,6 @@ while True:
     puzzle = CommandHandler.parse(usrinput, puzzle)
     print('{:═<40}'.format(''))
     CLI.drawGameBox(puzzle)
-    if puzzle.showFinishedFlag():
+    if puzzle.getFinishedFlag():
         CommandHandler.finalGame(puzzle)
     usrinput = input('> ')
