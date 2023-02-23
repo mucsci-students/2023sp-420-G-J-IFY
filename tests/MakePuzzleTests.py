@@ -42,9 +42,9 @@ class MakePuzzleTests(unittest.TestCase):
 
     #test guess
     src.guess(obj, 'friend')
-    assert(obj.showFoundWords() == ['friend'])
-    assert(obj.showScore() == 6)
-    assert(obj.showRank() == 'Good Start')
+    assert(obj.getFoundWords() == ['friend'])
+    assert(obj.getScore() == 6)
+    assert(obj.getRank() == 'Good Start')
     print("guess: PASSED")
     
     
