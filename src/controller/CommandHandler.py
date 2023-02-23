@@ -1,11 +1,69 @@
-from cview import CLI
+################################################################################
+# CommandHandler.py
+# AUTHOR: Isaak Weidman, Jacob Lovegren
+# DATE OF CREATION: -
+#
+# DESCRIPTION:
+#   Routs functionality from user-input into backend of the project, then
+#   updates the display to reflect those changes.
+#
+# FUNCTIONS:
+#   parse(userinput : str, game : object) -> object
+#
+#   newPuzzle() -> object:
+#
+#   printPuzzle(game : object) -> None
+#
+#   printWords(game : object) -> None
+#
+#   showStatus(game : object) -> None
+#
+#   saveGame(game : object) -> None
+#
+#   savePuzzle(game : object) -> None 
+#
+#   loadGame(game : object) -> None
+#
+#   help() -> None
+#
+#   exit() -> None
+#
+#   handleSave(game : object, num : int) -> None
+#
+#   finalGame(finishedPuzzle : object) -> None
+################################################################################
+import sys
+import os
+
+
+current = os.path.dirname(os.path.realpath(__file__))
+
+parent = os.path.dirname(current)
+
+sys.path.append(parent)
+
+import cview
 from model import MakePuzzle, StateStorage
 from os import path
 
-# params:
-#   - input: string, user input. Check if input matches anythin in commands list
-#   - game: object, the currently active game
-def parse(usrinput, game):
+################################################################################
+# parse(userinput : str, game : object) -> object:
+#
+# DESCRIPTION:
+#   Directs game functionality based on string input, game object
+# 
+# PARAMETERS:
+#   usrinput : str
+#     - string provided by user containing either a guess, a command, or bad
+#       input.
+#   game : object
+#     - puzzle object storing current game state
+#
+# RETURN:
+#   object
+#     - updated puzzle object
+################################################################################
+def parse(usrinput : str, game : object) -> object:
     match usrinput:
         case '!new':
             return newPuzzle()
@@ -33,9 +91,10 @@ def parse(usrinput, game):
         case '!save-list':
             print ('Implementation Pending...')
         case '!help':
-            return help(game)
+            help()
+            return game
         case '!exit':
-            exit(game)
+            exit()
             return game
         case _:
             if usrinput.startswith('!'):
@@ -53,7 +112,17 @@ def parse(usrinput, game):
                 return game
 
 
-def newPuzzle():
+################################################################################
+# newPuzzle() -> None:
+#
+# DESCRIPTION:
+#   prompts for input and directs functionality to create a new puzzle object.
+#
+# RETURN:
+#   object
+#     - new puzzle object
+################################################################################
+def newPuzzle() -> object:
     print('Please enter a base word with exactly 7 unique characters. \n' +
     'For auto-generated base word, press enter.')
     word = input('> ')
@@ -61,18 +130,50 @@ def newPuzzle():
     out.shuffleChars()
     return(out)
 
-# params:
-#   - game: object, the currently active game
-def printPuzzle(game):
+
+################################################################################
+# printPuzzle(game : object) -> None:
+#
+# DESCRIPTION:
+#   prints puzzle data in a neatly formatted box
+#
+# PRAMETERS:
+#   game : object
+#     - puzzle object storing current game state
+################################################################################
+def printPuzzle(game : object) -> None:
     CLI.drawTextBox([CLI.drawPuzzle(game.getShuffleLetters().upper())], 
                     40, '^')
 
-def printWords(game):
+
+################################################################################
+# printWords(game : object) ->
+#
+# DESCRIPTION:
+#   prints list of discovered words in a neatly formatted text box
+#
+# PARAMETERS:
+#   game : object
+#     - puzzle object storing current game state
+################################################################################
+def printWords(game : object) -> None:
     CLI.drawTextBox(
         ['Discovered Words: \ {wrds}'.format(wrds = game.getFoundWords())], 
         40, '^')
 
-def showStatus(game):
+
+################################################################################
+# showStatus(game : object) -> None
+#
+# DESCRIPTION:
+#   prints the current user rank, score, a progress bar and percent progress
+#   in a neatly formatted text box.
+#
+# PARAMETERS:
+#   game : object
+#     - puzzle object storing the current game state.
+################################################################################
+def showStatus(game : object) -> None:
     score = game.getScore()
     max = game.getMaxScore()
     prog = score/max
@@ -80,15 +181,46 @@ def showStatus(game):
     stats = 'Score: {} \ Progress: {}%'.format(score, int(prog*100))
     CLI.drawTextBox(['Level: \ ' + bar + ' \ ' + stats], 40, '^')
 
-# saves overall game progress
-def saveGame(game):
+
+################################################################################
+# saveGame(Game : object) -> None:
+#
+# DESCRIPTION:
+#   creates a new save entry for the overall status of the game.
+#
+# PARAMETERS:
+#   game : object
+#     - puzzle object storing the current game state
+################################################################################
+def saveGame(game : object) -> None:
     handleSave(game, 0)
 
-# save puzzle (unique letters and words) only
-def savePuzzle(game):
+
+################################################################################
+# savePuzzle(game : object) -> None:
+#
+# DESCRIPTION:
+#   creates a new save entry for JUST the puzzle data of the game.
+#
+# PARAMETERS:
+#   game : object
+#     - puzzle object storing the current game state
+################################################################################
+def savePuzzle(game : object) -> None:
     handleSave(game, 1)
 
-def loadGame(game):
+
+################################################################################
+# loadGame(game : object) -> None:
+#
+# DESCRIPTION:
+#   load an existing save entry into memory
+#
+# PARAMETERS:
+#   game : object
+#     - puzzle object storing the current game state
+################################################################################
+def loadGame(game : object) -> None:
     fileName = input('Please enter the name of the game you are looking for.'
                      '\n> ')
     newGame =  StateStorage.loadPuzzle(fileName)
@@ -96,7 +228,15 @@ def loadGame(game):
         game = newGame
     return(game)
 
-def help(game):
+
+################################################################################
+# help() -> None
+#
+# DESCRIPTION:
+#   provides a brief description of game rules and generally how to play as well
+#   as a list of all available commands.
+################################################################################
+def help() -> None:
     descHead = ('How to play: \ ')
     descBody = ("Simply type a word after the '> ' prompt and press enter "
                 "to submit a guess. \ \ "
@@ -131,9 +271,14 @@ def help(game):
     CLI.drawTextBox([descHead, descBody], 40, '<')
     CLI.drawTextBox([commHead, commBody], 40, '<')
 
-    return game
 
-def exit(game):
+################################################################################
+# exit() -> None:
+#
+# DESCRIPTION:
+#   prompts user for confirmation, then quits the game.
+################################################################################
+def exit() -> None:
     print('Are you sure? all unsaved progress will be lost. [Y/N]')
     usrinput = input('> ').upper()
     match usrinput:
@@ -144,15 +289,24 @@ def exit(game):
             return
         case _:
             print('Input Invalid')
-            parse('!exit', game) # recursively calls until valid input provided.
+            parse('!exit') # recursively calls until valid input provided.
 
-# Params: game - the game object
-#       : num -  an integer value to determin if we are saving all the game 
-#                progress or just the puzzle 0 for saveCurrent() and 1 for 
-#                savePuzzle
-# saves the games state and handles input from the user to determine if they 
-# want to overwirte a file or not
-def handleSave(game, num):
+
+################################################################################
+# handleSave(game : object, num) -> None:
+#
+# DESCRIPTION:
+#   saves the games state and handles input from the user to determin if they
+#   want to overwrite a file or not
+# 
+# PARAMETERS:
+#   game : object
+#     - puzzle object storing current game state
+#   num : int
+#     - an integer value to determin if we are saving all the game progress
+#       or just the pzzle. 0 for saveCurrent() and 1 for savePuzzle().
+################################################################################
+def handleSave(game : object, num : int) -> None:
     saveStatus = False
     fileName = input('Please enter the name of the file you would like to save '
                      'for example "Game1"\n> ')
@@ -179,6 +333,17 @@ def handleSave(game, num):
     else:
         print('Game could not be saved.')
 
-def finalGame(finishedPuzzle):
+################################################################################
+# finalGame(finishedPuzzle : object) -> None
+#
+# DESCRIPTION:
+#   Notifies the user that they have found all the words for the currently
+#   active game.
+#
+# PARAMETERS:
+#   finishedPuzzle : object
+#     - puzzle object for the currently active (and finished) game.
+################################################################################
+def finalGame(finishedPuzzle : object) -> None:
     showStatus(finishedPuzzle)
     print("Congratulations!!!!\nYou have found all of the\nwords for this puzzle!")  

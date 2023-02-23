@@ -1,12 +1,21 @@
 # authors: Gaige Zakroski
-import model.puzzle as puzzle
+import sys
+import os
+
+
+current = os.path.dirname(os.path.realpath(__file__))
+
+parent = os.path.dirname(current)
+
+sys.path.append(parent)
+import src
 import unittest
-import pytest
+
 
 # tests the constuctor
 class testSaveState(unittest.TestCase):
     #test constuctor
-    obj = puzzle.Puzzle('a', 'warlock')
+    obj = src.Puzzle('a', 'warlock')
     assert(obj.keyLett == 'a')
     assert(obj.uniqueLett == 'warlock')
     assert(obj.shuffleLett == 'warlock')

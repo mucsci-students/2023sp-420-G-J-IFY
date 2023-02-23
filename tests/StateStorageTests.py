@@ -5,15 +5,23 @@ import os.path
 from os import path
 import string
 import random
-import model.StateStorage as StateStorage
+import sys
+import os
+
+
+current = os.path.dirname(os.path.realpath(__file__))
+
+parent = os.path.dirname(current)
+
+sys.path.append(parent)
+import src
 import json
 import unittest
-import model.puzzle as puzzle
-import model.MakePuzzle as MakePuzzle
-import pytest
 
+list =[]
 class StateStorageTests(unittest.TestCase):
     # Creates a random string of length 10 
+    
     def makeRandomJsonName():
         letters = string.ascii_lowercase
         result = ""
@@ -43,15 +51,7 @@ class StateStorageTests(unittest.TestCase):
             'foundWordList' : saveStateObj.getFoundWords(), 'allWordList': saveStateObj.getAllWords(), 'rank' : saveStateObj.getRank()}
         return dict
 
-# tests the savePuzzle function to see if the information saved is saved correctly
-# meaning that only the baseWord and rhe manditory character is saved no other part of the game
-    fileName = "MeetingGame"
-    obj = StateStorage.loadPuzzle(fileName)
-    dict = {"keyLetter": "a", "uniqueLetters": "acklorw", "shuffleLetters": "acklorw", "currentScore": 0, "maxScore": 323, "foundWordList": [], "allWordList": ["acro", "alar", "alow", "arak", "arco", "awol", "caca", "calk", "call", "calo", "cark", "carl", "carr", "claw", "coal", "coca", "cola", "craw", "kaka", "kola", "kora", "lack", "lall", "lark", "loca", "okra", "olla", "oral", "orca", "orra", "rack", "roar", "wack", "walk", "wall", "wark", "wawl", "acock", "alack", "allow", "arrow", "cacao", "calla", "carol", "clack", "claro", "cloak", "coala", "cocoa", "coral", "craal", "crack", "crawl", "croak", "karoo", "koala", "kraal", "local", "loral", "wacko", "walla", "wrack", "alcool", "arrack", "calcar", "callow", "carack", "cloaca", "coccal", "collar", "corral", "karroo", "wallow", "caracal", "caracol", "carrack", "cloacal", "corolla", "oarlock", "warlock", "warwork", "callaloo", "caracara", "rackwork", "wallaroo"], "rank": "Beginner"}
-    StateStorage.savePuzzle(obj,fileName + '1')
-    checkIfExists(fileName + '.json')
-    checkContents(fileName + '.json', dict)
-    print("testSavePuzzle1: PASSED")
+
     
 
 # test if we save an empty game and a file is not already created with the same name a new one is created and empty
@@ -59,8 +59,8 @@ class StateStorageTests(unittest.TestCase):
     fileName = makeRandomJsonName()
     fileNameJson = fileName + ".json"
     dict = {"keyLetter": "a", "uniqueLetters": "warlock", "shuffleLetters": "warlock", "currentScore": 0, "maxScore": 0, "foundWordList": [], "allWordList": [], "rank": " "}
-    obj = puzzle.Puzzle('a','warlock')
-    StateStorage.saveCurrent(obj, fileName)
+    obj = src.Puzzle('a','warlock')
+    src.saveCurrent(obj, fileName)
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict)
     print ("testSaveCurrent1: PASSED")
@@ -73,21 +73,38 @@ class StateStorageTests(unittest.TestCase):
     fileName = makeRandomJsonName()
     fileNameJson = fileName + ".json"
     print("for the following prompt enter only the character a for testing purposes")
-    obj = MakePuzzle.newPuzzle("warlock")
-    MakePuzzle.guess(obj, "warlock")
-    MakePuzzle.guess(obj, "warlock")
-    MakePuzzle.guess(obj, "wrack")
-    MakePuzzle.guess(obj, "alcool")
-    StateStorage.saveCurrent(obj, fileName)
+    obj = src.newPuzzle("warlock")
+    src.guess(obj, "warlock")
+    src.guess(obj, "warlock")
+    src.guess(obj, "wrack")
+    src.guess(obj, "alcool")
+    src.saveCurrent(obj, fileName)
     #dictionary representing obj
     file = open(fileNameJson)
     dict = json.load(file)
     checkContents(fileNameJson,dict)
     print("testSaveCurrent2: PASSED")
+    list.append(fileNameJson)
     
     
+    # tests the savePuzzle function to see if the information saved is saved correctly
+    # meaning that only the baseWord and rhe manditory character is saved no other part of the game
+    def testSavePuzzle(self):
+        fileName = 'shortestGame'
+        fileNameJson = fileName + ".json"
+        obj1 = src.loadPuzzle(fileName)
+        src.guess(obj1, 'kamotiq')
+        dict1 = {"keyLetter": "q", "uniqueLetters": "aikmoqt", "shuffleLetters": "aikmoqta", "currentScore": 0, "maxScore": 14, "foundWordList": [], "allWordList": ["kamotiq"], "rank": "Beginner"}
+        src.savePuzzle(obj1,fileName)
+        obj1 = src.loadPuzzle(fileName)
+        self.assertNotEquals(obj1.foundWordList, ["kamotiq"])
+        assert(obj1.score == 0)
+        assert(obj1.rank == "Beginner")
+      
+        print("testSavePuzzle1: PASSED")
     # file is removed
-    os.remove(fileNameJson)
+    
+ 
   
 
 # test if we can overrite a save
@@ -96,35 +113,35 @@ class StateStorageTests(unittest.TestCase):
     fileNameJson = fileName + ".json"
         
 
-    StateStorage.saveCurrent(obj, fileName)
+    src.saveCurrent(obj, fileName)
     file = open(fileNameJson)
     dict1 = json.load(file)
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict1)
-    MakePuzzle.guess(obj, 'acock')
-    StateStorage.saveCurrent(obj, fileName)
+    src.guess(obj, 'acock')
+    src.saveCurrent(obj, fileName)
     file = open(fileNameJson)
     dict2 = json.load(file)
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict2)
     print("testSaveCurrent3: PASSED")
-    
-    os.remove(fileNameJson)
+    list.append(fileNameJson)
     #load a game and make sure the feilds are set correctly
     fileName = makeRandomJsonName()
     fileNameJson = fileName + ".json"
     
-    MakePuzzle.guess(obj, 'wall')
-    StateStorage.saveCurrent(obj, fileName)
-    obj2 = StateStorage.loadPuzzle(fileName)
+    src.guess(obj, 'wall')
+    src.saveCurrent(obj, fileName)
+    obj2 = src.loadPuzzle(fileName)
     dict1 = __makeDict(obj)
     
     dict2 = __makeDict(obj2)
     assert(dict1 == dict2)
     print("testLoadPuzzle1: PASSED")
     
-    os.remove(fileNameJson)
+    list.append(fileNameJson)
 
 
 if __name__ == '__main__':
     unittest.main()
+

@@ -1,8 +1,17 @@
 # Author: Francesco Spagnolo
+import sys
+import os
+
+
+current = os.path.dirname(os.path.realpath(__file__))
+
+parent = os.path.dirname(current)
+
+sys.path.append(parent)
 
 import unittest
-#import pytest
-import MakePuzzle
+
+import src
 import sqlite3
 from random import randrange
 
@@ -10,7 +19,7 @@ class MakePuzzleTests(unittest.TestCase):
     
     # testing if make puzzle correctly produces a new game
     print("for the following prompt enter the letter i for testing purposes")
-    obj = MakePuzzle.newPuzzle('friends')
+    obj = src.newPuzzle('friends')
     assert(obj.keyLett == 'i')
     assert(obj.uniqueLett == 'definrs')
     assert(obj.shuffleLett == 'definrs')
@@ -22,24 +31,20 @@ class MakePuzzleTests(unittest.TestCase):
     print("MakePuzzle: PASSED")
     
     # test findBaseWord
-    assert(MakePuzzle.findBaseWord() != None)
-    assert(MakePuzzle.findBaseWord() != ('', ''))
+    assert(src.findBaseWord() != None)
+    assert(src.findBaseWord() != ('', ''))
     print("findBaseWord: PASSED")
     
     #test checkDataBase
-    assert(MakePuzzle.checkDataBase(obj.uniqueLett) != False)
+    assert(src.checkDataBase(obj.uniqueLett) != False)
     print("checkDataBase: PASSED")
     
-    #test choseKeyLetter
-    assert(MakePuzzle.choseKeyLetter(obj.uniqueLett).isalpha())
-    assert(len(MakePuzzle.choseKeyLetter(obj.uniqueLett)) == 1)
-    print("choseKeyLetter: PASSED")
-    
+
     #test guess
-    MakePuzzle.guess(obj, 'friend')
-    assert(obj.getFoundWords() == ['friend'])
-    assert(obj.getScore() == 6)
-    assert(obj.getRank() == 'Good Start')
+    src.guess(obj, 'friend')
+    assert(obj.showFoundWords() == ['friend'])
+    assert(obj.showScore() == 6)
+    assert(obj.showRank() == 'Good Start')
     print("guess: PASSED")
     
     

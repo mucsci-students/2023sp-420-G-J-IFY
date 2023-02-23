@@ -14,12 +14,21 @@
 #   saveCurrent(puzzle: Obj, fileName : str)
 #       - saves a current state of a puzzle
 ################################################################################
+import sys
+import os
+
+
+current = os.path.dirname(os.path.realpath(__file__))
+
+parent = os.path.dirname(current)
+
+sys.path.append(parent)
 
 import json
 import string
 import os.path
 from os import path
-import model.puzzle as saveState
+import model
 from pathlib import Path
 import shutil
 
@@ -96,7 +105,7 @@ def __makeDict(saveStateObj):
 #   returns a saveState Object with all its fields set
 ################################################################################
 def __setFields(dict):
-    obj = saveState.Puzzle(dict['keyLetter'], dict['uniqueLetters'])
+    obj = model.Puzzle(dict['keyLetter'], dict['uniqueLetters'])
     obj.setShuffleLetters(dict['shuffleLetters'])
     obj.setScore(dict['currentScore'])
     obj.setMaxScore(dict['maxScore'])
@@ -129,7 +138,7 @@ def __setFields(dict):
 ################################################################################
 def savePuzzle(saveStateObj, fileName):
     # creates dict to be saved
-    newObj = saveState.Puzzle(saveStateObj.getKeyLetter(), saveStateObj.getUniqueLetters())
+    newObj = model.Puzzle(saveStateObj.getKeyLetter(), saveStateObj.getUniqueLetters())
     newObj.setMaxScore(saveStateObj.getMaxScore())
     newObj.setAllWordList(saveStateObj.getAllWords())
     newObj.updateRank()
