@@ -46,9 +46,9 @@ class StateStorageTests(unittest.TestCase):
         assert(path.isfile(fileName))
     
     def __makeDict(saveStateObj):
-        dict = {'keyLetter': saveStateObj.showKeyLetter(), 'uniqueLetters': saveStateObj.showUniqueLetters(), 
-            'shuffleLetters': saveStateObj.showShuffleLetters(), 'currentScore': saveStateObj.showScore(), 'maxScore' : saveStateObj.showMaxScore(), 
-            'foundWordList' : saveStateObj.showFoundWords(), 'allWordList': saveStateObj.showAllWords(), 'rank' : saveStateObj.showRank()}
+        dict = {'keyLetter': saveStateObj.getKeyLetter(), 'uniqueLetters': saveStateObj.getUniqueLetters(), 
+            'shuffleLetters': saveStateObj.getShuffleLetters(), 'currentScore': saveStateObj.getScore(), 'maxScore' : saveStateObj.getMaxScore(), 
+            'foundWordList' : saveStateObj.getFoundWords(), 'allWordList': saveStateObj.getAllWords(), 'rank' : saveStateObj.getRank()}
         return dict
 
 

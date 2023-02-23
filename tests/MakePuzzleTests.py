@@ -24,9 +24,9 @@ class MakePuzzleTests(unittest.TestCase):
     assert(obj.uniqueLett == 'definrs')
     assert(obj.shuffleLett == 'definrs')
     assert(obj.score == 0)
-    assert(obj.maxScore == obj.showMaxScore())
+    assert(obj.maxScore == obj.getMaxScore())
     assert(obj.foundWordList == [])
-    assert(obj.allWordList == obj.showAllWords())
+    assert(obj.allWordList == obj.getAllWords())
     assert(obj.rank == 'Beginner')
     print("MakePuzzle: PASSED")
     

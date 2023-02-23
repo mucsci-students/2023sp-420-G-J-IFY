@@ -142,7 +142,7 @@ def newPuzzle() -> object:
 #     - puzzle object storing current game state
 ################################################################################
 def printPuzzle(game : object) -> None:
-    CLI.drawTextBox([CLI.drawPuzzle(game.showShuffleLetters().upper())], 
+    CLI.drawTextBox([CLI.drawPuzzle(game.getShuffleLetters().upper())], 
                     40, '^')
 
 
@@ -158,7 +158,7 @@ def printPuzzle(game : object) -> None:
 ################################################################################
 def printWords(game : object) -> None:
     CLI.drawTextBox(
-        ['Discovered Words: \ {wrds}'.format(wrds = game.showFoundWords())], 
+        ['Discovered Words: \ {wrds}'.format(wrds = game.getFoundWords())], 
         40, '^')
 
 
@@ -174,10 +174,10 @@ def printWords(game : object) -> None:
 #     - puzzle object storing the current game state.
 ################################################################################
 def showStatus(game : object) -> None:
-    score = game.showScore()
-    max = game.showMaxScore()
+    score = game.getScore()
+    max = game.getMaxScore()
     prog = score/max
-    bar = game.showRank() + ' ' + CLI.drawProgressBar(20, prog)
+    bar = game.getRank() + ' ' + CLI.drawProgressBar(20, prog)
     stats = 'Score: {} \ Progress: {}%'.format(score, int(prog*100))
     CLI.drawTextBox(['Level: \ ' + bar + ' \ ' + stats], 40, '^')
 
