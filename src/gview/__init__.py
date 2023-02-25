@@ -1,4 +1,4 @@
-from .ButtonCluster import *
+#from .ButtonCluster import *
 from .MainWindow import *
-from .WordsWidget import *
+#from .WordsWidget import *
 
