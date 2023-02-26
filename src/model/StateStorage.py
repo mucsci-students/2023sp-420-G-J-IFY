@@ -48,6 +48,11 @@ import shutil
 def __Save(dict, fileName):
     with open(fileName, 'w') as file:
         json.dump(dict, file)
+    cwd = os.getcwd()
+    saveCur = cwd + '/' + fileName
+    saveNew = cwd + '/src' + '/data' + '/saves' + '/' + fileName
+
+    os.rename(saveCur, saveNew)
         
 ################################################################################
 # __SearchDict(dict: dict, fileName: str) -> Element
@@ -85,9 +90,12 @@ def __SearchDict(dict, element):
 #   Returns a dictionary of all fields of a saveState object
 ################################################################################
 def __makeDict(saveStateObj):
-    dict = {'keyLetter': saveStateObj.getKeyLetter(), 'uniqueLetters': saveStateObj.getUniqueLetters(), 
-            'shuffleLetters': saveStateObj.getShuffleLetters(), 'currentScore': saveStateObj.getScore(), 'maxScore' : saveStateObj.getMaxScore(), 
-            'foundWordList' : saveStateObj.getFoundWords(), 'allWordList': saveStateObj.getAllWords(), 'rank' : saveStateObj.getRank()}
+    dict = {'RequiredLetter': saveStateObj.getKeyLetter(), 
+            'PuzzleLetters': saveStateObj.getUniqueLetters(), 
+            'CurrentPoints': saveStateObj.getScore(), 
+            'MaxPoints' : saveStateObj.getMaxScore(), 
+            'GuessedWords' : saveStateObj.getFoundWords(), 
+            'WordList': saveStateObj.getAllWords()}
     return dict
 
 ################################################################################
@@ -105,13 +113,13 @@ def __makeDict(saveStateObj):
 #   returns a saveState Object with all its fields set
 ################################################################################
 def __setFields(dict):
-    obj = model.Puzzle(dict['keyLetter'], dict['uniqueLetters'])
-    obj.setShuffleLetters(dict['shuffleLetters'])
-    obj.setScore(dict['currentScore'])
-    obj.setMaxScore(dict['maxScore'])
-    obj.setFoundWords(dict['foundWordList'])
-    obj.setAllWordList(dict['allWordList'])
-    obj.setRank(dict['rank'])
+    obj = model.Puzzle(dict['RequiredLetter'], dict['PuzzleLetters'])
+    obj.shuffleChars()
+    obj.setScore(dict['CurrentPoints'])
+    obj.setMaxScore(dict['MaxPoints'])
+    obj.setFoundWords(dict['GuessedWords'])
+    obj.setAllWordList(dict['WordList'])
+    obj.setRank = obj.updateRank()
     return obj
     
 ################################################################################
@@ -224,6 +232,7 @@ def __checkFileExists(pathToFile):
 def __Load(fileName):
     # checks if file exists
     try:
+        os.chdir('./src/data/saves')
         newFileName = fileName + '.json'
         # create a path to the current directory
         path1 = Path(Path.cwd())
@@ -237,6 +246,7 @@ def __Load(fileName):
         # puts elements in the file in a dictionary
         dict = json.load(file)
         obj = __setFields(dict)
+        move3dirBack()
         return obj
     except FileNotFoundError:
 
@@ -244,3 +254,9 @@ def __Load(fileName):
         # raised saying the file does not exist
        print ("The file " + newFileName + " does not exist in this directory\n"
               "Returning to game...")
+       move3dirBack()
+       
+def move3dirBack():
+    os.chdir('..')
+    os.chdir('..')
+    os.chdir('..')
