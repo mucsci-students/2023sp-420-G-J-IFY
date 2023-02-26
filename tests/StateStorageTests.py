@@ -49,9 +49,7 @@ class StateStorageTests(unittest.TestCase):
         file = open(fileName)
         dict = json.load(file)
         assert(dict == dictToCheck)
-        os.chdir('..')
-        os.chdir('..')
-        os.chdir('..')
+        src.move3dirBack()
 
 # Params: fileName - Name of the file 
 # Checks to see if the file exists in the current directory
@@ -60,9 +58,7 @@ class StateStorageTests(unittest.TestCase):
     def checkIfExists(fileName):
         os.chdir('./src/data/saves')
         assert(path.isfile(fileName))
-        os.chdir('..')
-        os.chdir('..')
-        os.chdir('..')
+        src.move3dirBack()
     
     def __makeDict(saveStateObj):
         dict = {'RequiredLetter': saveStateObj.getKeyLetter(), 
@@ -123,10 +119,7 @@ class StateStorageTests(unittest.TestCase):
     file = open(fileNameJson)
     dict = json.load(file)
 
-    os.chdir('..')
-    os.chdir('..')
-    os.chdir('..')
-
+    src.move3dirBack()
     checkContents(fileNameJson,dict)
     print("testSaveCurrent2: PASSED")
     
@@ -160,9 +153,7 @@ class StateStorageTests(unittest.TestCase):
     os.chdir('./src/data/saves')
     file = open(fileNameJson)
     dict1 = json.load(file)
-    os.chdir('..')
-    os.chdir('..')
-    os.chdir('..')
+    src.move3dirBack()
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict1)
     src.guess(obj, 'acock')
@@ -170,9 +161,7 @@ class StateStorageTests(unittest.TestCase):
     os.chdir('./src/data/saves')
     file = open(fileNameJson)
     dict2 = json.load(file)
-    os.chdir('..')
-    os.chdir('..')
-    os.chdir('..')
+    src.move3dirBack()
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict2)
     print("testSaveCurrent3: PASSED")

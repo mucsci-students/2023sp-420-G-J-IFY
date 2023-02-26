@@ -231,9 +231,8 @@ def __checkFileExists(pathToFile):
 ################################################################################
 def __Load(fileName):
     # checks if file exists
-    os.chdir('./src/data/saves')
-
     try:
+        os.chdir('./src/data/saves')
         newFileName = fileName + '.json'
         # create a path to the current directory
         path1 = Path(Path.cwd())
@@ -247,9 +246,7 @@ def __Load(fileName):
         # puts elements in the file in a dictionary
         dict = json.load(file)
         obj = __setFields(dict)
-        os.chdir('..')
-        os.chdir('..')
-        os.chdir('..')
+        move3dirBack()
         return obj
     except FileNotFoundError:
 
@@ -257,3 +254,9 @@ def __Load(fileName):
         # raised saying the file does not exist
        print ("The file " + newFileName + " does not exist in this directory\n"
               "Returning to game...")
+       move3dirBack()
+       
+def move3dirBack():
+    os.chdir('..')
+    os.chdir('..')
+    os.chdir('..')
