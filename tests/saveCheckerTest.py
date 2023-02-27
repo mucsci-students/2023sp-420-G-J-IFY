@@ -40,7 +40,6 @@ import sqlite3
 
 # define Python user-defined exceptions
 class LettersMismatchException(Exception):
-    "Raised when key letter not in uniqueLetters"
     pass
 
 class NotInDBException(Exception):
@@ -51,6 +50,10 @@ class PointsMismatchException(Exception):
 
 class BadGuessesException(Exception):
     pass
+
+class WrongCurrentScoreException(Exception):
+    pass
+
 
 def checkLoad(guessedWords : list, wordList : list, puzzleLetters : str, 
                requiredLetter : str, currentPoints: int, 
@@ -82,20 +85,51 @@ def checkLoad(guessedWords : list, wordList : list, puzzleLetters : str,
         if not set(guessedWords).issubset(set(wordList)):
             raise BadGuessesException
         
+        tempTable = "create temporary table guessWords (guesses);"
+        cursor.execute(tempTable)
+
+        querey = "insert into guessWords (guesses) values ('"
+        for a in guessedWords:
+            querey += a + "'), ('"
+        querey += "');"
+        cursor.execute(querey)
+
+        join = """
+            select sum(wordScore) from dictionary join guessWords 
+            on dictionary.fullWord is guessWords.guesses;
+            """
+        cursor.execute(join)
+
+        ourScore = cursor.fetchone()[0]
+
+        if ourScore == None:
+            ourScore = 0
+        if ourScore != currentPoints:
+            raise WrongCurrentScoreException
 
         print("If we made it here, this save is valid")
 
     except LettersMismatchException:
         print("Keyletter not in UniqueLetters")
+        #from here, we need determine if those uniqueLetters even make a word, 
+        #or just rejec the save entirely. I'm leaning towards reject the save
 
     except NotInDBException:
         print("That combo of letters is not in our DB")
+        #again, without this funtionality, probably better to reject the save
+        #entirely
     
     except PointsMismatchException:
         print("Points don't match up, remake wordlist")
+        #this is easy enough, just regenerate that word list
 
     except BadGuessesException:
         print("There are guessed words that are not part of the wordList")
+        #prune them from the list
+
+    except WrongCurrentScoreException:
+        print("The score is not correct. Needs to be recalced")
+        #update score
 
     finally:
         #close DB
@@ -110,3 +144,5 @@ checkLoad(['bearfucker'], ['kamotiq'], 'aikmoqt', 'q', 0, 14)
 checkLoad([], ['kamotiq'], 'aikmoqt', 'q', 0, 7)
 #check if keyLetter is mached
 checkLoad([], ['kamotiq'], 'aikmoqt', 'z', 0, 7)
+#check if game is scored incorrectly
+checkLoad(['waxworks'], ['waxwork', 'waxworks'], 'waxorks', 'x', 8, 22)
