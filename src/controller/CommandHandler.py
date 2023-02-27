@@ -42,7 +42,7 @@ parent = os.path.dirname(current)
 
 sys.path.append(parent)
 
-import cview
+import cview as CLI
 from model import MakePuzzle, StateStorage
 from os import path
 
