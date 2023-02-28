@@ -8,18 +8,30 @@
 # that some difference in our systems doesn't crash our game. 
 #
 # (Global, public) functions:
-#   function1(param1 : int) -> bool
+#   checkLoad(fileName:str) -> dict
 #
-#   function2(param1='default' : str, param2 : bool) -> int
+#   load(fileName:str) -> dict
 #
-#   function3() -> None
-#
-#   function4() -> None
+#   allLoser(my_list:list(str)) -> list(str)
 #
 ################################################################################
 
 import sqlite3
+import json
+from model import StateStorage
+import os
+import sys
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+import os.path
+from os import path
+from model import MakePuzzle
+from pathlib import Path
 
+
+#for my own sanity, this is the example json save format we need to check
+#against
 """{
     "GuessedWords": [
         "fire",
@@ -38,111 +50,202 @@ import sqlite3
     "MaxPoints": 647
 }"""
 
-# define Python user-defined exceptions
-class LettersMismatchException(Exception):
-    pass
-
+################################################################################
+# class NotInDBException(Exception)
+# Description:
+#   An exception for when a unique/key combo does not exist in our DB
+#
+# Arguments:
+#   EXCEOTION : EXCEPTION
+################################################################################
 class NotInDBException(Exception):
     pass
 
-class PointsMismatchException(Exception):
-    pass
-
-class BadGuessesException(Exception):
-    pass
-
-class WrongCurrentScoreException(Exception):
-    pass
-
-
-def checkLoad(guessedWords : list, wordList : list, puzzleLetters : str, 
-               requiredLetter : str, currentPoints: int, 
-               maxPoints: int):
+################################################################################
+# checkLoad(loadFields)
+#
+# DESCRIPTION:
+#   This fucntion checks all the possible reasons why our app could faile from
+#   a foreign load
+#
+# PARAMETERS:
+#   fileName - the string of the beginning of a .json file storing save data
+#
+# RETURNS:
+#   valid dictionary for game
+#
+# RAISES:
+#   Exception
+#    
+################################################################################
+def checkLoad(fileName):   
     # SQLite Connections
     wordDict = sqlite3.connect('wordDict.db')
-    # Used to execute SQL commands
     cursor = wordDict.cursor()
 
-    puzzleLetters = puzzleLetters.lower()
-    requiredLetter = requiredLetter.lower()
-
     try:
-        #first, check if keyLetter is in uniqueLetters
-        if requiredLetter not in puzzleLetters:
-            raise LettersMismatchException
-        #next, check for if uniqueletters are good
-        uniqueLetters = ''.join(sorted(set(puzzleLetters)))
+        #Parse the json for a dict
+        dictDict = Load(fileName)
+
+        #load specific dictionary fields into local variables
+        #THROWS EXCEPTION IF KEY IS NOT IN DICT
+        guessedWords = allLower(dictDict["GuessedWords"])
+        wordList = allLower(dictDict["WordList"])
+        puzzleLetters = dictDict["PuzzleLetters"].lower()
+        requiredLetter = dictDict["RequiredLetter"].lower()
+        currentPoints = dictDict["CurrentPoints"]
+        maxPoints = dictDict["MaxPoints"]
+        
+
+        #check if the unique letters/keyletter combo is in our DB
+        #append requiredLetter to puzzleLetters just in case they fucked
+        #up how they store the required letters
+        uniqueLetters = ''.join(sorted(set(puzzleLetters + requiredLetter)))
         cursor.execute("select score from allGames where uniqueLetters = '" +
                        uniqueLetters + "' and keyLetter = '" + requiredLetter +
                        "';")
         score = cursor.fetchone()
+        #if the score isn't in our DB, then its not a valid game, 
+        #reject the game
         if score == None:
             raise NotInDBException
         
+        #if score mismatch, remake word list from our DB
         if score[0] != maxPoints:
-            raise PointsMismatchException
+            print("Points mismatch, fixing now")
+            maxPoints = score[0]
+            #generateWordList
+            wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, 
+                                                         requiredLetter)
         
+        #check to make sure all guesses are valid
         if not set(guessedWords).issubset(set(wordList)):
-            raise BadGuessesException
+            for word in guessedWords:
+                #prune any bad guesses from list
+                if word not in wordList:
+                    print(word + " Is not a valid for this puzzle")
+                    guessedWords.remove(word)
         
+        #rescore the validated guess list
         tempTable = "create temporary table guessWords (guesses);"
         cursor.execute(tempTable)
-
         querey = "insert into guessWords (guesses) values ('"
         for a in guessedWords:
             querey += a + "'), ('"
         querey += "');"
         cursor.execute(querey)
-
         join = """
             select sum(wordScore) from dictionary join guessWords 
             on dictionary.fullWord is guessWords.guesses;
             """
         cursor.execute(join)
-
+        #this is what our score should be
         ourScore = cursor.fetchone()[0]
-
+        #if there's doesn't match, set it to ours
         if ourScore == None:
             ourScore = 0
         if ourScore != currentPoints:
-            raise WrongCurrentScoreException
+            print("Looks like those points aren't accureate. Let's get "
+                  + "that corrected ")
+            currentPoints = ourScore
 
+        #at this point, all fields are validates in our game, remake dictionary
         print("If we made it here, this save is valid")
+        dictDict["GuessedWords"] = guessedWords
+        dictDict["WordList"] = wordList
+        dictDict["PuzzleLetters"] = puzzleLetters
+        dictDict["RequiredLetter"] = requiredLetter
+        dictDict["CurrentPoints"] = currentPoints 
+        dictDict["MaxPoints"] = maxPoints 
 
-    except LettersMismatchException:
-        print("Keyletter not in UniqueLetters")
-        #from here, we need determine if those uniqueLetters even make a word, 
-        #or just rejec the save entirely. I'm leaning towards reject the save
+        #return validated dictionary
+        return dictDict
 
+    #KeyError is raised IF the fields in the .json do not match the standard
+    except KeyError:
+        print("BAD KEYS")
+        #this is a critical error and needs to be dumped
+
+    #NotinDBException is raised IF the game doesn't exist in our DB
     except NotInDBException:
         print("That combo of letters is not in our DB")
-        #again, without this funtionality, probably better to reject the save
-        #entirely
-    
-    except PointsMismatchException:
-        print("Points don't match up, remake wordlist")
-        #this is easy enough, just regenerate that word list
+        #REJECT THE LOAD
 
-    except BadGuessesException:
-        print("There are guessed words that are not part of the wordList")
-        #prune them from the list
-
-    except WrongCurrentScoreException:
-        print("The score is not correct. Needs to be recalced")
-        #update score
-
+    #regardless of end, close connection to DB
     finally:
         #close DB
         wordDict.commit()
         wordDict.close()
 
-#check if all is good
-checkLoad([], ['kamotiq'], 'aikmoqt', 'q', 0, 14)
-#check for badGuess
-checkLoad(['bearfucker'], ['kamotiq'], 'aikmoqt', 'q', 0, 14)
-#check for point mismatch
-checkLoad([], ['kamotiq'], 'aikmoqt', 'q', 0, 7)
-#check if keyLetter is mached
-checkLoad([], ['kamotiq'], 'aikmoqt', 'z', 0, 7)
-#check if game is scored incorrectly
-checkLoad(['waxworks'], ['waxwork', 'waxworks'], 'waxorks', 'x', 8, 22)
+
+################################################################################
+# This is an exact ripoff of StateStorage.__load()
+################################################################################
+def Load(fileName):
+    # checks if file exists
+    try:
+        os.chdir('./src/data/saves')
+        newFileName = fileName + '.json'
+        # create a path to the current directory
+        path1 = Path(Path.cwd())
+        # append the file in question to the path
+        a = path1 / newFileName
+        StateStorage.__checkFileExists(a)
+
+        # opens file
+        file = open(newFileName)
+
+        # puts elements in the file in a dictionary
+        dict = json.load(file)
+        move3dirBack()
+        return dict
+    except FileNotFoundError:
+
+        # if fileName does not exist then a FileNotFoundError is 
+        # raised saying the file does not exist
+       print ("The file " + newFileName + " does not exist in this directory\n"
+              "Returning to game...")
+       move3dirBack()
+       
+def move3dirBack():
+    os.chdir('..')
+    os.chdir('..')
+    os.chdir('..')
+
+############################################################################
+# allLower(my_list : list(str)) -> list(str)
+#
+# DESCRIPTION:
+#   This helper function changes all strings in a list to lower case
+#
+# PARAMETERS:
+#   my_list 
+#       - a list of strings of unkown case
+#
+# RETURNS:
+#   list(str)
+#       - a list of strings in lower case
+############################################################################
+def allLower(my_list):
+    return[x.lower() for x in my_list]
+
+
+#Test cases
+"""
+print("\nkamotiqGood")
+checkLoad('kamotiqGood')
+print('\nwarlockGood')
+checkLoad('warlockGood')
+print('\nwaxworkGood')
+checkLoad('waxworkGood')
+print('\nbadFields')
+checkLoad('badFields')
+print('\nbadGameSeed')
+checkLoad('badGameSeed')
+print('\nbadMaxScore')
+checkLoad('badMaxScore')
+print('\nbadGuess')
+checkLoad('badGuess')
+print('\nBADEVERYTHING')
+checkLoad('BADEVERYTHING')
+"""

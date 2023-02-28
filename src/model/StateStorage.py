@@ -245,6 +245,10 @@ def __Load(fileName):
 
         # puts elements in the file in a dictionary
         dict = json.load(file)
+
+        ###here is where I'm going to call the field checker, can      ###fail out as needed
+
+
         obj = __setFields(dict)
         move3dirBack()
         return obj
