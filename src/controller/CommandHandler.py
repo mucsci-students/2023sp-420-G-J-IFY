@@ -108,7 +108,7 @@ def parse(usrinput : str, game : object) -> object:
                 return game
                 
             else:
-                MakePuzzle.guess(game, usrinput)
+                MakePuzzle.guess(game, usrinput, False)
                 return game
 
 

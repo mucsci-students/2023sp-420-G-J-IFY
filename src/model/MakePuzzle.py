@@ -192,9 +192,14 @@ def checkDataBase(baseWord: str):
 #  input : str
 #   user input 
 ################################################################################
-def guess(puzzle, input: str):
+def guess(puzzle, input: str, flag : bool):
     
-    input = input.lower()
+    if not flag:
+        input = input.lower()
+    else:
+        #TODO
+        #input = pull from gui
+        pass
 
     conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
@@ -202,13 +207,23 @@ def guess(puzzle, input: str):
     #check for every case in the user's guess to give points or output error
     #check for only containing alphabetical characters
     if not input.isalpha():
-        print(input + " contains non alphabet characters")
+        if not flag:
+            print(input + " contains non alphabet characters")
+        else:
+            # TODO
+            # pop up window
+            pass
         
     # checks words in the word list to see if it is valid for the puzzle
     elif input in puzzle.getAllWords(): 
         #check if it is already found
-        if input in puzzle.getFoundWords(): 
-            print(input.upper() + " was already found!")
+        if input in puzzle.getFoundWords():
+            if not flag:
+                print(input.upper() + " was already found!")
+            else:
+                #TODO
+                #Pop up window
+                pass
         else:
             #query the database to see how many points to give
             query = "select wordScore from dictionary where fullWord = '" + input + "';"
@@ -218,20 +233,40 @@ def guess(puzzle, input: str):
             puzzle.updateFoundWords(input)
             print(input.upper() + ' is one of the words!')
     elif len(input) < 4: #if the word is not in the list check the size
-        print(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
+        if not flag:
+            print(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
+        else:
+            #TODO
+            #POPUP WINDOW
+            pass
     else:
         #query the database to see if it is a word at all
         query1 = "select uniqueLetters from dictionary where fullWord = '" + input + "';"
         cursor.execute(query1)
         response = cursor.fetchone()
         if response == None:
-            print(input.upper() + " isn't a word in the dictionary")
+            if not flag:
+                print(input.upper() + " isn't a word in the dictionary")
+            else:
+                #TODO
+                #Popup window
+                pass
         #check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())): 
-            print(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
+            if not flag:
+                print(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
+            else:
+                #TODO
+                #popup Window
+                pass
         else:
             #must be letters not in the puzzle in this case
-            print(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
+            if not flag:
+                print(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
+            else:
+                #TODO
+                #popup window
+                pass
             
     conn.commit()
     conn.close()
