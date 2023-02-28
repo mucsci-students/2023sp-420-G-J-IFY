@@ -21,6 +21,7 @@ from PyQt6.QtCore import (
     QSize,
 )
 from PyQt6.QtGui import (
+    QMouseEvent,
     QPainter,
     QPen,
     QBrush,
@@ -91,13 +92,13 @@ class HexCluster(QWidget):
         width = self.buttons[0].width
 
         xpad = 10
-        ypad = 10
+        ypad = int(math.sqrt(xpad**2 - (xpad/2)**2))
 
         posx = int(width/2 + xpad/2)
         posy = 0
 
         self.buttons[1].move(posx, posy)
-        posx += width + ypad
+        posx += width + xpad
         self.buttons[2].move(posx, posy)
 
         posx = 0
@@ -178,6 +179,7 @@ class HexButton(QPushButton):
         self.x = 3
         self.y = 3
         self.boundingBox = QRect(self.x, self.y, self.width, self.height)
+        self.radius = self.height/2
         self.hexagon = self._calcHex()
         self.setFlat(True)
         self.setText(text)
@@ -251,6 +253,16 @@ class HexButton(QPushButton):
         self._drawText(painter)
         painter.end()
 
+    def mousePressEvent(self, e: QMouseEvent) -> None:
+        self.radius -= 2
+        # self.setColor(Qt.GlobalColor.green)
+        return super().mousePressEvent(e)
+    
+    def mouseReleaseEvent(self, e: QMouseEvent) -> None:
+        self.radius += 2
+        # self.setColor(Qt.GlobalColor.white)
+        return super().mouseReleaseEvent(e)
+
 
     ############################################################################
     # _drawBoundingBox(painter : QPainter) -> None
@@ -286,6 +298,8 @@ class HexButton(QPushButton):
         brush = QBrush(Qt.BrushStyle.SolidPattern)
         brush.setColor(self.color)
         pen = QPen(self.color, 2, Qt.PenStyle.SolidLine)
+
+        self.hexagon = self._calcHex()
 
         painter.setBrush(brush)
         painter.drawPolygon(self.hexagon)
@@ -330,25 +344,22 @@ class HexButton(QPushButton):
     #     with a bounding box with side length self.size
     # RETURN:
     #   QPolygonF:
-    #     - a hexagon with a diameter of self.size
+    #     - an equilateral hexagon of size radius
     ############################################################################
     def _calcHex(self) -> QPolygonF:
-
-        hexagon = QPolygonF()
         
-        sideLength = self.height/2
+        hexagon = QPolygonF()
+
         posX = self.width/2 + self.x
-        posY = self.y
-        rads = -math.pi/6
+        posY = self.height/2 + self.y
+        rads = math.pi/2
 
-        hexagon.append(QPointF(posX, posY))
+        for i in range(6):
+            hexagon.append(QPointF(
+                posX + math.cos(rads) * self.radius,
+                posY + math.sin(rads) * self.radius
+            ))
 
-        for i in range(5):
             rads += math.pi/3
-
-            posX += (math.cos(rads) * sideLength)
-            posY += (math.sin(rads) * sideLength)
-
-            hexagon.append(QPointF(posX, posY))
 
         return hexagon

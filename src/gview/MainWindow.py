@@ -204,6 +204,8 @@ class GameWidget(QWidget):
         for btn in self.cluster.buttons:
             btn.clicked.connect(self._onHexClicked)
 
+        self.uInput.textEdited.connect(self._onUInputEdited)
+
         self._initUI()
 
 
@@ -233,15 +235,18 @@ class GameWidget(QWidget):
         # Set formatting attributes of user input field
         self.uInput.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.uInput.setFrame(False)
-        self.uInput.setFont(QFont("Helvetica", 25))
+        font = QFont("Arial", 30)
+        font.setBold(True)
+        self.uInput.setFont(font)
         self.uInput.setStyleSheet("background : rgba(0, 0, 0, 0)")
 
         # regular expression that only allows key letters, upper and lower.
         # ex. [W|A|R|L|O|C|K]+|[w|a|r|l|o|c|k]+
-        regex = QRegularExpression((
-            f"[{'|'.join(self.letters).upper()}]+|"
-            f"[{'|'.join(self.letters).lower()}]+"
-        ))
+        regex = QRegularExpression(
+            f"[{'|'.join(self.letters).upper()}|"
+            f"{'|'.join(self.letters).lower()}]+"
+        )
+        print(regex)
         # Create and set uInput validator
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)
@@ -287,7 +292,8 @@ class GameWidget(QWidget):
         sender = self.sender()
         self.uInput.setText(f'{self.uInput.text()}{sender.text}')
 
-
+    def _onUInputEdited(self, txt):
+        self.uInput.setText(txt.upper())
 
 def main():
     app = QApplication([])
