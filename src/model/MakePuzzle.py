@@ -28,17 +28,21 @@ import itertools
 #  baseWord : str
 #   takes a baseword that is either an empty string or a pangram and makes a 
 #   puzzle from it
+#  
+#  flag : bool
+#    flag to check if we are using cli or gui (True for Gui False for Cli)
+#
 #
 # RETURNS:
 #  puzzle
 #   empty game object
-#
+# 
 # RAISES:
 #  BadQueryException
 #   if check is baseword contains nonalphas
 #   if word is in the database
 ################################################################################
-def newPuzzle(baseWord: str) -> object:    
+def newPuzzle(baseWord: str, flag: bool) -> object:    
     try:
         uniqueLetters = {}
         if baseWord == '':
@@ -65,18 +69,10 @@ def newPuzzle(baseWord: str) -> object:
             uniqueLetters = returnTuple[1]
             # need to catch if user enters more than one letter. This is a known 
             # problem that will be addressed before end of sprint 1
-            keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
-            keyLetter = keyLetter.lower()
-                        #test to see if keyletter is valid
-            while keyLetter not in uniqueLetters or keyLetter == "":
-                #catch if they enter nothing
-                if keyLetter == "":
-                    keyLetter = input("Must enter character from " 
-                                      + baseWord + ": ")
-                else:
-                    keyLetter = input(keyLetter + " is not part of " 
-                                      + baseWord + 
-                                      " - Please enter a letter from your word: ")
+            if flag == False:
+                keyLetter = newPuzzCli(baseWord, uniqueLetters)
+            else:
+                keyLetter = newPuzzGui(baseWord)
             #now that the input has been validated, go find the max score for this game
             conn = sqlite3.connect('wordDict.db')
             cursor = conn.cursor()
@@ -99,7 +95,11 @@ def newPuzzle(baseWord: str) -> object:
         return puzzle
     #Raise exception for bad puzzle seed
     except BadQueryException:
-        print(baseWord.upper() + " is not a valid word")
+        if flag == False:
+            print(baseWord.upper() + " is not a valid word")
+        else:
+            # TODO
+            pass
         return CommandHandler.newPuzzle()
     
 
@@ -339,3 +339,43 @@ def sortStrToAlphabetical(unsorted : str) -> str:
     uniqueLettersList = sorted(set(unsorted))
     #convert list to string
     return ''.join(uniqueLettersList)
+
+
+
+################################################################################
+# newPuzzCli(baseWord: str, uniqueLetters: dict) -> str
+#
+# DESCRIPTION:
+#   This function takes a string and a dictionary and handles input to determine
+#   the key Letter for CLI
+#
+# PARAMETERS:
+#   baseWord: str
+#       base word of a puzzle 
+#
+#   uniqueLetters: dict
+#       dict of unique letters    
+# 
+# RETURNS:
+#   keyLetter: str
+#       key letter for the game  
+#
+################################################################################
+def newPuzzCli(baseWord: str, uniqueLetters: dict) -> str:
+    keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
+    keyLetter = keyLetter.lower()
+    #test to see if keyletter is valid
+    while keyLetter not in uniqueLetters or keyLetter == "":
+    #catch if they enter nothing
+        if keyLetter == "":
+            keyLetter = input("Must enter character from " 
+                                        + baseWord + ": ")
+        else:
+            keyLetter = input(keyLetter + " is not part of " 
+                                    + baseWord + 
+                                    " - Please enter a letter from your word: ")
+    return keyLetter
+            
+def newPuzzGui(baseWord: str):
+    # TODO
+    pass
