@@ -108,7 +108,7 @@ def parse(usrinput : str, game : object) -> object:
                 return game
                 
             else:
-                MakePuzzle.guess(game, usrinput)
+                MakePuzzle.guess(game, usrinput, False)
                 return game
 
 
@@ -126,7 +126,7 @@ def newPuzzle() -> object:
     print('Please enter a base word with exactly 7 unique characters. \n' +
     'For auto-generated base word, press enter.')
     word = input('> ')
-    out = MakePuzzle.newPuzzle(word.lower())
+    out = MakePuzzle.newPuzzle(word.lower(), False)
     out.shuffleChars()
     return(out)
 
