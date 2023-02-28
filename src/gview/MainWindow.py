@@ -202,7 +202,7 @@ class GameWidget(QWidget):
 
         # Append each cluster button's text to user input field when clicked
         for btn in self.cluster.buttons:
-            btn.clicked.connect(self.onHexClicked)
+            btn.clicked.connect(self._onHexClicked)
 
         self._initUI()
 
