@@ -284,14 +284,14 @@ def guess(puzzle, input: str, flag : bool):
 #   list
 #       - a list of all the possible words for the given puzzle
 ################################################################################
-def getAllWordsFromPangram(puzz) -> list: #unclear how to add the puzzle type to this line
+def getAllWordsFromPangram(unique, key) -> list: #unclear how to add the puzzle type to this line
     #create powerset of letters from baseword
-    pSet = list(powerset(puzz.getUniqueLetters()))
+    pSet = list(powerset(unique))
     cleanSet = []
 
     #remove sets from powerset to produce subset with keyletter
     for a in pSet:
-        if puzz.getKeyLetter() in a:
+        if key in a:
             cleanSet.append(sortStrToAlphabetical(''.join(a)))
       
     #Time to querey the DB   
