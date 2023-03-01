@@ -1,12 +1,12 @@
 ifeq ($(OS), Windows_NT)
-all:run clean
+all: setup
 
 
 setup:
 	pip install pytest
 	pip install PyQt6
 	pip install -e .
-	cls
+	
 
 activate:
 	. .venv/Scripts/activate
@@ -39,17 +39,17 @@ cleanTests:
 
 else
 
-all:run
+all: setup
 
 
 setup:
 	pip install pytest
 	pip install PyQt6
 	pip install -e .
-	clear
+	
 
 activate:
-	source .venv/Scripts/activate
+	. .venv/bin/activate
 
 venv:
 	python3 -m venv .venv
