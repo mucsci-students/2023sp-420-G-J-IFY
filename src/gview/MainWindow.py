@@ -20,6 +20,10 @@ sys.path.append(filePath)
 from SimpleBCluster import simpleButtonCluster
 from StatsPanel import StatsPanel
 from HexCluster import HexCluster
+from Dialogs import (
+    LoadDialog,
+    LoadFailedDialog,
+)
 from PyQt6.QtGui import (
     QAction,
     QFont,
@@ -116,6 +120,7 @@ class MainWindow(QMainWindow):
         newAction = QAction('New', self)
         saveAction = QAction('Save', self)
         loadAction = QAction('Load', self)
+        loadAction.triggered.connect(self._onLoadBtnClicked)
         statsAction = QAction('Stats', self)
         helpAction = QAction('Help', self)
 
@@ -157,6 +162,11 @@ class MainWindow(QMainWindow):
     ############################################################################
     def _createCentralWidget(self):
         self.setCentralWidget(GameWidget(self, self.letters))
+
+    def _onLoadBtnClicked(self):
+
+        loadDlg = LoadDialog(self)
+        loadDlg.show()
 
 
 
