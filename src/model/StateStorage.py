@@ -258,6 +258,7 @@ def __Load(fileName):
     # checks if file exists
     try:
         os.chdir('./src/data/saves')
+        # check if user ended their save with the .json filename
         if fileName.endswith('.json'):
             newFileName = fileName
         else:
