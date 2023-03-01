@@ -258,7 +258,10 @@ def __Load(fileName):
     # checks if file exists
     try:
         os.chdir('./src/data/saves')
-        newFileName = fileName + '.json'
+        if fileName.endswith('.json'):
+            newFileName = fileName
+        else:
+            newFileName = fileName + '.json'
         # create a path to the current directory
         path1 = Path(Path.cwd())
         # append the file in question to the path
