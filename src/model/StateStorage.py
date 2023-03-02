@@ -18,6 +18,7 @@ import sys
 import os
 import sqlite3 #for saveGameChecker
 from model import MakePuzzle #for saveGameChecker
+import model.output as output
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -180,7 +181,7 @@ def savePuzzle(saveStateObj, fileName):
     __Save(dict, fileName + ".json")
     
 ################################################################################
-# loadPuzzle(fileName: str) -> obj
+# loadPuzzle(fileName: str, outty : object) -> obj
 #
 # DESCRIPTION:
 #   loads the puzzle given a file name
@@ -192,9 +193,11 @@ def savePuzzle(saveStateObj, fileName):
 # RETURNS:
 #  __Load(fileName)
 #   Loaded puzzle obj
+#   outty : object
+#     - output object storing output strings
 ################################################################################
-def loadPuzzle(fileName):
-    return __Load(fileName)
+def loadPuzzle(fileName, outty):
+    return __Load(fileName, outty)
 
 ################################################################################
 # saveCurrent(puzzle: obj, fileName: str)
@@ -237,7 +240,7 @@ def __checkFileExists(pathToFile):
         return p.exists()
 
 ################################################################################
-# __Load(fileName: str) -> Obj
+# __Load(fileName: str, outty : object) -> Obj
 #
 # DESCRIPTION:
 #   loads the file and creates a dictionary that will be returned
@@ -245,6 +248,8 @@ def __checkFileExists(pathToFile):
 # PARAMETERS:
 #  fileName : str
 #   the name of the file ex 'help'
+#   outty : object
+#     - output object storing output strings
 #
 # RETURNS:
 #  obj
@@ -254,7 +259,7 @@ def __checkFileExists(pathToFile):
 #  FileNotFoundError
 #   file that is trying to be loaded does not exist
 ################################################################################
-def __Load(fileName):
+def __Load(fileName, outty):
     # checks if file exists
     try:
         os.chdir('./src/data/saves')
@@ -288,11 +293,11 @@ def __Load(fileName):
     except FileNotFoundError:
         # if fileName does not exist then a FileNotFoundError is 
         # raised saying the file does not exist
-       print ("The file " + newFileName + " does not exist in this directory\n"
+       outty.setField("The file " + newFileName + " does not exist in this directory\n"
               "Returning to game...")
        move3dirBack()
     except BadJSONException:
-        print ("The file " + newFileName + " contains critical errors that \n"
+        outty.setField("The file " + newFileName + " contains critical errors that \n"
               "prevent the game from functioning properly\n"
               "Returning to game...")
         

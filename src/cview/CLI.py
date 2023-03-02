@@ -22,6 +22,7 @@
 ################################################################################
 
 from os import system, name
+import model.output as output
 
 ################################################################################
 # drawTextBox(message : str, width : int, align : str) -> None
@@ -160,8 +161,10 @@ def drawPuzzle(letters : list) -> str:
 # PARAMETERS:
 #   game : object
 #     - puzzle object storing current game state
+#   outty : object
+#     - output object storing output string
 ################################################################################
-def drawGameBox(game : object) -> None:
+def drawGameBox(game : object, outty : object) -> None:
 
     # calculate game progression
     score = game.getScore()
@@ -172,9 +175,10 @@ def drawGameBox(game : object) -> None:
     tier2 = 'Level: \ {lvl} {pBar}'.format(lvl = game.getRank(), 
                                            pBar = drawProgressBar(20, prog))
     tier3 = 'Discovered Words: \ {wrds}'.format(wrds = game.getFoundWords())
-    tier4 = drawPuzzle(game.getShuffleLetters().upper())
-    tier5 = 'Enter your guess, or type \'!help\' for a list of commands.'
-    drawTextBox([tier1, tier2, tier3, tier4, tier5], 40, '^')
+    tier4 = outty.getField()
+    tier5 = drawPuzzle(game.getShuffleLetters().upper())
+    tier6 = 'Enter your guess, or type \'!help\' for a list of commands.'
+    drawTextBox([tier1, tier2, tier3, tier4, tier5, tier6], 40, '^')
 
 
 ################################################################################
