@@ -11,7 +11,7 @@
 # GUIController
 #
 # FUNCTIONS:
-# connectSignals(self, keySymbol: str, button)
+# connectSignals(keySymbol: str, button)
 ################################################################################
 
 #LaunchSetting() { 
@@ -76,6 +76,10 @@ def connectSignals():
 #  input : str
 #   user input as a single character (one at a time)
 ################################################################################        
+    def buildExpr(self, subExpression: str) -> None:
+        
+        expression = self.view.displayText() + subExpression
+        self.view.setDisplayText(expression)
 #    def buildExpr(self, subExpression: str) -> None:
 #        
 #        expression = self.view.displayText() + subExpression
@@ -237,7 +241,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
