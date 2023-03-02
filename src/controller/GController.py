@@ -58,7 +58,7 @@ window = MainWindow(puzzle)
 #  user input as a single character (one at a time)
 ################################################################################
 def connectSignals():
-    dialog = window.newDialog
+    dialog = window.nwDialog
 
     baseWord = dialog.uInput.text()
     keyLett = dialog.keyLett.currentActivatedText()

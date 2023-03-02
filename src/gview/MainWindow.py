@@ -20,7 +20,7 @@ sys.path.append(filePath)
 from model.puzzle import Puzzle
 from StatsPanel import StatsPanel
 from HexCluster import HexCluster
-from Dialogs import LoadDialog, NewDialog, LoadFailedDialog
+import Dialogs
 from PyQt6.QtGui import (
     QAction,
     QFont,
@@ -61,21 +61,24 @@ from PyQt6.QtWidgets import (
 #
 ################################################################################
 class MainWindow(QMainWindow):
-    def __init__(self, puzzle : Puzzle, *args, **kwargs):
+    def __init__(self, puzzle : Puzzle=None, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         
         self.statsPanel = StatsPanel(self)
 
-        self.centralWidget = GameWidget(self, puzzle.getShuffleLetters)
+        if puzzle == None:
+            self.centralWidgetr = GameWidget(self, ['W', 'A', 'R', 'L', 'O', 'C', 'K'])
+        else:
+            self.centralWidget = GameWidget(self, puzzle.getShuffleLetters)
         self.toolBar = self._createToolBar()
         self.infoBar = self._createInfoBar()
         self.setStatusBar(QStatusBar(self))
 
-        self.newDialog = NewDialog(self)
-        self.loadDialog = LoadDialog(self)
-        self.loadFailed = LoadFailedDialog(self)
-        self.saveDialog = None
-        self.helpDialog = None
+        self.newDialog = Dialogs.NewDialog(self)
+        self.loadDialog = Dialogs.LoadDialog(self)
+        self.loadFailed = Dialogs.LoadFailedDialog(self)
+        self.saveDialog = Dialogs.SaveDialog(self)
+        self.helpDialog = Dialogs.HelpDialog(self)
 
         self.setWindowTitle('Spelling Bee')
         self.setMinimumSize(700, 400)
@@ -106,7 +109,7 @@ class MainWindow(QMainWindow):
         loadAction = QAction('Load', self)
         helpAction = QAction('Help', self)
 
-        newAction.triggered.connect(self.newDialog.show)
+        newAction.triggered.connect(self.nwDialog.show)
         saveAction.triggered.connect(self.saveDialog.show)
         loadAction.triggered.connect(self.loadDialog.show)
         helpAction.triggered.connect(self.helpDialog.show)
@@ -272,3 +275,8 @@ class GameWidget(QWidget):
 
     def _onUInputEdited(self, txt):
         self.uInput.setText(txt.upper())
+
+
+if __name__ == '__main__':
+    app = QApplication([])
+    window = MainWindow()
