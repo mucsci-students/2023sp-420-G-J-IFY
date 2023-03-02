@@ -32,6 +32,7 @@ from gview.MainWindow import MainWindow
 from model import MakePuzzle, StateStorage, output
 from model.puzzle import Puzzle
 import PyQt6
+from PyQt6.QtCore import QEvent
 from PyQt6.QtWidgets import QApplication
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -63,9 +64,12 @@ def connectSignals(puzzle, window, outty):
     keyLett = dialog.keyLett.currentText()
 
     # newPuzzle uses default params
-    dialog.warningBtns.accepted.connect(newPuzzle)
+    dialog.warningBtns.accepted.connect(
+        lambda: newPuzzle(puzzle, outty, window, '', '')
+    )
     # newPuzzle uses provided params
-    dialog.advBtns.accepted.connect(lambda: newPuzzle(puzzle, outty,baseWord, keyLett))
+    dialog.advBtns.accepted.connect(
+        lambda: newPuzzle(puzzle, outty, window, baseWord, keyLett))
     
     window.centralWidget.entrBtn.clicked.connect(lambda: guess(puzzle, outty, window))
     window.centralWidget.uInput.returnPressed.connect(lambda: guess(puzzle, outty, window))
@@ -90,13 +94,11 @@ def connectSignals(puzzle, window, outty):
 #   object
 #     - new puzzle object
 ################################################################################
-def newPuzzle(puzzle: Puzzle, outty,baseWord : str = '', keyLetter : str = '') -> None:
-    sender = sender().parent
-    baseWord = sender.basWrd.text()
-    keyLetter = sender.keyLett.currentText()
-    out = MakePuzzle.newPuzzle(baseWord, keyLetter, outty, True).shuffleChars()
-    puzzle = out
-    sender.accept()
+def newPuzzle(puzzle: Puzzle, outty, window : MainWindow, baseWord : str = '', keyLetter : str = '') -> None:
+    puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, outty, True)
+
+    window.newGame(puzzle)
+
 ################################################################################
 # guess(window: object) -> None
 #
