@@ -15,6 +15,7 @@
 #       - saves a current state of a puzzle
 ################################################################################
 import sys
+import dbFixer
 import os
 import sqlite3 #for saveGameChecker
 from model import MakePuzzle #for saveGameChecker
@@ -345,6 +346,7 @@ def allLower(my_list):
 ################################################################################
 def checkLoad(dictDict):   
     # SQLite Connections
+    dbFixer.goToDB()
     wordDict = sqlite3.connect('wordDict.db') #this is the top level, needs to be fixed later
     cursor = wordDict.cursor()
 
@@ -428,5 +430,6 @@ def checkLoad(dictDict):
         #close DB
         wordDict.commit()
         wordDict.close()
+        dbFixer.leaveDB()
         #return validated dictionary or NONE if exception occured
         return dictDict
