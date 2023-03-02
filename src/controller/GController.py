@@ -54,7 +54,7 @@ class GController():
         self.connectSignals()
 
 
-    ################################################################################
+    ############################################################################
     # connectSignals(keySymbol: str, button)
     #
     # DESCRIPTION:
@@ -66,7 +66,7 @@ class GController():
     #  keySymbol : str
     #  button : unsure
     #  user input as a single character (one at a time)
-    ################################################################################
+    ############################################################################
     def connectSignals(self):
         dialog = self.window.newDialog
 
@@ -242,7 +242,7 @@ class GController():
 def main():
     outty = output.Output()
     app = QApplication([])
-    cntrl = GController()
+    control = GController()
     sys.exit(app.exec())
     
 if __name__ == '__main__':
