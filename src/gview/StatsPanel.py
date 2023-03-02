@@ -13,6 +13,7 @@
 #
 ################################################################################
 
+from model.puzzle import Puzzle
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -75,7 +76,6 @@ class StatsPanel(QWidget):
         # initialize defaults for foundWords:
         self.foundWords.setReadOnly(True)
         self.foundWords.setFont(QFont('Helvetica', 16))
-        self.foundWords.setText('Found Words:')
 
         # Size Policies:
         # level is at its minimum size defined
@@ -109,3 +109,7 @@ class StatsPanel(QWidget):
         )
 
         self.setLayout(layout)
+
+    def update(self, puzzle : Puzzle) -> None:
+        
+        self.foundWords.setText('\n'.join(puzzle.getFoundWords()))

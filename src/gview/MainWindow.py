@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
         
         self.statsPanel = StatsPanel(self)
 
-        self.centralWidget = GameWidget(self, puzzle.getShuffleLetters)
+        self.centralWidget = GameWidget(self, puzzle.getUniqueLetters().upper())
 
         self.setCentralWidget(self.centralWidget)
 

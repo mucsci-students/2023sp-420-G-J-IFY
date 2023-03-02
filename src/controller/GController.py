@@ -29,7 +29,8 @@ import os
 from os import path
 from functools import partial
 from gview.MainWindow import MainWindow
-from model import MakePuzzle, StateStorage, output, puzzle
+from model import MakePuzzle, StateStorage, output
+from model.puzzle import Puzzle
 import PyQt6
 from PyQt6.QtWidgets import QApplication
 current = os.path.dirname(os.path.realpath(__file__))
@@ -38,8 +39,10 @@ sys.path.append(parent)
         
 #Global Var
 outty = output.Output()
+global puzzle 
 puzzle = MakePuzzle.newPuzzle('','',outty,True)
 app = QApplication([])
+global window 
 window = MainWindow(puzzle)
 
           
@@ -96,7 +99,7 @@ def newPuzzle(baseWord : str = '', keyLetter : str = '') -> None:
     sender = sender().parent
     baseWord = sender.basWrd.text()
     keyLetter = sender.keyLett.currentText()
-    out = MakePuzzle.newPuzzle(baseWord, keyLetter, None, 0).shuffleChars()
+    out = MakePuzzle.newPuzzle(baseWord, keyLetter, outty, True).shuffleChars()
     puzzle =  out
     sender.accept()
 ################################################################################
@@ -115,6 +118,9 @@ def guess():
     text = window.centralWidget.uInput.text()
     window.centralWidget.uInput.clear()
     MakePuzzle.guess(puzzle, text, True, outty)    
+    window.statsPanel.update(puzzle)
+    window.setStatusTip(outty.getField())
+    print(outty.getField())
 ################################################################################
 # saveGame(Game : object) -> None:
 #
@@ -224,6 +230,5 @@ def deleteInput():
     window.centralWidget.uInput.backspace()
 
 connectSignals()
-#window.welcomeDialog.show()
 window.show()
 sys.exit(app.exec())
