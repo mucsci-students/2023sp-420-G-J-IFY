@@ -27,7 +27,7 @@
 import sys
 import os
 from functools import partial
-from gview import SimpleBCluster
+from gview import SimpleBCluster, MainWindow
 from model import MakePuzzle, StateStorage
 import PyQt6
 from PyQt6.QtWidgets import QApplication
