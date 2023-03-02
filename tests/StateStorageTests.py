@@ -7,7 +7,7 @@ import string
 import random
 import sys
 import os
-
+import model.output as output
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -19,7 +19,7 @@ sys.path.append(parent)
 import src
 import json
 import unittest
-
+outty = output.Output()
 list =[]
 class StateStorageTests(unittest.TestCase):
     # Creates a random string of length 10 
@@ -106,12 +106,11 @@ class StateStorageTests(unittest.TestCase):
 #test if we save  all the state remains and a file is created
     fileName = 'TESTFILE2'
     fileNameJson = fileName + ".json"
-    print("for the following prompt enter only the character a for testing purposes")
-    obj = src.newPuzzle("warlock", False)
-    src.guess(obj, "warlock",False)
-    src.guess(obj, "warlock",False)
-    src.guess(obj, "wrack",False)
-    src.guess(obj, "alcool",False)
+    obj = src.newPuzzle("warlock",'a', outty, False)
+    src.guess(obj, "warlock", False, outty)
+    src.guess(obj, "warlock",False, outty)
+    src.guess(obj, "wrack", False, outty)
+    src.guess(obj, "alcool", False, outty)
     src.saveCurrent(obj, fileName)
     #dictionary representing obj
     os.chdir('./src/data/saves')
@@ -129,12 +128,12 @@ class StateStorageTests(unittest.TestCase):
     fileName = 'TESTFILE3'
     fileNameJson = fileName + ".json"
     obj = makeShortestGame()
-    src.guess(obj, 'kamotiq',False)
+    src.guess(obj, 'kamotiq', False, outty)
     dict1 = {'RequiredLetter': 'q', 'PuzzleLetters': 'kamotiq', 
                  'CurrentPoints': 0, 'MaxPoints': 14, 'GuessedWords': [], 
                  'WordList': ['kamotiq']} 
     src.savePuzzle(obj,fileName)
-    obj1 = src.loadPuzzle(fileName)
+    obj1 = src.loadPuzzle(fileName, outty)
     assert(obj1.foundWordList != ["kamotiq"])
     assert(obj1.score == 0)
     assert(obj1.rank == "Beginner")
@@ -156,7 +155,7 @@ class StateStorageTests(unittest.TestCase):
     src.move3dirBack()
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict1)
-    src.guess(obj, 'acock',False)
+    src.guess(obj, 'acock', False, outty)
     src.saveCurrent(obj, fileName)
     os.chdir('./src/data/saves')
     file = open(fileNameJson)
@@ -170,9 +169,9 @@ class StateStorageTests(unittest.TestCase):
     fileName = "TESTFILE5"
     fileNameJson = fileName + ".json"
     
-    src.guess(obj, 'wall', False)
+    src.guess(obj, 'wall', False, outty)
     src.saveCurrent(obj, fileName)
-    obj2 = src.loadPuzzle(fileName)
+    obj2 = src.loadPuzzle(fileName, outty)
     dict1 = __makeDict(obj)
     
     dict2 = __makeDict(obj2)

@@ -1,8 +1,8 @@
 # Author: Francesco Spagnolo
 import sys
 import os
-
-
+import model.output as output
+outty = output.Output()
 current = os.path.dirname(os.path.realpath(__file__))
 
 parent = os.path.dirname(current)
@@ -18,8 +18,7 @@ from random import randrange
 class MakePuzzleTests(unittest.TestCase):
     
     # testing if make puzzle correctly produces a new game
-    print("for the following prompt enter the letter i for testing purposes")
-    obj = src.newPuzzle('friends', False)
+    obj = src.newPuzzle('friends', 'i', outty, False)
     assert(obj.keyLett == 'i')
     assert(obj.uniqueLett == 'definrs')
     assert(obj.shuffleLett == 'definrs')
@@ -41,12 +40,12 @@ class MakePuzzleTests(unittest.TestCase):
     
 
     #test guess
-    src.guess(obj, 'friend', False)
+    src.guess(obj, 'friend', False, outty)
     assert(obj.getFoundWords() == ['friend'])
     assert(obj.getScore() == 6)
     assert(obj.getRank() == 'Good Start')
     print("guess: PASSED")
     
-    
+    #huge
 if __name__ == '__main__':
     unittest.main()
