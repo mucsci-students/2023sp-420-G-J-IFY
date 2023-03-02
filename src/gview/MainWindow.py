@@ -114,10 +114,10 @@ class MainWindow(QMainWindow):
 
         # add buttons to tool bar
         newAction = QAction('New', self)
-        newAction.triggered.connect(self._onNewBtnClicked)
+        #newAction.triggered.connect(self._onNewBtnClicked)
         saveAction = QAction('Save', self)
         loadAction = QAction('Load', self)
-        loadAction.triggered.connect(self._onLoadBtnClicked)
+        #loadAction.triggered.connect(self._onLoadBtnClicked)
         statsAction = QAction('Stats', self)
         helpAction = QAction('Help', self)
 
