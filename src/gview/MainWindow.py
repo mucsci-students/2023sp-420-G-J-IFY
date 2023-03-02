@@ -95,6 +95,12 @@ class MainWindow(QMainWindow):
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
         self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.infoBar)
 
+    def newGame(self, puzzle: Puzzle) -> None:
+
+        self.centralWidget.cluster.setLetters(puzzle.getUniqueLetters().upper())
+        self.statsPanel.update(puzzle)
+        self.centralWidget.newGame(puzzle.getShuffleLetters().upper())
+
 
     ############################################################################
     # _createToolBar()
@@ -200,6 +206,17 @@ class GameWidget(QWidget):
         self.uInput.textEdited.connect(self._onUInputEdited)
 
         self._initUI()
+
+    def newGame(self, letters : list[str]):
+        self.letters = letters
+
+        regex = QRegularExpression(
+            f"[{'|'.join(self.letters).upper()}|"
+            f"{'|'.join(self.letters).lower()}]+"
+        )
+        # Create and set uInput validator
+        validator = QRegularExpressionValidator(regex)
+        self.uInput.setValidator(validator)
 
 
     ############################################################################
