@@ -9,14 +9,11 @@ from PyQt6.QtWidgets import (
     QApplication,
     QWidget,
     QDialog,
-    QSizePolicy,
     QVBoxLayout,
     QLabel,
     QLineEdit,
     QDialogButtonBox,
-    QComboBox,
 )
-
 
 class LoadDialog(QDialog):
     def __init__(self, parent: QWidget, *args, **kwargs):
