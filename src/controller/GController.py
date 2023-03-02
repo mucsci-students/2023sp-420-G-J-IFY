@@ -71,15 +71,15 @@ def connectSignals():
     window.centralWidget.enter.click.connect(guess)
     window.centralWidget.uInput.returnPressed.connect(guess)
     
-    window.saveDialog.btns.accepted.connect(saveGame)
+    # window.saveDialog.btns.accepted.connect(saveGame)
     
-    window.helpDialog.btns.accepted.connect(help)
+    # window.helpDialog.btns.accepted.connect(help)
     
     window.centralWidget.shuffle.click.connect(shuffleLetters)
     
     window.loadDialog.btns.accepted.connect(loadGame)
     
-    window.centralWidget.delete.click.connect(deleteInput)           
+    window.centralWidget.delete.click.connect(deleteInput)         
 ################################################################################
 # newPuzzle(userInput) -> object:
 #
@@ -219,7 +219,7 @@ def loadGame(game : object, fileName: str='') -> None:
 #   none
 ################################################################################
 def deleteInput():
-    window.centralWidget.uInput.clear()
+    window.centralWidget.uInput.backspace()
 
 connectSignals(window)
 window.show()
