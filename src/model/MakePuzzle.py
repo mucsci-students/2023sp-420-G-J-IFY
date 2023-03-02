@@ -15,7 +15,6 @@ import sqlite3
 from random import randrange
 import model.puzzle as saveState
 from model import dbFixer
-from controller import CommandHandler
 import itertools
 import model.output as output
 
@@ -110,13 +109,10 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
         else:
             # TODO
             pass
-        return CommandHandler.newPuzzle(outty)
     except LetterMismatchException:
         outty.setField(keyLetter.upper() + " is not a valid key letter")
-        return CommandHandler.newPuzzle(outty)
     except EmptyKeyLetterException:
         outty.setField("Key letter cannot be empty")
-        return CommandHandler.newPuzzle(outty)
     
 
 #Exception used for newPuzzle to catch bad starting words

@@ -131,8 +131,6 @@ def parse(usrinput : str, game : object, outty) -> object:
 #     - new puzzle object
 ################################################################################
 def newPuzzle(outty) -> object:
-    if outty.getField() != '':
-        print(outty.getField())
     print('Please enter a base word with exactly 7 unique characters. \n' +
     'For auto-generated base word, press enter.')
     word = input('> ')
@@ -141,8 +139,12 @@ def newPuzzle(outty) -> object:
         keyLetter = input("Enter a letter from your word "
                       "to use as the key letter\n> ")
     out = MakePuzzle.newPuzzle(word.lower(), keyLetter.lower(), outty, False)
-    out.shuffleChars()
-    return(out)
+    if outty.getField() != '':
+        print(outty.getField())
+        newPuzzle(outty)
+    else:
+        out.shuffleChars()
+        return(out)
 
 
 ################################################################################
