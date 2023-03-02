@@ -107,14 +107,14 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
     #Raise exception for bad puzzle seed
     except BadQueryException:
         if flag == False:
-            outty.setField(baseWord.upper() + " is not a valid word")
+            outty.setField("ERROR!: " + baseWord.upper() + " is not a valid word")
         else:
             # TODO
             pass
     except LetterMismatchException:
-        outty.setField(keyLetter.upper() + " is not a valid key letter")
+        outty.setField("ERROR!: " + keyLetter.upper() + " is not a valid key letter")
     except EmptyKeyLetterException:
-        outty.setField("Key letter cannot be empty")
+        outty.setField("ERROR!: " + "Key letter cannot be empty")
     
 
 #Exception used for newPuzzle to catch bad starting words
