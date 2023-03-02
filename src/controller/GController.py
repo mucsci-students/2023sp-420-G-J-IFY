@@ -72,7 +72,7 @@ def connectSignals():
     window.centralWidget.entrBtn.clicked.connect(guess)
     window.centralWidget.uInput.returnPressed.connect(guess)
 
-    window.welcomeDialog.accepted.connect(window.show)
+    window.welcomeDialog.accepted.connect(window.loadDialog.show)
     window.welcomeDialog.rejected.connect(window.show)
     
     # window.saveDialog.btns.accepted.connect(saveGame)
@@ -226,7 +226,7 @@ def deleteInput():
     window.centralWidget.uInput.backspace()
 
 connectSignals()
-puzzle = puzzle.Puzzle('', ['', '', '', '', '', '', ''])
+puzzle = MakePuzzle.newPuzzle('','',outty,True)
 puzzle.shuffle()
 window.welcomeDialog.show()
 sys.exit(app.exec())
