@@ -20,9 +20,7 @@ sys.path.append(filePath)
 from SimpleBCluster import simpleButtonCluster
 from StatsPanel import StatsPanel
 from HexCluster import HexCluster
-from Dialogs import (
-    NewDialog,
-)
+from LoadDialog import LoadDialog
 from PyQt6.QtGui import (
     QAction,
     QFont,
@@ -117,9 +115,10 @@ class MainWindow(QMainWindow):
 
         # add buttons to tool bar
         newAction = QAction('New', self)
-        newAction.triggered.connect(self._onNewBtnClicked)
+        #newAction.triggered.connect(self._onNewBtnClicked)
         saveAction = QAction('Save', self)
         loadAction = QAction('Load', self)
+        loadAction.triggered.connect(self._onLoadBtnClicked)
         statsAction = QAction('Stats', self)
         helpAction = QAction('Help', self)
 
@@ -162,10 +161,9 @@ class MainWindow(QMainWindow):
     def _createCentralWidget(self):
         self.setCentralWidget(GameWidget(self, self.letters))
 
-    def _onNewBtnClicked(self):
-
-        newDlg = NewDialog(self)
-        newDlg.show()
+    def _onLoadBtnClicked(self, e):
+        dialog = LoadDialog(self)
+        dialog.show()
 
 
 
