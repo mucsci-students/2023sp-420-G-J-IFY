@@ -14,9 +14,6 @@ activate:
 venv:
 	py -m venv .venv
 
-run: setup
-	py SpellingBee
-
 tests: setup
 	py tests
 
@@ -53,10 +50,6 @@ activate:
 
 venv:
 	python3 -m venv .venv
-
-run: setup
-	python3 SpellingBee
-	
 
 tests: setup
 	python3 tests

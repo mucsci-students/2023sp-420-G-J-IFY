@@ -1,3 +1,3 @@
 from gview import *
 
-main()
+from .GController import *
