@@ -17,6 +17,13 @@ import model.puzzle as saveState
 from model import dbFixer
 from controller import CommandHandler
 import itertools
+import model.output as output
+
+class LetterMismatchException(Exception):
+    pass
+
+class EmptyKeyLetterException(Exception):
+    pass
 
 
 ################################################################################
@@ -29,7 +36,8 @@ import itertools
 #  baseWord : str
 #   takes a baseword that is either an empty string or a pangram and makes a 
 #   puzzle from it
-#  
+#  outty : object
+#     - output object storing output strings
 #  flag : bool
 #    flag to check if we are using cli or gui (True for Gui False for Cli)
 #
@@ -43,7 +51,7 @@ import itertools
 #   if check is baseword contains nonalphas
 #   if word is in the database
 ################################################################################
-def newPuzzle(baseWord: str, flag: bool) -> object:    
+def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object:    
     try:
         uniqueLetters = {}
         if baseWord == '':
@@ -60,20 +68,19 @@ def newPuzzle(baseWord: str, flag: bool) -> object:
             #catch if nonalphas before query is made to prevent SQL injection
             if not baseWord.isalpha():
                 raise BadQueryException
+            #validate the key letter
+            if keyLetter == '':
+                raise EmptyKeyLetterException 
+            if keyLetter not in baseWord:
+                raise LetterMismatchException
+
             #query DB for word
             returnTuple = checkDataBase(baseWord.lower())
             #returnTuple will be None if query returns emptyy
             if returnTuple == None:
-                # Need to catch this exception, this is a known problem that will
-                # be addressed before end of sprint 1
                 raise BadQueryException
             uniqueLetters = returnTuple[1]
-            # need to catch if user enters more than one letter. This is a known 
-            # problem that will be addressed before end of sprint 1
-            if flag == False:
-                keyLetter = newPuzzCli(baseWord, uniqueLetters)
-            else:
-                keyLetter = newPuzzGui(baseWord)
+
             #now that the input has been validated, go find the max score for this game
             dbFixer.goToDB()
             conn = sqlite3.connect('wordDict.db')
@@ -99,11 +106,17 @@ def newPuzzle(baseWord: str, flag: bool) -> object:
     #Raise exception for bad puzzle seed
     except BadQueryException:
         if flag == False:
-            print(baseWord.upper() + " is not a valid word")
+            outty.setField(baseWord.upper() + " is not a valid word")
         else:
             # TODO
             pass
-        return CommandHandler.newPuzzle()
+        return CommandHandler.newPuzzle(outty)
+    except LetterMismatchException:
+        outty.setField(keyLetter.upper() + " is not a valid key letter")
+        return CommandHandler.newPuzzle(outty)
+    except EmptyKeyLetterException:
+        outty.setField("Key letter cannot be empty")
+        return CommandHandler.newPuzzle(outty)
     
 
 #Exception used for newPuzzle to catch bad starting words
@@ -187,7 +200,7 @@ def checkDataBase(baseWord: str):
 
 
 ################################################################################
-# guess(puzzle, input: str)
+# guess(puzzle, input: str, flag : bool, outty : object)
 #
 # DESCRIPTION:
 #   checks the database for valid words, already found words and 
@@ -198,8 +211,12 @@ def checkDataBase(baseWord: str):
 #   puzzle object of current played game space
 #  input : str
 #   user input 
+#  flag : bool
+#  outty : object
+#    - output object storing output strings
+#
 ################################################################################
-def guess(puzzle, input: str, flag : bool):
+def guess(puzzle, input: str, flag : bool, outty : object):
     
     if not flag:
         input = input.lower()
@@ -215,7 +232,7 @@ def guess(puzzle, input: str, flag : bool):
     #check for only containing alphabetical characters
     if not input.isalpha():
         if not flag:
-            print(input + " contains non alphabet characters")
+            outty.setField(input + " contains non alphabet characters")
         else:
             # TODO
             # pop up window
@@ -226,7 +243,7 @@ def guess(puzzle, input: str, flag : bool):
         #check if it is already found
         if input in puzzle.getFoundWords():
             if not flag:
-                print(input.upper() + " was already found!")
+                outty.setField(input.upper() + " was already found!")
             else:
                 #TODO
                 #Pop up window
@@ -238,10 +255,10 @@ def guess(puzzle, input: str, flag : bool):
             puzzle.updateScore(cursor.fetchone()[0])
             puzzle.updateRank()
             puzzle.updateFoundWords(input)
-            print(input.upper() + ' is one of the words!')
+            outty.setField(input.upper() + ' is one of the words!')
     elif len(input) < 4: #if the word is not in the list check the size
         if not flag:
-            print(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
+            outty.setField(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
         else:
             #TODO
             #POPUP WINDOW
@@ -253,7 +270,7 @@ def guess(puzzle, input: str, flag : bool):
         response = cursor.fetchone()
         if response == None:
             if not flag:
-                print(input.upper() + " isn't a word in the dictionary")
+                outty.setField(input.upper() + " isn't a word in the dictionary")
             else:
                 #TODO
                 #Popup window
@@ -261,7 +278,7 @@ def guess(puzzle, input: str, flag : bool):
         #check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())): 
             if not flag:
-                print(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
+                outty.setField(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
             else:
                 #TODO
                 #popup Window
@@ -269,7 +286,7 @@ def guess(puzzle, input: str, flag : bool):
         else:
             #must be letters not in the puzzle in this case
             if not flag:
-                print(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
+                outty.setField(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
             else:
                 #TODO
                 #popup window
@@ -407,7 +424,7 @@ def sortStrToAlphabetical(unsorted : str) -> str:
 #
 ################################################################################
 def newPuzzCli(baseWord: str, uniqueLetters: dict) -> str:
-    keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
+    keyLetter = input("Enter a letter from your word to use as the key letter\n> ")     #####i believe these are fully depricated now Jacob Lovegren 3/1/23
     keyLetter = keyLetter.lower()
     #test to see if keyletter is valid
     while keyLetter not in uniqueLetters or keyLetter == "":
