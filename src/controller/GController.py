@@ -38,14 +38,9 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
         
 #Global Var
-outty = output.Output()
-global puzzle 
-puzzle = MakePuzzle.newPuzzle('','',outty,True)
-app = QApplication([])
-global window 
-window = MainWindow(puzzle)
 
-          
+
+
         
         
 ################################################################################
@@ -61,7 +56,7 @@ window = MainWindow(puzzle)
 #  button : unsure
 #  user input as a single character (one at a time)
 ################################################################################
-def connectSignals():
+def connectSignals(puzzle, window, outty):
     dialog = window.newDialog
 
     baseWord = dialog.baseWrd.text()
@@ -70,20 +65,20 @@ def connectSignals():
     # newPuzzle uses default params
     dialog.warningBtns.accepted.connect(newPuzzle)
     # newPuzzle uses provided params
-    dialog.advBtns.accepted.connect(lambda: newPuzzle(baseWord, keyLett))
+    dialog.advBtns.accepted.connect(lambda: newPuzzle(puzzle, outty,baseWord, keyLett))
     
-    window.centralWidget.entrBtn.clicked.connect(guess)
-    window.centralWidget.uInput.returnPressed.connect(guess)
+    window.centralWidget.entrBtn.clicked.connect(lambda: guess(puzzle, outty, window))
+    window.centralWidget.uInput.returnPressed.connect(lambda: guess(puzzle, outty, window))
     
     # window.saveDialog.btns.accepted.connect(saveGame)
     
     # window.helpDialog.btns.accepted.connect(help)
     
-    window.centralWidget.shflBtn.clicked.connect(shuffleLetters)
+    window.centralWidget.shflBtn.clicked.connect(lambda: shuffleLetters(puzzle))
     
-    window.loadDialog.btns.accepted.connect(loadGame)
+    window.loadDialog.btns.accepted.connect(lambda: loadGame(puzzle, window))
     
-    window.centralWidget.delBtn.clicked.connect(deleteInput)  
+    window.centralWidget.delBtn.clicked.connect(lambda: deleteInput(window))  
 
 ################################################################################
 # newPuzzle(userInput) -> object:
@@ -95,13 +90,12 @@ def connectSignals():
 #   object
 #     - new puzzle object
 ################################################################################
-def newPuzzle(baseWord : str = '', keyLetter : str = '') -> None:
-    global puzzle 
+def newPuzzle(puzzle: Puzzle, outty,baseWord : str = '', keyLetter : str = '') -> None:
     sender = sender().parent
     baseWord = sender.basWrd.text()
     keyLetter = sender.keyLett.currentText()
     out = MakePuzzle.newPuzzle(baseWord, keyLetter, outty, True).shuffleChars()
-    puzzle =  out
+    puzzle = out
     sender.accept()
 ################################################################################
 # guess(window: object) -> None
@@ -114,9 +108,8 @@ def newPuzzle(baseWord : str = '', keyLetter : str = '') -> None:
 #  window : Obj
 #   the GUI window we will be manipulating
 ################################################################################
-def guess():
-    #Connect to text field in view and grab
-    global puzzle 
+def guess(puzzle, outty, window):
+    #Connect to text field in view and grab 
     text = window.centralWidget.uInput.text()
     window.centralWidget.uInput.clear()
     MakePuzzle.guess(puzzle, text, True, outty)    
@@ -134,8 +127,7 @@ def guess():
 #   game : object
 #     - puzzle object storing the current game state
 ################################################################################
-def saveGame() -> None:
-    global puzzle 
+def saveGame(puzzle) -> None:
     # Takes file name
     handleSave(puzzle, 0)
     handleSave(puzzle, 1)    
@@ -196,8 +188,7 @@ def help() -> None:
 #   provides a brief description of game rules and generally how to play as well
 #   as a list of all available commands.
 ################################################################################
-def shuffleLetters() -> None:
-    global puzzle 
+def shuffleLetters(puzzle) -> None:
     puzzle.shuffleChars()
 ################################################################################
 # loadGame(game : object) -> None:
@@ -209,15 +200,14 @@ def shuffleLetters() -> None:
 #   game : object
 #     - puzzle object storing the current game state
 ################################################################################
-def loadGame(game : object, fileName: str='') -> None:
-    global puzzle 
+def loadGame(game : object, window) -> None: 
     sender = sender().parent.uInput.text()
     fileName = sender
     if path.isfile(fileName +'.json'):
         newGame =  StateStorage.loadPuzzle(fileName)
         
         if newGame != None:
-            puzzle = newGame
+            game = newGame
         else:
             window.loadFailed.show()
     else:
@@ -231,9 +221,18 @@ def loadGame(game : object, fileName: str='') -> None:
 # PARAMETERS:
 #   none
 ################################################################################
-def deleteInput():
+def deleteInput(window):
     window.centralWidget.uInput.backspace()
 
-connectSignals()
-window.show()
-sys.exit(app.exec())
+
+def main():
+    outty = output.Output()
+    puzzle = MakePuzzle.newPuzzle('','',outty,True)
+    app = QApplication([])
+    window = MainWindow(puzzle) 
+    connectSignals(puzzle, window, outty)
+    window.show()
+    sys.exit(app.exec())
+    
+if __name__ == '__main__':
+    main()
