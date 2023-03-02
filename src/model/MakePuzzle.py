@@ -16,7 +16,7 @@ from random import randrange
 import model.puzzle as saveState
 from controller import CommandHandler
 import itertools
-
+import model.output as output
 
 ################################################################################
 # newPuzzle(baseWord: str) -> Puzzle Obj
@@ -42,7 +42,7 @@ import itertools
 #   if check is baseword contains nonalphas
 #   if word is in the database
 ################################################################################
-def newPuzzle(baseWord: str, flag: bool) -> object:    
+def newPuzzle(baseWord: str, outty: output, flag: bool) -> object:    
     try:
         uniqueLetters = {}
         if baseWord == '':
@@ -96,11 +96,11 @@ def newPuzzle(baseWord: str, flag: bool) -> object:
     #Raise exception for bad puzzle seed
     except BadQueryException:
         if flag == False:
-            print(baseWord.upper() + " is not a valid word")
+            outty.setField(baseWord.upper() + " is not a valid word")
         else:
             # TODO
             pass
-        return CommandHandler.newPuzzle()
+        return CommandHandler.newPuzzle(outty)
     
 
 #Exception used for newPuzzle to catch bad starting words

@@ -2,6 +2,7 @@ import cview.CLI as CLI
 import model.puzzle as puzzle
 import controller.CommandHandler as CommandHandler
 import os
+import model.output as output
 
 
 # TODO, restrict input to JUST !new, !load, and !exit
@@ -9,6 +10,7 @@ import os
 usrinput = ' '
 validIn = False
 puzzle = puzzle.Puzzle('', '')
+outty = output.Output()
 
 # inital user initialization of game
 while not validIn:
@@ -20,7 +22,8 @@ while not validIn:
     #CLI.clear()
     match usrinput:
         case '!new':
-            puzzle = CommandHandler.newPuzzle()
+            puzzle = CommandHandler.newPuzzle(outty)
+            print(outty.getField())
             validIn = True
         case '!load':
             puzzle = CommandHandler.loadGame(puzzle)

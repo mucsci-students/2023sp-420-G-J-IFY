@@ -34,6 +34,7 @@
 ################################################################################
 import sys
 import os
+import model.output as output
 
 
 current = os.path.dirname(os.path.realpath(__file__))
@@ -122,11 +123,11 @@ def parse(usrinput : str, game : object) -> object:
 #   object
 #     - new puzzle object
 ################################################################################
-def newPuzzle() -> object:
+def newPuzzle(outty) -> object:
     print('Please enter a base word with exactly 7 unique characters. \n' +
     'For auto-generated base word, press enter.')
     word = input('> ')
-    out = MakePuzzle.newPuzzle(word.lower(), False)
+    out = MakePuzzle.newPuzzle(word.lower(), outty, False)
     out.shuffleChars()
     return(out)
 
