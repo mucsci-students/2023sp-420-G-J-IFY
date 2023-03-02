@@ -361,7 +361,7 @@ class HelpDialog(QDialog):
         self.setLayout(layout)
 
 class WelcomeDialog(QDialog):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, parent=None, *args, **kwargs):
         super(WelcomeDialog, self).__init__(parent=None, *args, **kwargs)
 
         self.message = QLabel(self)

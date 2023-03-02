@@ -37,8 +37,8 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
         
 #Global Var
-puzzle = None
 outty = output.Output()
+puzzle = MakePuzzle.newPuzzle('','',outty,True)
 app = QApplication([])
 window = MainWindow(puzzle)
 
@@ -71,9 +71,6 @@ def connectSignals():
     
     window.centralWidget.entrBtn.clicked.connect(guess)
     window.centralWidget.uInput.returnPressed.connect(guess)
-
-    window.welcomeDialog.accepted.connect(window.loadDialog.show)
-    window.welcomeDialog.rejected.connect(window.show)
     
     # window.saveDialog.btns.accepted.connect(saveGame)
     
@@ -83,7 +80,8 @@ def connectSignals():
     
     window.loadDialog.btns.accepted.connect(loadGame)
     
-    window.centralWidget.delBtn.clicked.connect(deleteInput)         
+    window.centralWidget.delBtn.clicked.connect(deleteInput)  
+
 ################################################################################
 # newPuzzle(userInput) -> object:
 #
@@ -226,7 +224,6 @@ def deleteInput():
     window.centralWidget.uInput.backspace()
 
 connectSignals()
-puzzle = MakePuzzle.newPuzzle('','',outty,True)
-puzzle.shuffle()
-window.welcomeDialog.show()
+#window.welcomeDialog.show()
+window.show()
 sys.exit(app.exec())

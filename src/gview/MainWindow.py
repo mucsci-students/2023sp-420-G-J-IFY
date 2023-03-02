@@ -61,20 +61,17 @@ from PyQt6.QtWidgets import (
 #
 ################################################################################
 class MainWindow(QMainWindow):
-    def __init__(self, puzzle : Puzzle=None, *args, **kwargs):
+    def __init__(self, puzzle : Puzzle, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         
         self.statsPanel = StatsPanel(self)
 
-        if puzzle == None:
-            self.centralWidget = GameWidget(self, ['W', 'A', 'R', 'L', 'O', 'C', 'K'])
-        else:
-            self.centralWidget = GameWidget(self, puzzle.getShuffleLetters)
+        self.centralWidget = GameWidget(self, puzzle.getShuffleLetters)
 
         self.setCentralWidget(self.centralWidget)
 
         self.setStatusBar(QStatusBar(self))
-        self.welcomeDialog = Dialogs.WelcomeDialog(self)
+        #self.welcomeDialog = Dialogs.WelcomeDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
         self.loadDialog = Dialogs.LoadDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
@@ -231,7 +228,6 @@ class GameWidget(QWidget):
             f"[{'|'.join(self.letters).upper()}|"
             f"{'|'.join(self.letters).lower()}]+"
         )
-        print(regex)
         # Create and set uInput validator
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)
