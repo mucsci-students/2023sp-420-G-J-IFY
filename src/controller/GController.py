@@ -28,8 +28,8 @@ import sys
 import os
 from os import path
 from functools import partial
-from gview import MainWindow
-from model import MakePuzzle, StateStorage
+from gview.MainWindow import MainWindow
+from model import MakePuzzle, StateStorage, output
 import PyQt6
 from PyQt6.QtWidgets import QApplication
 current = os.path.dirname(os.path.realpath(__file__))
@@ -37,7 +37,8 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
         
 #Global Var
-puzzle = None       
+puzzle = None
+outty = output.Output()
 app = QApplication([])
 window = MainWindow(puzzle)
 
@@ -58,28 +59,28 @@ window = MainWindow(puzzle)
 #  user input as a single character (one at a time)
 ################################################################################
 def connectSignals():
-    dialog = window.nwDialog
+    dialog = window.newDialog
 
-    baseWord = dialog.uInput.text()
-    keyLett = dialog.keyLett.currentActivatedText()
+    baseWord = dialog.baseWrd.text()
+    keyLett = dialog.keyLett.currentText()
 
     # newPuzzle uses default params
     dialog.warningBtns.accepted.connect(newPuzzle)
     # newPuzzle uses provided params
     dialog.advBtns.accepted.connect(lambda: newPuzzle(baseWord, keyLett))
     
-    window.centralWidget.enter.click.connect(guess)
+    window.centralWidget.entrBtn.clicked.connect(guess)
     window.centralWidget.uInput.returnPressed.connect(guess)
     
     # window.saveDialog.btns.accepted.connect(saveGame)
     
     # window.helpDialog.btns.accepted.connect(help)
     
-    window.centralWidget.shuffle.click.connect(shuffleLetters)
+    window.centralWidget.shflBtn.clicked.connect(shuffleLetters)
     
     window.loadDialog.btns.accepted.connect(loadGame)
     
-    window.centralWidget.delete.click.connect(deleteInput)         
+    window.centralWidget.delBtn.clicked.connect(deleteInput)         
 ################################################################################
 # newPuzzle(userInput) -> object:
 #
@@ -112,7 +113,7 @@ def guess():
     #Connect to text field in view and grab
     text = window.centralWidget.uInput.text()
     window.centralWidget.uInput.clear()
-    MakePuzzle.guess(puzzle, text)    
+    MakePuzzle.guess(puzzle, text, True, outty)    
 ################################################################################
 # saveGame(Game : object) -> None:
 #
@@ -221,6 +222,6 @@ def loadGame(game : object, fileName: str='') -> None:
 def deleteInput():
     window.centralWidget.uInput.backspace()
 
-connectSignals(window)
+connectSignals()
 window.show()
 sys.exit(app.exec())

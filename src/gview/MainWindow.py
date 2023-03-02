@@ -67,18 +67,21 @@ class MainWindow(QMainWindow):
         self.statsPanel = StatsPanel(self)
 
         if puzzle == None:
-            self.centralWidgetr = GameWidget(self, ['W', 'A', 'R', 'L', 'O', 'C', 'K'])
+            self.centralWidget = GameWidget(self, ['W', 'A', 'R', 'L', 'O', 'C', 'K'])
         else:
             self.centralWidget = GameWidget(self, puzzle.getShuffleLetters)
-        self.toolBar = self._createToolBar()
-        self.infoBar = self._createInfoBar()
-        self.setStatusBar(QStatusBar(self))
 
+        self.setCentralWidget(self.centralWidget)
+
+        self.setStatusBar(QStatusBar(self))
         self.newDialog = Dialogs.NewDialog(self)
         self.loadDialog = Dialogs.LoadDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
+
+        self.toolBar = self._createToolBar()
+        self.infoBar = self._createInfoBar()
 
         self.setWindowTitle('Spelling Bee')
         self.setMinimumSize(700, 400)
@@ -88,7 +91,7 @@ class MainWindow(QMainWindow):
         )
 
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
-        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.statusBar)
+        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.infoBar)
 
 
     ############################################################################
@@ -135,7 +138,7 @@ class MainWindow(QMainWindow):
         infoBar = QToolBar('Stats', self)
         infoBar.setMovable(False)
 
-        self.statsPanel.setParnt(infoBar)
+        self.statsPanel.setParent(infoBar)
         infoBar.addWidget(self.statsPanel)
 
         return infoBar 
@@ -275,8 +278,3 @@ class GameWidget(QWidget):
 
     def _onUInputEdited(self, txt):
         self.uInput.setText(txt.upper())
-
-
-if __name__ == '__main__':
-    app = QApplication([])
-    window = MainWindow()
