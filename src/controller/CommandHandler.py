@@ -139,7 +139,7 @@ def newPuzzle(outty) -> object:
         keyLetter = input("Enter a letter from your word "
                       "to use as the key letter\n> ")
     out = MakePuzzle.newPuzzle(word.lower(), keyLetter.lower(), outty, False)
-    if outty.getField() != '':
+    if outty.getField().startswith("ERROR"):
         print(outty.getField())
         newPuzzle(outty)
     else:
