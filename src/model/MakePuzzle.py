@@ -101,6 +101,8 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
         # Generates rank
         puzzle.updateRank()
         
+        outty.setField('Puzzle creation successful.\nLetters: {}\nKeyletter: {}'.format(puzzle.getUniqueLetters(), puzzle.getKeyLetter()))
+
         return puzzle
     #Raise exception for bad puzzle seed
     except BadQueryException:
@@ -210,12 +212,16 @@ def checkDataBase(baseWord: str):
 ################################################################################
 def guess(puzzle, input: str, flag : bool, outty : object):
     
+    input = input.lower()
+    '''
     if not flag:
         input = input.lower()
     else:
         #TODO
         #input = pull from gui
+        outty.setField('Flag: {}'.format(flag))
         pass
+    '''
     dbFixer.goToDB()
     conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
@@ -223,23 +229,31 @@ def guess(puzzle, input: str, flag : bool, outty : object):
     #check for every case in the user's guess to give points or output error
     #check for only containing alphabetical characters
     if not input.isalpha():
+        outty.setField(input + " contains non alphabet characters")
+
+        '''
         if not flag:
             outty.setField(input + " contains non alphabet characters")
         else:
             # TODO
             # pop up window
             pass
+        '''
         
     # checks words in the word list to see if it is valid for the puzzle
     elif input in puzzle.getAllWords(): 
         #check if it is already found
+        outty.setField('input in words list')
         if input in puzzle.getFoundWords():
+            outty.setField(input.upper() + " was already found!")
+            '''
             if not flag:
                 outty.setField(input.upper() + " was already found!")
             else:
                 #TODO
                 #Pop up window
                 pass
+            '''
         else:
             #query the database to see how many points to give
             query = "select wordScore from dictionary where fullWord = '" + input + "';"
@@ -249,40 +263,53 @@ def guess(puzzle, input: str, flag : bool, outty : object):
             puzzle.updateFoundWords(input)
             outty.setField(input.upper() + ' is one of the words!')
     elif len(input) < 4: #if the word is not in the list check the size
+
+        outty.setField(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
+        '''
         if not flag:
             outty.setField(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
         else:
             #TODO
             #POPUP WINDOW
             pass
+        '''
     else:
         #query the database to see if it is a word at all
         query1 = "select uniqueLetters from dictionary where fullWord = '" + input + "';"
         cursor.execute(query1)
         response = cursor.fetchone()
         if response == None:
+            outty.setField(input.upper() + " isnt't a word in the dictionary")
+            '''
             if not flag:
                 outty.setField(input.upper() + " isn't a word in the dictionary")
             else:
                 #TODO
                 #Popup window
                 pass
+            '''
         #check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())): 
+            outty.setField(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
+            '''
             if not flag:
                 outty.setField(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
             else:
                 #TODO
                 #popup Window
                 pass
+            '''
         else:
             #must be letters not in the puzzle in this case
+            outty.setField(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
+            '''
             if not flag:
                 outty.setField(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
             else:
                 #TODO
                 #popup window
                 pass
+            '''
             
     conn.commit()
     conn.close()

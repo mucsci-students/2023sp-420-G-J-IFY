@@ -108,14 +108,29 @@ def newPuzzle(puzzle: Puzzle, outty,baseWord : str = '', keyLetter : str = '') -
 #  window : Obj
 #   the GUI window we will be manipulating
 ################################################################################
-def guess(puzzle, outty, window):
+def guess(puzzle: Puzzle, outty: output.Output, window: MainWindow):
     #Connect to text field in view and grab 
     text = window.centralWidget.uInput.text()
     window.centralWidget.uInput.clear()
     MakePuzzle.guess(puzzle, text, True, outty)    
     window.statsPanel.update(puzzle)
     window.setStatusTip(outty.getField())
-    print(outty.getField())
+    out = (
+        '=========================\n'
+        'Guess: {0}\n'
+        'Found Words: {1}\n'
+        'All Words: {2}\n'
+        'Outty: {3}\n'
+        '========================='
+    )
+    print(
+        out.format(
+            text, 
+            ', '.join(puzzle.getFoundWords()),
+            ', '.join(puzzle.getAllWords()),
+            outty.getField()
+        )
+    )
 ################################################################################
 # saveGame(Game : object) -> None:
 #
@@ -228,6 +243,7 @@ def deleteInput(window):
 def main():
     outty = output.Output()
     puzzle = MakePuzzle.newPuzzle('','',outty,True)
+    print(outty.getField())
     app = QApplication([])
     window = MainWindow(puzzle) 
     connectSignals(puzzle, window, outty)
