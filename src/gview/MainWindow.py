@@ -17,27 +17,28 @@ import sys, os
 filePath = os.path.dirname(__file__)
 sys.path.append(filePath)
 
-from SimpleBCluster import simpleButtonCluster
+from model.puzzle import Puzzle
 from StatsPanel import StatsPanel
 from HexCluster import HexCluster
-from Dialogs import (
-    NewDialog,
-)
+from Dialogs import LoadDialog, NewDialog, LoadFailedDialog
 from PyQt6.QtGui import (
     QAction,
     QFont,
     QRegularExpressionValidator,
     QValidator,
+    QKeyEvent,
 )
 from PyQt6.QtCore import (
     Qt,
     QRegularExpression,
+    QEvent,
 )
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
     QSizePolicy,
     QToolBar,
+    QStatusBar,
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
@@ -60,47 +61,31 @@ from PyQt6.QtWidgets import (
 #
 ################################################################################
 class MainWindow(QMainWindow):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, puzzle : Puzzle, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         
-        # Attributes
-        
+        self.statsPanel = StatsPanel(self)
 
-        # Tentative placeholder
+        self.centralWidget = GameWidget(self, puzzle.getShuffleLetters)
+        self.toolBar = self._createToolBar()
+        self.infoBar = self._createInfoBar()
+        self.setStatusBar(QStatusBar(self))
+
+        self.newDialog = NewDialog(self)
+        self.loadDialog = LoadDialog(self)
+        self.loadFailed = LoadFailedDialog(self)
+        self.saveDialog = None
+        self.helpDialog = None
+
         self.setWindowTitle('Spelling Bee')
-        self.setGeometry(100, 100, 700, 400)
+        self.setMinimumSize(700, 400)
+        self.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum
+        )
 
-        self.letters = ['W', 'A', 'R', 'L', 'O', 'C', 'K']
-        
-
-        # Creation Functions
-        self._createCentralWidget()
-        self._createMenuBar()
-        self._createToolBar()
-        self._createStatsBar()
-        
-
-    ############################################################################
-    # _createMenuBar()
-    #
-    # DESCRIPTION:
-    #   creates menubar attributes and actions
-    ############################################################################
-    def _createMenuBar(self):
-
-        # Create manu bar
-        menuBar = self.menuBar()
-
-        # Add menu bar options
-        fileMenu = menuBar.addMenu('&File')
-        windowMenu = menuBar.addMenu('&Window')
-        helpMenu = menuBar.addMenu('Help')
-        
-        # Attach example action to each option
-        action = QAction('A menu action', self)
-        fileMenu.addAction(action)
-        windowMenu.addAction(action)
-        helpMenu.addAction(action)
+        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
+        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.statusBar)
 
 
     ############################################################################
@@ -109,7 +94,7 @@ class MainWindow(QMainWindow):
     # DESCRIPTION:
     #   creates toolbar buttons and actions
     ############################################################################
-    def _createToolBar(self):
+    def _createToolBar(self) -> QToolBar:
 
         # Create static tool bar
         toolBar = QToolBar('Tools', self)
@@ -117,56 +102,40 @@ class MainWindow(QMainWindow):
 
         # add buttons to tool bar
         newAction = QAction('New', self)
-        newAction.triggered.connect(self._onNewBtnClicked)
         saveAction = QAction('Save', self)
         loadAction = QAction('Load', self)
-        statsAction = QAction('Stats', self)
         helpAction = QAction('Help', self)
+
+        newAction.triggered.connect(self.newDialog.show)
+        saveAction.triggered.connect(self.saveDialog.show)
+        loadAction.triggered.connect(self.loadDialog.show)
+        helpAction.triggered.connect(self.helpDialog.show)
 
         # add actions to tool bar
         toolBar.addAction(newAction)
         toolBar.addAction(saveAction)
         toolBar.addAction(loadAction)
-        toolBar.addAction(statsAction)
         toolBar.addAction(helpAction)
 
-        self.addToolBar(toolBar)
+        return toolBar
 
 
     ############################################################################
-    # _createStatsbar()
+    # _createInfoBar()
     #
     # DESCRIPTION:
     #   creates status bar to the right to display user progress and found words
     ############################################################################
-    def _createStatsBar(self):
+    def _createInfoBar(self) -> QToolBar:
 
         # create static tool
-        statsBar = QToolBar('Stats', self)
-        statsBar.setMovable(False)
+        infoBar = QToolBar('Stats', self)
+        infoBar.setMovable(False)
 
-        # Create StatsPanel widget parented to this toolbar
-        statsPanel = StatsPanel(statsBar)
-        statsBar.addWidget(statsPanel)
+        self.statsPanel.setParnt(infoBar)
+        infoBar.addWidget(self.statsPanel)
 
-        # Move toolbar to the right of Central Widget
-        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, statsBar)
-
-
-    ############################################################################
-    # _createCentralWidget(self):
-    #
-    # DESCRIPTION:
-    #   creates central widget
-    ############################################################################
-    def _createCentralWidget(self):
-        self.setCentralWidget(GameWidget(self, self.letters))
-
-    def _onNewBtnClicked(self):
-
-        newDlg = NewDialog(self)
-        newDlg.show()
-
+        return infoBar 
 
 
 
@@ -303,12 +272,3 @@ class GameWidget(QWidget):
 
     def _onUInputEdited(self, txt):
         self.uInput.setText(txt.upper())
-
-def main():
-    app = QApplication([])
-    mainWindow = MainWindow()
-    mainWindow.show()
-    sys.exit(app.exec())
-
-if __name__ == "__main__":
-    main()

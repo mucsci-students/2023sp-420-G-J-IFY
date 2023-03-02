@@ -1,11 +1,12 @@
 ifeq ($(OS), Windows_NT)
-all:run
+all: setup
 
 
 setup:
 	pip install pytest
 	pip install PyQt6
 	pip install -e .
+	
 
 activate:
 	. .venv/Scripts/activate
@@ -13,7 +14,7 @@ activate:
 venv:
 	py -m venv .venv
 
-run: tests
+run: setup
 	py SpellingBee
 
 tests: setup
@@ -22,34 +23,44 @@ tests: setup
 deactivate:
 	deactivate
 
-clean:
+cleanVenv: 
 	rmdir .venv/Scripts
 	rmdir .venv/Include
 	rmdir .venv/Lib
 	del .venv/pyvenv.cfg
-	del *.json
+	cls
+
+cleanTests:
+	del ./src/data/saves/TESTFILE1.json
+	del ./src/data/saves/TESTFILE2.json
+	del ./src/data/saves/TESTFILE3.json
+	del ./src/data/saves/TESTFILE4.json
+	del ./src/data/saves/TESTFILE5.json
 
 else
 
-all:run clean
+all: setup
 
 
 setup:
 	pip install pytest
 	pip install PyQt6
 	pip install -e .
+	
 
 activate:
-	source .venv/Scripts/activate
+	. .venv/bin/activate
 
 venv:
 	python3 -m venv .venv
 
-run: tests
+run: setup
 	python3 SpellingBee
+	
 
 tests: setup
 	python3 tests
+	clear
 
 deactivate: cleanVenv
 	deactivate
@@ -59,13 +70,13 @@ cleanVenv:
 	rm -r .venv/lib
 	rm -r .venv/bin
 	rm .venv/pyvenv.cfg
-clean:
+	clear
+cleanTests: tests
 	rm -r ./src/data/saves/TESTFILE1.json
 	rm -r ./src/data/saves/TESTFILE2.json
 	rm -r ./src/data/saves/TESTFILE3.json
 	rm -r ./src/data/saves/TESTFILE4.json
 	rm -r ./src/data/saves/TESTFILE5.json
-	rm -r ./src/data/saves/TESTFILE6.json
-
+	clear
 
 endif

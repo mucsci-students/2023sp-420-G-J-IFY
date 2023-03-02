@@ -27,149 +27,219 @@ from PyQt6.QtWidgets import (
     QComboBox,
 )
 
-class NewDialog(QDialog):
-    def __init__(self, parent : QWidget=None, *args, **kwargs):
-        super(NewDialog, self).__init__(parent, *args, **kwargs)
+class LoadDialog(QDialog):
+    def __init__(self, parent: QWidget, *args, **kwargs):
+        super(LoadDialog, self).__init__(parent, *args, **kwargs)
 
-        self.setFixedSize(self.minimumSize())
-        self.setSizePolicy(
-            QSizePolicy.Policy.Fixed,
-            QSizePolicy.Policy.Fixed
-        )
-        self.setModal(True)
+        self.uInput = QLineEdit(self)
+        self.btns = QDialogButtonBox(self)
 
-        self.stack = QStackedWidget(self)
+        self.initUI()
 
-        self.warningMsg = QLabel(self)
-        self.advBtn = QPushButton(self)
-        self.warningBtns = QDialogButtonBox(self)
+    def initUI(self):
 
-        self.baseWrd = QLineEdit(self)
-        self.keyLett = QComboBox(self)
-        self.advBtns = QDialogButtonBox(self)
-
-        self._initUI()
-
-        self.display()
-
-    def _initUI(self):
+        self.setFixedSize(200, 100)
         
         layout = QVBoxLayout()
+        layout.setSpacing(20)
 
-        warning = self._initWarningPage()
-        advanced = self._initAdvNewPage()
+        self.uInput.setPlaceholderText('Save File Name')
 
-        self.stack.addWidget(warning)
-        self.stack.addWidget(advanced)
+        self.btns.setStandardButtons (
+            QDialogButtonBox.StandardButton.Cancel |
+            QDialogButtonBox.StandardButton.Open
+        )
 
-        layout.addWidget(self.stack)
+        self.btns.accepted.connect(self.accept)
+        self.btns.rejected.connect(self.reject)
+
+        layout.addWidget(self.uInput)
+        layout.addWidget(self.btns)
 
         self.setLayout(layout)
 
 
 
-    def _initWarningPage(self) -> QWidget:
+class LoadFailedDialog(QDialog):
+    def __init__(self, parent : QWidget, *args, **kwargs):
+        super(LoadFailedDialog, self).__init__(parent, *args, **kwargs)
 
-        page = QWidget(self)
+        self.message = QLabel(self)
+        self.btns = QDialogButtonBox(self)
+
+        self.initUI()
+
+    def initUI(self):
+
+        self.setFixedSize(200, 100)
+
         layout = QVBoxLayout()
-        advLayout = QHBoxLayout()
 
-        # Warning message setup and formatting
-        self.warningMsg.setText(
-            'Are you sure? All unsaved progress will be lost.'
-        )
-        self.warningMsg.setWordWrap(True)
-        self.warningMsg.setSizePolicy(
-            QSizePolicy.Policy.MinimumExpanding,
-            QSizePolicy.Policy.MinimumExpanding
-        )
-
-        # Advanced button setup and formatting
         font = QFont()
-        font.setUnderline(True)
-        self.advBtn.setStyleSheet("color: blue; border: none")
-        self.advBtn.setFont(font)
-        self.advBtn.setText('Advanced')
-        self.advBtn.setFlat(True)
-        self.advBtn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.advBtn.setSizePolicy(
-            QSizePolicy.Policy.Fixed,
-            QSizePolicy.Policy.Fixed
-        )
-        self.advBtn.setFixedSize(self.advBtn.minimumSizeHint())
-        self.advBtn.clicked.connect(lambda: self.display(1))
+        font.setFamily('Helvetica')
+        font.setPointSize(16)
 
-        # Spacer to move Advanced button to the right
-        advLayout.addSpacerItem(
-            QSpacerItem(5, 0, QSizePolicy.Policy.MinimumExpanding)
-        )
-        advLayout.addWidget(self.advBtn)
+        self.message.setFont(font)
+        self.message.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.message.setText('Load game failed...')
 
-        # Dialog buttons setup, formatting, and tentative connections
-        self.warningBtns.setStandardButtons(
-            QDialogButtonBox.StandardButton.Cancel
-            | QDialogButtonBox.StandardButton.Ok
-        )
-        self.warningBtns.button(
+        self.btns.setStandardButtons(
             QDialogButtonBox.StandardButton.Ok
-        ).setText('Yes')
-        self.warningBtns.accepted.connect(self.accept)
-        self.warningBtns.rejected.connect(self.reject)
-
-        # Populate the widget
-        layout.addWidget(self.warningMsg)
-        layout.addLayout(advLayout)
-        layout.addWidget(self.warningBtns)
-        page.setLayout(layout)
-        return page
-
-
-
-    def _initAdvNewPage(self) -> QWidget:
-        
-        page = QWidget(self)
-        layout = QVBoxLayout()
-        form = QFormLayout()
-
-        regex = QRegularExpression(
-            '[A-Z|a-z]+'
         )
-        validator = QRegularExpressionValidator(regex)
-        self.baseWrd.setValidator(validator)
+        self.btns.accepted.connect(self.accept)
 
-        self.baseWrd.textEdited.connect(self._populateCombo)
+        layout.addWidget(self.message)
+        layout.addWidget(self.btns)
 
-        self.advBtns.setStandardButtons(
-            QDialogButtonBox.StandardButton.Cancel
-            | QDialogButtonBox.StandardButton.Ok
-        )
-        self.advBtns.button(
-            QDialogButtonBox.StandardButton.Cancel
-        ).setText('Back')
-        self.advBtns.button(
-            QDialogButtonBox.StandardButton.Ok
-        ).setText('Apply')
-        
-        self.advBtns.accepted.connect(self.accept)
-        self.advBtns.rejected.connect(lambda: self.display(0))
+        self.setLayout(layout)
 
-        form.addRow('Baseword:', self.baseWrd)
-        form.addRow('Key Letter:', self.keyLett)
 
-        layout.addLayout(form)
-        layout.addWidget(self.advBtns)
-        page.setLayout(layout)
-        return page
-    
-    def _populateCombo(self, word: str) -> None:
-        self.keyLett.clear()
+class NewDialog(QDialog):
+     def __init__(self, parent : QWidget=None, *args, **kwargs):
+         super(NewDialog, self).__init__(parent, *args, **kwargs)
 
-        uniqueLett = list(set(word))
+         self.setFixedSize(self.minimumSize())
+         self.setSizePolicy(
+             QSizePolicy.Policy.Fixed,
+             QSizePolicy.Policy.Fixed
+         )
+         self.setModal(True)
 
-        for l in word:
-            self.keyLett.addItem(l)
+         self.stack = QStackedWidget(self)
 
-    
+         self.warningMsg = QLabel(self)
+         self.advBtn = QPushButton(self)
+         self.warningBtns = QDialogButtonBox(self)
 
-    def display(self, i : int=0) -> None:
-        self.stack.setCurrentIndex(i)
+         self.baseWrd = QLineEdit(self)
+         self.keyLett = QComboBox(self)
+         self.advBtns = QDialogButtonBox(self)
+
+         self._initUI()
+
+         self.display()
+
+     def _initUI(self):
+
+         layout = QVBoxLayout()
+
+         warning = self._initWarningPage()
+         advanced = self._initAdvNewPage()
+
+         self.stack.addWidget(warning)
+         self.stack.addWidget(advanced)
+
+         layout.addWidget(self.stack)
+
+         self.setLayout(layout)
+
+
+
+     def _initWarningPage(self) -> QWidget:
+
+         page = QWidget(self)
+         layout = QVBoxLayout()
+         advLayout = QHBoxLayout()
+
+         # Warning message setup and formatting
+         self.warningMsg.setText(
+             'Are you sure? All unsaved progress will be lost.'
+         )
+         self.warningMsg.setWordWrap(True)
+         self.warningMsg.setSizePolicy(
+             QSizePolicy.Policy.MinimumExpanding,
+             QSizePolicy.Policy.MinimumExpanding
+         )
+
+         # Advanced button setup and formatting
+         font = QFont()
+         font.setUnderline(True)
+         self.advBtn.setStyleSheet("color: blue; border: none")
+         self.advBtn.setFont(font)
+         self.advBtn.setText('Advanced')
+         self.advBtn.setFlat(True)
+         self.advBtn.setCursor(Qt.CursorShape.PointingHandCursor)
+         self.advBtn.setSizePolicy(
+             QSizePolicy.Policy.Fixed,
+             QSizePolicy.Policy.Fixed
+         )
+         self.advBtn.setFixedSize(self.advBtn.minimumSizeHint())
+         self.advBtn.clicked.connect(lambda: self.display(1))
+
+         # Spacer to move Advanced button to the right
+         advLayout.addSpacerItem(
+             QSpacerItem(5, 0, QSizePolicy.Policy.MinimumExpanding)
+         )
+         advLayout.addWidget(self.advBtn)
+
+         # Dialog buttons setup, formatting, and tentative connections
+         self.warningBtns.setStandardButtons(
+             QDialogButtonBox.StandardButton.Cancel
+             | QDialogButtonBox.StandardButton.Ok
+         )
+         self.warningBtns.button(
+             QDialogButtonBox.StandardButton.Ok
+         ).setText('Yes')
+         self.warningBtns.accepted.connect(self.accept)
+         self.warningBtns.rejected.connect(self.reject)
+
+         # Populate the widget
+         layout.addWidget(self.warningMsg)
+         layout.addLayout(advLayout)
+         layout.addWidget(self.warningBtns)
+         page.setLayout(layout)
+         return page
+
+
+
+     def _initAdvNewPage(self) -> QWidget:
+
+         page = QWidget(self)
+         layout = QVBoxLayout()
+         form = QFormLayout()
+
+         regex = QRegularExpression(
+             '[A-Z|a-z]+'
+         )
+         validator = QRegularExpressionValidator(regex)
+         self.baseWrd.setValidator(validator)
+
+         self.baseWrd.textEdited.connect(self._populateCombo)
+
+         self.advBtns.setStandardButtons(
+             QDialogButtonBox.StandardButton.Cancel
+             | QDialogButtonBox.StandardButton.Ok
+         )
+         self.advBtns.button(
+             QDialogButtonBox.StandardButton.Cancel
+         ).setText('Back')
+         self.advBtns.button(
+             QDialogButtonBox.StandardButton.Ok
+         ).setText('Apply')
+
+         self.advBtns.accepted.connect(self.accept)
+         self.advBtns.rejected.connect(lambda: self.display(0))
+
+         form.addRow('Baseword:', self.baseWrd)
+         form.addRow('Key Letter:', self.keyLett)
+
+         layout.addLayout(form)
+         layout.addWidget(self.advBtns)
+         page.setLayout(layout)
+         return page
+
+     def _populateCombo(self, word: str) -> None:
+         self.keyLett.clear()
+
+         uniqueLett = list(set(word))
+
+         for l in uniqueLett:
+             self.keyLett.addItem(l.upper())
+
+
+
+     def display(self, i : int=0) -> None:
+         self.stack.setCurrentIndex(i)
+
+
+

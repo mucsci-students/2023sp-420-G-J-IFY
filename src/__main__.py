@@ -8,3 +8,4 @@ else:
         from controller.cController import __main__
     else:
         print(argv[0] + ' is not a valid flag')
+
