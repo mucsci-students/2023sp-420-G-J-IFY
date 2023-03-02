@@ -96,6 +96,7 @@ def connectSignals():
 #     - new puzzle object
 ################################################################################
 def newPuzzle(baseWord : str = '', keyLetter : str = '') -> None:
+    global puzzle 
     sender = sender().parent
     baseWord = sender.basWrd.text()
     keyLetter = sender.keyLett.currentText()
@@ -115,6 +116,7 @@ def newPuzzle(baseWord : str = '', keyLetter : str = '') -> None:
 ################################################################################
 def guess():
     #Connect to text field in view and grab
+    global puzzle 
     text = window.centralWidget.uInput.text()
     window.centralWidget.uInput.clear()
     MakePuzzle.guess(puzzle, text, True, outty)    
@@ -133,6 +135,7 @@ def guess():
 #     - puzzle object storing the current game state
 ################################################################################
 def saveGame() -> None:
+    global puzzle 
     # Takes file name
     handleSave(puzzle, 0)
     handleSave(puzzle, 1)    
@@ -194,6 +197,7 @@ def help() -> None:
 #   as a list of all available commands.
 ################################################################################
 def shuffleLetters() -> None:
+    global puzzle 
     puzzle.shuffleChars()
 ################################################################################
 # loadGame(game : object) -> None:
@@ -206,6 +210,7 @@ def shuffleLetters() -> None:
 #     - puzzle object storing the current game state
 ################################################################################
 def loadGame(game : object, fileName: str='') -> None:
+    global puzzle 
     sender = sender().parent.uInput.text()
     fileName = sender
     if path.isfile(fileName +'.json'):
