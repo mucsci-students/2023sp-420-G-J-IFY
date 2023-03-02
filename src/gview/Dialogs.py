@@ -217,7 +217,6 @@ class NewDialog(QDialog):
              QDialogButtonBox.StandardButton.Ok
          ).setText('Apply')
 
-         self.advBtns.accepted.connect(self.accept)
          self.advBtns.rejected.connect(lambda: self.display(0))
 
          form.addRow('Baseword:', self.baseWrd)
@@ -242,4 +241,82 @@ class NewDialog(QDialog):
          self.stack.setCurrentIndex(i)
 
 
+class SaveDialog(QDialog):
+    def __init__(self, parent : QWidget | None, *args, **kwargs):
+        super(SaveDialog, self).__init__(parent, *args, **kwargs)
 
+        self.fileName = QLineEdit(self)
+        self.justPuzzle = QCheckBox(self)
+        self.btns = QDialogButtonBox(self)
+
+        self.setFixedSize(200, 150)
+        self.setSizePolicy(
+            QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Fixed
+        )
+
+        self._initUI()
+
+    def _initUI(self):
+
+        layout = QVBoxLayout()
+
+        regex = QRegularExpression(
+            '[A-Z|a-z|0-9|\.|_|-]+'
+        )
+        validator = QRegularExpressionValidator(regex)
+        self.fileName.setValidator(validator)
+        self.fileName.setPlaceholderText('File Name')
+
+        self.justPuzzle.setText('Save blank puzzle')
+
+        self.btns.setStandardButtons(
+            QDialogButtonBox.StandardButton.Cancel
+            | QDialogButtonBox.StandardButton.Save
+        )
+        self.btns.rejected.connect(self.reject)
+
+        layout.addWidget(self.fileName)
+        layout.addWidget(self.justPuzzle)
+        layout.addWidget(self.btns)
+
+        self.setLayout(layout)
+
+
+
+class SaveOverwriteDialog(QDialog):
+    def __init__(self, parent : QWidget | None, *args, **kwargs):
+        super(SaveOverwriteDialog, self).__init__(parent, *args, **kwargs)
+
+        self.message = QLabel(self)
+        self.btns = QDialogButtonBox(self)
+
+        self.setFixedSize(200, 125)
+
+        self.setSizePolicy(
+            QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Fixed
+        )
+
+        self._initUI()
+
+    def _initUI(self):
+
+        layout = QVBoxLayout()
+
+        self.message.setText(
+            'The file name you entered already exists. '
+            'Would you like to overwrite?'
+        )
+        self.message.setWordWrap(True)
+
+        self.btns.setStandardButtons(
+            QDialogButtonBox.StandardButton.Cancel
+            | QDialogButtonBox.StandardButton.Ok
+        )
+        self.btns.rejected.connect(self.reject)
+
+        layout.addWidget(self.message)
+        layout.addWidget(self.btns)
+
+        self.setLayout(layout)
