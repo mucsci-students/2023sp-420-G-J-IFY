@@ -158,25 +158,28 @@ def checkLoad(fileName):
         dictDict["CurrentPoints"] = currentPoints 
         dictDict["MaxPoints"] = maxPoints 
 
-        #return validated dictionary
-        return dictDict
+
 
     #KeyError is raised IF the fields in the .json do not match the standard
     except KeyError:
         print("BAD KEYS")
         #this is a critical error and needs to be dumped
+        dictDict = None
 
     #NotinDBException is raised IF the game doesn't exist in our DB
     except NotInDBException:
         print("That combo of letters is not in our DB")
         #REJECT THE LOAD
+        dictDict = None
 
     #regardless of end, close connection to DB
     finally:
         #close DB
         wordDict.commit()
         wordDict.close()
-
+        print('In the finally block')
+        #return validated dictionary
+        return dictDict
 
 ################################################################################
 # This is an exact ripoff of StateStorage.__load()
@@ -231,14 +234,16 @@ def allLower(my_list):
 
 
 #Test cases
-"""
+
 print("\nkamotiqGood")
 checkLoad('kamotiqGood')
 print('\nwarlockGood')
 checkLoad('warlockGood')
 print('\nwaxworkGood')
 checkLoad('waxworkGood')
-print('\nbadFields')
+ret = print('\nbadFields')
+if ret == None:
+    print("REJECT THE LOAD!!!")
 checkLoad('badFields')
 print('\nbadGameSeed')
 checkLoad('badGameSeed')
@@ -248,4 +253,4 @@ print('\nbadGuess')
 checkLoad('badGuess')
 print('\nBADEVERYTHING')
 checkLoad('BADEVERYTHING')
-"""
+
