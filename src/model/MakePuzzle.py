@@ -15,7 +15,6 @@ import sqlite3
 from random import randrange
 import model.puzzle as saveState
 from model import dbFixer
-from controller.cController import CommandHandler
 import itertools
 import model.output as output
 
@@ -102,6 +101,8 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
         # Generates rank
         puzzle.updateRank()
         
+        outty.setField('Puzzle creation successful.\nLetters: {}\nKeyletter: {}'.format(puzzle.getUniqueLetters(), puzzle.getKeyLetter()))
+
         return puzzle
     #Raise exception for bad puzzle seed
     except BadQueryException:
@@ -110,13 +111,10 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
         else:
             # TODO
             pass
-        return CommandHandler.newPuzzle(outty)
     except LetterMismatchException:
         outty.setField(keyLetter.upper() + " is not a valid key letter")
-        return CommandHandler.newPuzzle(outty)
     except EmptyKeyLetterException:
         outty.setField("Key letter cannot be empty")
-        return CommandHandler.newPuzzle(outty)
     
 
 #Exception used for newPuzzle to catch bad starting words
@@ -195,10 +193,6 @@ def checkDataBase(baseWord: str):
     dbFixer.leaveDB()
 
     return returnResult
-
-
-
-
 ################################################################################
 # guess(puzzle, input: str, flag : bool, outty : object)
 #
@@ -218,12 +212,16 @@ def checkDataBase(baseWord: str):
 ################################################################################
 def guess(puzzle, input: str, flag : bool, outty : object):
     
+    input = input.lower()
+    '''
     if not flag:
         input = input.lower()
     else:
         #TODO
         #input = pull from gui
+        outty.setField('Flag: {}'.format(flag))
         pass
+    '''
     dbFixer.goToDB()
     conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
@@ -231,23 +229,31 @@ def guess(puzzle, input: str, flag : bool, outty : object):
     #check for every case in the user's guess to give points or output error
     #check for only containing alphabetical characters
     if not input.isalpha():
+        outty.setField(input + " contains non alphabet characters")
+
+        '''
         if not flag:
             outty.setField(input + " contains non alphabet characters")
         else:
             # TODO
             # pop up window
             pass
+        '''
         
     # checks words in the word list to see if it is valid for the puzzle
     elif input in puzzle.getAllWords(): 
         #check if it is already found
+        outty.setField('input in words list')
         if input in puzzle.getFoundWords():
+            outty.setField(input.upper() + " was already found!")
+            '''
             if not flag:
                 outty.setField(input.upper() + " was already found!")
             else:
                 #TODO
                 #Pop up window
                 pass
+            '''
         else:
             #query the database to see how many points to give
             query = "select wordScore from dictionary where fullWord = '" + input + "';"
@@ -257,153 +263,57 @@ def guess(puzzle, input: str, flag : bool, outty : object):
             puzzle.updateFoundWords(input)
             outty.setField(input.upper() + ' is one of the words!')
     elif len(input) < 4: #if the word is not in the list check the size
+
+        outty.setField(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
+        '''
         if not flag:
             outty.setField(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
         else:
             #TODO
             #POPUP WINDOW
             pass
+        '''
     else:
         #query the database to see if it is a word at all
         query1 = "select uniqueLetters from dictionary where fullWord = '" + input + "';"
         cursor.execute(query1)
         response = cursor.fetchone()
         if response == None:
+            outty.setField(input.upper() + " isnt't a word in the dictionary")
+            '''
             if not flag:
                 outty.setField(input.upper() + " isn't a word in the dictionary")
             else:
                 #TODO
                 #Popup window
                 pass
+            '''
         #check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())): 
+            outty.setField(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
+            '''
             if not flag:
                 outty.setField(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
             else:
                 #TODO
                 #popup Window
                 pass
+            '''
         else:
             #must be letters not in the puzzle in this case
+            outty.setField(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
+            '''
             if not flag:
                 outty.setField(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
             else:
                 #TODO
                 #popup window
                 pass
+            '''
             
     conn.commit()
     conn.close()
     dbFixer.leaveDB()
-
-################################################################################
-# getAllWordsFromPangram(puzz : Puzzle Object) -> list
-# DESCRIPTION:
-#   This function generates all the words for a given puzzle.
-#
-# PARAMETERS:
-#   puzz : Puzzle
-#       - the Puzzle object where the needed letters are pulled from
-#
-# RETURNS:
-#   list
-#       - a list of all the possible words for the given puzzle
-################################################################################
-def getAllWordsFromPangram(unique, key) -> list: #unclear how to add the puzzle type to this line
-    #create powerset of letters from baseword
-    pSet = list(powerset(unique))
-    cleanSet = []
-
-    #remove sets from powerset to produce subset with keyletter
-    for a in pSet:
-        if key in a:
-            cleanSet.append(sortStrToAlphabetical(''.join(a)))
-      
-    #Time to querey the DB   
-    dbFixer.goToDB()
-    conn = sqlite3.connect('wordDict.db')
-    cursor = conn.cursor()
-
-    #create temp table to use for natural joins soon
-    tempTable = "create temporary table validLetters (uniLetts);"
-    cursor.execute(tempTable)
-   
-    #Build out tempTable for join later
-    querey = "insert into validLetters (uniLetts) values ('"
-    for a in cleanSet:
-        querey += a + "'), ('"
-    querey += "');"
-    cursor.execute(querey)
-    
-    #build out query using joins
-    join = """
-            select fullWord from dictionary join validLetters 
-            on dictionary.uniqueLetters is validLetters.uniLetts;
-            """
-    cursor.execute(join)
-    
-    #catch return form query
-    tuples = (cursor.fetchall())
-    #turn list of tuples into list of strings
-    listList = list(itertools.chain(*tuples))
-    #close DB
-    conn.commit()
-    conn.close()
-    dbFixer.leaveDB()
-
-    #return list of valid words
-    return listList
-
-
-################################################################################
-# powerset(iterable) -> set
-#
-# DESCRIPTION:
-#   This is a helper funciton for generateAllWordsFromPangram()
-#
-#   This function takes an iterable object and returns a powerset of that
-#   iterable object. 
-#   
-#   A power set is all the possible subset combinations of the set.
-#       i.e. powerst (abc) -> a, b, c, ab, ac, bc, abc
-#
-# PARAMETERS: 
-#   iterable : ITERABLE OBJECT
-#       - any iterable object, in this case, a string of unique letters
-#       - 'abcdefg'
-#
-# RETURNS:
-#   Set
-#       - a powerset of the iterable object
-################################################################################
-from itertools import chain, combinations
-def powerset(iterable):
-    "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
-    s = list(iterable)
-    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
-
-
-################################################################################
-# sortStrToAlphabetical(unsorted : str) -> str
-#
-# DESCRIPTION:
-#   This function takes a string and alphabetizes the letters within
-#
-# PARAMETERS:
-#   unsorted : str
-#       - "warlock"
-#
-# RETURNS:
-#   str
-#       -"acklorw"
-################################################################################
-def sortStrToAlphabetical(unsorted : str) -> str:
-    uniqueLettersList = sorted(set(unsorted))
-    #convert list to string
-    return ''.join(uniqueLettersList)
-
-
-
 ################################################################################
 # newPuzzCli(baseWord: str, uniqueLetters: dict) -> str
 #

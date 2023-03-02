@@ -25,7 +25,7 @@ cleanVenv:
 	rmdir .venv/Include
 	rmdir .venv/Lib
 	del .venv/pyvenv.cfg
-	cls
+	cls 
 
 cleanTests:
 	del ./src/data/saves/TESTFILE1.json

@@ -13,6 +13,7 @@
 #
 ################################################################################
 
+from model.puzzle import Puzzle
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -50,6 +51,7 @@ class StatsPanel(QWidget):
         self.level = QLabel(self)
         self.pBar = QProgressBar(self)
         self.foundWords = QTextEdit(self)
+        self.header = '**Found Words:** \n ___\n'
 
         self.initUI()
 
@@ -68,14 +70,16 @@ class StatsPanel(QWidget):
         )
 
         # initialize defaults for level
-        self.level.setFont(QFont('Helvetica', 18))
-        self.level.setText('Level')
+        font = QFont('Helvetica')
+        font.setUnderline(True)
+        self.level.setFont(font)
+        self.level.setText('Beginner')
         # initialize defaults for pBar
-        self.pBar.setValue(30)
+        self.pBar.setValue(0)
         # initialize defaults for foundWords:
-        self.foundWords.setReadOnly(True)
         self.foundWords.setFont(QFont('Helvetica', 16))
-        self.foundWords.setText('Found Words:')
+        self.foundWords.setReadOnly(True)
+        self.foundWords.setMarkdown(self.header)
 
         # Size Policies:
         # level is at its minimum size defined
@@ -109,3 +113,17 @@ class StatsPanel(QWidget):
         )
 
         self.setLayout(layout)
+
+
+    def update(self, puzzle : Puzzle) -> None:
+
+        self.level.setText(puzzle.getRank())
+
+        self.pBar.setValue(int((puzzle.getScore()/puzzle.getMaxScore())*100))
+
+        body = self.header
+
+        for word in puzzle.getFoundWords():
+            body += f'{word.upper()} \n\n'
+
+        self.foundWords.setMarkdown(body)
