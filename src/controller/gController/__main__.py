@@ -1,0 +1,3 @@
+from gview import *
+
+main()

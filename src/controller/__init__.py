@@ -1,2 +1,2 @@
-from .CommandHandler import *
-from .GController import *
+from .cController import *
+from .gController import *
