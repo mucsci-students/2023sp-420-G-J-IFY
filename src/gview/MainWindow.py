@@ -20,7 +20,7 @@ sys.path.append(filePath)
 from model.puzzle import Puzzle
 from StatsPanel import StatsPanel
 from HexCluster import HexCluster
-from Dialogs import LoadDialog, NewDialog, LoadFailedDialog
+import Dialogs
 from PyQt6.QtGui import (
     QAction,
     QFont,
@@ -66,16 +66,24 @@ class MainWindow(QMainWindow):
         
         self.statsPanel = StatsPanel(self)
 
-        self.centralWidget = GameWidget(self, puzzle.getShuffleLetters)
+        self.centralWidget = GameWidget(
+            self, 
+            puzzle.getShuffleLetters().upper(),
+            puzzle.getKeyLetter()
+        )
+
+        self.setCentralWidget(self.centralWidget)
+
+        self.setStatusBar(QStatusBar(self))
+        #self.welcomeDialog = Dialogs.WelcomeDialog(self)
+        self.newDialog = Dialogs.NewDialog(self)
+        self.loadDialog = Dialogs.LoadDialog(self)
+        self.loadFailed = Dialogs.LoadFailedDialog(self)
+        self.saveDialog = Dialogs.SaveDialog(self)
+        self.helpDialog = Dialogs.HelpDialog(self)
+
         self.toolBar = self._createToolBar()
         self.infoBar = self._createInfoBar()
-        self.setStatusBar(QStatusBar(self))
-
-        self.newDialog = NewDialog(self)
-        self.loadDialog = LoadDialog(self)
-        self.loadFailed = LoadFailedDialog(self)
-        self.saveDialog = None
-        self.helpDialog = None
 
         self.setWindowTitle('Spelling Bee')
         self.setMinimumSize(700, 400)
@@ -85,7 +93,7 @@ class MainWindow(QMainWindow):
         )
 
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
-        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.statusBar)
+        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.infoBar)
 
 
     ############################################################################
@@ -132,7 +140,7 @@ class MainWindow(QMainWindow):
         infoBar = QToolBar('Stats', self)
         infoBar.setMovable(False)
 
-        self.statsPanel.setParnt(infoBar)
+        self.statsPanel.setParent(infoBar)
         infoBar.addWidget(self.statsPanel)
 
         return infoBar 
@@ -168,11 +176,18 @@ class MainWindow(QMainWindow):
 #     - List of key letters
 ################################################################################
 class GameWidget(QWidget):
-    def __init__(self, parent: QWidget, letters: list[str], *args, **kwargs):
+    def __init__(
+            self, 
+            parent: QWidget, 
+            letters: list[str], 
+            keyLett: str,
+            *args, 
+            **kwargs
+        ):
         super(GameWidget, self).__init__(parent, *args, **kwargs)
 
         self.uInput = QLineEdit(self)
-        self.cluster = HexCluster(self, letters)
+        self.cluster = HexCluster(self, letters, keyLett)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
         self.entrBtn = QPushButton('Enter', self)
@@ -224,7 +239,6 @@ class GameWidget(QWidget):
             f"[{'|'.join(self.letters).upper()}|"
             f"{'|'.join(self.letters).lower()}]+"
         )
-        print(regex)
         # Create and set uInput validator
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)

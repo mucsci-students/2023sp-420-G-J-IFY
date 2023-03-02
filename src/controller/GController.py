@@ -28,20 +28,20 @@ import sys
 import os
 from os import path
 from functools import partial
-from gview import MainWindow
-from model import MakePuzzle, StateStorage
+from gview.MainWindow import MainWindow
+from model import MakePuzzle, StateStorage, output
+from model.puzzle import Puzzle
 import PyQt6
+from PyQt6.QtCore import QEvent
 from PyQt6.QtWidgets import QApplication
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
         
 #Global Var
-puzzle = None       
-app = QApplication([])
-window = MainWindow(puzzle)
 
-          
+
+
         
         
 ################################################################################
@@ -57,29 +57,33 @@ window = MainWindow(puzzle)
 #  button : unsure
 #  user input as a single character (one at a time)
 ################################################################################
-def connectSignals():
+def connectSignals(puzzle, window, outty):
     dialog = window.newDialog
 
-    baseWord = dialog.uInput.text()
-    keyLett = dialog.keyLett.currentActivatedText()
+    baseWord = dialog.baseWrd.text()
+    keyLett = dialog.keyLett.currentText()
 
     # newPuzzle uses default params
-    dialog.warningBtns.accepted.connect(newPuzzle)
+    dialog.warningBtns.accepted.connect(
+        lambda: newPuzzle(puzzle, outty, window, '', '')
+    )
     # newPuzzle uses provided params
-    dialog.advBtns.accepted.connect(lambda: newPuzzle(baseWord, keyLett))
+    dialog.advBtns.accepted.connect(
+        lambda: newPuzzle(puzzle, outty, window, baseWord, keyLett))
     
-    window.centralWidget.enter.click.connect(guess)
-    window.centralWidget.uInput.returnPressed.connect(guess)
+    window.centralWidget.entrBtn.clicked.connect(lambda: guess(puzzle, outty, window))
+    window.centralWidget.uInput.returnPressed.connect(lambda: guess(puzzle, outty, window))
     
     # window.saveDialog.btns.accepted.connect(saveGame)
     
     # window.helpDialog.btns.accepted.connect(help)
     
-    window.centralWidget.shuffle.click.connect(shuffleLetters)
+    window.centralWidget.shflBtn.clicked.connect(lambda: shuffleLetters(puzzle))
     
-    window.loadDialog.btns.accepted.connect(loadGame)
+    window.loadDialog.btns.accepted.connect(lambda: loadGame(puzzle, window))
     
-    window.centralWidget.delete.click.connect(deleteInput)         
+    window.centralWidget.delBtn.clicked.connect(lambda: deleteInput(window))  
+
 ################################################################################
 # newPuzzle(userInput) -> object:
 #
@@ -90,13 +94,11 @@ def connectSignals():
 #   object
 #     - new puzzle object
 ################################################################################
-def newPuzzle(baseWord : str = '', keyLetter : str = '') -> None:
-    sender = sender().parent
-    baseWord = sender.basWrd.text()
-    keyLetter = sender.keyLett.currentText()
-    out = MakePuzzle.newPuzzle(baseWord, keyLetter, None, 0).shuffleChars()
-    puzzle =  out
-    sender.accept()
+def newPuzzle(puzzle: Puzzle, outty, window : MainWindow, baseWord : str = '', keyLetter : str = '') -> None:
+    puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, outty, True)
+
+    window.newGame(puzzle)
+
 ################################################################################
 # guess(window: object) -> None
 #
@@ -108,11 +110,13 @@ def newPuzzle(baseWord : str = '', keyLetter : str = '') -> None:
 #  window : Obj
 #   the GUI window we will be manipulating
 ################################################################################
-def guess():
-    #Connect to text field in view and grab
+def guess(puzzle: Puzzle, outty: output.Output, window: MainWindow):
+    #Connect to text field in view and grab 
     text = window.centralWidget.uInput.text()
     window.centralWidget.uInput.clear()
-    MakePuzzle.guess(puzzle, text)    
+    MakePuzzle.guess(puzzle, text, True, outty)    
+    window.statsPanel.update(puzzle)
+    window.setStatusTip(outty.getField())
 ################################################################################
 # saveGame(Game : object) -> None:
 #
@@ -124,7 +128,7 @@ def guess():
 #   game : object
 #     - puzzle object storing the current game state
 ################################################################################
-def saveGame() -> None:
+def saveGame(puzzle) -> None:
     # Takes file name
     handleSave(puzzle, 0)
     handleSave(puzzle, 1)    
@@ -185,7 +189,7 @@ def help() -> None:
 #   provides a brief description of game rules and generally how to play as well
 #   as a list of all available commands.
 ################################################################################
-def shuffleLetters() -> None:
+def shuffleLetters(puzzle) -> None:
     puzzle.shuffleChars()
 ################################################################################
 # loadGame(game : object) -> None:
@@ -197,14 +201,14 @@ def shuffleLetters() -> None:
 #   game : object
 #     - puzzle object storing the current game state
 ################################################################################
-def loadGame(game : object, fileName: str='') -> None:
+def loadGame(game : object, window) -> None: 
     sender = sender().parent.uInput.text()
     fileName = sender
     if path.isfile(fileName +'.json'):
         newGame =  StateStorage.loadPuzzle(fileName)
         
         if newGame != None:
-            puzzle = newGame
+            game = newGame
         else:
             window.loadFailed.show()
     else:
@@ -218,9 +222,20 @@ def loadGame(game : object, fileName: str='') -> None:
 # PARAMETERS:
 #   none
 ################################################################################
-def deleteInput():
+def deleteInput(window):
     window.centralWidget.uInput.backspace()
 
-connectSignals(window)
-window.show()
-sys.exit(app.exec())
+
+def main():
+    outty = output.Output()
+    puzzle = MakePuzzle.newPuzzle('','',outty,True)
+    puzzle.shuffleChars()
+    print(outty.getField())
+    app = QApplication([])
+    window = MainWindow(puzzle) 
+    connectSignals(puzzle, window, outty)
+    window.show()
+    sys.exit(app.exec())
+    
+if __name__ == '__main__':
+    main()
