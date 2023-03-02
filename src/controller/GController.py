@@ -1,6 +1,6 @@
 ################################################################################
 # GController.py
-# AUTHOR: Francesco Spagnolo, Yah'hymbey
+# AUTHOR: Isaak Weidman, Yah'hymbey Baruti Ali-Bey, Francesco Spagnolo 
 # DATE OF CREATION: 2/25/2023
 #
 # DESCRIPTION:
@@ -26,17 +26,22 @@
 
 import sys
 import os
+from os import path
 from functools import partial
-from gview import SimpleBCluster, MainWindow
+from gview import MainWindow
 from model import MakePuzzle, StateStorage
 import PyQt6
 from PyQt6.QtWidgets import QApplication
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
+        
+#Global Var
+puzzle = None       
+app = QApplication([])
+window = MainWindow(puzzle)
 
-# Global Variables
-puzzle = None
+          
         
         
 ################################################################################
@@ -53,38 +58,28 @@ puzzle = None
 #  user input as a single character (one at a time)
 ################################################################################
 def connectSignals():
-#    for keySymbol, button in self.view.buttonMap.items():
-#        if keySymbol not in {"Delete", "Shuffle", "Enter"}:
-#            button.clicked.connect(partial(self.buildExpr, keySymbol))
+    dialog = window.newDialog
+
+    baseWord = dialog.uInput.text()
+    keyLett = dialog.keyLett.currentActivatedText()
+
+    # newPuzzle uses default params
+    dialog.warningBtns.accepted.connect(newPuzzle)
+    # newPuzzle uses provided params
+    dialog.advBtns.accepted.connect(lambda: newPuzzle(baseWord, keyLett))
     
-    self.view.buttonMap["Delete"].clicked.connect(self.deleteInput)
-    self.view.display.deletePressed.connect(self.deleteInput) #will have to test
-    self.view.buttonMap["Shuffle"].clicked.connect(self) #will have to figure out
-    self.view.display.spacePressed.connect(self) #will have to test and figure out
-    self.view.buttonMap["Enter"].clicked.connect(self.guess)
-    self.view.display.returnPressed.connect(self.guess) #will have to test
-        
-        
-################################################################################
-# buildExpr(subExpression: str)
-#
-# DESCRIPTION:
-#   Displays the newly formed expression while
-#   building it in the backend to use
-#
-# PARAMETERS:
-#  input : str
-#   user input as a single character (one at a time)
-################################################################################        
-    def buildExpr(self, subExpression: str) -> None:
-        
-        expression = self.view.displayText() + subExpression
-        self.view.setDisplayText(expression)
-#    def buildExpr(self, subExpression: str) -> None:
-#        
-#        expression = self.view.displayText() + subExpression
-#        self.view.setDisplayText(expression)       
+    window.centralWidget.enter.click.connect(guess)
+    window.centralWidget.uInput.returnPressed.connect(guess)
     
+    window.saveDialog.btns.accepted.connect(saveGame)
+    
+    window.helpDialog.btns.accepted.connect(help)
+    
+    window.centralWidget.shuffle.click.connect(shuffleLetters)
+    
+    window.loadDialog.btns.accepted.connect(loadGame)
+    
+    window.centralWidget.delete.click.connect(deleteInput)           
 ################################################################################
 # newPuzzle(userInput) -> object:
 #
@@ -95,28 +90,29 @@ def connectSignals():
 #   object
 #     - new puzzle object
 ################################################################################
-def newPuzzle(usrinput: str) -> object:
-    out = MakePuzzle.newPuzzle(usrinput.lower())
-    out.shuffleChars()
+def newPuzzle(baseWord : str = '', keyLetter : str = '') -> None:
+    sender = sender().parent
+    baseWord = sender.basWrd.text()
+    keyLetter = sender.keyLett.currentText()
+    out = MakePuzzle.newPuzzle(baseWord, keyLetter, None, 0).shuffleChars()
     puzzle =  out
-    
+    sender.accept()
 ################################################################################
-# guess(puzzle, input: str)
+# guess(window: object) -> None
 #
 # DESCRIPTION:
 #   Checks the database for valid words, already found words and 
 #   words that do not exist
 #
 # PARAMETERS:
-#  puzzle : Obj
-#   puzzle object of current played game space
-#  input : str
-#   user input 
+#  window : Obj
+#   the GUI window we will be manipulating
 ################################################################################
-def guess(input: str):
+def guess():
     #Connect to text field in view and grab
-    MakePuzzle.guess(puzzle, input)
-        
+    text = window.centralWidget.uInput.text()
+    window.centralWidget.uInput.clear()
+    MakePuzzle.guess(puzzle, text)    
 ################################################################################
 # saveGame(Game : object) -> None:
 #
@@ -128,11 +124,10 @@ def guess(input: str):
 #   game : object
 #     - puzzle object storing the current game state
 ################################################################################
-def saveGame(game : object) -> None:
-    handleSave(game, 0)
-    handleSave(game, 1)
-        
-        
+def saveGame() -> None:
+    # Takes file name
+    handleSave(puzzle, 0)
+    handleSave(puzzle, 1)    
 ################################################################################
 # handleSave(game : object, num) -> None:
 #
@@ -147,35 +142,32 @@ def saveGame(game : object) -> None:
 #     - an integer value to determin if we are saving all the game progress
 #       or just the pzzle. 0 for saveCurrent() and 1 for savePuzzle().
 ################################################################################
-def handleSave(game : object, num : int) -> None:
+def handleSave(game : object, fileName: str ,num : int) -> None:
     saveStatus = False
-    output = ''
-    fileName = input('Please enter the name of the file you would like to save '
-                     'for example "Game1"\n> ')
     if(path.isfile(fileName +'.json')):
-        yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
-                    '\n Enter Y for yes or N for no\n> ')
-        if(yesOrNo == 'Y'):
+        # Run Dialog Window for overwriting existing file
+        # Change if to check if user click yes or no
+        if(True):
             if(num == 0):
                 StateStorage.saveCurrent(game, fileName)
                 saveStatus = True
             elif(num == 1):
                 StateStorage.savePuzzle(game, fileName)
                 saveStatus = True
-        else: 
-            if(num == 0):
-                StateStorage.saveCurrent(game, fileName)
-                saveStatus = True
-            elif(num == 1):
-                StateStorage.savePuzzle(game, fileName)
-                saveStatus = True
+    else: 
+        if(num == 0):
+            StateStorage.saveCurrent(game, fileName)
+            saveStatus = True
+        elif(num == 1):
+            StateStorage.savePuzzle(game, fileName)
+            saveStatus = True
     
         if saveStatus:
-            return 'Save Complete!'
+            # Run dialog window for successful save
+            pass
         else:
-            return 'Game could not be saved.'
-        
-        
+            # Run dialog window for failed save
+            pass       
 ################################################################################
 # help() -> None
 #
@@ -184,26 +176,17 @@ def handleSave(game : object, num : int) -> None:
 #   as a list of all available commands.
 ################################################################################
 def help() -> None:
-    descHead = ('How to play: \ ')
-    descBody = ("Simply type a word and press enter "
-                "to submit a guess. \ \ ")
-
-    commHead = ('Available Commands: \ ')
-    commBody = ('!new: \ '
-                'Generates a new puzzle from a base word with exactly 7 '
-                'unique characters, or an auto-generated base word. \ '
-                '!shuffle: \ '
-                'Shuffle the order of the active puzzle for a fresh view \ '
-                '!save: \ '
-                'Create a new save for the current game \ '
-                '!load: \ '
-                'Load a previously saved game \ '
-                '!help: \ '
-                'Show the list of all available commands with a brief '
-                "description. (You're here now!) \ "
-                '!exit: \ '
-                'Exit the game ')
-    
+    # Display Game Intructions
+    pass
+################################################################################
+# help() -> None
+#
+# DESCRIPTION:
+#   provides a brief description of game rules and generally how to play as well
+#   as a list of all available commands.
+################################################################################
+def shuffleLetters() -> None:
+    puzzle.shuffleChars()
 ################################################################################
 # loadGame(game : object) -> None:
 #
@@ -214,30 +197,30 @@ def help() -> None:
 #   game : object
 #     - puzzle object storing the current game state
 ################################################################################
-    def loadGame(self, game : object) -> None:
-        fileName = input('Please enter the name of the game you are looking for.'
-                     '\n> ')
+def loadGame(game : object, fileName: str='') -> None:
+    sender = sender().parent.uInput.text()
+    fileName = sender
+    if path.isfile(fileName +'.json'):
         newGame =  StateStorage.loadPuzzle(fileName)
+        
         if newGame != None:
-            game = newGame
-        return (game)
-    
-    #TODO
-    def deleteInput(self):
-        self.view.clearDisplay() #might have to fix if this clears the whole display
+            puzzle = newGame
+        else:
+            window.loadFailed.show()
+    else:
+        window.loadFailed.show()
+################################################################################
+# deleteInput() -> None:
+#
+# DESCRIPTION:
+#   deletes char from input field
+#
+# PARAMETERS:
+#   none
+################################################################################
+def deleteInput():
+    window.centralWidget.uInput.clear()
 
-# When new game is made or loaded
-# 
-
-def main():
-    # make controller object
-    app = QApplication([])
-    window = MainWindow(puzzle)
-    connectSignals()
-    window.show()
-    
-    
-    sys.exit(app.exec())
-
-if __name__ == "__main__":
-    main()
+connectSignals(window)
+window.show()
+sys.exit(app.exec())
