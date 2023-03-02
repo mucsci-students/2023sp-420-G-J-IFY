@@ -320,3 +320,42 @@ class SaveOverwriteDialog(QDialog):
         layout.addWidget(self.btns)
 
         self.setLayout(layout)
+
+
+class HelpDialog(QDialog):
+    def __init__(self, parent : QWidget | None, *args, **kwargs):
+        super(HelpDialog, self).__init__(parent, *args, **kwargs)
+
+        self.instructions = QLabel(self)
+        self.btns = QDialogButtonBox(self)
+
+        self.setMinimumHeight(170)
+
+        self.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Minimum
+        )
+
+        self._initUI()
+
+    def _initUI(self):
+        
+        layout = QVBoxLayout()
+
+        self.instructions.setText(
+            'Welcome to Spelling Bee! (presented by G(J)IFY)'
+            'To play, simply enter a word using only the letters in the'
+            'honey comb (must include the center letter) by either typing'
+            'on your keyboard or by clicking on the letters directly.'
+        )
+        self.instructions.setWordWrap(True)
+
+        self.btns.setStandardButtons(
+            QDialogButtonBox.StandardButton.Ok
+        )
+        self.btns.accepted.connect(self.accept)
+
+        layout.addWidget(self.instructions)
+        layout.addWidget(self.btns)
+
+        self.setLayout(layout)
