@@ -20,11 +20,6 @@ This application runs on the following operating systems
 Before running the program, you must have Python installed 
   (3.11.2 at the time). (https://www.python.org/downloads/)
 
-Also be sure to install pytest to run the unit tests.
-```
-pip install pytest
-```
-
 ### Installing
 
 - First, clone repository with:
@@ -36,7 +31,7 @@ git clone "https://github.com/mucsci-students/2023sp-420-G-J-IFY.git"
 - Then, navigate to `./GitHub/2023sp-420-G-J-IFY/` and run the following command:
 
 ```
-pip install -e .
+make
 ```
 
 ### Executing program
