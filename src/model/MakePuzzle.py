@@ -14,6 +14,7 @@
 import sqlite3
 from random import randrange
 import model.puzzle as saveState
+from model import dbFixer
 from controller import CommandHandler
 import itertools
 
@@ -74,6 +75,7 @@ def newPuzzle(baseWord: str, flag: bool) -> object:
             else:
                 keyLetter = newPuzzGui(baseWord)
             #now that the input has been validated, go find the max score for this game
+            dbFixer.goToDB()
             conn = sqlite3.connect('wordDict.db')
             cursor = conn.cursor()
             cursor.execute("select score from allGames where uniqueLetters = '" +
@@ -82,6 +84,7 @@ def newPuzzle(baseWord: str, flag: bool) -> object:
             #close DB
             conn.commit()
             conn.close()
+            dbFixer.leaveDB()
                     
         # Creates the puzzle for users to solve
         puzzle = saveState.Puzzle(keyLetter, uniqueLetters)
@@ -124,6 +127,7 @@ class BadQueryException(Exception):
 ################################################################################
 def findBaseWord():
     # SQLite Connections
+    dbFixer.goToDB()
     wordDict = sqlite3.connect('wordDict.db')
 
     # Used to execute SQL commands
@@ -140,6 +144,7 @@ def findBaseWord():
     #close DB
     wordDict.commit()
     wordDict.close()
+    dbFixer.leaveDB()
 
     #return tuple of result
     return resultResult
@@ -161,6 +166,7 @@ def findBaseWord():
 ################################################################################
 def checkDataBase(baseWord: str):
     # SQLite Connections
+    dbFixer.goToDB()
     wordDict = sqlite3.connect('wordDict.db')
     
     # Used to execute SQL commands
@@ -173,6 +179,7 @@ def checkDataBase(baseWord: str):
     #after result is caught, disconenct from DB
     wordDict.commit()
     wordDict.close()
+    dbFixer.leaveDB()
 
     return returnResult
 
@@ -200,7 +207,7 @@ def guess(puzzle, input: str, flag : bool):
         #TODO
         #input = pull from gui
         pass
-
+    dbFixer.goToDB()
     conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
         
@@ -270,6 +277,7 @@ def guess(puzzle, input: str, flag : bool):
             
     conn.commit()
     conn.close()
+    dbFixer.leaveDB()
 
 ################################################################################
 # getAllWordsFromPangram(puzz : Puzzle Object) -> list
@@ -295,6 +303,7 @@ def getAllWordsFromPangram(unique, key) -> list: #unclear how to add the puzzle 
             cleanSet.append(sortStrToAlphabetical(''.join(a)))
       
     #Time to querey the DB   
+    dbFixer.goToDB()
     conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
 
@@ -323,6 +332,7 @@ def getAllWordsFromPangram(unique, key) -> list: #unclear how to add the puzzle 
     #close DB
     conn.commit()
     conn.close()
+    dbFixer.leaveDB()
 
     #return list of valid words
     return listList

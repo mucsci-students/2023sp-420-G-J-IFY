@@ -15,7 +15,7 @@
 #       - saves a current state of a puzzle
 ################################################################################
 import sys
-import dbFixer
+from model import dbFixer
 import os
 import sqlite3 #for saveGameChecker
 from model import MakePuzzle #for saveGameChecker
