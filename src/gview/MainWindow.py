@@ -20,7 +20,7 @@ sys.path.append(filePath)
 from SimpleBCluster import simpleButtonCluster
 from StatsPanel import StatsPanel
 from HexCluster import HexCluster
-from Dialogs import LoadDialog
+from LoadDialog import LoadDialog
 from PyQt6.QtGui import (
     QAction,
     QFont,
