@@ -115,22 +115,6 @@ def guess(puzzle: Puzzle, outty: output.Output, window: MainWindow):
     MakePuzzle.guess(puzzle, text, True, outty)    
     window.statsPanel.update(puzzle)
     window.setStatusTip(outty.getField())
-    out = (
-        '=========================\n'
-        'Guess: {0}\n'
-        'Found Words: {1}\n'
-        'All Words: {2}\n'
-        'Outty: {3}\n'
-        '========================='
-    )
-    print(
-        out.format(
-            text, 
-            ', '.join(puzzle.getFoundWords()),
-            ', '.join(puzzle.getAllWords()),
-            outty.getField()
-        )
-    )
 ################################################################################
 # saveGame(Game : object) -> None:
 #
@@ -243,6 +227,7 @@ def deleteInput(window):
 def main():
     outty = output.Output()
     puzzle = MakePuzzle.newPuzzle('','',outty,True)
+    puzzle.shuffleChars()
     print(outty.getField())
     app = QApplication([])
     window = MainWindow(puzzle) 

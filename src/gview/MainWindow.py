@@ -66,7 +66,11 @@ class MainWindow(QMainWindow):
         
         self.statsPanel = StatsPanel(self)
 
-        self.centralWidget = GameWidget(self, puzzle.getUniqueLetters().upper())
+        self.centralWidget = GameWidget(
+            self, 
+            puzzle.getShuffleLetters().upper(),
+            puzzle.getKeyLetter()
+        )
 
         self.setCentralWidget(self.centralWidget)
 
@@ -172,11 +176,18 @@ class MainWindow(QMainWindow):
 #     - List of key letters
 ################################################################################
 class GameWidget(QWidget):
-    def __init__(self, parent: QWidget, letters: list[str], *args, **kwargs):
+    def __init__(
+            self, 
+            parent: QWidget, 
+            letters: list[str], 
+            keyLett: str,
+            *args, 
+            **kwargs
+        ):
         super(GameWidget, self).__init__(parent, *args, **kwargs)
 
         self.uInput = QLineEdit(self)
-        self.cluster = HexCluster(self, letters)
+        self.cluster = HexCluster(self, letters, keyLett)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
         self.entrBtn = QPushButton('Enter', self)

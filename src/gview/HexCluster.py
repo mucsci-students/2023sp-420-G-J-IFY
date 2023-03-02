@@ -54,10 +54,19 @@ from PyQt6.QtWidgets import (
 #     - list of 7 HexButtons, one for each key letter
 ################################################################################
 class HexCluster(QWidget):
-    def __init__(self, parent: QWidget, letters: list[str], *args, **kwargs):
+    def __init__(
+            self, 
+            parent: QWidget, 
+            letters: list[str], 
+            keyLet: str,
+            *args, 
+            **kwargs
+        ):
         super(HexCluster, self).__init__(parent, *args, **kwargs)
 
         self.buttons : list[HexButton] = []
+        self.keyLet = keyLet
+
 
         self._addButtons(letters)
         self._arrangeButtons()
