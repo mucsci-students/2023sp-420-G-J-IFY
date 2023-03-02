@@ -19,7 +19,7 @@ class MakePuzzleTests(unittest.TestCase):
     
     # testing if make puzzle correctly produces a new game
     print("for the following prompt enter the letter i for testing purposes")
-    obj = src.newPuzzle('friends')
+    obj = src.newPuzzle('friends', False)
     assert(obj.keyLett == 'i')
     assert(obj.uniqueLett == 'definrs')
     assert(obj.shuffleLett == 'definrs')
@@ -41,7 +41,7 @@ class MakePuzzleTests(unittest.TestCase):
     
 
     #test guess
-    src.guess(obj, 'friend')
+    src.guess(obj, 'friend', False)
     assert(obj.getFoundWords() == ['friend'])
     assert(obj.getScore() == 6)
     assert(obj.getRank() == 'Good Start')

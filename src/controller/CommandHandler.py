@@ -94,7 +94,7 @@ def parse(usrinput : str, game : object) -> object:
             help()
             return game
         case '!exit':
-            exit()
+            exit(game)
             return game
         case _:
             if usrinput.startswith('!'):
@@ -108,7 +108,7 @@ def parse(usrinput : str, game : object) -> object:
                 return game
                 
             else:
-                MakePuzzle.guess(game, usrinput)
+                MakePuzzle.guess(game, usrinput, False)
                 return game
 
 
@@ -126,7 +126,7 @@ def newPuzzle() -> object:
     print('Please enter a base word with exactly 7 unique characters. \n' +
     'For auto-generated base word, press enter.')
     word = input('> ')
-    out = MakePuzzle.newPuzzle(word.lower())
+    out = MakePuzzle.newPuzzle(word.lower(), False)
     out.shuffleChars()
     return(out)
 
@@ -278,7 +278,7 @@ def help() -> None:
 # DESCRIPTION:
 #   prompts user for confirmation, then quits the game.
 ################################################################################
-def exit() -> None:
+def exit(game) -> None:
     print('Are you sure? all unsaved progress will be lost. [Y/N]')
     usrinput = input('> ').upper()
     match usrinput:
@@ -289,7 +289,7 @@ def exit() -> None:
             return
         case _:
             print('Input Invalid')
-            parse('!exit') # recursively calls until valid input provided.
+            parse('!exit', game) # recursively calls until valid input provided.
 
 
 ################################################################################

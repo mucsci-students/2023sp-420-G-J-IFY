@@ -24,6 +24,25 @@ from PyQt6.QtWidgets import (
     QTextEdit,
 )
 
+
+################################################################################
+# class StatsPanel()
+#
+# DESCRIPTION:
+#   Widget that displays game progress to the user
+#
+# ARGUMENTS:
+#   parent : QWidget | None
+#     - parent widget
+#
+# ATTRIBUTES:
+#   level : QLabel
+#     - Text representation of players progress
+#   pBar : QProgressbar
+#     - progress bar displaying % of game completed
+#   foundWords : QTextEdit
+#     - list of all words found by the user
+################################################################################
 class StatsPanel(QWidget):
     def __init__(self, parent: QWidget | None, *args, **kwargs) -> None:
         super().__init__(parent, *args, **kwargs)
@@ -34,6 +53,13 @@ class StatsPanel(QWidget):
 
         self.initUI()
 
+
+    ############################################################################
+    # initUI() -> None
+    #
+    # DESCRIPTION:
+    #   initialize attributes and layout
+    ############################################################################
     def initUI(self) -> None:
 
         self.setSizePolicy(

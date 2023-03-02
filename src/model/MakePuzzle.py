@@ -28,17 +28,21 @@ import itertools
 #  baseWord : str
 #   takes a baseword that is either an empty string or a pangram and makes a 
 #   puzzle from it
+#  
+#  flag : bool
+#    flag to check if we are using cli or gui (True for Gui False for Cli)
+#
 #
 # RETURNS:
 #  puzzle
 #   empty game object
-#
+# 
 # RAISES:
 #  BadQueryException
 #   if check is baseword contains nonalphas
 #   if word is in the database
 ################################################################################
-def newPuzzle(baseWord: str) -> object:    
+def newPuzzle(baseWord: str, flag: bool) -> object:    
     try:
         uniqueLetters = {}
         if baseWord == '':
@@ -65,18 +69,10 @@ def newPuzzle(baseWord: str) -> object:
             uniqueLetters = returnTuple[1]
             # need to catch if user enters more than one letter. This is a known 
             # problem that will be addressed before end of sprint 1
-            keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
-            keyLetter = keyLetter.lower()
-                        #test to see if keyletter is valid
-            while keyLetter not in uniqueLetters or keyLetter == "":
-                #catch if they enter nothing
-                if keyLetter == "":
-                    keyLetter = input("Must enter character from " 
-                                      + baseWord + ": ")
-                else:
-                    keyLetter = input(keyLetter + " is not part of " 
-                                      + baseWord + 
-                                      " - Please enter a letter from your word: ")
+            if flag == False:
+                keyLetter = newPuzzCli(baseWord, uniqueLetters)
+            else:
+                keyLetter = newPuzzGui(baseWord)
             #now that the input has been validated, go find the max score for this game
             conn = sqlite3.connect('wordDict.db')
             cursor = conn.cursor()
@@ -99,7 +95,11 @@ def newPuzzle(baseWord: str) -> object:
         return puzzle
     #Raise exception for bad puzzle seed
     except BadQueryException:
-        print(baseWord.upper() + " is not a valid word")
+        if flag == False:
+            print(baseWord.upper() + " is not a valid word")
+        else:
+            # TODO
+            pass
         return CommandHandler.newPuzzle()
     
 
@@ -192,9 +192,14 @@ def checkDataBase(baseWord: str):
 #  input : str
 #   user input 
 ################################################################################
-def guess(puzzle, input: str):
+def guess(puzzle, input: str, flag : bool):
     
-    input = input.lower()
+    if not flag:
+        input = input.lower()
+    else:
+        #TODO
+        #input = pull from gui
+        pass
 
     conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
@@ -202,13 +207,23 @@ def guess(puzzle, input: str):
     #check for every case in the user's guess to give points or output error
     #check for only containing alphabetical characters
     if not input.isalpha():
-        print(input + " contains non alphabet characters")
+        if not flag:
+            print(input + " contains non alphabet characters")
+        else:
+            # TODO
+            # pop up window
+            pass
         
     # checks words in the word list to see if it is valid for the puzzle
     elif input in puzzle.getAllWords(): 
         #check if it is already found
-        if input in puzzle.getFoundWords(): 
-            print(input.upper() + " was already found!")
+        if input in puzzle.getFoundWords():
+            if not flag:
+                print(input.upper() + " was already found!")
+            else:
+                #TODO
+                #Pop up window
+                pass
         else:
             #query the database to see how many points to give
             query = "select wordScore from dictionary where fullWord = '" + input + "';"
@@ -218,20 +233,40 @@ def guess(puzzle, input: str):
             puzzle.updateFoundWords(input)
             print(input.upper() + ' is one of the words!')
     elif len(input) < 4: #if the word is not in the list check the size
-        print(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
+        if not flag:
+            print(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
+        else:
+            #TODO
+            #POPUP WINDOW
+            pass
     else:
         #query the database to see if it is a word at all
         query1 = "select uniqueLetters from dictionary where fullWord = '" + input + "';"
         cursor.execute(query1)
         response = cursor.fetchone()
         if response == None:
-            print(input.upper() + " isn't a word in the dictionary")
+            if not flag:
+                print(input.upper() + " isn't a word in the dictionary")
+            else:
+                #TODO
+                #Popup window
+                pass
         #check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())): 
-            print(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
+            if not flag:
+                print(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
+            else:
+                #TODO
+                #popup Window
+                pass
         else:
             #must be letters not in the puzzle in this case
-            print(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
+            if not flag:
+                print(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
+            else:
+                #TODO
+                #popup window
+                pass
             
     conn.commit()
     conn.close()
@@ -249,14 +284,14 @@ def guess(puzzle, input: str):
 #   list
 #       - a list of all the possible words for the given puzzle
 ################################################################################
-def getAllWordsFromPangram(puzz) -> list: #unclear how to add the puzzle type to this line
+def getAllWordsFromPangram(unique, key) -> list: #unclear how to add the puzzle type to this line
     #create powerset of letters from baseword
-    pSet = list(powerset(puzz.getUniqueLetters()))
+    pSet = list(powerset(unique))
     cleanSet = []
 
     #remove sets from powerset to produce subset with keyletter
     for a in pSet:
-        if puzz.getKeyLetter() in a:
+        if key in a:
             cleanSet.append(sortStrToAlphabetical(''.join(a)))
       
     #Time to querey the DB   
@@ -339,3 +374,43 @@ def sortStrToAlphabetical(unsorted : str) -> str:
     uniqueLettersList = sorted(set(unsorted))
     #convert list to string
     return ''.join(uniqueLettersList)
+
+
+
+################################################################################
+# newPuzzCli(baseWord: str, uniqueLetters: dict) -> str
+#
+# DESCRIPTION:
+#   This function takes a string and a dictionary and handles input to determine
+#   the key Letter for CLI
+#
+# PARAMETERS:
+#   baseWord: str
+#       base word of a puzzle 
+#
+#   uniqueLetters: dict
+#       dict of unique letters    
+# 
+# RETURNS:
+#   keyLetter: str
+#       key letter for the game  
+#
+################################################################################
+def newPuzzCli(baseWord: str, uniqueLetters: dict) -> str:
+    keyLetter = input("Enter a letter from your word to use as the key letter\n> ")
+    keyLetter = keyLetter.lower()
+    #test to see if keyletter is valid
+    while keyLetter not in uniqueLetters or keyLetter == "":
+    #catch if they enter nothing
+        if keyLetter == "":
+            keyLetter = input("Must enter character from " 
+                                        + baseWord + ": ")
+        else:
+            keyLetter = input(keyLetter + " is not part of " 
+                                    + baseWord + 
+                                    " - Please enter a letter from your word: ")
+    return keyLetter
+            
+def newPuzzGui(baseWord: str):
+    # TODO
+    pass

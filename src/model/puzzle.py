@@ -364,7 +364,7 @@ class Puzzle:
     #   none
     ############################################################################
     def findAllWords(self):
-       self.allWordList = makePuzzle.getAllWordsFromPangram(self)
+       self.allWordList = makePuzzle.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
 
     ############################################################################
     # updateFoundWords(word)

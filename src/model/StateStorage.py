@@ -1,6 +1,6 @@
 ################################################################################
 # StateStorage.py
-# Author: Gaige Zakroski, Yah'hymbey Baruti Ali-Bey
+# Author: Gaige Zakroski, Yah'hymbey Baruti Ali-Bey, Jacob Lovegren
 # Date of Creation: 2-8-2023
 #
 # A Module that contains many functions that will be capable of saving 
@@ -16,7 +16,8 @@
 ################################################################################
 import sys
 import os
-
+import sqlite3 #for saveGameChecker
+from model import MakePuzzle #for saveGameChecker
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -34,6 +35,30 @@ import shutil
 
 
 ################################################################################
+# class NotInDBException(Exception)
+# Description:
+#   An exception for when a unique/key combo does not exist in our DB
+#
+# Arguments:
+#   EXCEPTION : EXCEPTION
+################################################################################
+class NotInDBException(Exception):
+
+    pass
+
+
+################################################################################
+# class BadJSONException(Exception)
+# Description:
+#   An exception for when a critical error occured in a json load format
+#
+# Arguments:
+#   EXCEPTION : EXCEPTION
+################################################################################
+class BadJSONException(Exception):
+    pass
+
+################################################################################
 # __Save(dict: dict, fileName: str)
 #
 # DESCRIPTION:
@@ -48,6 +73,11 @@ import shutil
 def __Save(dict, fileName):
     with open(fileName, 'w') as file:
         json.dump(dict, file)
+    cwd = os.getcwd()
+    saveCur = cwd + '/' + fileName
+    saveNew = cwd + '/src' + '/data' + '/saves' + '/' + fileName
+
+    os.rename(saveCur, saveNew)
         
 ################################################################################
 # __SearchDict(dict: dict, fileName: str) -> Element
@@ -85,9 +115,12 @@ def __SearchDict(dict, element):
 #   Returns a dictionary of all fields of a saveState object
 ################################################################################
 def __makeDict(saveStateObj):
-    dict = {'keyLetter': saveStateObj.getKeyLetter(), 'uniqueLetters': saveStateObj.getUniqueLetters(), 
-            'shuffleLetters': saveStateObj.getShuffleLetters(), 'currentScore': saveStateObj.getScore(), 'maxScore' : saveStateObj.getMaxScore(), 
-            'foundWordList' : saveStateObj.getFoundWords(), 'allWordList': saveStateObj.getAllWords(), 'rank' : saveStateObj.getRank()}
+    dict = {'RequiredLetter': saveStateObj.getKeyLetter(), 
+            'PuzzleLetters': saveStateObj.getUniqueLetters(), 
+            'CurrentPoints': saveStateObj.getScore(), 
+            'MaxPoints' : saveStateObj.getMaxScore(), 
+            'GuessedWords' : saveStateObj.getFoundWords(), 
+            'WordList': saveStateObj.getAllWords()}
     return dict
 
 ################################################################################
@@ -105,13 +138,13 @@ def __makeDict(saveStateObj):
 #   returns a saveState Object with all its fields set
 ################################################################################
 def __setFields(dict):
-    obj = model.Puzzle(dict['keyLetter'], dict['uniqueLetters'])
-    obj.setShuffleLetters(dict['shuffleLetters'])
-    obj.setScore(dict['currentScore'])
-    obj.setMaxScore(dict['maxScore'])
-    obj.setFoundWords(dict['foundWordList'])
-    obj.setAllWordList(dict['allWordList'])
-    obj.setRank(dict['rank'])
+    obj = model.Puzzle(dict['RequiredLetter'], dict['PuzzleLetters'])
+    obj.shuffleChars()
+    obj.setScore(dict['CurrentPoints'])
+    obj.setMaxScore(dict['MaxPoints'])
+    obj.setFoundWords(dict['GuessedWords'])
+    obj.setAllWordList(dict['WordList'])
+    obj.setRank = obj.updateRank()
     return obj
     
 ################################################################################
@@ -224,7 +257,12 @@ def __checkFileExists(pathToFile):
 def __Load(fileName):
     # checks if file exists
     try:
-        newFileName = fileName + '.json'
+        os.chdir('./src/data/saves')
+        # check if user ended their save with the .json filename
+        if fileName.endswith('.json'):
+            newFileName = fileName
+        else:
+            newFileName = fileName + '.json'
         # create a path to the current directory
         path1 = Path(Path.cwd())
         # append the file in question to the path
@@ -236,11 +274,159 @@ def __Load(fileName):
 
         # puts elements in the file in a dictionary
         dict = json.load(file)
+        move3dirBack()
+    
+        # check that dict contains valid save data
+        dict = checkLoad(dict)
+        # if corrupt file happens, throw exception
+        if dict == None:
+            raise BadJSONException
+
         obj = __setFields(dict)
+        
         return obj
     except FileNotFoundError:
-
         # if fileName does not exist then a FileNotFoundError is 
         # raised saying the file does not exist
        print ("The file " + newFileName + " does not exist in this directory\n"
               "Returning to game...")
+       move3dirBack()
+    except BadJSONException:
+        print ("The file " + newFileName + " contains critical errors that \n"
+              "prevent the game from functioning properly\n"
+              "Returning to game...")
+        
+
+################################################################################
+# move3dirBack()
+#
+# DESCRIPTION:
+#   This helper function moves the directory up three levels
+################################################################################
+def move3dirBack():
+    os.chdir('..')
+    os.chdir('..')
+    os.chdir('..')
+
+
+################################################################################
+# allLower(my_list : list(str)) -> list(str)
+#
+# DESCRIPTION:
+#   This helper function changes all strings in a list to lower case
+#
+# PARAMETERS:
+#   my_list 
+#       - a list of strings of unkown case
+#
+# RETURNS:
+#   list(str)
+#       - a list of strings in lower case
+################################################################################
+def allLower(my_list):
+    return[x.lower() for x in my_list]
+
+
+################################################################################
+# checkLoad(loadFields)
+#
+# DESCRIPTION:
+#   This fucntion checks all the possible reasons why our app could fail from
+#   a foreign load
+#
+# PARAMETERS:
+#   dictDict - a dictionary of the .json fields
+#
+# RETURNS:
+#   valid dictionary for game or None if invalid save file
+#
+# RAISES:
+#   Exception for any load that will crash our program
+################################################################################
+def checkLoad(dictDict):   
+    # SQLite Connections
+    wordDict = sqlite3.connect('wordDict.db') #this is the top level, needs to be fixed later
+    cursor = wordDict.cursor()
+
+    try:
+        #load specific dictionary fields into local variables
+        #THROWS EXCEPTION IF KEY IS NOT IN DICT
+        guessedWords = allLower(dictDict["GuessedWords"])
+        wordList = allLower(dictDict["WordList"])
+        puzzleLetters = dictDict["PuzzleLetters"].lower()
+        requiredLetter = dictDict["RequiredLetter"].lower()
+        currentPoints = dictDict["CurrentPoints"]
+        maxPoints = dictDict["MaxPoints"]
+
+        #check if the unique letters/keyletter combo is in our DB
+        #append requiredLetter to puzzleLetters just in case they fucked
+        #up how they store the required letters
+        uniqueLetters = ''.join(sorted(set(puzzleLetters + requiredLetter)))
+        cursor.execute("select score from allGames where uniqueLetters = '" +
+                       uniqueLetters + "' and keyLetter = '" + requiredLetter +
+                       "';")
+        score = cursor.fetchone()
+        #if the score isn't in our DB, then its not a valid game, 
+        #reject the game
+        if score == None:
+            raise KeyError
+        
+        #if score mismatch, remake word list from our DB
+        if score[0] != maxPoints:
+            maxPoints = score[0]
+            #generateWordList
+            wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, 
+                                                         requiredLetter)
+        
+        #check to make sure all guesses are valid
+        if not set(guessedWords).issubset(set(wordList)):
+            for word in guessedWords:
+                #prune any bad guesses from list
+                if word not in wordList:
+                    guessedWords.remove(word)
+        
+        #rescore the validated guess list
+        tempTable = "create temporary table guessWords (guesses);"
+        cursor.execute(tempTable)
+        querey = "insert into guessWords (guesses) values ('"
+        for a in guessedWords:
+            querey += a + "'), ('"
+        querey += "');"
+        cursor.execute(querey)
+        join = """
+            select sum(wordScore) from dictionary join guessWords 
+            on dictionary.fullWord is guessWords.guesses;
+            """
+        cursor.execute(join)
+        #this is what our score should be
+        ourScore = cursor.fetchone()[0]
+        #if there's doesn't match, set it to ours
+        if ourScore == None:
+            ourScore = 0
+        if ourScore != currentPoints:
+            currentPoints = ourScore
+
+        # at this point, all fields are validates in our game, remake dictionary
+        dictDict["GuessedWords"] = guessedWords
+        dictDict["WordList"] = wordList
+        dictDict["PuzzleLetters"] = puzzleLetters
+        dictDict["RequiredLetter"] = requiredLetter
+        dictDict["CurrentPoints"] = currentPoints 
+        dictDict["MaxPoints"] = maxPoints 
+
+
+    #KeyError is raised IF the fields in the .json do not match the standard
+    except KeyError:
+        dictDict = None
+
+    #NotinDBException is raised IF the game doesn't exist in our DB
+    except NotInDBException:
+        dictDict = None
+
+    #regardless of end, close connection to DB
+    finally:
+        #close DB
+        wordDict.commit()
+        wordDict.close()
+        #return validated dictionary or NONE if exception occured
+        return dictDict

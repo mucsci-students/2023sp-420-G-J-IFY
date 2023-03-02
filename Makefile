@@ -4,6 +4,7 @@ all:run
 
 setup:
 	pip install pytest
+	pip install PyQt6
 	pip install -e .
 
 activate:
@@ -35,6 +36,7 @@ all:run clean
 
 setup:
 	pip install pytest
+	pip install PyQt6
 	pip install -e .
 
 activate:
@@ -58,6 +60,12 @@ cleanVenv:
 	rm -r .venv/bin
 	rm .venv/pyvenv.cfg
 clean:
-	rm -r *.json
+	rm -r ./src/data/saves/TESTFILE1.json
+	rm -r ./src/data/saves/TESTFILE2.json
+	rm -r ./src/data/saves/TESTFILE3.json
+	rm -r ./src/data/saves/TESTFILE4.json
+	rm -r ./src/data/saves/TESTFILE5.json
+	rm -r ./src/data/saves/TESTFILE6.json
+
 
 endif
