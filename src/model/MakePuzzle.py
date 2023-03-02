@@ -15,7 +15,7 @@ import sqlite3
 from random import randrange
 import model.puzzle as saveState
 from model import dbFixer
-from controller import CommandHandler
+from controller.cController import CommandHandler
 import itertools
 import model.output as output
 
