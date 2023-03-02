@@ -29,7 +29,7 @@ import os
 from os import path
 from functools import partial
 from gview.MainWindow import MainWindow
-from model import MakePuzzle, StateStorage, output
+from model import MakePuzzle, StateStorage, output, puzzle
 import PyQt6
 from PyQt6.QtWidgets import QApplication
 current = os.path.dirname(os.path.realpath(__file__))
@@ -71,6 +71,9 @@ def connectSignals():
     
     window.centralWidget.entrBtn.clicked.connect(guess)
     window.centralWidget.uInput.returnPressed.connect(guess)
+
+    window.welcomeDialog.accepted.connect(window.show)
+    window.welcomeDialog.rejected.connect(window.show)
     
     # window.saveDialog.btns.accepted.connect(saveGame)
     
@@ -223,5 +226,7 @@ def deleteInput():
     window.centralWidget.uInput.backspace()
 
 connectSignals()
-window.show()
+puzzle = puzzle.Puzzle('', ['', '', '', '', '', '', ''])
+puzzle.shuffle()
+window.welcomeDialog.show()
 sys.exit(app.exec())

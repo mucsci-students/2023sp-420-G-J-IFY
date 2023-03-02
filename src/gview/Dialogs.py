@@ -359,3 +359,34 @@ class HelpDialog(QDialog):
         layout.addWidget(self.btns)
 
         self.setLayout(layout)
+
+class WelcomeDialog(QDialog):
+    def __init__(self, *args, **kwargs):
+        super(WelcomeDialog, self).__init__(parent=None, *args, **kwargs)
+
+        self.message = QLabel(self)
+        self.btns = QDialogButtonBox(self)
+
+        self._initUI()
+
+    def _initUI(self):
+
+        layout = QVBoxLayout()
+
+        self.message.setText(
+            "Welcome to Spelling Bee!"
+            "Would you like to load a game?"
+        )
+        self.message.setWordWrap(True)
+
+        self.btns.setStandardButtons(
+            QDialogButtonBox.StandardButton.No
+            | QDialogButtonBox.StandardButton.Yes
+        )
+
+        layout.addWidget(self.message)
+        layout.addWidget(self.btns)
+
+        self.setLayout(layout)
+
+        

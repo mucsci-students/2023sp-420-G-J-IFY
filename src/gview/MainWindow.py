@@ -74,6 +74,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         self.setStatusBar(QStatusBar(self))
+        self.welcomeDialog = Dialogs.WelcomeDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
         self.loadDialog = Dialogs.LoadDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
