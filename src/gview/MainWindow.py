@@ -109,7 +109,7 @@ class MainWindow(QMainWindow):
         loadAction = QAction('Load', self)
         helpAction = QAction('Help', self)
 
-        newAction.triggered.connect(self.nwDialog.show)
+        newAction.triggered.connect(self.newDialog.show)
         saveAction.triggered.connect(self.saveDialog.show)
         loadAction.triggered.connect(self.loadDialog.show)
         helpAction.triggered.connect(self.helpDialog.show)
