@@ -98,7 +98,7 @@ def parse(usrinput : str, game : object, outty) -> object:
             help()
             return game
         case '!exit':
-            exit(game)
+            exit(game, outty)
             return game
         case _:
             if usrinput.startswith('!'):
@@ -300,18 +300,19 @@ def help() -> None:
 # DESCRIPTION:
 #   prompts user for confirmation, then quits the game.
 ################################################################################
-def exit(game) -> None:
+def exit(game, outty) -> None:
     print('Are you sure? all unsaved progress will be lost. [Y/N]')
     usrinput = input('> ').upper()
     match usrinput:
         case 'Y':
-            print("Thank you for playing!")
+            outty.setField("Thank you for playing!")
+    
             quit()
         case 'N':
             return
         case _:
-            print('Input Invalid')
-            parse('!exit', game) # recursively calls until valid input provided.
+            outty.setField('Input Invalid')
+            parse('!exit', game, outty) # recursively calls until valid input provided.
 
 
 ################################################################################

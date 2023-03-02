@@ -24,7 +24,7 @@ while not validIn:
             puzzle = CommandHandler.newPuzzle(outty)
             validIn = True
         case '!load':
-            puzzle = CommandHandler.loadGame(puzzle)
+            puzzle = CommandHandler.loadGame(puzzle, outty)
             if puzzle.maxScore == 0:
                 validIn = False
             else:
