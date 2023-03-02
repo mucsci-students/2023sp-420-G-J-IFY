@@ -8,7 +8,7 @@
 #   updates the display to reflect those changes.
 #
 # FUNCTIONS:
-#   parse(userinput : str, game : object) -> object
+#   parse(userinput : str, game : object, outty : object) -> object
 #
 #   newPuzzle() -> object:
 #
@@ -18,11 +18,11 @@
 #
 #   showStatus(game : object) -> None
 #
-#   saveGame(game : object) -> None
+#   saveGame(game : object, outty : object) -> None
 #
-#   savePuzzle(game : object) -> None 
+#   savePuzzle(game : object, outty : object) -> None 
 #
-#   loadGame(game : object) -> None
+#   loadGame(game : object, outty : object) -> None
 #
 #   help() -> None
 #
@@ -34,6 +34,8 @@
 ################################################################################
 import sys
 import os
+import model.output as output
+
 
 
 current = os.path.dirname(os.path.realpath(__file__))
@@ -47,7 +49,7 @@ from model import MakePuzzle, StateStorage
 from os import path
 
 ################################################################################
-# parse(userinput : str, game : object) -> object:
+# parse(userinput : str, game : object, outty : object) -> object:
 #
 # DESCRIPTION:
 #   Directs game functionality based on string input, game object
@@ -58,15 +60,17 @@ from os import path
 #       input.
 #   game : object
 #     - puzzle object storing current game state
+#   outty : object
+#     - output object storing output strings
 #
 # RETURN:
 #   object
 #     - updated puzzle object
 ################################################################################
-def parse(usrinput : str, game : object) -> object:
+def parse(usrinput : str, game : object, outty) -> object:
     match usrinput:
         case '!new':
-            return newPuzzle()
+            return newPuzzle(outty)
         case '!puzzle':
             printPuzzle(game)
             return game
@@ -78,18 +82,18 @@ def parse(usrinput : str, game : object) -> object:
             return game
         case '!shuffle':
             game.shuffleChars()
-            print('Shuffling letters...')
+            outty.setField('Shuffling letters...')
             return game
         case '!save':
-            saveGame(game)
+            saveGame(game, outty)
             return game
         case '!savePuzzle':
-            savePuzzle(game)
+            savePuzzle(game, outty)
             return game
         case '!load':
-            return loadGame(game)
+            return loadGame(game, outty)
         case '!save-list':
-            print ('Implementation Pending...')
+            outty.setField('Implementation Pending...')
         case '!help':
             help()
             return game
@@ -98,17 +102,17 @@ def parse(usrinput : str, game : object) -> object:
             return game
         case _:
             if usrinput.startswith('!'):
-                print('Command not recognized. Type \"!help\" for a list of '
+                outty.setField('Command not recognized. Type \"!help\" for a list of '
                       'valid commands...')
                 return game
 
             elif not usrinput.isalpha():
-                print('Input not accepted:\n'
+                outty.setField('Input not accepted:\n'
                       '\t~Guesses should only contain alphabetical characters.')
                 return game
                 
             else:
-                MakePuzzle.guess(game, usrinput, False)
+                MakePuzzle.guess(game, usrinput, False, outty)
                 return game
 
 
@@ -118,15 +122,25 @@ def parse(usrinput : str, game : object) -> object:
 # DESCRIPTION:
 #   prompts for input and directs functionality to create a new puzzle object.
 #
+#  PARAMETERS:
+#   outty : object
+#     - output object storing output strings
+#
 # RETURN:
 #   object
 #     - new puzzle object
 ################################################################################
-def newPuzzle() -> object:
+def newPuzzle(outty) -> object:
+    if outty.getField() != '':
+        print(outty.getField())
     print('Please enter a base word with exactly 7 unique characters. \n' +
     'For auto-generated base word, press enter.')
     word = input('> ')
-    out = MakePuzzle.newPuzzle(word.lower(), False)
+    keyLetter = ''
+    if word != '':
+        keyLetter = input("Enter a letter from your word "
+                      "to use as the key letter\n> ")
+    out = MakePuzzle.newPuzzle(word.lower(), keyLetter.lower(), outty, False)
     out.shuffleChars()
     return(out)
 
@@ -191,9 +205,11 @@ def showStatus(game : object) -> None:
 # PARAMETERS:
 #   game : object
 #     - puzzle object storing the current game state
+#   outty : object
+#     - output object storing output strings
 ################################################################################
-def saveGame(game : object) -> None:
-    handleSave(game, 0)
+def saveGame(game : object, outty : object) -> None:
+    handleSave(game, 0, outty)
 
 
 ################################################################################
@@ -205,9 +221,11 @@ def saveGame(game : object) -> None:
 # PARAMETERS:
 #   game : object
 #     - puzzle object storing the current game state
+#   outty : object
+#     - output object storing output strings
 ################################################################################
-def savePuzzle(game : object) -> None:
-    handleSave(game, 1)
+def savePuzzle(game : object, outty) -> None:
+    handleSave(game, 1, outty)
 
 
 ################################################################################
@@ -219,11 +237,13 @@ def savePuzzle(game : object) -> None:
 # PARAMETERS:
 #   game : object
 #     - puzzle object storing the current game state
+#   outty : object
+#     - output object storing output strings
 ################################################################################
-def loadGame(game : object) -> None:
+def loadGame(game : object, outty) -> None:
     fileName = input('Please enter the name of the game you are looking for.'
                      '\n> ')
-    newGame =  StateStorage.loadPuzzle(fileName)
+    newGame =  StateStorage.loadPuzzle(fileName, outty)
     if newGame != None:
         game = newGame
     return(game)
@@ -293,7 +313,7 @@ def exit(game) -> None:
 
 
 ################################################################################
-# handleSave(game : object, num) -> None:
+# handleSave(game : object, num : int, outty : object) -> None:
 #
 # DESCRIPTION:
 #   saves the games state and handles input from the user to determin if they
@@ -305,8 +325,10 @@ def exit(game) -> None:
 #   num : int
 #     - an integer value to determin if we are saving all the game progress
 #       or just the pzzle. 0 for saveCurrent() and 1 for savePuzzle().
+#   outty : object
+#     - output object storing output strings
 ################################################################################
-def handleSave(game : object, num : int) -> None:
+def handleSave(game : object, num : int, outty : object) -> None:
     saveStatus = False
     fileName = input('Please enter the name of the file you would like to save '
                      'for example "Game1"\n> ')
@@ -334,7 +356,7 @@ def handleSave(game : object, num : int) -> None:
         print('Game could not be saved.')
 
 ################################################################################
-# finalGame(finishedPuzzle : object) -> None
+# finalGame(finishedPuzzle : object, outty : object) -> None
 #
 # DESCRIPTION:
 #   Notifies the user that they have found all the words for the currently
@@ -343,7 +365,9 @@ def handleSave(game : object, num : int) -> None:
 # PARAMETERS:
 #   finishedPuzzle : object
 #     - puzzle object for the currently active (and finished) game.
+#   outty : object
+#     - output object storing output strings
 ################################################################################
-def finalGame(finishedPuzzle : object) -> None:
+def finalGame(finishedPuzzle : object, outty) -> None:
     showStatus(finishedPuzzle)
-    print("Congratulations!!!!\nYou have found all of the\nwords for this puzzle!")  
+    outty.setField("Congratulations!!!! You have found all of the words for this puzzle!")  
