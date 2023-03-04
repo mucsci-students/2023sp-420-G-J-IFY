@@ -34,6 +34,8 @@ from model.puzzle import Puzzle
 import PyQt6
 from PyQt6.QtCore import QEvent
 from PyQt6.QtWidgets import QApplication
+from tkinter import filedialog as fd
+from tkinter.messagebox import showinfo
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
@@ -247,6 +249,29 @@ class GController():
         ################################################################################
     def deleteInput(window):
         window.centralWidget.uInput.backspace()
+    
+    ############################################################################
+    # openExplorer() -> path:
+    #
+    # DESCRIPTION:
+    #   opens the file exploer and returns the path of the selected file
+
+    # PARAMETERS:
+    #   none
+    #
+    ############################################################################
+    def openExplorer() -> path:
+        filetypes = (
+            ('textFiles', '*.json'),
+            ('All files' , '*.*')
+            )
+
+        fileName = fd.askopenfilename(
+                title = 'open a file',
+                initialdir= '/',
+                filetypes =filetypes)
+        return fileName
+
 
 
 def main():
