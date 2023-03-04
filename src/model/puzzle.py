@@ -32,6 +32,7 @@ from itertools import chain, combinations
 #   allWordList: list
 #   rank: str
 #   finishedFlag: bool
+#   pointsTilRank: int
 #
 # <public> Functions:
 #   getKeyLetter() -> str
@@ -52,6 +53,8 @@ from itertools import chain, combinations
 #     - returns the a current rank of the player
 #   getFinishedFlag() -> bool
 #     - returns whether the game is finished or not
+#   getPointsTilRank() -> int
+#     - returns the points needed until the next rank
 #   setKeyLetter(letter: str)
 #     - takes a given key letter and set to a key letter in the puzzle
 #   setUniqueLetters(uniqueLetters: set)
@@ -70,6 +73,8 @@ from itertools import chain, combinations
 #     - sets the rank of the puzzle
 #   setFinishedFlag(update: bool)
 #     - sets the finished flag in puzzle
+#   setPointsTilRank(points: int)
+#     - sets the points til rank 
 #   findAllWords()
 #     - generates a list of valid guessable words
 #   updateFoundWords(word: str)
@@ -78,6 +83,8 @@ from itertools import chain, combinations
 #     - adds pointIncrease to the score
 #   updateRank()
 #     - updates puzzle rank based off score
+#   calcPointsTilRank(rankPer : double)
+#     - updates the points til rank based on current max and level
 #   shuffleChars()
 #     - shuffles the order or shuffle letter list
 ################################################################################
@@ -93,6 +100,7 @@ class Puzzle:
         self.allWordList = []
         self.rank = ' '
         self.finishedFlag = False
+        self.pointsTilRank = 1
     
     ############################################################################
     # getKeyLetter() -> str
@@ -229,15 +237,26 @@ class Puzzle:
     # Description:
     #   display the finished flag
     #
-    # Parameters:
-    #   none
-    #
     # Returns:
     #   self.finishedFlag
     #       bool value
     ############################################################################
     def getFinishedFlag(self):
         return self.finishedFlag
+    
+
+    ############################################################################
+    # getPointsTilRank() - int
+    #
+    # Description:
+    #   returns the points needed until next level
+    #
+    # Returns:
+    #   self.pointsTilRank
+    #       int value
+    ############################################################################
+    def getPointsTilRank(self):
+        return self.pointsTilRank
 
     ############################################################################
     # setKeyLetter(letter: str)
@@ -357,6 +376,19 @@ class Puzzle:
         self.finishedFlag = update
 
     ############################################################################
+    # setPointsTilRank(points)
+    #
+    # Description:
+    #   sets the points til rank up
+    #
+    # Parameters:
+    #   points
+    #       points needed to rank up
+    ############################################################################
+    def setPointsTilRank(self, points):
+        self.pointsTilRank = round(points)
+
+    ############################################################################
     # findAllWords(self)
     #
     # Description:
@@ -410,27 +442,51 @@ class Puzzle:
         currentPercent = self.score / self.maxScore
         if currentPercent == 0:
             self.rank = "Beginner"
+            self.setPointsTilRank(1)
         elif currentPercent < 0.05:
             self.rank =  "Good Start"
+            self.calcPointsTilRank(0.05)
         elif currentPercent < 0.08:
             self.rank = "Moving Up"
+            self.calcPointsTilRank(0.08)
         elif currentPercent < 0.15:
             self.rank = "Good"
+            self.calcPointsTilRank(0.15)
         elif currentPercent < 0.25:
             self.rank = "Solid"
+            self.calcPointsTilRank(0.25)
         elif currentPercent < 0.4:
             self.rank = "Nice"
+            self.calcPointsTilRank(0.4)
         elif currentPercent < 0.51:
             self.rank = "Great"
+            self.calcPointsTilRank(0.51)
         elif currentPercent < 0.71:
             self.rank = "Amazing"
+            self.calcPointsTilRank(0.71)
         elif currentPercent < 1:
             self.rank = "Genius"
+            self.calcPointsTilRank(1)
         else: #all words found
             self.rank = "Queen Bee"
             #set final flag
             self.setFinishedFlag(True)
-        
+            self.setPointsTilRank(0)
+
+    ############################################################################
+    # calcPointsTilRank(rankPer)
+    #
+    # Description:
+    #   calcPointsTilRank takes a decimal for the next rank up and determines
+    #   how many points are needed to hit that rank
+    #
+    # Parameters:
+    #   rankPer
+    #       a floating point number for the next rank to hit
+    ############################################################################
+    def calcPointsTilRank(self, rankPer):
+        self.setPointsTilRank(self.maxScore * rankPer - self.score)
+
     ############################################################################
     # shuffleChars()
     #
