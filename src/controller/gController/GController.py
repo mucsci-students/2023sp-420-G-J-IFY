@@ -103,7 +103,6 @@ class GController():
     #     - new puzzle object
     ################################################################################
     def newPuzzle(self) -> None:
-
         dlg = self.window.newDialog
         baseWord = str(dlg.baseWrd.text()).lower()
         keyLetter = str(dlg.keyLett.currentText()).lower()
@@ -113,7 +112,6 @@ class GController():
         self.window.newGame(self.puzzle)
         dlg.baseWrd.clear()
         dlg.accept()
-
     ################################################################################
     # guess(window: object) -> None
     #
@@ -167,19 +165,15 @@ class GController():
     #     - an integer value to determin if we are saving all the game progress
     #       or just the pzzle. 0 for saveCurrent() and 1 for savePuzzle().
     ################################################################################
-    def handleSave(game : object, fileName: str ,num : int) -> None:
+    def handleSave(self, game : object, fileName: str ,num : int) -> None:
         saveStatus = False
+        
         if(path.isfile(fileName +'.json')):
             # Run Dialog Window for overwriting existing file
             # Change if to check if user click yes or no
+            self.window.owDialog.show()
+            self.window.owDialog.accept.connect(lambda: self.toOverwrite(num, game, fileName))
             
-            if(True):
-                if(num == 0):
-                    StateStorage.saveCurrent(game, fileName)
-                    saveStatus = True
-                elif(num == 1):
-                    StateStorage.savePuzzle(game, fileName)
-                    saveStatus = True
         else: 
             if(num == 0):
                 StateStorage.saveCurrent(game, fileName)
@@ -188,12 +182,12 @@ class GController():
                 StateStorage.savePuzzle(game, fileName)
                 saveStatus = True
         
-            if saveStatus:
+        #    if saveStatus:
                 # Run dialog window for successful save
-                pass
-            else:
+        #        pass
+        #    else:
                 # Run dialog window for failed save
-                pass       
+        #        pass       
     ################################################################################
     # help() -> None
     #
@@ -205,23 +199,22 @@ class GController():
         # Display Game Intructions
         pass
     ################################################################################
-    # help() -> None
+    # shuffleLetters() -> None
     #
     # DESCRIPTION:
-    #   provides a brief description of game rules and generally how to play as well
-    #   as a list of all available commands.
+    #   Shuffles the letters in the GUI View
     ################################################################################
     def shuffleLetters(self) -> None:
         self.puzzle.shuffleChars()
+        MainWindow.centralWidget.cluster.setLetters(self.puzzle.getShuffleLetters())
     ################################################################################
-    # loadGame(game : object) -> None:
+    # loadGame() -> None:
     #
     # DESCRIPTION:
     #   load an existing save entry into memory
     #
     # PARAMETERS:
-    #   game : object
-    #     - puzzle object storing the current game state
+    # 
     ################################################################################
     def loadGame(self) -> None: 
         sender = sender().parent.uInput.text()
@@ -246,6 +239,22 @@ class GController():
     ################################################################################
     def deleteInput(self):
         self.window.centralWidget.uInput.backspace()
+    ################################################################################
+    # toOverwrite() -> None:
+    #
+    # DESCRIPTION:
+    #   completes save overwrite
+    #
+    # PARAMETERS:
+    #   none
+    ################################################################################
+    def toOverwrite(self, num, game, fileName):
+        if(num == 0):
+            StateStorage.saveCurrent(game, fileName)
+            saveStatus = True
+        elif(num == 1):
+            StateStorage.savePuzzle(game, fileName)
+            saveStatus = True
 
 ################################################################################
 # openExplorer() -> None:
