@@ -106,8 +106,8 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
         # Generates rank
         puzzle.updateRank()
         
-        outty.setField('Puzzle creation successful.\nLetters: {}\nKeyletter: {}'
-                       .format(puzzle.getUniqueLetters(), puzzle.getKeyLetter()))
+        #outty.setField('Puzzle creation successful.\nLetters: {}\nKeyletter: {}'
+        #               .format(puzzle.getUniqueLetters(), puzzle.getKeyLetter()))
 
         return puzzle
     #Raise exception for bad puzzle seed
@@ -238,9 +238,13 @@ def guess(puzzle, input: str, flag : bool, outty : object):
     conn = sqlite3.connect('wordDict.db')
     cursor = conn.cursor()
         
+
+    if len(input) > 15:
+        outty.setField("That guess is too long." + 
+                       "Max length is only 15 characters")
     #check for every case in the user's guess to give points or output error
     #check for only containing alphabetical characters
-    if not input.isalpha():
+    elif not input.isalpha():
         outty.setField(input + " contains non alphabet characters")
 
         '''
