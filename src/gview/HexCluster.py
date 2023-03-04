@@ -72,8 +72,9 @@ class HexCluster(QWidget):
         self._arrangeButtons()
 
     def setLetters(self, legends: list[str]) -> None:
-        for i in range(7):
-            self.buttons[i].text = legends[i]
+        
+        for i, c in enumerate(legends):
+            self.buttons[i].text = c
 
 
     ############################################################################

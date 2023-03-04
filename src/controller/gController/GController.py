@@ -69,17 +69,19 @@ class GController():
     #  user input as a single character (one at a time)
     ############################################################################
     def connectSignals(self):
-        dialog = self.window.newDialog
+        newDlg = self.window.newDialog
+        saveDlg = self.window.saveDialog
+        loadDlg = self.window.loadDialog
 
-        baseWord = dialog.baseWrd.text()
-        keyLett = dialog.keyLett.currentText()
+        baseWord = newDlg.baseWrd.text()
+        keyLett = newDlg.keyLett.currentText()
 
         # newPuzzle uses default params
-        dialog.warningBtns.accepted.connect(
+        newDlg.warningBtns.accepted.connect(
             lambda: self.newPuzzle('', '')
         )
         # newPuzzle uses provided params
-        dialog.advBtns.accepted.connect(
+        newDlg.advBtns.accepted.connect(
             lambda: self.newPuzzle(baseWord, keyLett))
         
         self.window.centralWidget.entrBtn.clicked.connect(self.guess)
@@ -109,6 +111,7 @@ class GController():
 
         self.puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
         self.puzzle.shuffleChars()
+        print(self.puzzle.getShuffleLetters())
         print(self.outty.getField())
         self.window.newGame(self.puzzle)
 

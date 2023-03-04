@@ -97,7 +97,7 @@ class MainWindow(QMainWindow):
 
     def newGame(self, puzzle: Puzzle) -> None:
 
-        self.centralWidget.cluster.setLetters(puzzle.getUniqueLetters().upper())
+        self.centralWidget.cluster.setLetters(puzzle.getShuffleLetters().upper())
         self.statsPanel.update(puzzle)
         self.centralWidget.newGame(puzzle.getShuffleLetters().upper())
 
