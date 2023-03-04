@@ -224,11 +224,11 @@ class GController():
     # PARAMETERS:
     # 
     ################################################################################
-    def loadGame(self) -> None: 
-        sender = sender().parent.uInput.text()
-        fileName = sender
+    def loadGame(self) -> None:
+        fileName = self.window.loadDialog.uInput.text()
+        os.chdir('./src/data/saves')
         if path.isfile(fileName +'.json'):
-            newGame =  StateStorage.loadPuzzle(fileName)
+            newGame =  StateStorage.loadPuzzle(fileName, self.outty)
             
             if newGame != None:
                 self.puzzle = newGame
@@ -236,6 +236,7 @@ class GController():
                 self.window.loadFailed.show()
         else:
             self.window.loadFailed.show()
+        StateStorage.move3dirBack()
     ################################################################################
     # deleteInput() -> None:
     #
