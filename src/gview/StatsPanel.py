@@ -50,6 +50,7 @@ class StatsPanel(QWidget):
 
         self.level = QLabel(self)
         self.pBar = QProgressBar(self)
+        self.ptsToNxt = QLabel(self)
         self.foundWords = QTextEdit(self)
         self.header = '**Found Words:** \n ___\n'
 
@@ -76,6 +77,10 @@ class StatsPanel(QWidget):
         self.level.setText('Beginner')
         # initialize defaults for pBar
         self.pBar.setValue(0)
+
+        # initialize ptsToNxt
+        self.ptsToNxt.setText('Points To Next Level: 1')
+
         # initialize defaults for foundWords:
         self.foundWords.setFont(QFont('Helvetica', 16))
         self.foundWords.setReadOnly(True)
@@ -103,10 +108,17 @@ class StatsPanel(QWidget):
 
         layout.addWidget(self.level, 0, 0)
         layout.addWidget(self.pBar, 0, 1)
+        layout.addWidget(
+            self.ptsToNxt,
+            1,
+            0,
+            1,
+            2
+        )
         # found Words spans both columns in grid
         layout.addWidget(
             self.foundWords,
-            1,
+            2,
             0,
             1,
             2
@@ -120,6 +132,10 @@ class StatsPanel(QWidget):
         self.level.setText(puzzle.getRank())
 
         self.pBar.setValue(int((puzzle.getScore()/puzzle.getMaxScore())*100))
+
+        self.ptsToNxt.setText('Points to next level: {pts}'.format(
+            pts=str(puzzle.getPointsTilRank())
+        ))
 
         body = self.header
 
