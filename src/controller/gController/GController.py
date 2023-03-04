@@ -76,6 +76,8 @@ class GController():
         baseWord = newDlg.baseWrd.text()
         keyLett = newDlg.keyLett.currentText()
 
+        print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLett}\n')
+
         # newPuzzle uses default params
         newDlg.warningBtns.accepted.connect(
             lambda: self.newPuzzle('', '')
