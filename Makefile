@@ -5,6 +5,7 @@ all: setup
 setup:
 	pip install pytest
 	pip install PyQt6
+	pip install tk
 	pip install -e .
 	
 
