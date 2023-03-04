@@ -253,8 +253,6 @@ class GController():
 
 ################################################################################
 def openExplorer() -> path:
-    from tkinter import filedialog as fd
-    from tkinter.messagebox import showinfo
     filetypes = (
         ('textFiles', '*.json'),
         ('All files' , '*.*')
