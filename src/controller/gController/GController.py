@@ -169,11 +169,14 @@ class GController():
     ################################################################################
     def handleSave(self, game : object, fileName: str ,num : int) -> None:
         saveStatus = False
+        self.window.saveDialog.fileName.clear()
+        self.window.saveDialog.justPuzzle.setChecked(False)
+        os.chdir('./src/data/saves')
         if(path.isfile(fileName +'.json')):
             # Run Dialog Window for overwriting existing file
             # Change if to check if user click yes or no
             self.window.owDialog.show()
-            self.window.owDialog.accept.connect(lambda: self.toOverwrite(num, game, fileName))
+            self.window.owDialog.btns.accepted.connect(lambda: self.toOverwrite(num, game, fileName))
             
         else: 
             if(num == 0):
@@ -183,6 +186,7 @@ class GController():
                 StateStorage.savePuzzle(game, fileName)
                 saveStatus = True
         
+        StateStorage.move3dirBack()
         #    if saveStatus:
                 # Run dialog window for successful save
         #        pass
@@ -259,6 +263,7 @@ class GController():
         elif(num == 1):
             StateStorage.savePuzzle(game, fileName)
             saveStatus = True
+        self.window.owDialog.accept()
 
 ################################################################################
 # openExplorer() -> None:
