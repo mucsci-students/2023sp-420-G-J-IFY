@@ -84,13 +84,16 @@ class GController():
         
         self.window.saveDialog.btns.accepted.connect(self.saveGame)
         
-        # window.helpDialog.btns.accepted.connect(help)
+        #self.window.helpDialog.btns.accepted.connect()
         
         self.window.centralWidget.shflBtn.clicked.connect(self.shuffleLetters)
         
         self.window.loadDialog.btns.accepted.connect(self.loadGame)
         
         self.window.centralWidget.delBtn.clicked.connect(self.deleteInput)  
+
+        #self.window.loadAction.triggered.connect(openExplorer)
+        openExplorer()
 
     ################################################################################
     # newPuzzle(userInput) -> object:
