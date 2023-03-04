@@ -69,20 +69,15 @@ class GController():
     #  user input as a single character (one at a time)
     ############################################################################
     def connectSignals(self):
-        newDlg = self.window.newDialog
-        saveDlg = self.window.saveDialog
-        loadDlg = self.window.loadDialog
-
-        baseWord = newDlg.baseWrd.text()
-        keyLett = newDlg.keyLett.currentText()
-
+        '''
         # newPuzzle uses default params
         newDlg.warningBtns.accepted.connect(
             lambda: self.newPuzzle('', '')
         )
+        '''
+
         # newPuzzle uses provided params
-        newDlg.advBtns.accepted.connect(
-            lambda: self.newPuzzle(baseWord, keyLett))
+        self.window.newDialog.btns.accepted.connect(self.newPuzzle)
         
         self.window.centralWidget.entrBtn.clicked.connect(self.guess)
         self.window.centralWidget.uInput.returnPressed.connect(self.guess)
@@ -107,11 +102,17 @@ class GController():
     #   object
     #     - new puzzle object
     ################################################################################
-    def newPuzzle(self, baseWord : str = '', keyLetter : str = '') -> None:
+    def newPuzzle(self) -> None:
 
+        dlg = self.window.newDialog
+        baseWord = str(dlg.baseWrd.text()).lower()
+        keyLetter = str(dlg.keyLett.currentText()).lower()
+        print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLetter}\n')
         self.puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
         self.puzzle.shuffleChars()
         self.window.newGame(self.puzzle)
+        dlg.baseWrd.clear()
+        dlg.accept()
 
     ################################################################################
     # guess(window: object) -> None

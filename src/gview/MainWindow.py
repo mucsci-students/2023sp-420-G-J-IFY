@@ -215,6 +215,7 @@ class GameWidget(QWidget):
             f"{'|'.join(self.letters).lower()}]+"
         )
         # Create and set uInput validator
+        self.uInput.clear()
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)
 

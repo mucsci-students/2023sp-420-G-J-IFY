@@ -109,11 +109,12 @@ class NewDialog(QDialog):
 
          self.warningMsg = QLabel(self)
          self.advBtn = QPushButton(self)
-         self.warningBtns = QDialogButtonBox(self)
+         self.backBtn = QPushButton(self)
 
          self.baseWrd = QLineEdit(self)
          self.keyLett = QComboBox(self)
-         self.advBtns = QDialogButtonBox(self)
+
+         self.btns = QDialogButtonBox(self)
 
          self._initUI()
 
@@ -130,6 +131,14 @@ class NewDialog(QDialog):
          self.stack.addWidget(advanced)
 
          layout.addWidget(self.stack)
+
+         self.btns.setStandardButtons(
+             QDialogButtonBox.StandardButton.Ok
+             | QDialogButtonBox.StandardButton.Cancel
+         )
+         self.btns.rejected.connect(self.reject)
+
+         layout.addWidget(self.btns)
 
          self.setLayout(layout)
 
@@ -172,21 +181,9 @@ class NewDialog(QDialog):
          )
          advLayout.addWidget(self.advBtn)
 
-         # Dialog buttons setup, formatting, and tentative connections
-         self.warningBtns.setStandardButtons(
-             QDialogButtonBox.StandardButton.Cancel
-             | QDialogButtonBox.StandardButton.Ok
-         )
-         self.warningBtns.button(
-             QDialogButtonBox.StandardButton.Ok
-         ).setText('Yes')
-         self.warningBtns.accepted.connect(self.accept)
-         self.warningBtns.rejected.connect(self.reject)
-
          # Populate the widget
          layout.addWidget(self.warningMsg)
          layout.addLayout(advLayout)
-         layout.addWidget(self.warningBtns)
          page.setLayout(layout)
          return page
 
@@ -196,6 +193,7 @@ class NewDialog(QDialog):
 
          page = QWidget(self)
          layout = QVBoxLayout()
+         backLayout = QHBoxLayout()
          form = QFormLayout()
 
          regex = QRegularExpression(
@@ -205,25 +203,32 @@ class NewDialog(QDialog):
          self.baseWrd.setValidator(validator)
 
          self.baseWrd.textEdited.connect(self._populateCombo)
-
-         self.advBtns.setStandardButtons(
-             QDialogButtonBox.StandardButton.Cancel
-             | QDialogButtonBox.StandardButton.Ok
+         
+         font = QFont()
+         font.setUnderline(True)
+         self.backBtn.setStyleSheet("color: blue; border: none")
+         self.backBtn.setFont(font)
+         self.backBtn.setText('Back')
+         self.backBtn.setFlat(True)
+         self.backBtn.setCursor(Qt.CursorShape.PointingHandCursor)
+         self.backBtn.setSizePolicy(
+             QSizePolicy.Policy.Fixed,
+             QSizePolicy.Policy.Fixed
          )
-         self.advBtns.button(
-             QDialogButtonBox.StandardButton.Cancel
-         ).setText('Back')
-         self.advBtns.button(
-             QDialogButtonBox.StandardButton.Ok
-         ).setText('Apply')
+         self.backBtn.setFixedSize(self.backBtn.minimumSizeHint())
+         self.backBtn.clicked.connect(lambda: self.display(0))
 
-         self.advBtns.rejected.connect(lambda: self.display(0))
+         # Spacer to move Advanced button to the right
+         backLayout.addSpacerItem(
+             QSpacerItem(5, 0, QSizePolicy.Policy.MinimumExpanding)
+         )
+         backLayout.addWidget(self.backBtn)
 
          form.addRow('Baseword:', self.baseWrd)
          form.addRow('Key Letter:', self.keyLett)
 
          layout.addLayout(form)
-         layout.addWidget(self.advBtns)
+         layout.addLayout(backLayout)
          page.setLayout(layout)
          return page
 
@@ -239,6 +244,18 @@ class NewDialog(QDialog):
 
      def display(self, i : int=0) -> None:
          self.stack.setCurrentIndex(i)
+
+     def reject(self) -> None:
+         self.baseWrd.clear()
+         self.keyLett.clear()
+         self.display(0)
+         super().reject()
+
+     def accept(self) -> None:
+         self.baseWrd.clear()
+         self.keyLett.clear()
+         self.display(0)
+         super().accept()
 
 
 class SaveDialog(QDialog):
