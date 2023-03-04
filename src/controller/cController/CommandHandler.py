@@ -141,7 +141,7 @@ def newPuzzle(outty) -> object:
     out = MakePuzzle.newPuzzle(word.lower(), keyLetter.lower(), outty, False)
     if outty.getField().startswith("ERROR"):
         print(outty.getField())
-        newPuzzle(outty)
+        outty.setField('')
     else:
         out.shuffleChars()
         return(out)

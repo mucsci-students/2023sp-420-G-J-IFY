@@ -18,7 +18,6 @@ while not validIn:
                      'To start a new game, type "!new". To load a previous '
                      'save, type "!load"'], 40, '^')
     usrinput = input('> ')
-    #CLI.clear()
     match usrinput:
         case '!new':
             puzzle = CommandHandler.newPuzzle(outty)
@@ -34,7 +33,9 @@ while not validIn:
             quit()
         case _:
             print(usrinput + " is not a valid command")
-
+    #check and see if bad puzzle object was returned somewhere
+    if puzzle == None:
+        validIn = False
 
 CLI.clear()
 CLI.drawGameBox(puzzle, outty)
