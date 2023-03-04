@@ -82,7 +82,7 @@ class GController():
         self.window.centralWidget.entrBtn.clicked.connect(self.guess)
         self.window.centralWidget.uInput.returnPressed.connect(self.guess)
         
-        # window.saveDialog.btns.accepted.connect(saveGame)
+        self.window.saveDialog.btns.accepted.connect(self.saveGame)
         
         # window.helpDialog.btns.accepted.connect(help)
         
@@ -150,7 +150,9 @@ class GController():
         if dialog.justPuzzle.isChecked():
             self.handleSave(self.puzzle, fileName, 1)
         else: 
-            self.handleSave(self.puzzle, fileName, 0)    
+            self.handleSave(self.puzzle, fileName, 0)   
+
+        dialog.accept() 
     ################################################################################
     # handleSave(game : object, num) -> None:
     #
@@ -167,7 +169,6 @@ class GController():
     ################################################################################
     def handleSave(self, game : object, fileName: str ,num : int) -> None:
         saveStatus = False
-        
         if(path.isfile(fileName +'.json')):
             # Run Dialog Window for overwriting existing file
             # Change if to check if user click yes or no
