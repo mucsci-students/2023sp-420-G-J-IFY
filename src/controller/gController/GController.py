@@ -206,8 +206,11 @@ class GController():
     #   Shuffles the letters in the GUI View
     ################################################################################
     def shuffleLetters(self) -> None:
+        centralWidget = self.window.centralWidget
         self.puzzle.shuffleChars()
-        MainWindow.centralWidget.cluster.setLetters(self.puzzle.getShuffleLetters())
+        letters = [*self.puzzle.getShuffleLetters().upper()]
+        centralWidget.setLetters(letters)
+        centralWidget.update()
     ################################################################################
     # loadGame() -> None:
     #
