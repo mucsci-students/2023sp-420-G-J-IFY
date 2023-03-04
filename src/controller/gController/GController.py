@@ -146,8 +146,13 @@ class GController():
     ################################################################################
     def saveGame(self) -> None:
         # Takes file name
-        self.handleSave(self.puzzle, 0)
-        self.handleSave(self.puzzle, 1)    
+        dialog = self.window.saveDialog
+        fileName = dialog.fileName.text()
+        
+        if dialog.justPuzzle.isChecked():
+            self.handleSave(self.puzzle, fileName, 1)
+        else: 
+            self.handleSave(self.puzzle, fileName, 0)    
     ################################################################################
     # handleSave(game : object, num) -> None:
     #
@@ -167,6 +172,7 @@ class GController():
         if(path.isfile(fileName +'.json')):
             # Run Dialog Window for overwriting existing file
             # Change if to check if user click yes or no
+            
             if(True):
                 if(num == 0):
                     StateStorage.saveCurrent(game, fileName)
