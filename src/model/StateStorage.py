@@ -20,6 +20,7 @@ import os
 import sqlite3 #for saveGameChecker
 from model import MakePuzzle #for saveGameChecker
 import model.output as output
+import platform
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -75,11 +76,15 @@ class BadJSONException(Exception):
 def __Save(dict, fileName):
     with open(fileName, 'w') as file:
         json.dump(dict, file)
-    cwd = os.getcwd()
-    saveCur = cwd + '/' + fileName
-    saveNew = cwd + '/src' + '/data' + '/saves' + '/' + fileName
-
-    os.rename(saveCur, saveNew)
+    cwd = Path.cwd()
+    saveCur = cwd  /  fileName
+    saveNew = cwd  / 'src'  / 'data' / 'saves' / fileName
+    
+    os = platform.system()
+    if os == 'Windows':
+        os.replace(str(saveCur) , str(saveNew))
+    else:
+        os.rename(saveCur, saveNew)
         
 ################################################################################
 # __SearchDict(dict: dict, fileName: str) -> Element
@@ -468,23 +473,3 @@ def checkLoad(dictDict):
         #return validated dictionary or NONE if exception occured
         return dictDict
     
-#def openExplorer() -> Path:
-    from tkinter import filedialog as fd
-    from tkinter.messagebox import showinfo
-    filetypes = (
-        ('textFiles', '*.json'),
-        ('All files' , '*.*')
-        )
-
-    fileName = fd.askopenfilename(
-            title = 'open a file',
-            initialdir= '/',
-            filetypes =filetypes)
-    return fileName
-
-#outty = output.Output()
-#obj = loadFromExploer(openExplorer(), outty)
-#if not obj == None:
-#    dict = __makeDict(obj)
-#    print (dict)
-#

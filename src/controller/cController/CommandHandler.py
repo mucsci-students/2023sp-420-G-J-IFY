@@ -335,6 +335,7 @@ def handleSave(game : object, num : int, outty : object) -> None:
     saveStatus = False
     fileName = input('Please enter the name of the file you would like to save '
                      'for example "Game1"\n> ')
+    os.chdir('./src/data/saves')
     if(path.isfile(fileName +'.json')):
         yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
                         '\n Enter Y for yes or N for no\n> ')
@@ -357,6 +358,8 @@ def handleSave(game : object, num : int, outty : object) -> None:
         print('Save Complete!')
     else:
         print('Game could not be saved.')
+        
+    StateStorage.move3dirBack()
 
 ################################################################################
 # finalGame(finishedPuzzle : object, outty : object) -> None
