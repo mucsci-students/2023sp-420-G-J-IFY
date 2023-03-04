@@ -82,7 +82,7 @@ class GController():
         self.window.centralWidget.entrBtn.clicked.connect(self.guess)
         self.window.centralWidget.uInput.returnPressed.connect(self.guess)
         
-        # window.saveDialog.btns.accepted.connect(saveGame)
+        self.window.saveDialog.btns.accepted.connect(self.saveGame)
         
         # window.helpDialog.btns.accepted.connect(help)
         
@@ -103,7 +103,6 @@ class GController():
     #     - new puzzle object
     ################################################################################
     def newPuzzle(self) -> None:
-
         dlg = self.window.newDialog
         baseWord = str(dlg.baseWrd.text()).lower()
         keyLetter = str(dlg.keyLett.currentText()).lower()
@@ -113,7 +112,6 @@ class GController():
         self.window.newGame(self.puzzle)
         dlg.baseWrd.clear()
         dlg.accept()
-
     ################################################################################
     # guess(window: object) -> None
     #
@@ -146,8 +144,15 @@ class GController():
     ################################################################################
     def saveGame(self) -> None:
         # Takes file name
-        self.handleSave(self.puzzle, 0)
-        self.handleSave(self.puzzle, 1)    
+        dialog = self.window.saveDialog
+        fileName = dialog.fileName.text()
+        
+        if dialog.justPuzzle.isChecked():
+            self.handleSave(self.puzzle, fileName, 1)
+        else: 
+            self.handleSave(self.puzzle, fileName, 0)   
+
+        dialog.accept() 
     ################################################################################
     # handleSave(game : object, num) -> None:
     #
@@ -162,18 +167,17 @@ class GController():
     #     - an integer value to determin if we are saving all the game progress
     #       or just the pzzle. 0 for saveCurrent() and 1 for savePuzzle().
     ################################################################################
-    def handleSave(game : object, fileName: str ,num : int) -> None:
+    def handleSave(self, game : object, fileName: str ,num : int) -> None:
         saveStatus = False
+        self.window.saveDialog.fileName.clear()
+        self.window.saveDialog.justPuzzle.setChecked(False)
+        os.chdir('./src/data/saves')
         if(path.isfile(fileName +'.json')):
             # Run Dialog Window for overwriting existing file
             # Change if to check if user click yes or no
-            if(True):
-                if(num == 0):
-                    StateStorage.saveCurrent(game, fileName)
-                    saveStatus = True
-                elif(num == 1):
-                    StateStorage.savePuzzle(game, fileName)
-                    saveStatus = True
+            self.window.owDialog.show()
+            self.window.owDialog.btns.accepted.connect(lambda: self.toOverwrite(num, game, fileName))
+            
         else: 
             if(num == 0):
                 StateStorage.saveCurrent(game, fileName)
@@ -182,12 +186,13 @@ class GController():
                 StateStorage.savePuzzle(game, fileName)
                 saveStatus = True
         
-            if saveStatus:
+        StateStorage.move3dirBack()
+        #    if saveStatus:
                 # Run dialog window for successful save
-                pass
-            else:
+        #        pass
+        #    else:
                 # Run dialog window for failed save
-                pass       
+        #        pass       
     ################################################################################
     # help() -> None
     #
@@ -199,23 +204,25 @@ class GController():
         # Display Game Intructions
         pass
     ################################################################################
-    # help() -> None
+    # shuffleLetters() -> None
     #
     # DESCRIPTION:
-    #   provides a brief description of game rules and generally how to play as well
-    #   as a list of all available commands.
+    #   Shuffles the letters in the GUI View
     ################################################################################
     def shuffleLetters(self) -> None:
+        centralWidget = self.window.centralWidget
         self.puzzle.shuffleChars()
+        letters = [*self.puzzle.getShuffleLetters().upper()]
+        centralWidget.setLetters(letters)
+        centralWidget.update()
     ################################################################################
-    # loadGame(game : object) -> None:
+    # loadGame() -> None:
     #
     # DESCRIPTION:
     #   load an existing save entry into memory
     #
     # PARAMETERS:
-    #   game : object
-    #     - puzzle object storing the current game state
+    # 
     ################################################################################
     def loadGame(self) -> None: 
         sender = sender().parent.uInput.text()
@@ -240,6 +247,23 @@ class GController():
     ################################################################################
     def deleteInput(self):
         self.window.centralWidget.uInput.backspace()
+    ################################################################################
+    # toOverwrite() -> None:
+    #
+    # DESCRIPTION:
+    #   completes save overwrite
+    #
+    # PARAMETERS:
+    #   none
+    ################################################################################
+    def toOverwrite(self, num, game, fileName):
+        if(num == 0):
+            StateStorage.saveCurrent(game, fileName)
+            saveStatus = True
+        elif(num == 1):
+            StateStorage.savePuzzle(game, fileName)
+            saveStatus = True
+        self.window.owDialog.accept()
 
 ################################################################################
 # openExplorer() -> None:

@@ -71,7 +71,6 @@ class MainWindow(QMainWindow):
             puzzle.getShuffleLetters().upper(),
             puzzle.getKeyLetter()
         )
-
         self.setCentralWidget(self.centralWidget)
 
         self.setStatusBar(QStatusBar(self))
@@ -80,6 +79,7 @@ class MainWindow(QMainWindow):
         self.loadDialog = Dialogs.LoadDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
+        self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
 
         self.toolBar = self._createToolBar()
@@ -218,6 +218,10 @@ class GameWidget(QWidget):
         self.uInput.clear()
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)
+
+    def setLetters(self, newletters: list[str]) -> None:
+        self.letters = newletters
+        self.cluster.setLetters(self.letters)
 
 
     ############################################################################
