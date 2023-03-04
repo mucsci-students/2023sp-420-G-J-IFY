@@ -111,8 +111,6 @@ class GController():
 
         self.puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
         self.puzzle.shuffleChars()
-        print(self.puzzle.getShuffleLetters())
-        print(self.outty.getField())
         self.window.newGame(self.puzzle)
 
     ################################################################################
