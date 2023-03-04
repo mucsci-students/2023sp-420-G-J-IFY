@@ -34,6 +34,8 @@ from model.puzzle import Puzzle
 import PyQt6
 from PyQt6.QtCore import QEvent
 from PyQt6.QtWidgets import QApplication
+from tkinter import filedialog as fd
+from tkinter.messagebox import showinfo
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
@@ -259,8 +261,6 @@ class GController():
     #
     ############################################################################
     def openExplorer() -> path:
-        from tkinter import filedialog as fd
-        from tkinter.messagebox import showinfo
         filetypes = (
             ('textFiles', '*.json'),
             ('All files' , '*.*')
