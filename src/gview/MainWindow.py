@@ -80,6 +80,7 @@ class MainWindow(QMainWindow):
         self.loadDialog = Dialogs.LoadDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
+        self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
 
         self.toolBar = self._createToolBar()
