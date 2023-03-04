@@ -84,7 +84,7 @@ def __Save(dict, fileName):
     if os == 'Windows':
         os.replace(str(saveCur) , str(saveNew))
     else:
-        os.rename(saveCur, saveNew)
+        os.rename(str(saveCur), str(saveNew))
         
 ################################################################################
 # __SearchDict(dict: dict, fileName: str) -> Element
