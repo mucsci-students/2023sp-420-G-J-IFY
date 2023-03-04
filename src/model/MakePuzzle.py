@@ -24,6 +24,9 @@ class LetterMismatchException(Exception):
 class EmptyKeyLetterException(Exception):
     pass
 
+class TooManyKeyLettersException(Exception):
+    pass
+
 
 ################################################################################
 # newPuzzle(baseWord: str) -> Puzzle Obj
@@ -70,6 +73,8 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
             #validate the key letter
             if keyLetter == '':
                 raise EmptyKeyLetterException 
+            if len(keyLetter) > 1:
+                raise TooManyKeyLettersException
             if keyLetter not in baseWord:
                 raise LetterMismatchException
 
@@ -101,20 +106,27 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
         # Generates rank
         puzzle.updateRank()
         
-        outty.setField('Puzzle creation successful.\nLetters: {}\nKeyletter: {}'.format(puzzle.getUniqueLetters(), puzzle.getKeyLetter()))
+        outty.setField('Puzzle creation successful.\nLetters: {}\nKeyletter: {}'
+                       .format(puzzle.getUniqueLetters(), puzzle.getKeyLetter()))
 
         return puzzle
     #Raise exception for bad puzzle seed
     except BadQueryException:
         if flag == False:
-            outty.setField("ERROR!: " + baseWord.upper() + " is not a valid word")
+            outty.setField("ERROR!: " + baseWord.upper() + 
+                           " is not a valid word")
         else:
             # TODO
             pass
     except LetterMismatchException:
-        outty.setField("ERROR!: " + keyLetter.upper() + " is not a valid key letter")
+        outty.setField("ERROR!: " + keyLetter.upper() + 
+                       " is not a valid key letter")
     except EmptyKeyLetterException:
         outty.setField("ERROR!: " + "Key letter cannot be empty")
+    except TooManyKeyLettersException:
+        outty.setField("ERROR!: " + keyLetter.upper() + 
+                       " contains more than one letter")
+
     
 
 #Exception used for newPuzzle to catch bad starting words
