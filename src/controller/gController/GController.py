@@ -247,6 +247,31 @@ class GController():
         ################################################################################
     def deleteInput(window):
         window.centralWidget.uInput.backspace()
+    
+    ############################################################################
+    # openExplorer() -> path:
+    #
+    # DESCRIPTION:
+    #   opens the file exploer and returns the path of the selected file
+
+    # PARAMETERS:
+    #   none
+    #
+    ############################################################################
+    def openExplorer() -> path:
+        from tkinter import filedialog as fd
+        from tkinter.messagebox import showinfo
+        filetypes = (
+            ('textFiles', '*.json'),
+            ('All files' , '*.*')
+            )
+
+        fileName = fd.askopenfilename(
+                title = 'open a file',
+                initialdir= '/',
+                filetypes =filetypes)
+        return fileName
+
 
 
 def main():

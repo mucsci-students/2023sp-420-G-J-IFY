@@ -301,7 +301,36 @@ def __Load(fileName, outty):
         outty.setField("The file " + newFileName + " contains critical errors that \n"
               "prevent the game from functioning properly\n"
               "Returning to game...")
-        
+
+################################################################################
+# LoadFromExplorer(pathTOFile, outty)
+#   
+# DESCRIPTION:
+#   will load a file using its path instead of its fileName
+# PARAMETERS:
+#   path : Path
+#       the path to the file being loaded
+#
+################################################################################
+def loadFromExploer(path : Path, outty):
+    try:
+        f = open(path)
+
+        dict = json.load(f)
+        dict = checkLoad(dict)
+        if dict == None:
+            raise BadJSONException
+        obj = __setFields(dict)
+        return obj
+    except FileNotFoundError:
+        # if fileName does not exist then a FileNotFoundError is 
+        # raised saying the file does not exist
+       outty.setField("The file " + path + " does not exist in this directory\n"
+              "Returning to game...")
+    except BadJSONException:
+        outty.setField("The file " + path + " contains critical errors that \n"
+              "prevent the game from functioning properly\n"
+              "Returning to game...")
 
 ################################################################################
 # move3dirBack()
@@ -438,3 +467,24 @@ def checkLoad(dictDict):
         dbFixer.leaveDB()
         #return validated dictionary or NONE if exception occured
         return dictDict
+    
+#def openExplorer() -> Path:
+    from tkinter import filedialog as fd
+    from tkinter.messagebox import showinfo
+    filetypes = (
+        ('textFiles', '*.json'),
+        ('All files' , '*.*')
+        )
+
+    fileName = fd.askopenfilename(
+            title = 'open a file',
+            initialdir= '/',
+            filetypes =filetypes)
+    return fileName
+
+#outty = output.Output()
+#obj = loadFromExploer(openExplorer(), outty)
+#if not obj == None:
+#    dict = __makeDict(obj)
+#    print (dict)
+#
