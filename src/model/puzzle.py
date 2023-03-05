@@ -12,6 +12,7 @@ import sqlite3
 import itertools
 from model import dbFixer
 from itertools import chain, combinations
+from model import MakePuzzle
 
 ################################################################################
 # class Puzzle()
@@ -399,7 +400,7 @@ class Puzzle:
     #   none
     ############################################################################
     def findAllWords(self):
-       self.allWordList = self.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
+       self.allWordList = MakePuzzle.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
 
     ############################################################################
     # updateFoundWords(word)
@@ -513,111 +514,3 @@ class Puzzle:
             ctr += 1
         #set the shuffleLetters field to the list rejoined to string
         self.setShuffleLetters(''.join(letters))
-
-
-    ################################################################################
-    # getAllWordsFromPangram(puzz : Puzzle Object) -> list
-    # DESCRIPTION:
-    #   This function generates all the words for a given puzzle.
-    #
-    # PARAMETERS:
-    #   puzz : Puzzle
-    #       - the Puzzle object where the needed letters are pulled from
-    #
-    # RETURNS:
-    #   list
-    #       - a list of all the possible words for the given puzzle
-    ################################################################################
-    def getAllWordsFromPangram(self, unique, key) -> list: #unclear how to add the puzzle type to this line
-        #create powerset of letters from baseword
-        pSet = list(self.powerset(unique))
-        cleanSet = []
-
-        #remove sets from powerset to produce subset with keyletter
-        for a in pSet:
-            if key in a:
-                cleanSet.append(self.sortStrToAlphabetical(''.join(a)))
-        
-        #Time to querey the DB   
-        dbFixer.goToDB()
-        conn = sqlite3.connect('wordDict.db')
-        cursor = conn.cursor()
-
-        #create temp table to use for natural joins soon
-        tempTable = "create temporary table validLetters (uniLetts);"
-        cursor.execute(tempTable)
-    
-        #Build out tempTable for join later
-        querey = "insert into validLetters (uniLetts) values ('"
-        for a in cleanSet:
-            querey += a + "'), ('"
-        querey += "');"
-        cursor.execute(querey)
-        
-        #build out query using joins
-        join = """
-                select fullWord from dictionary join validLetters 
-                on dictionary.uniqueLetters is validLetters.uniLetts;
-                """
-        cursor.execute(join)
-        
-        #catch return form query
-        tuples = (cursor.fetchall())
-        #turn list of tuples into list of strings
-        listList = list(itertools.chain(*tuples))
-        #close DB
-        conn.commit()
-        conn.close()
-        dbFixer.leaveDB()
-
-        #return list of valid words
-        return listList
-
-
-    ################################################################################
-    # powerset(iterable) -> set
-    #
-    # DESCRIPTION:
-    #   This is a helper funciton for generateAllWordsFromPangram()
-    #
-    #   This function takes an iterable object and returns a powerset of that
-    #   iterable object. 
-    #   
-    #   A power set is all the possible subset combinations of the set.
-    #       i.e. powerst (abc) -> a, b, c, ab, ac, bc, abc
-    #
-    # PARAMETERS: 
-    #   iterable : ITERABLE OBJECT
-    #       - any iterable object, in this case, a string of unique letters
-    #       - 'abcdefg'
-    #
-    # RETURNS:
-    #   Set
-    #       - a powerset of the iterable object
-    ################################################################################
-    
-    def powerset(self, iterable):
-        "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
-        s = list(iterable)
-        return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
-
-
-    ################################################################################
-    # sortStrToAlphabetical(unsorted : str) -> str
-    #
-    # DESCRIPTION:
-    #   This function takes a string and alphabetizes the letters within
-    #
-    # PARAMETERS:
-    #   unsorted : str
-    #       - "warlock"
-    #
-    # RETURNS:
-    #   str
-    #       -"acklorw"
-    ################################################################################
-    def sortStrToAlphabetical(self, unsorted : str) -> str:
-        uniqueLettersList = sorted(set(unsorted))
-        #convert list to string
-        return ''.join(uniqueLettersList)
-

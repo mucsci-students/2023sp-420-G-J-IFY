@@ -5,6 +5,7 @@ import model.output as output
 import os
 
 
+
 # TODO, restrict input to JUST !new, !load, and !exit
 outty = output.Output()
 usrinput = ' '
@@ -13,6 +14,8 @@ puzzle = puzzle.Puzzle('', '')
 
 # inital user initialization of game
 while not validIn:
+    if outty.getField() != '':
+        print(outty.getField())
     CLI.drawTextBox(['Welcome to Spelling Bee! \ '
                      'Presented by G(J)IFY',
                      'To start a new game, type "!new". To load a previous '
