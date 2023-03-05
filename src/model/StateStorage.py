@@ -78,13 +78,13 @@ def __Save(dict, fileName):
         json.dump(dict, file)
     cwd = Path.cwd()
     saveCur = cwd  /  fileName
-    saveNew = cwd  / 'src'  / 'data' / 'saves' / fileName
-    
-    os = platform.system()
-    if os == 'Windows':
-        os.replace(str(saveCur) , str(saveNew))
+    if path.exists(saveCur):
+        os.replace(saveCur, saveCur)
     else:
-        os.rename(str(saveCur), str(saveNew))
+        saveNew = cwd  / 'src'  / 'data' / 'saves' / fileName
+        os.replace(str(saveCur) , str(saveNew))
+
+
         
 ################################################################################
 # __SearchDict(dict: dict, fileName: str) -> Element
@@ -306,7 +306,7 @@ def __Load(fileName, outty):
         outty.setField("The file " + newFileName + " contains critical errors that \n"
               "prevent the game from functioning properly\n"
               "Returning to game...")
-
+        move3dirBack()
 ################################################################################
 # LoadFromExplorer(pathTOFile, outty)
 #   
