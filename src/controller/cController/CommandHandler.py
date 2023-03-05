@@ -281,7 +281,7 @@ def help() -> None:
                 'Create a new save for the current game \ '
                 '!savePuzzle: \ '
                 'Create a new save for a blank version of the current game '
-                '(not including any progress from current session)'
+                '(not including any progress from current session) \ '
                 '!load: \ '
                 'Load a previously saved game \ '
                 '!help: \ '
