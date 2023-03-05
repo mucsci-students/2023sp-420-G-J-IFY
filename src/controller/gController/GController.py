@@ -245,9 +245,13 @@ class GController():
         StateStorage.move3dirBack()
         '''
         fileName = QFileDialog.getOpenFileName(self.window, 'File')[0]
-        self.puzzle = StateStorage.loadFromExploer(fileName, self.outty)
-        self.window.setStatus(self.outty.getField())
-        self.window.newGame(self.puzzle)
+        
+        newPuzzle = StateStorage.loadFromExploer(fileName, self.outty)
+        if newPuzzle == None:
+            self.window.loadFailed.show()
+        else:
+            self.puzzle = newPuzzle
+            self.window.newGame(self.puzzle)
     ################################################################################
     # deleteInput() -> None:
     #
