@@ -71,6 +71,11 @@ class HexCluster(QWidget):
         self._addButtons(letters)
         self._arrangeButtons()
 
+    ############################################################################
+    # setLetters(legends: list[str]) -> None:
+    # 
+    # Change key letters
+    ############################################################################
     def setLetters(self, legends: list[str]) -> None:
         
         for i, c in enumerate(legends):
@@ -268,11 +273,23 @@ class HexButton(QPushButton):
         self._drawText(painter)
         painter.end()
 
+    ############################################################################
+    # mousePressEvent(self, e: QMouseEvent) -> None:
+    #
+    # DESCRIPTION
+    #   Makes buttons smaller when pressed
+    ############################################################################
     def mousePressEvent(self, e: QMouseEvent) -> None:
         self.radius -= 2
         # self.setColor(Qt.GlobalColor.green)
         return super().mousePressEvent(e)
     
+    ############################################################################
+    # mouseReleaseEvent(self, e: QMouseEvent) -> None:
+    #
+    # DESCRIPTION
+    #   returns buttons to original size when button is released
+    ############################################################################
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         self.radius += 2
         # self.setColor(Qt.GlobalColor.white)

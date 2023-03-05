@@ -126,13 +126,19 @@ class StatsPanel(QWidget):
 
         self.setLayout(layout)
 
-
+    ############################################################################
+    # update(puzzle : Puzzle) -> None
+    #
+    # DESCRIPTION:
+    #   Update information in stats panel to reflect current state of the game
+    ############################################################################
     def update(self, puzzle : Puzzle) -> None:
 
         self.level.setText(puzzle.getRank())
 
+        # Calculate percentage as into to display on pBar
         self.pBar.setValue(int((puzzle.getScore()/puzzle.getMaxScore())*100))
-
+    
         self.ptsToNxt.setText('Points to next level: {pts}'.format(
             pts=str(puzzle.getPointsTilRank())
         ))

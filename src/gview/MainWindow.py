@@ -202,6 +202,7 @@ class GameWidget(QWidget):
         ):
         super(GameWidget, self).__init__(parent, *args, **kwargs)
 
+        # Declare primary attributes
         self.uInput = QLineEdit(self)
         self.cluster = HexCluster(self, letters, keyLett)
         self.delBtn = QPushButton('Delete', self)
@@ -212,14 +213,21 @@ class GameWidget(QWidget):
         # Append each cluster button's text to user input field when clicked
         for btn in self.cluster.buttons:
             btn.clicked.connect(self._onHexClicked)
-
+        # Connect textEdited signal to defined function that validates input
         self.uInput.textEdited.connect(self._onUInputEdited)
 
         self._initUI()
 
-    def newGame(self, letters : list[str]):
+    ############################################################################
+    # newGame(letters : list[str])
+    # 
+    # DESCRIPTIONS:
+    #   updates all applicable widgets to reflect the state of the new game.
+    ############################################################################
+    def newGame(self, letters : list[str]) -> None:
         self.letters = letters
 
+        # Create new validator for uInput
         regex = QRegularExpression(
             f"[{'|'.join(self.letters).upper()}|"
             f"{'|'.join(self.letters).lower()}]+"
@@ -229,6 +237,12 @@ class GameWidget(QWidget):
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)
 
+    ############################################################################
+    # setLetters (newLetters : list[str])
+    #
+    # DESCRIPTION:
+    #   change the key letters
+    ############################################################################
     def setLetters(self, newletters: list[str]) -> None:
         self.letters = newletters
         self.cluster.setLetters(self.letters)
@@ -316,5 +330,11 @@ class GameWidget(QWidget):
         sender = self.sender()
         self.uInput.setText(f'{self.uInput.text()}{sender.text}')
 
+    ############################################################################
+    # _onUInputEdited(self, txt):
+    #  
+    # DESCRIPTION:
+    #   force input text to uppercase
+    ############################################################################
     def _onUInputEdited(self, txt):
         self.uInput.setText(txt.upper())
