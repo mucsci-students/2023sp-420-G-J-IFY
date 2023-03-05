@@ -45,6 +45,7 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QLineEdit,
     QSpacerItem,
+    QFileDialog,
 )
 
 ################################################################################
@@ -76,11 +77,13 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar(self))
         #self.welcomeDialog = Dialogs.WelcomeDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
-        self.loadDialog = Dialogs.LoadDialog(self)
+        #self.loadDialog = QFileDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
+
+        #self.loadDialog.rejected.connect(self.loadDialog.reject)
 
         self.toolBar = self._createToolBar()
         self.infoBar = self._createInfoBar()
@@ -117,18 +120,18 @@ class MainWindow(QMainWindow):
         # add buttons to tool bar
         newAction = QAction('New', self)
         saveAction = QAction('Save', self)
-        loadAction = QAction('Load', self)
+        self.loadAction = QAction('Load', self)
         helpAction = QAction('Help', self)
 
         newAction.triggered.connect(self.newDialog.show)
         saveAction.triggered.connect(self.saveDialog.show)
-        loadAction.triggered.connect(self.loadDialog.show)
+        #loadAction.triggered.connect(self.loadDialog.show)
         helpAction.triggered.connect(self.helpDialog.show)
 
         # add actions to tool bar
         toolBar.addAction(newAction)
         toolBar.addAction(saveAction)
-        toolBar.addAction(loadAction)
+        toolBar.addAction(self.loadAction)
         toolBar.addAction(helpAction)
 
         return toolBar
