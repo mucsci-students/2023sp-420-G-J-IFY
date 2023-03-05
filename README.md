@@ -99,6 +99,9 @@ Francesco Spagnolo
 - 1.0.0
   - Initial CLI release
 
+- 2.0.0
+  - Initial GUI release
+
 ## License
 ---
 
