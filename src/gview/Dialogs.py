@@ -110,7 +110,8 @@ class NewDialog(QDialog):
          self.warningMsg = QLabel(self)
          self.advBtn = QPushButton(self)
          self.backBtn = QPushButton(self)
-
+         
+         self.advMsg = QLabel(self)
          self.baseWrd = QLineEdit(self)
          self.keyLett = QComboBox(self)
 
@@ -223,7 +224,8 @@ class NewDialog(QDialog):
              QSpacerItem(5, 0, QSizePolicy.Policy.MinimumExpanding)
          )
          backLayout.addWidget(self.backBtn)
-
+         
+         form.addRow('', self.advMsg)
          form.addRow('Baseword:', self.baseWrd)
          form.addRow('Key Letter:', self.keyLett)
 
@@ -240,7 +242,8 @@ class NewDialog(QDialog):
          for l in uniqueLett:
              self.keyLett.addItem(l.upper())
 
-
+     def setMessage(self, text: str) -> None:
+         self.advMsg.setText(text)
 
      def display(self, i : int=0) -> None:
          self.stack.setCurrentIndex(i)
