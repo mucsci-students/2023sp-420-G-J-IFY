@@ -114,6 +114,7 @@ class GController():
         self.puzzle.shuffleChars()
         self.window.newGame(self.puzzle)
         dlg.baseWrd.clear()
+        self.window.setStatus(self.outty.getField)
         dlg.accept()
     ################################################################################
     # guess(window: object) -> None
@@ -133,7 +134,7 @@ class GController():
         self.window.centralWidget.uInput.clear()
         MakePuzzle.guess(self.puzzle, text, True, self.outty)    
         self.window.statsPanel.update(self.puzzle)
-        self.window.setStatusTip(self.outty.getField())
+        self.window.setStatus(self.outty.getField())
     ################################################################################
     # saveGame(Game : object) -> None:
     #
@@ -155,6 +156,7 @@ class GController():
         else: 
             self.handleSave(self.puzzle, fileName, 0)   
 
+        self.window.setStatus(self.outty.getField())
         dialog.accept() 
     ################################################################################
     # handleSave(game : object, num) -> None:
@@ -244,6 +246,7 @@ class GController():
         '''
         fileName = QFileDialog.getOpenFileName(self.window, 'File')[0]
         self.puzzle = StateStorage.loadFromExploer(fileName, self.outty)
+        self.window.setStatus(self.outty.getField())
         self.window.newGame(self.puzzle)
     ################################################################################
     # deleteInput() -> None:
