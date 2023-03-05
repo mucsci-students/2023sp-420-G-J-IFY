@@ -43,6 +43,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QPushButton,
+    QLabel,
     QLineEdit,
     QSpacerItem,
     QFileDialog,
@@ -74,7 +75,10 @@ class MainWindow(QMainWindow):
         )
         self.setCentralWidget(self.centralWidget)
 
-        self.setStatusBar(QStatusBar(self))
+        self.statusBar = QStatusBar(self)
+        self.status = QLabel(self.statusBar)
+        self.statusBar.addWidget(self.status)
+        self.setStatusBar(self.statusBar)
         #self.welcomeDialog = Dialogs.WelcomeDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
         #self.loadDialog = QFileDialog(self)
@@ -103,6 +107,9 @@ class MainWindow(QMainWindow):
         self.centralWidget.cluster.setLetters(puzzle.getShuffleLetters().upper())
         self.statsPanel.update(puzzle)
         self.centralWidget.newGame(puzzle.getShuffleLetters().upper())
+
+    def setStatus(self, text):
+        self.status.setText(text)
 
 
     ############################################################################
