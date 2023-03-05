@@ -271,17 +271,17 @@ def __Load(fileName, outty):
         os.chdir('./src/data/saves')
         # check if user ended their save with the .json filename
         if fileName.endswith('.json'):
-            newFileName = fileName
+            fileName = fileName
         else:
-            newFileName = fileName + '.json'
+            fileName = fileName + '.json'
         # create a path to the current directory
         path1 = Path(Path.cwd())
         # append the file in question to the path
-        a = path1 / newFileName
+        a = path1 / fileName
         __checkFileExists(a)
 
         # opens file
-        file = open(newFileName)
+        file = open(fileName)
 
         # puts elements in the file in a dictionary
         dict = json.load(file)
@@ -299,14 +299,14 @@ def __Load(fileName, outty):
     except FileNotFoundError:
         # if fileName does not exist then a FileNotFoundError is 
         # raised saying the file does not exist
-       outty.setField("The file " + newFileName + " does not exist in this directory\n"
+       outty.setField("The file " + fileName + " does not exist in this directory\n"
               "Returning to game...")
        move3dirBack()
     except BadJSONException:
-        outty.setField("The file " + newFileName + " contains critical errors that \n"
+        outty.setField("The file " + fileName + " contains critical errors that \n"
               "prevent the game from functioning properly\n"
               "Returning to game...")
-        move3dirBack()
+       
 ################################################################################
 # LoadFromExplorer(pathTOFile, outty)
 #   
@@ -385,8 +385,7 @@ def allLower(my_list):
 ################################################################################
 def checkLoad(dictDict):   
     # SQLite Connections
-    dbFixer.goToDB()
-    wordDict = sqlite3.connect('wordDict.db') #this is the top level, needs to be fixed later
+    wordDict = sqlite3.connect('src/model/wordDict.db')
     cursor = wordDict.cursor()
 
     try:
@@ -416,8 +415,7 @@ def checkLoad(dictDict):
         if score[0] != maxPoints:
             maxPoints = score[0]
             #generateWordList
-            wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, 
-                                                         requiredLetter)
+            wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, requiredLetter)
         
         #check to make sure all guesses are valid
         if not set(guessedWords).issubset(set(wordList)):
@@ -469,7 +467,6 @@ def checkLoad(dictDict):
         #close DB
         wordDict.commit()
         wordDict.close()
-        dbFixer.leaveDB()
+
         #return validated dictionary or NONE if exception occured
         return dictDict
-    

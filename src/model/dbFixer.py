@@ -14,7 +14,7 @@
 import os
 from os import path
 
-
+from pathlib import Path
 
 ################################################################################
 # goToDB() -> None
@@ -33,7 +33,7 @@ from os import path
 def goToDB() -> bool:
     # move down into the db
     os.chdir('./src/model')
-    return checkExists()
+    #return checkExists()
 
 ################################################################################
 # leaveDB() -> None
@@ -51,7 +51,7 @@ def goToDB() -> bool:
 def leaveDB() -> bool:
     os.chdir('..')
     os.chdir('..')
-    return not checkExists()
+    #return not checkExists()
 
 
 ################################################################################

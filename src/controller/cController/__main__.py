@@ -13,6 +13,8 @@ puzzle = puzzle.Puzzle('', '')
 
 # inital game loop, loop until valid start is reached
 while not validIn:
+    if outty.getField() != '':
+        print(outty.getField())
     CLI.drawTextBox(['Welcome to Spelling Bee! \ '
                      'Presented by G(J)IFY',
                      'To start a new game, type "!new". To load a previous '

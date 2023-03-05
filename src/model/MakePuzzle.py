@@ -17,6 +17,7 @@ import model.puzzle as saveState
 from model import dbFixer
 import itertools
 import model.output as output
+from itertools import chain, combinations
 
 class LetterMismatchException(Exception):
     pass
@@ -86,8 +87,7 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
             uniqueLetters = returnTuple[1]
 
             #now that the input has been validated, go find the max score for this game
-            dbFixer.goToDB()
-            conn = sqlite3.connect('wordDict.db')
+            conn = sqlite3.connect('src/model/wordDict.db')
             cursor = conn.cursor()
             cursor.execute("select score from allGames where uniqueLetters = '" +
                            uniqueLetters + "' and keyLetter = '" + keyLetter + "';")
@@ -95,7 +95,6 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
             #close DB
             conn.commit()
             conn.close()
-            dbFixer.leaveDB()
                     
         # Creates the puzzle for users to solve
         puzzle = saveState.Puzzle(keyLetter, uniqueLetters)
@@ -150,8 +149,7 @@ class BadQueryException(Exception):
 ################################################################################
 def findBaseWord():
     # SQLite Connections
-    dbFixer.goToDB()
-    wordDict = sqlite3.connect('wordDict.db')
+    wordDict = sqlite3.connect('src/model/wordDict.db')
 
     # Used to execute SQL commands
     wordDictC = wordDict.cursor()
@@ -167,7 +165,6 @@ def findBaseWord():
     #close DB
     wordDict.commit()
     wordDict.close()
-    dbFixer.leaveDB()
 
     #return tuple of result
     return resultResult
@@ -189,8 +186,7 @@ def findBaseWord():
 ################################################################################
 def checkDataBase(baseWord: str):
     # SQLite Connections
-    dbFixer.goToDB()
-    wordDict = sqlite3.connect('wordDict.db')
+    wordDict = sqlite3.connect('src/model/wordDict.db')
     
     # Used to execute SQL commands
     cursor = wordDict.cursor()
@@ -202,7 +198,6 @@ def checkDataBase(baseWord: str):
     #after result is caught, disconenct from DB
     wordDict.commit()
     wordDict.close()
-    dbFixer.leaveDB()
 
     return returnResult
 ################################################################################
@@ -234,8 +229,7 @@ def guess(puzzle, input: str, flag : bool, outty : object):
         outty.setField('Flag: {}'.format(flag))
         pass
     '''
-    dbFixer.goToDB()
-    conn = sqlite3.connect('wordDict.db')
+    conn = sqlite3.connect('src/model/wordDict.db')
     cursor = conn.cursor()
         
 
@@ -329,7 +323,8 @@ def guess(puzzle, input: str, flag : bool, outty : object):
             
     conn.commit()
     conn.close()
-    dbFixer.leaveDB()
+  
+
 ################################################################################
 # newPuzzCli(baseWord: str, uniqueLetters: dict) -> str
 #
@@ -367,3 +362,107 @@ def newPuzzCli(baseWord: str, uniqueLetters: dict) -> str:
 def newPuzzGui(baseWord: str):
     # TODO
     pass
+
+################################################################################
+# getAllWordsFromPangram(puzz : Puzzle Object) -> list
+# DESCRIPTION:
+#   This function generates all the words for a given puzzle.
+#
+# PARAMETERS:
+#   puzz : Puzzle
+#       - the Puzzle object where the needed letters are pulled from
+#
+# RETURNS:
+#   list
+#       - a list of all the possible words for the given puzzle
+################################################################################
+def getAllWordsFromPangram(unique, key) -> list: 
+    #create powerset of letters from baseword
+    pSet = list(powerset(unique))
+    cleanSet = []
+
+    #remove sets from powerset to produce subset with keyletter
+    for a in pSet:
+        if key in a:
+            cleanSet.append(sortStrToAlphabetical(''.join(a)))
+    #Time to querey the DB   
+    conn = sqlite3.connect('src/model/wordDict.db')
+    cursor = conn.cursor()
+
+
+    #create temp table to use for natural joins soon
+    tempTable = "create temporary table validLetters (uniLetts);"
+    cursor.execute(tempTable)
+    
+    #Build out tempTable for join later
+    querey = "insert into validLetters (uniLetts) values ('"
+    for a in cleanSet:
+        querey += a + "'), ('"
+    querey += "');"
+    cursor.execute(querey)
+        
+    #build out query using joins
+    join = """
+            select fullWord from dictionary join validLetters 
+            on dictionary.uniqueLetters is validLetters.uniLetts;
+            """
+    cursor.execute(join)
+        
+    #catch return form query
+    tuples = (cursor.fetchall())
+    #turn list of tuples into list of strings
+    listList = list(itertools.chain(*tuples))
+    #close DB
+    conn.commit()
+    conn.close()
+
+    #return list of valid words
+    return listList
+
+
+################################################################################
+# powerset(iterable) -> set
+#
+# DESCRIPTION:
+#   This is a helper funciton for generateAllWordsFromPangram()
+#
+#   This function takes an iterable object and returns a powerset of that
+#   iterable object. 
+#   
+#   A power set is all the possible subset combinations of the set.
+#       i.e. powerst (abc) -> a, b, c, ab, ac, bc, abc
+#
+# PARAMETERS: 
+#   iterable : ITERABLE OBJECT
+#       - any iterable object, in this case, a string of unique letters
+#       - 'abcdefg'
+#
+# RETURNS:
+#   Set
+#       - a powerset of the iterable object
+################################################################################
+    
+def powerset(iterable):
+    "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
+
+
+################################################################################
+# sortStrToAlphabetical(unsorted : str) -> str
+#
+# DESCRIPTION:
+#   This function takes a string and alphabetizes the letters within
+#
+# PARAMETERS:
+#   unsorted : str
+#       - "warlock"
+#
+# RETURNS:
+#   str
+#       -"acklorw"
+################################################################################
+def sortStrToAlphabetical(unsorted : str) -> str:
+        uniqueLettersList = sorted(set(unsorted))
+        #convert list to string
+        return ''.join(uniqueLettersList)
