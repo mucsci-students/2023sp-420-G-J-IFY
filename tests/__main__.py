@@ -18,4 +18,7 @@ import StateStorageTests
 print('{str:-^{num}}'.format(str = '=', num = 40))
 import MakePuzzleTests
 print('{str:-^{num}}'.format(str = '=', num = 40))
+import saveCheckTests
+print('{str:-^{num}}'.format(str = '=', num = 40))
+
 

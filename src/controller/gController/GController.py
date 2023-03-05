@@ -33,7 +33,7 @@ from model import MakePuzzle, StateStorage, output
 from model.puzzle import Puzzle
 import PyQt6
 from PyQt6.QtCore import QEvent
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QFileDialog
 from tkinter import filedialog as fd
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -84,13 +84,16 @@ class GController():
         
         self.window.saveDialog.btns.accepted.connect(self.saveGame)
         
-        # window.helpDialog.btns.accepted.connect(help)
+        #self.window.helpDialog.btns.accepted.connect()
         
         self.window.centralWidget.shflBtn.clicked.connect(self.shuffleLetters)
         
-        self.window.loadDialog.btns.accepted.connect(self.loadGame)
+        #self.window.loadDialog.accepted.connect(self.loadGame)
         
         self.window.centralWidget.delBtn.clicked.connect(self.deleteInput)  
+
+        self.window.loadAction.triggered.connect(self.loadGame)
+        
 
     ################################################################################
     # newPuzzle(userInput) -> object:
@@ -106,12 +109,18 @@ class GController():
         dlg = self.window.newDialog
         baseWord = str(dlg.baseWrd.text()).lower()
         keyLetter = str(dlg.keyLett.currentText()).lower()
-        print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLetter}\n')
-        self.puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
-        self.puzzle.shuffleChars()
-        self.window.newGame(self.puzzle)
-        dlg.baseWrd.clear()
-        dlg.accept()
+
+        if len([*baseWord]) == 7:
+            dlg.setMessage('')
+            print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLetter}\n')
+            self.puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
+            self.puzzle.shuffleChars()
+            self.window.newGame(self.puzzle)
+            dlg.baseWrd.clear()
+            self.window.setStatus(self.outty.getField())
+            dlg.accept()
+        else:
+            dlg.setMessage('Invalid base word')
     ################################################################################
     # guess(window: object) -> None
     #
@@ -130,7 +139,7 @@ class GController():
         self.window.centralWidget.uInput.clear()
         MakePuzzle.guess(self.puzzle, text, True, self.outty)    
         self.window.statsPanel.update(self.puzzle)
-        self.window.setStatusTip(self.outty.getField())
+        self.window.setStatus(self.outty.getField())
     ################################################################################
     # saveGame(Game : object) -> None:
     #
@@ -152,6 +161,7 @@ class GController():
         else: 
             self.handleSave(self.puzzle, fileName, 0)   
 
+        self.window.setStatus(self.outty.getField())
         dialog.accept() 
     ################################################################################
     # handleSave(game : object, num) -> None:
@@ -224,11 +234,12 @@ class GController():
     # PARAMETERS:
     # 
     ################################################################################
-    def loadGame(self) -> None: 
-        sender = sender().parent.uInput.text()
-        fileName = sender
+    def loadGame(self) -> None:
+        '''
+        fileName = self.window.loadDialog.uInput.text()
+        os.chdir('./src/data/saves')
         if path.isfile(fileName +'.json'):
-            newGame =  StateStorage.loadPuzzle(fileName)
+            newGame =  StateStorage.loadPuzzle(fileName, self.outty)
             
             if newGame != None:
                 self.puzzle = newGame
@@ -236,6 +247,16 @@ class GController():
                 self.window.loadFailed.show()
         else:
             self.window.loadFailed.show()
+        StateStorage.move3dirBack()
+        '''
+        fileName = QFileDialog.getOpenFileName(self.window, 'File')[0]
+        
+        newPuzzle = StateStorage.loadFromExploer(fileName, self.outty)
+        if newPuzzle == None:
+            self.window.loadFailed.show()
+        else:
+            self.puzzle = newPuzzle
+            self.window.newGame(self.puzzle)
     ################################################################################
     # deleteInput() -> None:
     #

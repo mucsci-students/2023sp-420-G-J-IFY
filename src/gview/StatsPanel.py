@@ -71,8 +71,8 @@ class StatsPanel(QWidget):
         )
 
         # initialize defaults for level
-        font = QFont('Helvetica')
-        font.setUnderline(True)
+        font = QFont('Helvetica', 14)
+        font.setBold(True)
         self.level.setFont(font)
         self.level.setText('Beginner')
         # initialize defaults for pBar

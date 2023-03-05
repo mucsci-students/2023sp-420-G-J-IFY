@@ -5,14 +5,13 @@ import model.output as output
 import os
 
 
-
-# TODO, restrict input to JUST !new, !load, and !exit
+#Start of game declarations for needed objects and fields
 outty = output.Output()
 usrinput = ' '
 validIn = False
 puzzle = puzzle.Puzzle('', '')
 
-# inital user initialization of game
+# inital game loop, loop until valid start is reached
 while not validIn:
     if outty.getField() != '':
         print(outty.getField())
@@ -22,32 +21,45 @@ while not validIn:
                      'save, type "!load"'], 40, '^')
     usrinput = input('> ')
     match usrinput:
+        #new game
         case '!new':
             puzzle = CommandHandler.newPuzzle(outty)
             validIn = True
+        #load game
         case '!load':
             puzzle = CommandHandler.loadGame(puzzle, outty)
+            #check and see if valid game was loaded
             if puzzle.maxScore == 0:
                 validIn = False
             else:
                 validIn = True
+        #exit
         case '!exit':
             print('Goodbye!')
             quit()
+        #invalid command
         case _:
             print(usrinput + " is not a valid command")
     #check and see if bad puzzle object was returned somewhere
     if puzzle == None:
         validIn = False
 
+#after start of game loop, draw new game for first time
 CLI.clear()
 CLI.drawGameBox(puzzle, outty)
 usrinput = input('> ')
 
+#game loop
 while True:
     CLI.clear()
+    #parse user input
     puzzle = CommandHandler.parse(usrinput, puzzle, outty)
+    #draw game box
     CLI.drawGameBox(puzzle, outty)
+    #reset outty
+    outty.setField('')
+    #check for end of game flag
     if puzzle.getFinishedFlag():
         CommandHandler.finalGame(puzzle, outty)
+    #wait for user's next input
     usrinput = input('> ')
