@@ -45,6 +45,7 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QLineEdit,
     QSpacerItem,
+    QFileDialog,
 )
 
 ################################################################################
@@ -76,11 +77,13 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar(self))
         #self.welcomeDialog = Dialogs.WelcomeDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
-        self.loadDialog = Dialogs.LoadDialog(self)
+        #self.loadDialog = QFileDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
+
+        #self.loadDialog.rejected.connect(self.loadDialog.reject)
 
         self.toolBar = self._createToolBar()
         self.infoBar = self._createInfoBar()

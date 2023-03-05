@@ -33,7 +33,7 @@ from model import MakePuzzle, StateStorage, output
 from model.puzzle import Puzzle
 import PyQt6
 from PyQt6.QtCore import QEvent
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QFileDialog
 from tkinter import filedialog as fd
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -88,12 +88,12 @@ class GController():
         
         self.window.centralWidget.shflBtn.clicked.connect(self.shuffleLetters)
         
-        self.window.loadDialog.btns.accepted.connect(self.loadGame)
+        #self.window.loadDialog.accepted.connect(self.loadGame)
         
         self.window.centralWidget.delBtn.clicked.connect(self.deleteInput)  
 
-        #self.window.loadAction.triggered.connect(openExplorer)
-        openExplorer()
+        self.window.loadAction.triggered.connect(self.loadGame)
+        
 
     ################################################################################
     # newPuzzle(userInput) -> object:
@@ -228,6 +228,7 @@ class GController():
     # 
     ################################################################################
     def loadGame(self) -> None:
+        '''
         fileName = self.window.loadDialog.uInput.text()
         os.chdir('./src/data/saves')
         if path.isfile(fileName +'.json'):
@@ -240,6 +241,10 @@ class GController():
         else:
             self.window.loadFailed.show()
         StateStorage.move3dirBack()
+        '''
+        fileName = QFileDialog.getOpenFileName(self.window, 'File')[0]
+        self.puzzle = StateStorage.loadFromExploer(fileName, self.outty)
+        self.window.newGame(self.puzzle)
     ################################################################################
     # deleteInput() -> None:
     #
