@@ -110,7 +110,7 @@ class GController():
         baseWord = str(dlg.baseWrd.text()).lower()
         keyLetter = str(dlg.keyLett.currentText()).lower()
 
-        if len([*baseWord]) <= 7:
+        if len([*baseWord]) == 7:
             dlg.setMessage('')
             print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLetter}\n')
             self.puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
