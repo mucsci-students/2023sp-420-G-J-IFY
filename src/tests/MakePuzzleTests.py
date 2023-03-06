@@ -11,9 +11,10 @@ sys.path.append(parent)
 
 import unittest
 
-import src
+#import src
 import sqlite3
 from random import randrange
+import model.MakePuzzle as src
 
 class MakePuzzleTests(unittest.TestCase):
     
