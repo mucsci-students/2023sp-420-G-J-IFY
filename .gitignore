@@ -157,6 +157,3 @@ docs/_build/
 
 # PyBuilder
 target/
-
-# Game Saves
-#src/data/saves
