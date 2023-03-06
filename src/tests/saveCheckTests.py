@@ -34,7 +34,9 @@ import model.output as output
 def Load(fileName):
     # checks if file exists
     try:
-        os.chdir('./tests/saves')
+        print(Path.cwd())
+        os.chdir('src/tests/saves')
+        print(Path.cwd())
         newFileName = fileName + '.json'
         # create a path to the current directory
         path1 = Path(Path.cwd())

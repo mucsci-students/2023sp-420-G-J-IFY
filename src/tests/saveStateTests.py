@@ -8,14 +8,15 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 
 sys.path.append(parent)
-import src
+#import src
 import unittest
+import model.puzzle as Puzzle
 
 
 # tests the constuctor
 class testSaveState(unittest.TestCase):
     #test constuctor
-    obj = src.Puzzle('a', 'warlock')
+    obj = Puzzle.Puzzle('a', 'warlock')
     assert(obj.keyLett == 'a')
     assert(obj.uniqueLett == 'warlock')
     assert(obj.shuffleLett == 'warlock')

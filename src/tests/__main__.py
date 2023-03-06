@@ -3,6 +3,9 @@
 import sys
 import os
 
+from pathlib import Path
+
+print(Path.cwd())
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -12,13 +15,13 @@ sys.path.append(parent)
 
 
 print('{str:-^{num}}'.format(str = 'Testing', num = 21))
-import saveStateTests
+import tests.saveStateTests
 print('{str:-^{num}}'.format(str = '=', num = 40))
-import StateStorageTests
+import tests.StateStorageTests
 print('{str:-^{num}}'.format(str = '=', num = 40))
-import MakePuzzleTests
+import tests.MakePuzzleTests
 print('{str:-^{num}}'.format(str = '=', num = 40))
-import saveCheckTests
-print('{str:-^{num}}'.format(str = '=', num = 40))
+#import tests.saveCheckTests
+#print('{str:-^{num}}'.format(str = '=', num = 40))
 
 

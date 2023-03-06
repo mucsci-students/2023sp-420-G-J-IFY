@@ -34,7 +34,7 @@
 ################################################################################
 import sys
 import os
-import model.output as output
+#import model.output as output
 
 
 
@@ -44,7 +44,7 @@ parent = os.path.dirname(current)
 
 sys.path.append(parent)
 
-import cview as CLI
+from cview import CLI
 from model import MakePuzzle, StateStorage
 from os import path
 
