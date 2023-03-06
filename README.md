@@ -20,10 +20,10 @@ This application runs on the following operating systems
 Before running the program, you must have Python installed 
   (3.11.2 at the time). (https://www.python.org/downloads/)
 
-Also be sure to install pytest to run the unit tests.
-```
-pip install pytest
-```
+Also be sure to download Chocolatey if you are on windows.
+  Run this command in Administrative PowerShell window to install Choclatey:
+  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
 
 ### Installing
 
@@ -36,7 +36,7 @@ git clone "https://github.com/mucsci-students/2023sp-420-G-J-IFY.git"
 - Then, navigate to `./GitHub/2023sp-420-G-J-IFY/` and run the following command:
 
 ```
-pip install -e .
+make
 ```
 
 ### Executing program
@@ -44,23 +44,31 @@ pip install -e .
 - To run, the program, run:
 Windows:
 ```
-python SpellingBee
+python src (To launch GUI)
+
+python src -c (To launch CLI)
 ```
 macOS/Linux:
 ```
-python3 SpellingBee
+python3 src (To launch GUI)
+
+python src -c (To launch CLI)
+
 ```
 
 - To run tests, run:
 Windows:
 ```
-python tests/allTests.py
+make tests
 ```
 macOS/Linux:
 ```
-python3 tests/allTests.py
+make tests
 ```
-
+- After runing tests run:
+```
+make cleanTests
+```
 ## Authors
 ---
 
@@ -90,6 +98,9 @@ Francesco Spagnolo
 ---
 - 1.0.0
   - Initial CLI release
+
+- 2.0.0
+  - Initial GUI release
 
 ## License
 ---
