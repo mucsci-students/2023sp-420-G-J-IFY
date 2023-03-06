@@ -65,10 +65,9 @@ cleanVenv:
 	rm -r .venv/bin
 	rm .venv/pyvenv.cfg
 	clear
-cleanTests: 
+cleanTests: tests
 	rm -r TESTFILE1.json
 	rm -r TESTFILE2.json
 	rm -r TESTFILE4.json
-	clear
 
 endif
