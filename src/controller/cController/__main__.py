@@ -53,7 +53,10 @@ usrinput = input('> ')
 while True:
     CLI.clear()
     #parse user input
-    puzzle = CommandHandler.parse(usrinput, puzzle, outty)
+    retPuzzle = CommandHandler.parse(usrinput, puzzle, outty)
+    #check to see if return puzzle was None (error occuered)
+    if retPuzzle != None:
+        puzzle = retPuzzle
     #draw game box
     CLI.drawGameBox(puzzle, outty)
     #reset outty
