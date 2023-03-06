@@ -110,9 +110,9 @@ class GController():
         baseWord = str(dlg.baseWrd.text()).lower()
         keyLetter = str(dlg.keyLett.currentText()).lower()
 
-        if len([*baseWord]) == 7:
-            dlg.setMessage('')
-            print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLetter}\n')
+        if len(set(baseWord)) == 7 or (baseWord == '' and keyLetter == ''):
+            #dlg.setMessage('')
+            #print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLetter}\n')
             self.puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
             self.puzzle.shuffleChars()
             self.window.newGame(self.puzzle)
@@ -120,7 +120,8 @@ class GController():
             self.window.setStatus(self.outty.getField())
             dlg.accept()
         else:
-            dlg.setMessage('Invalid base word')
+            #dlg.setMessage('Invalid base word')
+            pass
     ################################################################################
     # guess(window: object) -> None
     #
