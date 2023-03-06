@@ -16,7 +16,7 @@ venv:
 	py -m venv .venv
 
 tests: setup
-	py tests
+	py src/tests
 
 deactivate:
 	deactivate
@@ -54,8 +54,7 @@ venv:
 	python3 -m venv .venv
 
 tests: setup
-	python3 tests
-	clear
+	python3 src/tests
 
 deactivate: cleanVenv
 	deactivate
@@ -67,11 +66,8 @@ cleanVenv:
 	rm .venv/pyvenv.cfg
 	clear
 cleanTests: tests
-	rm -r ./src/data/saves/TESTFILE1.json
-	rm -r ./src/data/saves/TESTFILE2.json
-	rm -r ./src/data/saves/TESTFILE3.json
-	rm -r ./src/data/saves/TESTFILE4.json
-	rm -r ./src/data/saves/TESTFILE5.json
-	clear
+	rm -r TESTFILE1.json
+	rm -r TESTFILE2.json
+	rm -r TESTFILE4.json
 
 endif
