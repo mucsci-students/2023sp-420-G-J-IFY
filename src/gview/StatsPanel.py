@@ -79,7 +79,10 @@ class StatsPanel(QWidget):
         self.pBar.setValue(0)
 
         # initialize ptsToNxt
-        self.ptsToNxt.setText('Points To Next Level: 1')
+        self.ptsToNxt.setText(
+            'Score: 0\n'
+            'Points To Next Level: 1'
+        )
 
         # initialize defaults for foundWords:
         self.foundWords.setFont(QFont('Helvetica', 16))
@@ -139,9 +142,12 @@ class StatsPanel(QWidget):
         # Calculate percentage as into to display on pBar
         self.pBar.setValue(int((puzzle.getScore()/puzzle.getMaxScore())*100))
     
-        self.ptsToNxt.setText('Points to next level: {pts}'.format(
-            pts=str(puzzle.getPointsTilRank())
-        ))
+        ptsToNxtStr = (
+            'Score: {score}\n'
+            'Points to next level: {pts}'
+        ).format(score=puzzle.getScore(), pts=puzzle.getPointsTilRank())
+    
+        self.ptsToNxt.setText(ptsToNxtStr)
 
         body = self.header
 
