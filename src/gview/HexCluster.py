@@ -266,9 +266,9 @@ class HexButton(QPushButton):
     #     - event signaling repaint of button
     ############################################################################
     def paintEvent(self, event) -> None:
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        painter = QPainter()
         painter.begin(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         self._drawHex(painter)
         self._drawText(painter)
         painter.end()
