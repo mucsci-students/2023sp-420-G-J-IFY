@@ -279,12 +279,14 @@ class GController():
     #   none
     ################################################################################
     def toOverwrite(self, num, game, fileName):
+        os.chdir('./src/data/saves')
         if(num == 0):
             StateStorage.saveCurrent(game, fileName)
             saveStatus = True
         elif(num == 1):
             StateStorage.savePuzzle(game, fileName)
             saveStatus = True
+        StateStorage.move3dirBack()
         self.window.owDialog.accept()
 
 ################################################################################
