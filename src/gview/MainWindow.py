@@ -107,6 +107,7 @@ class MainWindow(QMainWindow):
         self.centralWidget.cluster.setLetters(puzzle.getShuffleLetters().upper())
         self.statsPanel.update(puzzle)
         self.centralWidget.newGame(puzzle.getShuffleLetters().upper())
+        self.status.clear()
 
     def setStatus(self, text):
         self.status.setText(text)

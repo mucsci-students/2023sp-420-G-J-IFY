@@ -117,7 +117,6 @@ class GController():
             self.puzzle.shuffleChars()
             self.window.newGame(self.puzzle)
             dlg.baseWrd.clear()
-            self.window.setStatus(self.outty.getField())
             dlg.accept()
         else:
             #dlg.setMessage('Invalid base word')
