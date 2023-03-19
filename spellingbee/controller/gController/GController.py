@@ -182,7 +182,7 @@ class GController():
         saveStatus = False
         self.window.saveDialog.fileName.clear()
         self.window.saveDialog.justPuzzle.setChecked(False)
-        os.chdir('./src/data/saves')
+        os.chdir('./spellingbee/data/saves')
         if(path.isfile(fileName +'.json')):
             # Run Dialog Window for overwriting existing file
             # Change if to check if user click yes or no
@@ -238,7 +238,7 @@ class GController():
     def loadGame(self) -> None:
         '''
         fileName = self.window.loadDialog.uInput.text()
-        os.chdir('./src/data/saves')
+        os.chdir('./spellingbee/data/saves')
         if path.isfile(fileName +'.json'):
             newGame =  StateStorage.loadPuzzle(fileName, self.outty)
             
@@ -279,7 +279,7 @@ class GController():
     #   none
     ################################################################################
     def toOverwrite(self, num, game, fileName):
-        os.chdir('./src/data/saves')
+        os.chdir('./spellingbee/data/saves')
         if(num == 0):
             StateStorage.saveCurrent(game, fileName)
             saveStatus = True

@@ -87,7 +87,7 @@ def newPuzzle(baseWord: str, keyLetter:str, outty: output, flag: bool) -> object
             uniqueLetters = returnTuple[1]
 
             #now that the input has been validated, go find the max score for this game
-            conn = sqlite3.connect('src/model/wordDict.db')
+            conn = sqlite3.connect('spellingbee/model/wordDict.db')
             cursor = conn.cursor()
             cursor.execute("select score from allGames where uniqueLetters = '" +
                            uniqueLetters + "' and keyLetter = '" + keyLetter + "';")
@@ -149,7 +149,7 @@ class BadQueryException(Exception):
 ################################################################################
 def findBaseWord():
     # SQLite Connections
-    wordDict = sqlite3.connect('src/model/wordDict.db')
+    wordDict = sqlite3.connect('spellingbee/model/wordDict.db')
 
     # Used to execute SQL commands
     wordDictC = wordDict.cursor()
@@ -186,7 +186,7 @@ def findBaseWord():
 ################################################################################
 def checkDataBase(baseWord: str):
     # SQLite Connections
-    wordDict = sqlite3.connect('src/model/wordDict.db')
+    wordDict = sqlite3.connect('spellingbee/model/wordDict.db')
     
     # Used to execute SQL commands
     cursor = wordDict.cursor()
@@ -229,7 +229,7 @@ def guess(puzzle, input: str, flag : bool, outty : object):
         outty.setField('Flag: {}'.format(flag))
         pass
     '''
-    conn = sqlite3.connect('src/model/wordDict.db')
+    conn = sqlite3.connect('spellingbee/model/wordDict.db')
     cursor = conn.cursor()
         
 
@@ -386,7 +386,7 @@ def getAllWordsFromPangram(unique, key) -> list:
         if key in a:
             cleanSet.append(sortStrToAlphabetical(''.join(a)))
     #Time to querey the DB   
-    conn = sqlite3.connect('src/model/wordDict.db')
+    conn = sqlite3.connect('spellingbee/model/wordDict.db')
     cursor = conn.cursor()
 
 

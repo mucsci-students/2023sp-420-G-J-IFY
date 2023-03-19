@@ -35,7 +35,7 @@ def Load(fileName):
     # checks if file exists
     try:
         print(Path.cwd())
-        os.chdir('src/tests/saves')
+        os.chdir('spellingbee/tests/saves')
         print(Path.cwd())
         newFileName = fileName + '.json'
         # create a path to the current directory
