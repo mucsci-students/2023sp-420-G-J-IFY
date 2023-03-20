@@ -32,7 +32,7 @@ from pathlib import Path
 ################################################################################
 def goToDB() -> bool:
     # move down into the db
-    os.chdir('./src/model')
+    os.chdir('./spellingbee/model')
     #return checkExists()
 
 ################################################################################

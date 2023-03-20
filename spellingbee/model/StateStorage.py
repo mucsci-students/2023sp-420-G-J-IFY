@@ -81,7 +81,7 @@ def __Save(dict, fileName):
     if path.exists(saveCur):
         os.replace(saveCur, saveCur)
     else:
-        saveNew = cwd  / 'src'  / 'data' / 'saves' / fileName
+        saveNew = cwd  / 'spellingbee'  / 'data' / 'saves' / fileName
         os.replace(str(saveCur) , str(saveNew))
 
 
@@ -268,7 +268,7 @@ def __checkFileExists(pathToFile):
 def __Load(fileName, outty):
     # checks if file exists
     try:
-        os.chdir('./src/data/saves')
+        os.chdir('./spellingbee/data/saves')
         # check if user ended their save with the .json filename
         if fileName.endswith('.json'):
             fileName = fileName
@@ -385,7 +385,7 @@ def allLower(my_list):
 ################################################################################
 def checkLoad(dictDict):   
     # SQLite Connections
-    wordDict = sqlite3.connect('src/model/wordDict.db')
+    wordDict = sqlite3.connect('spellingbee/model/wordDict.db')
     cursor = wordDict.cursor()
 
     try:

@@ -14,8 +14,8 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 
 sys.path.append(parent)
-import model.StateStorage as src
-#import src
+import model.StateStorage as spellingbee
+#import spellingbee
 import json
 import unittest
 import model.puzzle as Puzzle
@@ -46,20 +46,20 @@ class StateStorageTests(unittest.TestCase):
 # If the file does not have the correct data in it then an asserionError will be 
 # raised
     def checkContents(fileName, dictToCheck):
-        #os.chdir('./src/data/saves')
+        #os.chdir('./spellingbee/data/saves')
         file = open(fileName)
         dict = json.load(file)
         assert(dict == dictToCheck)
-        #src.move3dirBack()
+        #spellingbee.move3dirBack()
 
 # Params: fileName - Name of the file 
 # Checks to see if the file exists in the current directory
 # If the file specified does not exist in the directory then an assertionError 
 # will be raised
     def checkIfExists(fileName):
-        #os.chdir('./src/data/saves')
+        #os.chdir('./spellingbee/data/saves')
         assert(path.isfile(fileName))
-        #src.move3dirBack()
+        #spellingbee.move3dirBack()
     
     def __makeDict(saveStateObj):
         dict = {'RequiredLetter': saveStateObj.getKeyLetter(), 
@@ -98,7 +98,7 @@ class StateStorageTests(unittest.TestCase):
     obj.uniqueLett = dict["PuzzleLetters"]
     obj.allWordList = dict["WordList"]
     obj.maxScore = dict["MaxPoints"]
-    src.saveCurrent(obj, fileName)
+    spellingbee.saveCurrent(obj, fileName)
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict)
     print ("testSaveCurrent1: PASSED")
@@ -111,14 +111,14 @@ class StateStorageTests(unittest.TestCase):
     MakePuzzle.guess(obj, "warlock",False, outty)
     MakePuzzle.guess(obj, "wrack", False, outty)
     MakePuzzle.guess(obj, "alcool", False, outty)
-    src.saveCurrent(obj, fileName)
+    spellingbee.saveCurrent(obj, fileName)
     #dictionary representing obj
-    #os.chdir('./src/data/saves')
+    #os.chdir('./spellingbee/data/saves')
 
     file = open(fileNameJson)
     dict = json.load(file)
 
-    #src.move3dirBack()
+    #spellingbee.move3dirBack()
     checkContents(fileNameJson,dict)
     print("testSaveCurrent2: PASSED")
     
@@ -132,13 +132,13 @@ class StateStorageTests(unittest.TestCase):
     dict1 = {'RequiredLetter': 'q', 'PuzzleLetters': 'kamotiq', 
                  'CurrentPoints': 0, 'MaxPoints': 14, 'GuessedWords': [], 
                  'WordList': ['kamotiq']} 
-    src.savePuzzle(obj,fileName)
-    os.replace('./TESTFILE3.json', './src/data/saves/TESTFILE3.json')
-    obj1 = src.loadPuzzle(fileName, outty)
+    spellingbee.savePuzzle(obj,fileName)
+    os.replace('./TESTFILE3.json', './spellingbee/data/saves/TESTFILE3.json')
+    obj1 = spellingbee.loadPuzzle(fileName, outty)
     assert(obj1.foundWordList != ["kamotiq"])
     assert(obj1.score == 0)
     assert(obj1.rank == "Beginner")
-    os.remove('./src/data/saves/TESTFILE3.json')
+    os.remove('./spellingbee/data/saves/TESTFILE3.json')
       
     print("testSavePuzzle1: PASSED")   
  
@@ -150,19 +150,19 @@ class StateStorageTests(unittest.TestCase):
     fileNameJson = fileName + ".json"
         
 
-    src.saveCurrent(obj, fileName)
-    #os.chdir('./src/data/saves')
+    spellingbee.saveCurrent(obj, fileName)
+    #os.chdir('./spellingbee/data/saves')
     file = open(fileNameJson)
     dict1 = json.load(file)
-    #src.move3dirBack()
+    #spellingbee.move3dirBack()
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict1)
     MakePuzzle.guess(obj, 'acock', False, outty)
-    src.saveCurrent(obj, fileName)
-    #os.chdir('./src/data/saves')
+    spellingbee.saveCurrent(obj, fileName)
+    #os.chdir('./spellingbee/data/saves')
     file = open(fileNameJson)
     dict2 = json.load(file)
-    #src.move3dirBack()
+    #spellingbee.move3dirBack()
     checkIfExists(fileNameJson)
     checkContents(fileNameJson, dict2)
     print("testSaveCurrent3: PASSED")
@@ -172,16 +172,16 @@ class StateStorageTests(unittest.TestCase):
     fileNameJson = fileName + ".json"
     
     MakePuzzle.guess(obj, 'wall', False, outty)
-    src.saveCurrent(obj, fileName)
-    os.replace('./TESTFILE5.json', './src/data/saves/TESTFILE5.json')
+    spellingbee.saveCurrent(obj, fileName)
+    os.replace('./TESTFILE5.json', './spellingbee/data/saves/TESTFILE5.json')
 
-    obj2 = src.loadPuzzle(fileName, outty)
+    obj2 = spellingbee.loadPuzzle(fileName, outty)
 
     dict1 = __makeDict(obj)
     
     dict2 = __makeDict(obj2)
     assert(dict1 == dict2)
-    os.remove( './src/data/saves/TESTFILE5.json')
+    os.remove( './spellingbee/data/saves/TESTFILE5.json')
     print("testLoadPuzzle1: PASSED")
     
 

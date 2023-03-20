@@ -11,15 +11,15 @@ sys.path.append(parent)
 
 import unittest
 
-#import src
+#import spellingbee
 import sqlite3
 from random import randrange
-import model.MakePuzzle as src
+import model.MakePuzzle as spellingbee
 
 class MakePuzzleTests(unittest.TestCase):
     
     # testing if make puzzle correctly produces a new game
-    obj = src.newPuzzle('friends', 'i', outty, False)
+    obj = spellingbee.newPuzzle('friends', 'i', outty, False)
     assert(obj.keyLett == 'i')
     assert(obj.uniqueLett == 'definrs')
     assert(obj.shuffleLett == 'definrs')
@@ -31,17 +31,17 @@ class MakePuzzleTests(unittest.TestCase):
     print("MakePuzzle: PASSED")
     
     # test findBaseWord
-    assert(src.findBaseWord() != None)
-    assert(src.findBaseWord() != ('', ''))
+    assert(spellingbee.findBaseWord() != None)
+    assert(spellingbee.findBaseWord() != ('', ''))
     print("findBaseWord: PASSED")
     
     #test checkDataBase
-    assert(src.checkDataBase(obj.uniqueLett) != False)
+    assert(spellingbee.checkDataBase(obj.uniqueLett) != False)
     print("checkDataBase: PASSED")
     
 
     #test guess
-    src.guess(obj, 'friend', False, outty)
+    spellingbee.guess(obj, 'friend', False, outty)
     assert(obj.getFoundWords() == ['friend'])
     assert(obj.getScore() == 6)
     assert(obj.getRank() == 'Good Start')

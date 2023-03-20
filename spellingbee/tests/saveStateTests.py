@@ -8,7 +8,7 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 
 sys.path.append(parent)
-#import src
+#import spellingbee
 import unittest
 import model.puzzle as Puzzle
 

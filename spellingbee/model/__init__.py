@@ -1,5 +1,5 @@
 import sys
-sys.path.append('src/model/saveState.py')
+sys.path.append('spellingbee/model/saveState.py')
 
 from .MakePuzzle import *
 from .puzzle import *
