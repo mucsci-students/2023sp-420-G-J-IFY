@@ -1,7 +1,7 @@
 # authors: Gaige Zakroski
 import sys
 import os
-
+import pytest
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -13,117 +13,120 @@ import unittest
 import model.puzzle as Puzzle
 
 
-# tests the constuctor
-class testSaveState(unittest.TestCase):
-    #test constuctor
-    obj = Puzzle.Puzzle('a', 'warlock')
-    assert(obj.keyLett == 'a')
-    assert(obj.uniqueLett == 'warlock')
-    assert(obj.shuffleLett == 'warlock')
-    assert(obj.score == 0)
-    assert(obj.maxScore == 0)
-    assert(obj.foundWordList == [])
-    assert(obj.allWordList == [])
-    assert(obj.rank == ' ')
-    print("testConstructor: PASSED")
-            
-        
-    #test get keyLetter
-    assert(obj.getKeyLetter() == obj.keyLett)
-    print("testgetKeyLetter: PASSED")
+
+@pytest.fixture
+def puzzleFixture():
+    return Puzzle.Puzzle('a', 'warlock')
+
+def testEmptyPuzzleKeyLett(puzzleFixture):
+    assert(puzzleFixture.keyLett == 'a')
+
+def testEmptyPuzzleUniqueLett(puzzleFixture):
+    assert(puzzleFixture.uniqueLett == 'warlock')
+
+def testEmptyPuzzleShuffleLett(puzzleFixture):
+    assert(puzzleFixture.shuffleLett == 'warlock')
+
+def testEmptyPuzzleScore(puzzleFixture):
+    assert(puzzleFixture.score == 0)
+
+def testEmptyPuzzleMaxScore(puzzleFixture):
+    assert(puzzleFixture.maxScore == 0)
+
+def testEmptyPuzzlefoundWords(puzzleFixture):
+    assert(puzzleFixture.foundWordList == [])
+
+def testEmptyPuzzleAllWords(puzzleFixture):
+    assert(puzzleFixture.allWordList == [])
+
+def testEmptyPuzzleRank(puzzleFixture):
+    assert(puzzleFixture.rank == ' ')
+puzzleFixture
+def testGetKeyLetter(puzzleFixture):
+    assert(puzzleFixture.getKeyLetter() == puzzleFixture.keyLett)
         
     # test getUniqueLetters
-    assert(obj.getUniqueLetters() == obj.uniqueLett)
-    print("testgetUniqueLetters: PASSED")
+def testGetUniqueLetters(puzzleFixture):
+    assert(puzzleFixture.getUniqueLetters() == puzzleFixture.uniqueLett)
         
     # test getShuffleLetters
-    assert(obj.getShuffleLetters() == obj.shuffleLett)
-    print("testgetShuffleLetters: PASSED")
+def testGetShuffleLetters(puzzleFixture):
+    assert(puzzleFixture.getShuffleLetters() == puzzleFixture.shuffleLett)
 
     # test getMaxScore
-    assert(obj.getMaxScore() == obj.maxScore )
-    print("testgetMaxScore: PASSED")
+def testGetMaxScore(puzzleFixture):
+    assert(puzzleFixture.getMaxScore() == puzzleFixture.maxScore )
         
     # testgetFoundWords
-    assert(obj.getFoundWords() == obj.foundWordList)
-    print("testgetFoundWords: PASSED")
+def testGetFoundWords(puzzleFixture):
+    assert(puzzleFixture.getFoundWords() == puzzleFixture.foundWordList)
+
     # test getAllWords
-    assert(obj.getAllWords() == obj.allWordList)
-    print("testgetAllWords: PASSED")
+def testGetAllWords(puzzleFixture):
+    assert(puzzleFixture.getAllWords() == puzzleFixture.allWordList)
     
     # testgetScore
-    assert(obj.getScore() == obj.score)
-    print("testgetScore: PASSED")
+def testGetScore(puzzleFixture):
+    assert(puzzleFixture.getScore() == puzzleFixture.score)
     
     # test getRank
-    assert(obj.getRank() == obj.rank)
-    print("testgetScore: PASSED")
+def testGetRank(puzzleFixture):
+    assert(puzzleFixture.getRank() == puzzleFixture.rank)
 
     # testUpdateFoundWords
-    obj.updateFoundWords('warlock')
-    obj.updateFoundWords('wrack')
-    obj.updateFoundWords('wallaroo')
-    assert(obj.foundWordList == ['warlock', 'wrack', 'wallaroo'])
-    print("testUpdateFoundWords: PASSED")
+def testUpdateFoundWordsGood()
+    puzzleFixture.updateFoundWords('warlock')
+    puzzleFixture.updateFoundWords('wrack')
+    puzzleFixture.updateFoundWords('wallaroo')
+    assert(puzzleFixture.foundWordList == ['warlock', 'wrack', 'wallaroo'])
        
 
     #test UpdateScore
-    obj.updateScore(10)
-    assert(obj.score == 10)
-    obj.updateScore(30)
-    assert(obj.score == 40)
-    print("testUpdateScore: PASSED")
+    puzzleFixture.updateScore(10)
+    assert(puzzleFixture.score == 10)
+    puzzleFixture.updateScore(30)
+    assert(puzzleFixture.score == 40)
 
     # test SetKeyLetter
-    obj.setKeyLetter('b')
-    assert(obj.keyLett == 'b')
-    print("testSetKeyLetter: PASSED")
+    puzzleFixture.setKeyLetter('b')
+    assert(puzzleFixture.keyLett == 'b')
 
     # test SetUniqueLetters
-    obj.setUniqueLetters('barnical')
-    assert(obj.uniqueLett == 'barnical')
-    print("testSetUniqueLetters: PASSED")
+    puzzleFixture.setUniqueLetters('barnical')
+    assert(puzzleFixture.uniqueLett == 'barnical')
         
     # test SetShuffleLetters
-    obj.setShuffleLetters('barnical')
-    assert(obj.shuffleLett == 'barnical')
-    print("testSetShuffleLetters: PASSED")
+    puzzleFixture.setShuffleLetters('barnical')
+    assert(puzzleFixture.shuffleLett == 'barnical')
         
     # test SetScore
-    obj.setScore(100)
-    assert(obj.score == 100)
-    print("testSetScore: PASSED")
+    puzzleFixture.setScore(100)
+    assert(puzzleFixture.score == 100)
 
     # test SetMaxScore
-    obj.setMaxScore(200)
-    assert(obj.maxScore == 200)
-    print("testSetMaxScore: PASSED")
+    puzzleFixture.setMaxScore(200)
+    assert(puzzleFixture.maxScore == 200)
 
     # test SetFoundWords
     list = ["warlock", "wrack", "alcool", "arrack", "wallaroo"]
-    obj.setFoundWords(list)
-    assert(obj.getFoundWords() == ["warlock", "wrack", "alcool", "arrack", "wallaroo"])
-    print("testSetFoundWords: PASSED")
+    puzzleFixture.setFoundWords(list)
+    assert(puzzleFixture.getFoundWords() == ["warlock", "wrack", "alcool", "arrack", "wallaroo"])
        
     # test SetAllWordList
-    obj.setAllWordList(["warlock", "wrack", "alcool", "arrack", "wallaroo", "cloacal", "corolla", "wallow", "corral"])
-    assert(obj.allWordList == ["warlock", "wrack", "alcool", "arrack", "wallaroo", "cloacal", "corolla", "wallow", "corral"])
-    print("testSetAllWordList: PASSED")
+    puzzleFixture.setAllWordList(["warlock", "wrack", "alcool", "arrack", "wallaroo", "cloacal", "corolla", "wallow", "corral"])
+    assert(puzzleFixture.allWordList == ["warlock", "wrack", "alcool", "arrack", "wallaroo", "cloacal", "corolla", "wallow", "corral"])
        
     # test  SetRank
-    obj.setRank('Queen Bee')
-    assert(obj.rank == 'Queen Bee')
-    print("testSetRank: PASSED")
+    puzzleFixture.setRank('Queen Bee')
+    assert(puzzleFixture.rank == 'Queen Bee')
       
     # test UpdateRank
-    obj.updateRank()
-    assert(obj.rank == "Great")
-    print("testUpdateRank: PASSED")
+    puzzleFixture.updateRank()
+    assert(puzzleFixture.rank == "Great")
        
     # test ShuffleChars 
-    obj.shuffleChars()
-    assert( not obj.shuffleLett == obj.uniqueLett)
-    print("testShuffleChars: PASSED")
+    puzzleFixture.shuffleChars()
+    assert( not puzzleFixture.shuffleLett == puzzleFixture.uniqueLett)
        
 
 if __name__ == '__main__':
