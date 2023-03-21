@@ -471,7 +471,15 @@ def checkLoad(dictDict):
         #return validated dictionary or NONE if exception occured
         return dictDict
 
-def saveFromExplorer(path, fileName, puzzle):
-    dict = __makeDict(puzzle)
+def saveFromExplorer(path : string, fileName : str, puzzle : object, onlyPuzz : bool) -> None:
+    
+    if onlyPuzz:
+        newObj = model.Puzzle(puzzle.getKeyLetter(), puzzle.getUniqueLetters())
+        newObj.setMaxScore(puzzle.getMaxScore())
+        newObj.setAllWordList(puzzle.getAllWords())
+        newObj.updateRank()    
+        dict = __makeDict(newObj)
+    else:
+        dict = __makeDict(puzzle)
     with open (path + '/' + fileName + '.json', "w") as file:
         json.dump(dict, file)

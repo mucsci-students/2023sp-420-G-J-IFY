@@ -192,11 +192,11 @@ class GController():
             
         else: 
             if(num == 0):
-                StateStorage.saveFromExplorer(folder, fileName, game)
+                StateStorage.saveFromExplorer(folder, fileName, game, False)
                 saveStatus = True
                 print(saveStatus)
             elif(num == 1):
-                StateStorage.savePuzzle(game, fileName)
+                StateStorage.saveFromExplorer(folder, fileName, game, True)
                 saveStatus = True
                 print('here')
                 #    if saveStatus:
