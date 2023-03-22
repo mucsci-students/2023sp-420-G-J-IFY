@@ -48,6 +48,19 @@ from cview import CLI
 from model import MakePuzzle, StateStorage
 from os import path
 
+commands = [
+    '!new',
+    '!puzzle',
+    '!found-words',
+    '!status',
+    '!shuffle',
+    '!save',
+    '!savePuzzle',
+    '!load',
+    '!help',
+    '!exit'
+]
+
 ################################################################################
 # parse(userinput : str, game : object, outty : object) -> object:
 #
