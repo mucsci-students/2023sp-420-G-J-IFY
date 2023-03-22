@@ -155,11 +155,13 @@ class GController():
         # Takes file name
         dialog = self.window.saveDialog
         fileName = dialog.fileName.text()
-        
+        path = str(QFileDialog.getExistingDirectory(self.window, "Select Directory"))
+
         if dialog.justPuzzle.isChecked():
-            self.handleSave(self.puzzle, fileName, 1)
+            self.handleSave(self.puzzle, fileName, 1, path)
         else: 
-            self.handleSave(self.puzzle, fileName, 0)   
+            self.handleSave(self.puzzle, fileName,  0, path)   
+
 
         self.window.setStatus(self.outty.getField())
         dialog.accept() 
@@ -177,27 +179,25 @@ class GController():
     #     - an integer value to determin if we are saving all the game progress
     #       or just the pzzle. 0 for saveCurrent() and 1 for savePuzzle().
     ################################################################################
-    def handleSave(self, game : object, fileName: str ,num : int) -> None:
+    def handleSave(self, game : object, fileName: str ,num : int, folder : str) -> None:
         saveStatus = False
         self.window.saveDialog.fileName.clear()
         self.window.saveDialog.justPuzzle.setChecked(False)
-        os.chdir('./spellingbee/data/saves')
-        if(path.isfile(fileName +'.json')):
+        folderPath = folder
+        if(path.isfile(folderPath + '/' + fileName + '.json')):
             # Run Dialog Window for overwriting existing file
             # Change if to check if user click yes or no
             self.window.owDialog.show()
-            self.window.owDialog.btns.accepted.connect(lambda: self.toOverwrite(num, game, fileName))
+            self.window.owDialog.btns.accepted.connect(lambda: self.toOverwrite(num, game, fileName, folderPath))
             
         else: 
             if(num == 0):
-                StateStorage.saveCurrent(game, fileName)
+                StateStorage.saveFromExplorer(folder, fileName, game, False)
                 saveStatus = True
             elif(num == 1):
-                StateStorage.savePuzzle(game, fileName)
+                StateStorage.saveFromExplorer(folder, fileName, game, True)
                 saveStatus = True
-        
-        StateStorage.move3dirBack()
-        #    if saveStatus:
+                #    if saveStatus:
                 # Run dialog window for successful save
         #        pass
         #    else:
@@ -237,7 +237,7 @@ class GController():
     def loadGame(self) -> None:
         '''
         fileName = self.window.loadDialog.uInput.text()
-        os.chdir('./spellingbee/data/saves')
+        os.chdir('./saves')
         if path.isfile(fileName +'.json'):
             newGame =  StateStorage.loadPuzzle(fileName, self.outty)
             
@@ -247,7 +247,7 @@ class GController():
                 self.window.loadFailed.show()
         else:
             self.window.loadFailed.show()
-        StateStorage.move3dirBack()
+        os.chdir('..')
         '''
         fileName = QFileDialog.getOpenFileName(self.window, 'File')[0]
         
@@ -277,15 +277,13 @@ class GController():
     # PARAMETERS:
     #   none
     ################################################################################
-    def toOverwrite(self, num, game, fileName):
-        os.chdir('./spellingbee/data/saves')
+    def toOverwrite(self, num, game, fileName, folder):
         if(num == 0):
-            StateStorage.saveCurrent(game, fileName)
+            StateStorage.saveFromExplorer(folder, fileName, game, False)
             saveStatus = True
         elif(num == 1):
-            StateStorage.savePuzzle(game, fileName)
+            StateStorage.saveFromExplorer(folder, fileName, game, True)
             saveStatus = True
-        StateStorage.move3dirBack()
         self.window.owDialog.accept()
 
 ################################################################################

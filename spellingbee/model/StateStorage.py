@@ -268,7 +268,7 @@ def __checkFileExists(pathToFile):
 def __Load(fileName, outty):
     # checks if file exists
     try:
-        os.chdir('./spellingbee/data/saves')
+        os.chdir('./saves')
         # check if user ended their save with the .json filename
         if fileName.endswith('.json'):
             fileName = fileName
@@ -285,7 +285,7 @@ def __Load(fileName, outty):
 
         # puts elements in the file in a dictionary
         dict = json.load(file)
-        move3dirBack()
+        os.chdir('..')
     
         # check that dict contains valid save data
         dict = checkLoad(dict)
@@ -470,3 +470,39 @@ def checkLoad(dictDict):
 
         #return validated dictionary or NONE if exception occured
         return dictDict
+
+
+################################################################################
+# saveFromExplorer(path : string, fileName : str, puzzle : object, onlyPuzz : bool) -> None:
+#
+# DESCRIPTION:
+
+#   This function saves a puzzle either with current progress or just the puzzle its self
+# PARAMETERS:
+
+# path : str
+#       path to the folder where the save needs to go
+# fileName: str
+#       name of the file
+# puzzle : object
+#       the game object that needs to be saved
+# onlyPuzz: bool
+#       A flag true if we are to only save the puzzle with no progress and false if we are to
+#       save the current state   
+#       
+#
+# RETURNS:
+#   None
+################################################################################
+def saveFromExplorer(path : str, fileName : str, puzzle : object, onlyPuzz : bool) -> None:
+    
+    if onlyPuzz:
+        newObj = model.Puzzle(puzzle.getKeyLetter(), puzzle.getUniqueLetters())
+        newObj.setMaxScore(puzzle.getMaxScore())
+        newObj.setAllWordList(puzzle.getAllWords())
+        newObj.updateRank()    
+        dict = __makeDict(newObj)
+    else:
+        dict = __makeDict(puzzle)
+    with open (path + '/' + fileName + '.json', "w") as file:
+        json.dump(dict, file)

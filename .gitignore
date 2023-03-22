@@ -161,3 +161,6 @@ target/
 # Game Saves
 src/data/saves
 #that should do it
+
+#all json files
+*.json
