@@ -6,13 +6,15 @@
 
 
 import sqlite3
-#import model.generateSubset as generateSubset
+
+# import model.generateSubset as generateSubset
 import random
 import sqlite3
 import itertools
-from model import dbFixer
+import dbFixer
 from itertools import chain, combinations
-from model import MakePuzzle
+import MakePuzzle
+
 
 ################################################################################
 # class Puzzle()
@@ -63,7 +65,7 @@ from model import MakePuzzle
 #   setShuffleLetters(shuffleLetters: set)
 #     - sets given shuffleLetters set to shuffleLettes in puzzle
 #   setScore(gameScore: int)
-#     - takes a score and sets it to the score in puzzle 
+#     - takes a score and sets it to the score in puzzle
 #   setMaxScore(maxGameScore: int)
 #     - sets max score of the game
 #   setFoundWords(foundWords: list)
@@ -75,7 +77,7 @@ from model import MakePuzzle
 #   setFinishedFlag(update: bool)
 #     - sets the finished flag in puzzle
 #   setPointsTilRank(points: int)
-#     - sets the points til rank 
+#     - sets the points til rank
 #   findAllWords()
 #     - generates a list of valid guessable words
 #   updateFoundWords(word: str)
@@ -90,7 +92,6 @@ from model import MakePuzzle
 #     - shuffles the order or shuffle letter list
 ################################################################################
 class Puzzle:
-    
     def __init__(self, keyLett, uniqueLett):
         self.keyLett = keyLett
         self.uniqueLett = uniqueLett
@@ -99,10 +100,10 @@ class Puzzle:
         self.maxScore = 0
         self.foundWordList = []
         self.allWordList = []
-        self.rank = ' '
+        self.rank = " "
         self.finishedFlag = False
         self.pointsTilRank = 1
-    
+
     ############################################################################
     # getKeyLetter() -> str
     #
@@ -118,7 +119,7 @@ class Puzzle:
     ############################################################################
     def getKeyLetter(self):
         return self.keyLett
-    
+
     ############################################################################
     # getUniqueLetters() -> str
     #
@@ -142,7 +143,7 @@ class Puzzle:
     #   returns a string of the unique letters to shuffle freely
     #
     # Parameters:
-    #   none 
+    #   none
     #
     # Returns:
     #   self.shuffleLett
@@ -231,7 +232,7 @@ class Puzzle:
     ############################################################################
     def getRank(self):
         return self.rank
-    
+
     ############################################################################
     # getFinishedFlag() - bool
     #
@@ -244,7 +245,6 @@ class Puzzle:
     ############################################################################
     def getFinishedFlag(self):
         return self.finishedFlag
-    
 
     ############################################################################
     # getPointsTilRank() - int
@@ -271,7 +271,7 @@ class Puzzle:
     ############################################################################
     def setKeyLetter(self, letter):
         self.keyLett = letter
-    
+
     ############################################################################
     # setUniqueLetters(uniqueLetters: str)
     #
@@ -310,7 +310,7 @@ class Puzzle:
     ############################################################################
     def setScore(self, gameScore):
         self.score = gameScore
-    
+
     ############################################################################
     # setMaxScore(maxGameScore: int)
     #
@@ -336,7 +336,7 @@ class Puzzle:
     ############################################################################
     def setFoundWords(self, foundWords):
         self.foundWordList = foundWords
-    
+
     ############################################################################
     # setAllWordList(wordList: list)
     #
@@ -349,7 +349,7 @@ class Puzzle:
     ############################################################################
     def setAllWordList(self, wordList):
         self.allWordList = wordList
-    
+
     ############################################################################
     # setRank(newRank: str)
     #
@@ -400,7 +400,9 @@ class Puzzle:
     #   none
     ############################################################################
     def findAllWords(self):
-       self.allWordList = MakePuzzle.getAllWordsFromPangram(self.uniqueLett, self.keyLett)
+        self.allWordList = MakePuzzle.getAllWordsFromPangram(
+            self.uniqueLett, self.keyLett
+        )
 
     ############################################################################
     # updateFoundWords(word)
@@ -414,7 +416,7 @@ class Puzzle:
     ############################################################################
     def updateFoundWords(self, word):
         self.foundWordList.append(word)
-    
+
     ############################################################################
     # updateScore(pointIncrease: int)
     #
@@ -445,7 +447,7 @@ class Puzzle:
             self.rank = "Beginner"
             self.setPointsTilRank(1)
         elif currentPercent < 0.05:
-            self.rank =  "Good Start"
+            self.rank = "Good Start"
             self.calcPointsTilRank(0.05)
         elif currentPercent < 0.08:
             self.rank = "Moving Up"
@@ -468,9 +470,9 @@ class Puzzle:
         elif currentPercent < 1:
             self.rank = "Genius"
             self.calcPointsTilRank(1)
-        else: #all words found
+        else:  # all words found
             self.rank = "Queen Bee"
-            #set final flag
+            # set final flag
             self.setFinishedFlag(True)
             self.setPointsTilRank(0)
 
@@ -498,19 +500,19 @@ class Puzzle:
     #   none
     ############################################################################
     def shuffleChars(self):
-        #strings are imutable, need a place to temporarily hold new shuffle pattern
-        #explode into list
+        # strings are imutable, need a place to temporarily hold new shuffle pattern
+        # explode into list
         letters = random.sample(self.getUniqueLetters(), len(self.getUniqueLetters()))
 
-        #looping through to find the main letter in shuffled list
-        ctr = 0    
-        while ctr < 7: 
+        # looping through to find the main letter in shuffled list
+        ctr = 0
+        while ctr < 7:
             if self.getKeyLetter() == letters[ctr]:
-                #copy whatever is in front of the line to later
+                # copy whatever is in front of the line to later
                 letters[ctr] = letters[0]
-                #repalce first char with key letter
-                letters[0] = self.getKeyLetter() 
+                # repalce first char with key letter
+                letters[0] = self.getKeyLetter()
                 break
             ctr += 1
-        #set the shuffleLetters field to the list rejoined to string
-        self.setShuffleLetters(''.join(letters))
+        # set the shuffleLetters field to the list rejoined to string
+        self.setShuffleLetters("".join(letters))
