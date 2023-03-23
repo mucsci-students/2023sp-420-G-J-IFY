@@ -2,6 +2,8 @@ import cview.CLI as CLI
 import model.puzzle as puzzle
 import controller.cController as CommandHandler
 import model.output as output
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
 import os
 
 
@@ -10,6 +12,7 @@ outty = output.Output()
 usrinput = ' '
 validIn = False
 puzzle = puzzle.Puzzle('', '')
+tabComp = WordCompleter(CommandHandler.commands)
 
 # inital game loop, loop until valid start is reached
 while not validIn:
@@ -19,7 +22,7 @@ while not validIn:
                      'Presented by G(J)IFY',
                      'To start a new game, type "!new". To load a previous '
                      'save, type "!load"'], 40, '^')
-    usrinput = input('> ')
+    usrinput = prompt('> ', completer=WordCompleter(['!new', '!load', '!exit']))
     match usrinput:
         #new game
         case '!new':
@@ -47,7 +50,7 @@ while not validIn:
 #after start of game loop, draw new game for first time
 CLI.clear()
 CLI.drawGameBox(puzzle, outty)
-usrinput = input('> ')
+usrinput = prompt('> ', completer=tabComp)
 
 #game loop
 while True:
@@ -65,4 +68,4 @@ while True:
     if puzzle.getFinishedFlag():
         CommandHandler.finalGame(puzzle, outty)
     #wait for user's next input
-    usrinput = input('> ')
+    usrinput = prompt('> ', completer=tabComp)
