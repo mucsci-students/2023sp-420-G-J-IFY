@@ -1,4 +1,4 @@
-import cview.CLI as CLI
+import View.CLI.CLI as CLI
 import model.puzzle as puzzle
 import controller.cController as CommandHandler
 import model.output as output

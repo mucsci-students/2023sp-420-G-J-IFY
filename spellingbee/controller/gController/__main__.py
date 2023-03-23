@@ -1,4 +1,4 @@
-from gview import *
+from View.GUI import *
 
 from .GController import *
 

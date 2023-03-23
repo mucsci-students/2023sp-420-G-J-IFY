@@ -1,4 +1,4 @@
 from .controller import * 
-from .cview import *
-from .gview import *
+from .CLI import *
+from .GUI import *
 from .model import *
