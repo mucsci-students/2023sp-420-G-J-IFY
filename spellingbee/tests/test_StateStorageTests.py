@@ -1,6 +1,6 @@
 # author: Gaige Zakroski
 # tests for various parts of a StateStorage module
-
+import pytest
 import os.path 
 from os import path
 import string
@@ -20,12 +20,14 @@ import json
 import unittest
 import model.puzzle as Puzzle
 import model.MakePuzzle as MakePuzzle
+
+#Globals
 outty = output.Output()
 list =[]
-class StateStorageTests(unittest.TestCase):
+
+
     # Creates a random string of length 10 
-    
-    def makeRandomJsonName():
+def makeRandomJsonName():
         letters = string.ascii_lowercase
         result = ""
         for i in range(10):
@@ -33,7 +35,7 @@ class StateStorageTests(unittest.TestCase):
 
         return result
     
-    def makeShortestGame():
+def makeShortestGame():
        obj = Puzzle.Puzzle('q', 'kamotiq')
        obj.allWordList = ['kamotiq']
        obj.maxScore = 14
@@ -45,23 +47,21 @@ class StateStorageTests(unittest.TestCase):
 # Checks the contents of a file and ensures the file has the correct data in it.
 # If the file does not have the correct data in it then an asserionError will be 
 # raised
-    def checkContents(fileName, dictToCheck):
-        #os.chdir('./saves')
-        file = open(fileName)
-        dict = json.load(file)
-        assert(dict == dictToCheck)
+def checkContents(fileName, dictToCheck):
+    #os.chdir('./saves')
+    file = open(fileName)
+    dict = json.load(file)
+    return  dict == dictToCheck
         #spellingbee.move3dirBack()
 
 # Params: fileName - Name of the file 
 # Checks to see if the file exists in the current directory
 # If the file specified does not exist in the directory then an assertionError 
 # will be raised
-    def checkIfExists(fileName):
-        #os.chdir('./saves')
-        assert(path.isfile(fileName))
-        #spellingbee.move3dirBack()
+def checkIfExists(fileName):
+    return path.isfile(fileName)
     
-    def __makeDict(saveStateObj):
+def __makeDict(saveStateObj):
         dict = {'RequiredLetter': saveStateObj.getKeyLetter(), 
                 'PuzzleLetters': saveStateObj.getUniqueLetters(), 
                 'CurrentPoints': saveStateObj.getScore(), 
@@ -69,14 +69,15 @@ class StateStorageTests(unittest.TestCase):
                 'GuessedWords' : saveStateObj.getFoundWords(), 
                 'WordList': saveStateObj.getAllWords()}
         return dict
-
-
+def removeSave(fileName):
+    path = str(Path.cwd()) + '/' + fileName
+    os.remove(path)
     
 
 # test if we save an empty game and a file is not already created with the same
 # name a new one is created and empty
-    fileName = "TESTFILE1"
-    fileNameJson = fileName + ".json"
+@pytest.fixture
+def puzzleFixture():
     dict = {"RequiredLetter": "a", "PuzzleLetters": "acklorw", 
             "CurrentPoints": 0, "MaxPoints": 323, "GuessedWords": [], 
             "WordList": ["acro", "alar", "alow", "arak", "arco", "awol", "caca",
@@ -94,90 +95,113 @@ class StateStorageTests(unittest.TestCase):
                           "karroo", "wallow", "caracal", "caracol", "carrack", 
                           "cloacal", "corolla", "oarlock", "warlock", "warwork", 
                           "callaloo", "caracara", "rackwork", "wallaroo"]}    
+
     obj = Puzzle.Puzzle('a','warlock')
+
     obj.uniqueLett = dict["PuzzleLetters"]
     obj.allWordList = dict["WordList"]
     obj.maxScore = dict["MaxPoints"]
-    spellingbee.saveCurrent(obj, fileName)
-    checkIfExists(fileNameJson)
-    checkContents(fileNameJson, dict)
-    print ("testSaveCurrent1: PASSED")
+    return (obj, dict)
 
-#test if we save  all the state remains and a file is created
-    fileName = 'TESTFILE2'
-    fileNameJson = fileName + ".json"
-    obj = MakePuzzle.newPuzzle("warlock",'a', outty, False)
+@pytest.fixture
+def playedPuzzle(puzzleFixture):
+    obj = puzzleFixture[0]
     MakePuzzle.guess(obj, "warlock", False, outty)
     MakePuzzle.guess(obj, "warlock",False, outty)
     MakePuzzle.guess(obj, "wrack", False, outty)
     MakePuzzle.guess(obj, "alcool", False, outty)
-    spellingbee.saveCurrent(obj, fileName)
-    #dictionary representing obj
+    return obj
+
+@pytest.fixture
+def completedPuzzle():
+    obj = makeShortestGame()
+    MakePuzzle.guess(obj, 'kamotiq', False, outty) 
+    return obj
+
+def testSaveCurrent1(puzzleFixture):
+    spellingbee.saveCurrent(puzzleFixture[0], 'test1')
+    assert(True == checkIfExists('test1.json'))
+def testCheckContentsOfTest1(puzzleFixture):
+    assert(checkContents('test1.json', puzzleFixture[1]))
+    removeSave('test1.json')
+
+
+#test if we save  all the state remains and a file is created
+def testSaveCurrentPlayed(playedPuzzle):
+    spellingbee.saveCurrent(playedPuzzle, "TESTFILE2")
+    dict = __makeDict(playedPuzzle)
     #os.chdir('./saves')
-
-    file = open(fileNameJson)
+    file = open("TESTFILE2.JSON")
     dict = json.load(file)
-
     #spellingbee.move3dirBack()
-    checkContents(fileNameJson,dict)
-    print("testSaveCurrent2: PASSED")
+    assert(checkContents('TESTFILE2.JSON',dict))
+    removeSave('TESTFILE2.JSON')
     
     
     # tests the savePuzzle function to see if the information saved is saved correctly
     # meaning that only the baseWord and rhe manditory character is saved no other part of the game
+def testSavePuzzleWordList(completedPuzzle):
     fileName = 'TESTFILE3'
     fileNameJson = fileName + ".json"
-    obj = makeShortestGame()
-    MakePuzzle.guess(obj, 'kamotiq', False, outty)
-    dict1 = {'RequiredLetter': 'q', 'PuzzleLetters': 'kamotiq', 
-                 'CurrentPoints': 0, 'MaxPoints': 14, 'GuessedWords': [], 
-                 'WordList': ['kamotiq']} 
-    spellingbee.savePuzzle(obj,fileName)
-    os.replace('./TESTFILE3.json', './saves/TESTFILE3.json')
-    obj1 = spellingbee.loadPuzzle(fileName, outty)
-    assert(obj1.foundWordList != ["kamotiq"])
-    assert(obj1.score == 0)
-    assert(obj1.rank == "Beginner")
-    os.remove('./saves/TESTFILE3.json')
-      
-    print("testSavePuzzle1: PASSED")   
- 
-  
+    spellingbee.savePuzzle(completedPuzzle,fileName)
+    file = open("TESTFILE3.JSON")
+    dict = json.load(file)    
+    assert(dict['GuessedWords'] != ["kamotiq"])
+    removeSave(fileNameJson)
+
+def testSavePuzzleScore(completedPuzzle):
+    fileName = 'TESTFILE3'
+    fileNameJson = fileName + ".json"
+    spellingbee.savePuzzle(completedPuzzle,fileName)
+    file = open("TESTFILE3.JSON")
+    dict = json.load(file)      
+    assert(dict['CurrentPoints'] == 0)
+    removeSave(fileNameJson)
 
 # test if we can overrite a save
-
+def testOverwriteSave(playedPuzzle):
     fileName = 'TESTFILE4'
     fileNameJson = fileName + ".json"
-        
+    spellingbee.saveCurrent(playedPuzzle, fileName)
+    assert(checkIfExists(fileNameJson))
 
-    spellingbee.saveCurrent(obj, fileName)
-    #os.chdir('./saves')
+def testOverwriteSave2():
+    fileName = 'TESTFILE4'
+    fileNameJson = fileName + ".json"
     file = open(fileNameJson)
     dict1 = json.load(file)
-    #spellingbee.move3dirBack()
-    checkIfExists(fileNameJson)
-    checkContents(fileNameJson, dict1)
-    MakePuzzle.guess(obj, 'acock', False, outty)
-    spellingbee.saveCurrent(obj, fileName)
-    #os.chdir('./saves')
+    assert(checkContents(fileNameJson, dict1))
+
+def testOverwriteSave3(playedPuzzle):
+    fileName = 'TESTFILE4'
+    fileNameJson = fileName + ".json"
+    MakePuzzle.guess(playedPuzzle, 'acock', False, outty)
+    spellingbee.saveCurrent(playedPuzzle, fileName)
     file = open(fileNameJson)
     dict2 = json.load(file)
-    #spellingbee.move3dirBack()
-    checkIfExists(fileNameJson)
-    checkContents(fileNameJson, dict2)
-    print("testSaveCurrent3: PASSED")
-    list.append(fileNameJson)
+    assert(checkIfExists(fileNameJson))
+
+
+def testOverwriteSave4(playedPuzzle):
+    fileName = 'TESTFILE4'
+    fileNameJson = fileName + ".json"
+    file = open(fileNameJson)
+    dict2 = json.load(file)
+    assert(checkContents(fileNameJson, dict2))
+    removeSave(fileNameJson)
     #load a game and make sure the feilds are set correctly
+
+def testLoad(playedPuzzle):
     fileName = "TESTFILE5"
     fileNameJson = fileName + ".json"
     
-    MakePuzzle.guess(obj, 'wall', False, outty)
-    spellingbee.saveCurrent(obj, fileName)
+    MakePuzzle.guess(playedPuzzle, 'wall', False, outty)
+    spellingbee.saveCurrent(playedPuzzle, fileName)
     os.replace('./TESTFILE5.json', './saves/TESTFILE5.json')
 
     obj2 = spellingbee.loadPuzzle(fileName, outty)
 
-    dict1 = __makeDict(obj)
+    dict1 = __makeDict(playedPuzzle)
     
     dict2 = __makeDict(obj2)
     assert(dict1 == dict2)
