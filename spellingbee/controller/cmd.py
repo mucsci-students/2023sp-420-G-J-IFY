@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-import os
+import os, sys
 
 from model import(
     MakePuzzle,
@@ -22,11 +22,9 @@ class Command(ABC):
     def execute(self) -> None:
         print("implementation pending")
 
-    @abstractmethod
     def get_name(self) -> str:
         return self._name
     
-    @abstractmethod
     def get_description(self) -> str:
         return self._description
 
@@ -62,13 +60,6 @@ class NewGame(Command):
         )
         puzzle.shuffleChars()
         return puzzle
-    
-    # Returns information about the command
-    def get_name(self) -> str:
-        return self._name
-    
-    def get_description(self) -> str:
-        return self._description
     
 ################################################################################
 # class SaveGame(Command)
@@ -109,13 +100,6 @@ class SaveGame(Command):
             puzzle=self._puzzle,
             onlyPuzz=self._onlyPuzz
         )
-
-    # Returns information about the command
-    def get_name(self) -> str:
-        return self._name
-    
-    def get_description(self) -> str:
-        return self._description
 
 '''   
 ################################################################################
@@ -161,13 +145,6 @@ class LoadGame(Command):
     def execute(self) -> None:
         StateStorage.loadFromExploer(self._path)
     
-    # Returns information about the command
-    def get_name(self) -> str:
-        return self._name
-    
-    def get_description(self) -> str:
-        return self._description
-    
 ################################################################################
 # class Shuffle(Command)
 #
@@ -190,13 +167,6 @@ class Shuffle(Command):
 
     def execute(self) -> None:
         self._receiver.shuffleChars()
-
-    # Returns information about the command
-    def get_name(self) -> str:
-        return self._name
-    
-    def get_description(self) -> str:
-        return self._description
     
 ################################################################################
 #
@@ -212,13 +182,6 @@ class Help(Command):
     def execute(self) -> None:
         return super().execute()
     
-    # Returns information about the command
-    def get_name(self) -> str:
-        return self._name
-    
-    def get_description(self) -> str:
-        return self._description
-    
 ################################################################################
 #
 ################################################################################
@@ -230,13 +193,6 @@ class Hint(Command):
     def execute(self) -> None:
         return super().execute()
     
-    # Returns information about the command
-    def get_name(self) -> str:
-        return self._name
-    
-    def get_description(self) -> str:
-        return self._description
-    
 ################################################################################
 #
 ################################################################################
@@ -246,11 +202,25 @@ class Exit(Command):
         self._description = 'Exit the game'
 
     def execute(self) -> None:
-        return super().execute()
+        sys.exit()
     
-    # Returns information about the command
-    def get_name(self) -> str:
-        return self._name
-    
-    def get_description(self) -> str:
-        return self._description
+
+################################################################################
+#
+################################################################################
+class Guess(Command):
+    def __init__(self, puzzle: Puzzle, word: str) -> None:
+        self._name = '!guess'
+        self._description = 'description pending'
+
+        # params
+        self._puzzle = puzzle
+        self._word = word
+
+    def execute(self) -> None:
+        MakePuzzle.guess(
+            puzzle=self._puzzle, 
+            input=self._word,
+            flag=False,
+            outty=None
+        )
