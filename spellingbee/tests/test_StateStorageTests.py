@@ -49,8 +49,8 @@ def makeShortestGame():
 # raised
 def checkContents(fileName, dictToCheck):
     #os.chdir('./saves')
-    file = open(fileName)
-    dict = json.load(file)
+    with open(fileName) as file:
+        dict = json.load(file)
     return  dict == dictToCheck
         #spellingbee.move3dirBack()
 
@@ -131,8 +131,8 @@ def testSaveCurrentPlayed(playedPuzzle):
     spellingbee.saveCurrent(playedPuzzle, "TESTFILE2")
     dict = __makeDict(playedPuzzle)
     #os.chdir('./saves')
-    file = open("TESTFILE2.JSON")
-    dict = json.load(file)
+    with open("TESTFILE2.json") as file:
+        dict = json.load(file)
     #spellingbee.move3dirBack()
     assert(checkContents('TESTFILE2.JSON',dict))
     removeSave('TESTFILE2.JSON')
@@ -144,8 +144,8 @@ def testSavePuzzleWordList(completedPuzzle):
     fileName = 'TESTFILE3'
     fileNameJson = fileName + ".json"
     spellingbee.savePuzzle(completedPuzzle,fileName)
-    file = open("TESTFILE3.JSON")
-    dict = json.load(file)    
+    with open("TESTFILE3.json") as file:
+        dict = json.load(file)    
     assert(dict['GuessedWords'] != ["kamotiq"])
     removeSave(fileNameJson)
 
@@ -153,8 +153,8 @@ def testSavePuzzleScore(completedPuzzle):
     fileName = 'TESTFILE3'
     fileNameJson = fileName + ".json"
     spellingbee.savePuzzle(completedPuzzle,fileName)
-    file = open("TESTFILE3.JSON")
-    dict = json.load(file)      
+    with open("TESTFILE3.json") as file:
+        dict = json.load(file)      
     assert(dict['CurrentPoints'] == 0)
     removeSave(fileNameJson)
 
@@ -168,8 +168,8 @@ def testOverwriteSave(playedPuzzle):
 def testOverwriteSave2():
     fileName = 'TESTFILE4'
     fileNameJson = fileName + ".json"
-    file = open(fileNameJson)
-    dict1 = json.load(file)
+    with open(fileNameJson) as file:
+        dict1 = json.load(file)
     assert(checkContents(fileNameJson, dict1))
 
 def testOverwriteSave3(playedPuzzle):
@@ -177,16 +177,16 @@ def testOverwriteSave3(playedPuzzle):
     fileNameJson = fileName + ".json"
     MakePuzzle.guess(playedPuzzle, 'acock', False, outty)
     spellingbee.saveCurrent(playedPuzzle, fileName)
-    file = open(fileNameJson)
-    dict2 = json.load(file)
+    with open(fileNameJson) as file:
+        dict2 = json.load(file)
     assert(checkIfExists(fileNameJson))
 
 
 def testOverwriteSave4(playedPuzzle):
     fileName = 'TESTFILE4'
     fileNameJson = fileName + ".json"
-    file = open(fileNameJson)
-    dict2 = json.load(file)
+    with open(fileNameJson) as file:
+        dict2 = json.load(file)
     assert(checkContents(fileNameJson, dict2))
     removeSave(fileNameJson)
     #load a game and make sure the feilds are set correctly
