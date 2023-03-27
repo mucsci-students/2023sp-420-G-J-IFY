@@ -44,9 +44,22 @@ parent = os.path.dirname(current)
 
 sys.path.append(parent)
 
-from cview import CLI
+from View.CLI import CLI
 from model import MakePuzzle, StateStorage
 from os import path
+
+commands = [
+    '!new',
+    '!puzzle',
+    '!found-words',
+    '!status',
+    '!shuffle',
+    '!save',
+    '!savePuzzle',
+    '!load',
+    '!help',
+    '!exit'
+]
 
 ################################################################################
 # parse(userinput : str, game : object, outty : object) -> object:
@@ -335,7 +348,7 @@ def handleSave(game : object, num : int, outty : object) -> None:
     saveStatus = False
     fileName = input('Please enter the name of the file you would like to save '
                      'for example "Game1"\n> ')
-    os.chdir('./spellingbee/data/saves')
+    os.chdir('./saves')
     if(path.isfile(fileName +'.json')):
         yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
                         '\n Enter Y for yes or N for no\n> ')
@@ -359,7 +372,7 @@ def handleSave(game : object, num : int, outty : object) -> None:
     else:
         print('Game could not be saved.')
         
-    StateStorage.move3dirBack()
+    os.chdir('..')
 
 ################################################################################
 # finalGame(finishedPuzzle : object, outty : object) -> None
