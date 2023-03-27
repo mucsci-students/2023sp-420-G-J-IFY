@@ -114,14 +114,14 @@ class hint:
         
         # Now we calculate the total of each column
         lenTotal = 0
-        # The -1 for the range omits the last column to avoid double counting
+        # The -1 in both loops for the ranges omits the last column and last row to avoid double counting
         for i in range(len(self.hint[0]) - 1):
-            for j in range(len(self.hint)):
+            for j in range(len(self.hint) - 1):
                 # The -2 here checks if the i is at column 12, which is the last column
                 if i == len(self.hint[0]) - 2:
                     # If it is, -1 to be at column 11
-                    i -= 1
-                    
+                    #i -= 1
+                    pass
                 # Add total in this column (i+1 is to skip the first column entirely)
                 lenTotal += self.hint[j][i+1]
             # Record total for this column then set column total to 0
@@ -180,6 +180,9 @@ class hint:
 # For displaying and testing functionality, remove comments here
 # and play around with any puzzle
 # newPuzzle = puzzle.Puzzle("a", "acklrow")
+# newPuzzle = puzzle.Puzzle("s", "eflnpsu")
+# newPuzzle = puzzle.Puzzle("n", "cenorsu")
 # hints = hint(newPuzzle)
 # hints.makeHintGrid(newPuzzle)
 # hints.printHint()
+# print(hints.countWords(newPuzzle))
