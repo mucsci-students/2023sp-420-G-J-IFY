@@ -13,10 +13,9 @@
 
 import sqlite3
 from random import randrange
-import puzzle as saveState
-import dbFixer
+import model.puzzle as saveState
 import itertools
-import output
+import model.output as output
 from itertools import chain, combinations
 
 

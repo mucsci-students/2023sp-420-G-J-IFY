@@ -11,9 +11,8 @@ import sqlite3
 import random
 import sqlite3
 import itertools
-import dbFixer
 from itertools import chain, combinations
-import MakePuzzle
+import model.MakePuzzle as MakePuzzle
 
 
 ################################################################################

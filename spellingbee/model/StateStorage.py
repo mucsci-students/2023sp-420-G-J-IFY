@@ -15,11 +15,10 @@
 #       - saves a current state of a puzzle
 ################################################################################
 import sys
-import dbFixer
 import os
 import sqlite3  # for saveGameChecker
-import MakePuzzle  # for saveGameChecker
-import output
+import model.MakePuzzle as MakePuzzle  # for saveGameChecker
+import model.output as output
 import platform
 
 current = os.path.dirname(os.path.realpath(__file__))
