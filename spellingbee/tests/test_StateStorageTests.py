@@ -134,8 +134,8 @@ def testSaveCurrentPlayed(playedPuzzle):
     with open("TESTFILE2.json") as file:
         dict = json.load(file)
     #spellingbee.move3dirBack()
-    assert(checkContents('TESTFILE2.JSON',dict))
-    removeSave('TESTFILE2.JSON')
+    assert(checkContents('TESTFILE2.json',dict))
+    removeSave('TESTFILE2.json')
     
     
     # tests the savePuzzle function to see if the information saved is saved correctly
