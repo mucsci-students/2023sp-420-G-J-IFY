@@ -10,13 +10,12 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 #import spellingbee
 import unittest
-import model.puzzle as Puzzle
-
+import puzzle
 
 
 @pytest.fixture
 def puzzleFixture():
-    return Puzzle.Puzzle('a', 'warlock')
+    return puzzle.Puzzle('a', 'warlock')
 
 def testEmptyPuzzleKeyLett(puzzleFixture):
     assert(puzzleFixture.keyLett == 'a')

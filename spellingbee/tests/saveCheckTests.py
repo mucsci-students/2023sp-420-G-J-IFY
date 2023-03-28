@@ -19,7 +19,7 @@
 import sqlite3
 import unittest
 import json
-from model import StateStorage
+import StateStorage
 import os
 import sys
 current = os.path.dirname(os.path.realpath(__file__))
@@ -27,9 +27,9 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 import os.path
 from os import path
-from model import MakePuzzle
+import MakePuzzle
 from pathlib import Path
-import model.output as output
+import output
 
 def Load(fileName):
     # checks if file exists
