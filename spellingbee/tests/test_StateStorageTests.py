@@ -18,7 +18,7 @@ import StateStorage as spellingbee
 #import spellingbee
 import json
 import unittest
-import puzzle
+from model.puzzle import Puzzle
 import MakePuzzle
 
 #Globals
@@ -36,7 +36,7 @@ def makeRandomJsonName():
         return result
     
 def makeShortestGame():
-       obj = puzzle.Puzzle('q', 'kamotiq')
+       obj = Puzzle('q', 'kamotiq')
        obj.allWordList = ['kamotiq']
        obj.maxScore = 14
        return obj
@@ -96,7 +96,7 @@ def puzzleFixture():
                           "cloacal", "corolla", "oarlock", "warlock", "warwork", 
                           "callaloo", "caracara", "rackwork", "wallaroo"]}    
 
-    obj = puzzle.Puzzle('a','warlock')
+    obj = Puzzle('a','warlock')
 
     obj.uniqueLett = dict["PuzzleLetters"]
     obj.allWordList = dict["WordList"]
