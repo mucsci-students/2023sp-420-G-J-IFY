@@ -16,7 +16,6 @@
 #
 ################################################################################
 
-import sqlite3
 import unittest
 import json
 import StateStorage
@@ -27,7 +26,6 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 import os.path
 from os import path
-import MakePuzzle
 from pathlib import Path
 import output
 
