@@ -394,6 +394,9 @@ class Puzzle:
     #   none
     ############################################################################
     def checkBingo(self):
+        if self.foundWordList == []:
+            return False
+        
         bingoList = [x[0].lower for x in self.foundWordList]
         bingoList = set(bingoList)
         return bingoList == self.getUniqueLetters()
