@@ -179,10 +179,10 @@ class hint:
 
 # For displaying and testing functionality, remove comments here
 # and play around with any puzzle
-# newPuzzle = puzzle.Puzzle("a", "acklrow")
-# newPuzzle = puzzle.Puzzle("s", "eflnpsu")
-# newPuzzle = puzzle.Puzzle("n", "cenorsu")
-# hints = hint(newPuzzle)
-# hints.makeHintGrid(newPuzzle)
-# hints.printHint()
-# print(hints.countWords(newPuzzle))
+#newPuzzle = puzzle.Puzzle("a", "acklrow")
+#newPuzzle = puzzle.Puzzle("s", "eflnpsu")
+#newPuzzle = puzzle.Puzzle("n", "cenorsu")
+#hints = hint(newPuzzle)
+#hints.makeHintGrid(newPuzzle)
+#hints.printHint()
+#print(hints.countWords(newPuzzle))
