@@ -428,18 +428,22 @@ def checkLoad(dictDict):
         if score == None:
             raise KeyError
 
-        # if score mismatch, remake word list from our DB
-        if score[0] != maxPoints:
-            maxPoints = score[0]
-            # generateWordList
-            wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, requiredLetter)
+        # just remake score and word list from our DB
+        maxPoints = score[0]
+        # generateWordList every time
+        wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, requiredLetter)
+
+        badWords = []
 
         # check to make sure all guesses are valid
         if not set(guessedWords).issubset(set(wordList)):
             for word in guessedWords:
-                # prune any bad guesses from list
+                # make a list of all the bad guesses
                 if word not in wordList:
-                    guessedWords.remove(word)
+                    badWords.append(word)
+            for thing in badWords:
+                guessedWords.remove(thing)
+            print(badWords + " were not valid words in the game and have been removed")
 
         # rescore the validated guess list
         tempTable = "create temporary table guessWords (guesses);"
