@@ -12,26 +12,16 @@
 ################################################################################
 import puzzle
 import MakePuzzle
-#import sqlite3
+
+# import sqlite3
+
 
 class hint:
     def __init__(self, obj: puzzle.Puzzle):
         rows, cols = (8, 14)
         self.hint = [[0 for i in range(cols)] for j in range(rows)]
         obj.findAllWords()
-
-    ############################################################################
-    # printHint()
-    #
-    # Description:
-    #   Prints the entire 2D list
-    #
-    # Parameters:
-    #   None
-    ############################################################################
-    def printHint(self):
-        for rows in self.hint:
-            print(rows)
+        # self.bingo = obj.bingo()
 
     ############################################################################
     # countWords(obj: puzzle.Puzzle) -> int
@@ -47,6 +37,22 @@ class hint:
         numWords = len(obj.getAllWords())
         return numWords
 
+    ############################################################################
+    # countWordsCheck(obj: puzzle.Puzzle) -> int
+    #
+    # Description:
+    #   Used as an assurance for countWords() for correctness
+    #
+    # Parameters:
+    #   obj
+    #      Object to be lengthed
+    ############################################################################
+    def countWordsCheck(obj: puzzle.Puzzle) -> int:
+        return len(
+            MakePuzzle.getAllWordsFromPangram(
+                obj.getUniqueLetters(), obj.getKeyLetter()
+            )
+        )
 
     ############################################################################
     # makeHintGrid(obj: puzzle.Puzzle)
@@ -73,7 +79,7 @@ class hint:
         counter = 0
         lett = 0
         total = 0
-        
+
         # For each letter
         for x in range(len(obj.getUniqueLetters())):
             # Check each word in the list of all words
@@ -87,23 +93,23 @@ class hint:
                             total += 1
                             break
                     # All words of a length counted so record that value
-                    self.hint[lett][wordLen-3] = counter
+                    self.hint[lett][wordLen - 3] = counter
                 else:
                     # New word of next length up
                     counter = 0
                     wordLen += 1
                     if len(i) != wordLen:
-                        for i in range((wordLen - len(i))-1):
+                        for i in range((wordLen - len(i)) - 1):
                             wordLen += 1
-                    
+
                     if len(i) == wordLen:
                         if i[0] == obj.uniqueLett[lett]:
                             # Count the word and add to the total
                             counter += 1
                             total += 1
-                            if allWords[len(allWords)-1:len(allWords)] != []:
-                                self.hint[lett][wordLen-3] = counter
-                                
+                            if allWords[len(allWords) - 1 : len(allWords)] != []:
+                                self.hint[lett][wordLen - 3] = counter
+
                 # Record total since all words have been counted of a starting letter
                 self.hint[lett][13] = total
             # Reset variables to count the next words with a new starting letter
@@ -111,7 +117,7 @@ class hint:
             counter = 0
             total = 0
             lett += 1
-        
+
         # Now we calculate the total of each column
         lenTotal = 0
         # The -1 in both loops for the ranges omits the last column and last row to avoid double counting
@@ -120,26 +126,38 @@ class hint:
                 # The -2 here checks if the i is at column 12, which is the last column
                 if i == len(self.hint[0]) - 2:
                     # If it is, -1 to be at column 11
-                    #i -= 1
+                    # i -= 1
                     pass
                 # Add total in this column (i+1 is to skip the first column entirely)
-                lenTotal += self.hint[j][i+1]
+                lenTotal += self.hint[j][i + 1]
             # Record total for this column then set column total to 0
-            self.hint[7][i+1] = lenTotal
+            self.hint[7][i + 1] = lenTotal
             lenTotal = 0
-            
+
     ############################################################################
-    # countWordsCheck(obj: puzzle.Puzzle) -> int
+    # getHintGrid()
     #
     # Description:
-    #   Used as an assurance for countWords() for correctness
+    #   Creates the entire 2D list in a nice format
     #
     # Parameters:
-    #   obj
-    #      Object to be lengthed
+    #   None
     ############################################################################
-    def countWordsCheck(obj: puzzle.Puzzle) -> int:
-        return len(MakePuzzle.getAllWordsFromPangram(obj.getUniqueLetters(), obj.getKeyLetter()))
+    def getHintGrid(self) -> list[list[int]]:
+        return self.hint
+
+    ############################################################################
+    # printHint()
+    #
+    # Description:
+    #   Prints the entire 2D list
+    #
+    # Parameters:
+    #   None
+    ############################################################################
+    def printHint(self):
+        for rows in self.hint:
+            print(rows)
 
     ############################################################################
     # numPangrams()
@@ -176,16 +194,21 @@ class hint:
     ############################################################################
     def twoLetterList(obj: puzzle.Puzzle):
         pass
-    
+
+    def getTwoLetterList(self):
+        pass
+
     def printTwoLetterList(obj: puzzle.Puzzle):
         pass
 
+
 # For displaying and testing functionality, remove comments here
 # and play around with any puzzle
-#newPuzzle = puzzle.Puzzle("a", "acklrow")
-#newPuzzle = puzzle.Puzzle("s", "eflnpsu")
-#newPuzzle = puzzle.Puzzle("n", "cenorsu")
-#hints = hint(newPuzzle)
-#hints.makeHintGrid(newPuzzle)
-#hints.printHint()
-#print(hints.countWords(newPuzzle))
+# newPuzzle = puzzle.Puzzle("a", "acklrow")
+# newPuzzle = puzzle.Puzzle("s", "eflnpsu")
+# newPuzzle = puzzle.Puzzle("n", "cenorsu")
+# hints = hint(newPuzzle)
+# hints.makeHintGrid(newPuzzle)
+# get = hints.getHintGrid()
+# hints.printHint()
+# print(hints.countWords(newPuzzle))
