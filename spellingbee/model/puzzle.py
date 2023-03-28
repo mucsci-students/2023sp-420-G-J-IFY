@@ -12,7 +12,7 @@ import random
 import sqlite3
 import itertools
 from itertools import chain, combinations
-import model.MakePuzzle as MakePuzzle
+import MakePuzzle
 
 
 ################################################################################
