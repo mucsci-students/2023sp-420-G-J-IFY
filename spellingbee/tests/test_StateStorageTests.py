@@ -7,14 +7,14 @@ import string
 import random
 import sys
 import os
-import output
+import outty
 from pathlib import Path
 current = os.path.dirname(os.path.realpath(__file__))
 
 parent = os.path.dirname(current)
 
 sys.path.append(parent)
-import model.StateStorage as spellingbee
+import StateStorage as spellingbee
 #import spellingbee
 import json
 import unittest
@@ -22,7 +22,7 @@ import puzzle
 import MakePuzzle
 
 #Globals
-outty = output.Output()
+outty = outty.Output()
 list =[]
 
 
