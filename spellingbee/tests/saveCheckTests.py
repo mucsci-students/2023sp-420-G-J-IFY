@@ -27,7 +27,7 @@ sys.path.append(parent)
 import os.path
 from os import path
 from pathlib import Path
-import output
+import model.output
 
 def Load(fileName):
     # checks if file exists
@@ -166,7 +166,7 @@ class saveCheckTests(unittest.TestCase):
 
         # tests to see if the wordlist is correctly converted
         try:
-            outty = output.Output()
+            outty = model.output.Output()
             dict = Load('warlock')
             dictlen = len(dict['WordList'])
             assert(len(dict2['WordList']) == dictlen)

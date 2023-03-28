@@ -10,7 +10,7 @@
 
 import hint
 import puzzle
-#import pytest
+import pytest
 
 ################################################################################
 # TESTS

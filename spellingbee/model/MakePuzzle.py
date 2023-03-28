@@ -15,7 +15,7 @@ import sqlite3
 from random import randrange
 import puzzle
 import itertools
-import output as output
+import output
 from itertools import chain, combinations
 
 
