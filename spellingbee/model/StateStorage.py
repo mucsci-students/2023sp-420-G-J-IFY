@@ -17,23 +17,17 @@
 import sys
 import os
 import sqlite3  # for saveGameChecker
-import model.MakePuzzle as MakePuzzle  # for saveGameChecker
-import model.output as output
-import platform
+import MakePuzzle  # for saveGameChecker
 
 current = os.path.dirname(os.path.realpath(__file__))
-
 parent = os.path.dirname(current)
-
 sys.path.append(parent)
 
 import json
-import string
 import os.path
 from os import path
 import model
 from pathlib import Path
-import shutil
 
 
 ################################################################################

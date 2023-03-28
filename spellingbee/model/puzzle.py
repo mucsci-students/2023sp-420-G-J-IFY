@@ -4,16 +4,8 @@
 # Date of Creation: 2-2-2023
 ################################################################################
 
-
-import sqlite3
-
-# import model.generateSubset as generateSubset
 import random
-import sqlite3
-import itertools
-from itertools import chain, combinations
 import MakePuzzle
-
 
 ################################################################################
 # class Puzzle()
