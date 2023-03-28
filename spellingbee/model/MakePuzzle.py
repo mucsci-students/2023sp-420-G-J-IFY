@@ -13,7 +13,7 @@
 
 import sqlite3
 from random import randrange
-import puzzle as saveState
+import puzzle
 import itertools
 import output as output
 from itertools import chain, combinations
@@ -104,18 +104,19 @@ def newPuzzle(baseWord: str, keyLetter: str, outty: output, flag: bool) -> objec
             conn.close()
 
         # Creates the puzzle for users to solve
-        puzzle = saveState.Puzzle(keyLetter, uniqueLetters)
+        newPuzzle = puzzle.Puzzle(keyLetter, uniqueLetters)
         # Populates the puzzles wordlist
-        puzzle.findAllWords()
+        newPuzzle.findAllWords()
         # Generates a max score
-        puzzle.setMaxScore(maxScore)
+        newPuzzle.setMaxScore(maxScore)
         # Generates rank
-        puzzle.updateRank()
+        newPuzzle.updateRank()
 
         # outty.setField('Puzzle creation successful.\nLetters: {}\nKeyletter: {}'
         #               .format(puzzle.getUniqueLetters(), puzzle.getKeyLetter()))
 
-        return puzzle
+        return newPuzzle
+    
     # Raise exception for bad puzzle seed
     except BadQueryException:
         if flag == False:
