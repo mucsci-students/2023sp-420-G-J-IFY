@@ -7,22 +7,22 @@ import string
 import random
 import sys
 import os
-import model.output as output
+import model.output
 from pathlib import Path
 current = os.path.dirname(os.path.realpath(__file__))
 
 parent = os.path.dirname(current)
 
 sys.path.append(parent)
-import model.StateStorage as spellingbee
+import StateStorage as spellingbee
 #import spellingbee
 import json
 import unittest
-import model.puzzle as Puzzle
-import model.MakePuzzle as MakePuzzle
+from model.puzzle import Puzzle
+import MakePuzzle
 
 #Globals
-outty = output.Output()
+outty = model.output.Output()
 list =[]
 
 
@@ -36,7 +36,7 @@ def makeRandomJsonName():
         return result
     
 def makeShortestGame():
-       obj = Puzzle.Puzzle('q', 'kamotiq')
+       obj = Puzzle('q', 'kamotiq')
        obj.allWordList = ['kamotiq']
        obj.maxScore = 14
        return obj
@@ -96,7 +96,7 @@ def puzzleFixture():
                           "cloacal", "corolla", "oarlock", "warlock", "warwork", 
                           "callaloo", "caracara", "rackwork", "wallaroo"]}    
 
-    obj = Puzzle.Puzzle('a','warlock')
+    obj = Puzzle('a','warlock')
 
     obj.uniqueLett = dict["PuzzleLetters"]
     obj.allWordList = dict["WordList"]
