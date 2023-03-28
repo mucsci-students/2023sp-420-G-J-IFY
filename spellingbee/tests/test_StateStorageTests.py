@@ -7,7 +7,7 @@ import string
 import random
 import sys
 import os
-import output
+import model.output
 from pathlib import Path
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -22,7 +22,7 @@ import puzzle
 import MakePuzzle
 
 #Globals
-outty = output.Output()
+outty = model.output.Output()
 list =[]
 
 

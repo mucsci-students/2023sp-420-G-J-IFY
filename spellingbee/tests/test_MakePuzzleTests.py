@@ -1,8 +1,8 @@
 # Author: Francesco Spagnolo
 import sys
 import os
-import output
-outty = output.Output()
+import model.output
+outty = model.output.Output()
 current = os.path.dirname(os.path.realpath(__file__))
 
 parent = os.path.dirname(current)
@@ -12,9 +12,8 @@ sys.path.append(parent)
 import unittest
 
 #import spellingbee
-import sqlite3
 from random import randrange
-import model.MakePuzzle as spellingbee
+import MakePuzzle as spellingbee
 import pytest
 
 @pytest.fixture
