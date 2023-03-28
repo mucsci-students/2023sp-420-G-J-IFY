@@ -69,6 +69,8 @@ import MakePuzzle
 #     - sets the finished flag in puzzle
 #   setPointsTilRank(points: int)
 #     - sets the points til rank
+#   checkBingo() -> bool
+#     - parses the words list to determine if the game has a bingo
 #   findAllWords()
 #     - generates a list of valid guessable words
 #   updateFoundWords(word: str)
@@ -379,6 +381,23 @@ class Puzzle:
     ############################################################################
     def setPointsTilRank(self, points):
         self.pointsTilRank = round(points)
+
+    ############################################################################
+    # checkBingo(self) -> bool
+    #
+    # Description:
+    #   Makes of list of the first letter of all found words
+    #   converts list to a set to get only one instance of each letter
+    #   compares converted list to the unique letters list
+    #
+    # Parameters:
+    #   none
+    ############################################################################
+    def checkBingo(self):
+        bingoList = [x[0].lower for x in self.foundWordList]
+        bingoList = set(bingoList)
+        return bingoList == self.getUniqueLetters()
+        
 
     ############################################################################
     # findAllWords(self)
