@@ -176,6 +176,9 @@ class hint:
     ############################################################################
     def twoLetterList(obj: puzzle.Puzzle):
         pass
+    
+    def printTwoLetterList(obj: puzzle.Puzzle):
+        pass
 
 # For displaying and testing functionality, remove comments here
 # and play around with any puzzle
