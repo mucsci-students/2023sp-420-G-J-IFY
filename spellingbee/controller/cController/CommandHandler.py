@@ -46,7 +46,9 @@ sys.path.append(parent)
 
 from View.CLI import CLI
 from model import MakePuzzle, StateStorage
+from model import hint
 from os import path
+
 
 commands = [
     '!new',
@@ -58,7 +60,8 @@ commands = [
     '!savePuzzle',
     '!load',
     '!help',
-    '!exit'
+    '!exit',
+    '!hint'
 ]
 
 ################################################################################
@@ -113,6 +116,8 @@ def parse(usrinput : str, game : object, outty) -> object:
         case '!exit':
             exit(game, outty)
             return game
+        case '!hint':
+            hints(game, outty)
         case _:
             if usrinput.startswith('!'):
                 outty.setField('Command not recognized. Type \"!help\" for a list of '
@@ -390,3 +395,105 @@ def handleSave(game : object, num : int, outty : object) -> None:
 def finalGame(finishedPuzzle : object, outty) -> None:
     showStatus(finishedPuzzle)
     outty.setField("Congratulations!!!! You have found all of the words for this puzzle!")  
+
+################################################################################
+# hints(puzzle: object, outty: object) -> None
+#
+# DESCRIPTION:
+#   Prints the hints, including the hints gird, number of words, 2 letter list, etc
+# PARAMETERS:
+#   puzzle : object
+#     - puzzle object for the currently active game.
+#   outty : object
+#     - output object storing output strings
+
+################################################################################
+def hints(game: object, outty: object) -> None:
+    gameLetters = formatGameLetts(game)
+    hintHeader = ('Spelling Bee Hint Grid \ '
+                  ' \ '
+                  'Center letter is capitalized. \ '
+                  ' \ '
+                  f'{gameLetters}'
+                  
+                )
+    
+    lengthHeaderStr = lengthHeader()
+    hintGrid = formatHintGrid(game)
+
+    grid = (f'{lengthHeaderStr} \ '
+            f'{hintGrid}')
+    
+    CLI.drawTextBox([hintHeader, grid], 60, '<')
+
+################################################################################
+# formatGameLetts(game:object) -> str
+#
+# DESCRIPTION:
+#   Formats the letters of the Game to be printed
+# PARAMETERS:
+#   puzzle : object
+#     - puzzle object for the currently active game.
+# Returns:
+#   fStr: str
+#       a format string of the game letters
+
+################################################################################
+def formatGameLetts(game:object) -> str:
+    fStr = ''
+    uniqueLetters = game.getShuffleLetters()
+
+    counter = 0
+    for i in uniqueLetters:
+        if counter == 0:
+            fStr += i.capitalize() + ' '
+        else:
+            fStr += i + ' '
+        counter += 1
+    return fStr
+
+################################################################################
+# formatHintGrid(game:object) -> str
+#
+# DESCRIPTION:
+#   Formats the the hints grid of the Game to be printed
+# PARAMETERS:
+#   puzzle : object
+#     - puzzle object for the currently active game.
+# Returns:
+#   fStr: str
+#       a format string of the hint grid
+
+################################################################################
+def formatHintGrid(game:object) -> str:
+    hintGrid = hint.hint(game)
+    hintGrid.makeHintGrid(game)
+    lst = hintGrid.hint
+    fStr = ''
+    for i in lst:
+        fStr += f'{i} \ '
+    return fStr
+
+################################################################################
+# lengthHeader() -> str
+#
+# DESCRIPTION:
+#   Formats the word lengths of the Game to be printed
+# PARAMETERS:
+#   puzzle : object
+#     - puzzle object for the currently active game.
+# Returns:
+#   fStr: str
+#       a format string of the lengths of the words including sigma
+
+################################################################################
+def lengthHeader() -> str:
+    fStr =''
+    sigma = "Σ"
+    for i in range(4,17):
+        if i == 16:
+            fStr += f'{sigma:>5}'
+        else:
+            fStr += f'{i:10}'
+
+    return fStr
