@@ -289,45 +289,160 @@ class GController():
             saveStatus = True
         self.window.owDialog.accept()
 
-    def hint(self):
+    ################################################################################
+    # hint(self) -> None:
+    #
+    # DESCRIPTION:
+    #   Displays a dialog window of the hints grid
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    ################################################################################
+    def hint(self) -> None:
+        # dialog window
         dlg = QMessageBox(parent=self.window)
+
+        # hint object
         obj = hint.hint(self.puzzle)
         obj.makeHintGrid(self.puzzle)
+
+        # list representation of the hint grid
         lst = obj.hint
+
+        # format String containing the Grid
         fStr = self.buildHintGrid(lst)
+
         dlg.setBaseSize(500,700)
         dlg.setText(fStr)
-        dlg.setLayout(self.populateHintGrid(dlg, lst))
+        #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
         #execute command
         #parse data
         #display 2 user
     
-    def formatHintsHeader(self):
+    ################################################################################
+    # formatHintsHeader(self) -> str:
+    #
+    # DESCRIPTION:
+    #   formats the hint grids header
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #
+    # RETURNS:
+    #   fStr : str
+    #       format String that contains the hint grid header
+    ################################################################################
+    def formatHintsHeader(self) -> str:
         fStr = 'Spelling Bee Grid \n\n\n'
         fStr += 'Center Letter is in bold.\n\n'
         fStr += self.puzzle.getUniqueLetters() + '\n\n\n'
         return fStr
-
+    
+    ################################################################################
+    # removeEmptyColumn(self, lst):
+    #
+    # DESCRIPTION:
+    #   removes empty columns from the grid
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #   
+    #   lst : List[List[int]]
+    #
+    ################################################################################
     def removeEmptyColumn(self, lst):
         pass
 
-    def buildHintGrid(self,lst : hint):
+    ################################################################################
+    # buildHintGrid(self,lst : hint):
+    #
+    # DESCRIPTION:
+    #   builds the Hints grid
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #
+    #   lst: List[List[int]]
+    #       list representation of the hint grid
+    #
+    # RETURN:
+    #   fStr: str
+    #       format string containing the complete hint grid
+    ################################################################################
+    def buildHintGrid(self,lst : hint) -> str:
         #build hint grid
         fStr =''
         letters = ''
-        sigma = 'Σ'
         fStr += self.formatHintsHeader()
         # builds a string of the unique letters from the 2d list
-        for i in range(8):
-            letters += str(lst[i][0]).capitalize()
-
-
-        for i in range(8):
-            lst[i].pop(0)
+        letters = self.getLettersFromGrid(lst)
         
         fStr += '    '
 
+        #print the word lengths from 4 - sigma
+        
+        fStr += self.formatLengthHeader()
+
+        fStr += self.formatHintsGrid(lst, letters)
+        #print the body of the grid
+        
+
+        fStr += "\nTwo Letter List:\n\n"
+        
+        return fStr
+        #return a formated string of the grid
+    
+    ################################################################################
+    # getLettersFromGrid(lst) -> str:
+    #
+    # DESCRIPTION:
+    #   Gets the letters from the 2d list and removes them the returns the letters
+    #
+    # PARAMETERS:
+    #   lst : list[list[str]]
+    #
+    # RETURN:
+    #   letters : str
+    #       letters of the puzzle
+    ################################################################################
+    def getLettersFromGrid(self, lst) -> str:
+        letters = ''
+        for i in range(8):
+            letters += str(lst[i][0]).capitalize()
+        return letters
+    
+    def formatHintsGrid(self,lst ,letters) -> str:
+        fStr =''
+        for i in range(8):
+            fStr += f'{letters[i]}:'
+            for y in range(0, 13):
+                if y == 0:
+                    fStr += f' {lst[i][y]:>5}'
+                else:
+                    fStr += f' {lst[i][y]:>5}'
+            fStr += '\n\n'
+        return fStr
+    ################################################################################
+    # formatLengthHeader() -> str:
+    #
+    # DESCRIPTION:
+    #   formats the lengths of the words to be displayed for the hint grid
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURN:
+    #   fStr : str
+    #       format String of the lengths Header
+    ################################################################################
+    def formatLengthHeader(self) -> str:
+        sigma = 'Σ'
+        fStr = ''
         for i in range(4, 17):
             if i != 0 and i != 16:   
                 fStr += f'{i:5} '
@@ -335,25 +450,27 @@ class GController():
                 fStr += f'{sigma:5}'
         fStr += '\n\n'
 
-
-        for i in range(8):
-            fStr += f'{letters[i]}:'
-
-            '''
-            for y in range(0, 13):
-                if y == 0:
-                    fStr += f' {lst[i][y]:>5}'
-                else:
-                    fStr += f' {lst[i][y]:>5}'
-            '''
-            fStr += '\n\n'
-
-            #fStr += "\nTwo Letter List:\n\n"
-        
         return fStr
-        #return a formated string of the grid
         
-    def populateHintGrid(parent, grid) -> QGridLayout:
+    ################################################################################
+    # populateHintGrid(self, parent, grid) -> QGridLayout:
+    #
+    # DESCRIPTION:
+    #   populate the hints grid
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #   parent : 
+    #       parent of the window
+    #   grid : List[List[int]]
+    #       List representation of the hint grid
+    #
+    # RETURN:
+    #   gridLayout : QGridLayout
+    #       The layout of the hint grid
+    ################################################################################
+    def populateHintGrid(self, parent, grid) -> QGridLayout:
 
         # Create QGridLayout object
         gridLayout = QGridLayout(parent)
@@ -367,31 +484,6 @@ class GController():
                 gridLayout.addWidget(lbl, row, col)
             
         return gridLayout
-
-################################################################################
-# openExplorer() -> None:
-#
-# DESCRIPTION:
-#  opens the file explorer and returns the path to the selected file
-#
-# PARAMETERS:
-#   none
-# RETURNS:
-#   filePath  
-#       the path to the file selected
-
-################################################################################
-def openExplorer() -> path:
-    filetypes = (
-        ('textFiles', '*.json'),
-        ('All files' , '*.*')
-        )
-
-    filePath = fd.askopenfilename(
-            title = 'open a file',
-            initialdir= '/',
-            filetypes =filetypes)
-    return filePath
 
 def main():
     outty = output.Output()
