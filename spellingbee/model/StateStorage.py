@@ -405,11 +405,9 @@ def checkLoad(dictDict):
         # load specific dictionary fields into local variables
         # THROWS EXCEPTION IF KEY IS NOT IN DICT
         guessedWords = allLower(dictDict["GuessedWords"])
-        wordList = allLower(dictDict["WordList"])
         puzzleLetters = dictDict["PuzzleLetters"].lower()
         requiredLetter = dictDict["RequiredLetter"].lower()
         currentPoints = dictDict["CurrentPoints"]
-        maxPoints = dictDict["MaxPoints"]
 
         # check if the unique letters/keyletter combo is in our DB
         # append requiredLetter to puzzleLetters just in case they fucked
@@ -469,7 +467,7 @@ def checkLoad(dictDict):
         # at this point, all fields are validates in our game, remake dictionary
         dictDict["GuessedWords"] = guessedWords
         dictDict["WordList"] = wordList
-        dictDict["PuzzleLetters"] = puzzleLetters
+        dictDict["PuzzleLetters"] = uniqueLetters
         dictDict["RequiredLetter"] = requiredLetter
         dictDict["CurrentPoints"] = currentPoints
         dictDict["MaxPoints"] = maxPoints
