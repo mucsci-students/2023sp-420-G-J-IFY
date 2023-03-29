@@ -130,7 +130,7 @@ class MainWindow(QMainWindow):
         saveAction = QAction('Save', self)
         self.loadAction = QAction('Load', self)
         helpAction = QAction('Help', self)
-        hintAction = QAction('Hint', self)
+        self.hintAction = QAction('Hint', self)
 
         newAction.triggered.connect(self.newDialog.show)
         saveAction.triggered.connect(self.saveDialog.show)
@@ -142,7 +142,7 @@ class MainWindow(QMainWindow):
         toolBar.addAction(saveAction)
         toolBar.addAction(self.loadAction)
         toolBar.addAction(helpAction)
-        toolBar.addAction(hintAction)
+        toolBar.addAction(self.hintAction)
 
         return toolBar
 

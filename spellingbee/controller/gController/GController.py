@@ -32,9 +32,10 @@ from View.GUI.MainWindow import MainWindow
 from model import MakePuzzle, StateStorage, output
 from model.puzzle import Puzzle
 import PyQt6
+import model.hint as hint
 from PyQt6.QtCore import QEvent
-from PyQt6.QtWidgets import QApplication, QFileDialog
-from tkinter import filedialog as fd
+from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QVBoxLayout, QTextEdit, QLabel, QGridLayout
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
@@ -93,6 +94,8 @@ class GController():
         self.window.centralWidget.delBtn.clicked.connect(self.deleteInput)  
 
         self.window.loadAction.triggered.connect(self.loadGame)
+
+        self.window.hintAction.triggered.connect(self.hint)
         
 
     ################################################################################
@@ -286,6 +289,85 @@ class GController():
             saveStatus = True
         self.window.owDialog.accept()
 
+    def hint(self):
+        dlg = QMessageBox(parent=self.window)
+        obj = hint.hint(self.puzzle)
+        obj.makeHintGrid(self.puzzle)
+        lst = obj.hint
+        fStr = self.buildHintGrid(lst)
+        dlg.setBaseSize(500,700)
+        dlg.setText(fStr)
+        dlg.setLayout(self.populateHintGrid(dlg, lst))
+        dlg.show()
+        #execute command
+        #parse data
+        #display 2 user
+    
+    def formatHintsHeader(self):
+        fStr = 'Spelling Bee Grid \n\n\n'
+        fStr += 'Center Letter is in bold.\n\n'
+        fStr += self.puzzle.getUniqueLetters() + '\n\n\n'
+        return fStr
+
+    def removeEmptyColumn(self, lst):
+        pass
+
+    def buildHintGrid(self,lst : hint):
+        #build hint grid
+        fStr =''
+        letters = ''
+        sigma = 'Σ'
+        fStr += self.formatHintsHeader()
+        # builds a string of the unique letters from the 2d list
+        for i in range(8):
+            letters += str(lst[i][0]).capitalize()
+
+
+        for i in range(8):
+            lst[i].pop(0)
+        
+        fStr += '    '
+
+        for i in range(4, 17):
+            if i != 0 and i != 16:   
+                fStr += f'{i:5} '
+            if i == 16:
+                fStr += f'{sigma:5}'
+        fStr += '\n\n'
+
+
+        for i in range(8):
+            fStr += f'{letters[i]}:'
+
+            '''
+            for y in range(0, 13):
+                if y == 0:
+                    fStr += f' {lst[i][y]:>5}'
+                else:
+                    fStr += f' {lst[i][y]:>5}'
+            '''
+            fStr += '\n\n'
+
+            #fStr += "\nTwo Letter List:\n\n"
+        
+        return fStr
+        #return a formated string of the grid
+        
+    def populateHintGrid(parent, grid) -> QGridLayout:
+
+        # Create QGridLayout object
+        gridLayout = QGridLayout(parent)
+            
+        # Iterate 2D List
+        for row in grid:
+            for col in row:
+            # For each element in the grid, create a label with text as element,
+            #  then add label to the grid layout at position [row][col]
+                lbl = QLabel(text=grid[row][col])
+                gridLayout.addWidget(lbl, row, col)
+            
+        return gridLayout
+
 ################################################################################
 # openExplorer() -> None:
 #
@@ -310,7 +392,6 @@ def openExplorer() -> path:
             initialdir= '/',
             filetypes =filetypes)
     return filePath
-
 
 def main():
     outty = output.Output()
