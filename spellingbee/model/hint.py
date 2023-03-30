@@ -160,7 +160,7 @@ class hint:
         # Grabs a random baseword from the list
         wordDictC.execute(
             """ SELECT COUNT(fullWord)
-                        FROM pangram
+                        FROM pangrams
                         WHERE uniqueLetters LIKE %
                         """ + ulString
         )
@@ -193,7 +193,7 @@ class hint:
         # Grabs a random baseword from the list
         wordDictC.execute(
             """ SELECT COUNT(fullWord)
-                        FROM pangram join dictionary
+                        FROM pangrams join dictionary
                         WHERE uniqueLetters like
                         """ + ulString + """ AND score = 14"""
         )
