@@ -398,8 +398,8 @@ class Puzzle:
             return False
         
         bingoList = [x[0].lower for x in self.foundWordList]
-        bingoList = set(bingoList.sort())
-        return bingoList == self.getUniqueLetters()
+        # bingoList = set(bingoList.sort())
+        return len(bingoList) == 7
         
 
     ############################################################################
