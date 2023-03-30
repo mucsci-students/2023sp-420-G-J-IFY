@@ -414,9 +414,8 @@ def hints(game: object, outty: object) -> None:
     hintGrid.makeHintGrid(game)
     hintHeader = ('Spelling Bee Hint Grid \n\n\n'
                   'Center letter is capitalized. \n\n '
-                  f'{gameLetters} \n\n'
-                  'WORDS: ' + f'{hintGrid.countWords(game)}, POINTS: ' + str(game.maxScore) + ', PANGRAMS: ' +  str(hintGrid.numPangrams(game)) + ' ('  + str(hintGrid.numPerfectPangram(game)) + ' Perfect)' 
-
+                  f'{gameLetters} \n\n\n'
+                  'WORDS: ' + f'{hintGrid.countWords(game)}, POINTS: ' + str(game.maxScore) + ', PANGRAMS: ' +  str(hintGrid.numPangrams(game)) + ' ('  + str(hintGrid.numPerfectPangram(game)) + ' Perfect) BINGO: '+ str(game.checkBingo())+ '\n'
                 )
     hintGrid = hint.hint(game)
     hintGrid.makeHintGrid(game)
