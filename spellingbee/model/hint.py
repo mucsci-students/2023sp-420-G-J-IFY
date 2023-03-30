@@ -14,6 +14,8 @@ import puzzle
 import MakePuzzle
 import sqlite3
 
+import sqlite3
+
 
 class hint:
     def __init__(self, obj: puzzle.Puzzle):
