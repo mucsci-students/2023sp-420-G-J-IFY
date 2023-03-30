@@ -184,6 +184,7 @@ class hint:
     #   None
     ############################################################################
     def numPerfectPangram(self) -> int:
+        ulString = puzzle.getUniqueLetters()
         # SQLite Connections
         wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
 
@@ -191,11 +192,10 @@ class hint:
         wordDictC = wordDict.cursor()
         # Grabs a random baseword from the list
         wordDictC.execute(
-            """ SELECT *
-                        FROM allGames 
-                        ORDER BY RANDOM() 
-                        Limit 1;
-                        """
+            """ SELECT COUNT(fullWord)
+                        FROM pangram
+                        WHERE uniqueLetters =
+                        """ + ulString
         )
         # catch return from querey
         resultResult = wordDictC.fetchone()
