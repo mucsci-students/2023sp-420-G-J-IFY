@@ -296,6 +296,7 @@ class hint:
 # newPuzzle = puzzle.Puzzle("a", "acklrow")
 # newPuzzle = puzzle.Puzzle("s", "eflnpsu")
 # newPuzzle = puzzle.Puzzle("n", "cenorsu")
+# newPuzzle = puzzle.Puzzle("p", "cenopt")
 # hints = hint(newPuzzle)
 
 # HINT GRID
