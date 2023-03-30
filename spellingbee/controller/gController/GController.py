@@ -359,7 +359,7 @@ class GController():
                 fStr += i + ' '
             counter += 1
         fStr += '\n\n\n'
-        fStr += 'WORDS: ' + str(hint.countWords(self.puzzle)) + ', POINTS: ' + str(self.puzzle.maxScore) + ', PANGRAMS: ' +  str(hint.numPangrams(self.puzzle)) + ' ('  + str(hint.numPerfectPangram(self.puzzle)) + ' Perfect)\n\n\n' 
+        fStr += 'WORDS: ' + str(hint.countWords(self.puzzle)) + ', POINTS: ' + str(self.puzzle.maxScore) + ', PANGRAMS: ' +  str(hint.numPangrams(self.puzzle)) + ' ('  + str(hint.numPerfectPangram(self.puzzle)) + ' Perfect), BINGO: '+ str(self.puzzle.checkBingo())+ '\n\n\n' 
 
         return fStr
     
