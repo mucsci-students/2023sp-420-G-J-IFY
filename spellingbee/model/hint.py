@@ -193,9 +193,9 @@ class hint:
         # Grabs a random baseword from the list
         wordDictC.execute(
             """ SELECT COUNT(fullWord)
-                        FROM pangram
-                        WHERE uniqueLetters =
-                        """ + ulString
+                        FROM pangram join dictionary
+                        WHERE uniqueLetters like
+                        """ + ulString + """ AND score = 14"""
         )
         # catch return from querey
         resultResult = wordDictC.fetchone()
