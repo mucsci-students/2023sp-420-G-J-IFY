@@ -308,7 +308,7 @@ class GController():
         layout = QVBoxLayout()
         layout.addWidget(mDlg)
         dlg.setLayout(layout)
-
+        mDlg.setReadOnly(True)
         button = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
         layout.addWidget(button)
         # hint object
@@ -318,11 +318,13 @@ class GController():
         font = QFont('Consolas', 11)
         # list representation of the hint grid
         lst = obj.hint
-        dlg.setBaseSize(700,700)
+        dlg.setGeometry(700,300,600,600)
+     
         # format String containing the Grid
         fStr = self.buildHintGrid(lst)
 
         mDlg.setPlainText(fStr)
+        
         dlg.setFont(font)
         #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
@@ -346,8 +348,17 @@ class GController():
     ################################################################################
     def formatHintsHeader(self) -> str:
         fStr = 'Spelling Bee Grid \n\n\n'
-        fStr += 'Center Letter is in bold.\n\n'
-        fStr += self.puzzle.getUniqueLetters() + '\n\n\n'
+        fStr += 'Center Letter is Capitalized.\n\n'
+        letters = self.puzzle.getShuffleLetters()
+
+        counter = 0
+        for i in letters:
+            if counter == 0:
+                fStr += i.capitalize() + ' '
+            else:
+                fStr += i + ' '
+            counter += 1
+        fStr += '\n\n\n'
         return fStr
     
     ################################################################################
