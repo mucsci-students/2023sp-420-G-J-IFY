@@ -12,7 +12,7 @@
 ################################################################################
 import puzzle
 import MakePuzzle
-#import sqlite3
+import sqlite3
 
 class hint:
     def __init__(self, obj: puzzle.Puzzle):
@@ -150,8 +150,29 @@ class hint:
     # Parameters:
     #   None
     ############################################################################
-    def numPangrams() -> int:
-        pass
+    def numPangrams(self) -> int:
+        ulString = puzzle.getUniqueLetters()
+        # SQLite Connections
+        wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
+
+        # Used to execute SQL commands
+        wordDictC = wordDict.cursor()
+        # Grabs a random baseword from the list
+        wordDictC.execute(
+            """ SELECT COUNT(fullWord)
+                        FROM pangram
+                        WHERE uniqueLetters LIKE 
+                        """ + ulString
+        )
+        # catch return from querey
+        resultResult = wordDictC.fetchone()
+        
+
+        # close DB
+        wordDict.commit()
+        wordDict.close()
+        return resultResult
+
 
     ############################################################################
     # numPerfectPangram()
@@ -162,8 +183,28 @@ class hint:
     # Parameters:
     #   None
     ############################################################################
-    def numPerfectPangram() -> int:
-        pass
+    def numPerfectPangram(self) -> int:
+        # SQLite Connections
+        wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
+
+        # Used to execute SQL commands
+        wordDictC = wordDict.cursor()
+        # Grabs a random baseword from the list
+        wordDictC.execute(
+            """ SELECT *
+                        FROM allGames 
+                        ORDER BY RANDOM() 
+                        Limit 1;
+                        """
+        )
+        # catch return from querey
+        resultResult = wordDictC.fetchone()
+        
+
+        # close DB
+        wordDict.commit()
+        wordDict.close()
+        return resultResult
 
     ############################################################################
     # twoLetterList(obj: puzzle.Puzzle)
