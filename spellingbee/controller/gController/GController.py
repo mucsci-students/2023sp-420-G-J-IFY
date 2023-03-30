@@ -34,8 +34,9 @@ from model.puzzle import Puzzle
 import PyQt6
 import model.hint as hint
 from PyQt6.QtCore import QEvent
-from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
-from PyQt6.QtWidgets import QVBoxLayout, QTextEdit, QLabel, QGridLayout
+from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox, QDialog, QDialogButtonBox
+from PyQt6.QtWidgets import QVBoxLayout, QTextEdit, QLabel, QGridLayout, QPlainTextEdit
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
@@ -301,20 +302,28 @@ class GController():
     ################################################################################
     def hint(self) -> None:
         # dialog window
-        dlg = QMessageBox(parent=self.window)
+        dlg = QDialog(parent=self.window)
+        mDlg = QPlainTextEdit(dlg)
+        mDlg.setBackgroundVisible(False)
+        layout = QVBoxLayout()
+        layout.addWidget(mDlg)
+        dlg.setLayout(layout)
 
+        button = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
+        layout.addWidget(button)
         # hint object
         obj = hint.hint(self.puzzle)
         obj.makeHintGrid(self.puzzle)
-
+        button.accepted.connect(dlg.accept)
+        font = QFont('Consolas', 11)
         # list representation of the hint grid
         lst = obj.hint
-
+        dlg.setBaseSize(700,700)
         # format String containing the Grid
         fStr = self.buildHintGrid(lst)
 
-        dlg.setBaseSize(500,700)
-        dlg.setText(fStr)
+        mDlg.setPlainText(fStr)
+        dlg.setFont(font)
         #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
         #execute command
@@ -414,6 +423,7 @@ class GController():
         letters = ''
         for i in range(8):
             letters += str(lst[i][0]).capitalize()
+            lst[i].pop(0)
         return letters
     
     def formatHintsGrid(self,lst ,letters) -> str:
@@ -421,10 +431,8 @@ class GController():
         for i in range(8):
             fStr += f'{letters[i]}:'
             for y in range(0, 13):
-                if y == 0:
-                    fStr += f' {lst[i][y]:>5}'
-                else:
-                    fStr += f' {lst[i][y]:>5}'
+                fStr += f' {lst[i][y]:>3}'
+                
             fStr += '\n\n'
         return fStr
     ################################################################################
@@ -442,12 +450,12 @@ class GController():
     ################################################################################
     def formatLengthHeader(self) -> str:
         sigma = 'Σ'
-        fStr = ''
+        fStr = ' '
         for i in range(4, 17):
             if i != 0 and i != 16:   
-                fStr += f'{i:5} '
+                fStr += f'{i:<4}'
             if i == 16:
-                fStr += f'{sigma:5}'
+                fStr += f'{sigma:3}'
         fStr += '\n\n'
 
         return fStr
