@@ -421,10 +421,10 @@ def hints(game: object, outty: object) -> None:
     lengthHeaderStr = lengthHeader()
     hintGrid = formatHintGrid(game)
 
-    grid = (f'{lengthHeaderStr} \ '
+    grid = (f'{lengthHeaderStr}'
             f'{hintGrid}')
     
-    CLI.drawTextBox([hintHeader, grid], 60, '<')
+    print(grid)
 
 ################################################################################
 # formatGameLetts(game:object) -> str
@@ -470,8 +470,16 @@ def formatHintGrid(game:object) -> str:
     hintGrid.makeHintGrid(game)
     lst = hintGrid.hint
     fStr = ''
-    for i in lst:
-        fStr += f'{i} \ '
+    for i in range(len(str)):
+        fStr += f'{str[i]}'
+    for y in range(16):
+        if y == 0:
+            fStr += f'{lst[i][y]: 3}'
+        else:
+            fStr += f'{lst[i][y]: 4}'
+        
+    fStr += '\n'
+
     return fStr
 
 ################################################################################
@@ -492,8 +500,8 @@ def lengthHeader() -> str:
     sigma = "Σ"
     for i in range(4,17):
         if i == 16:
-            fStr += f'{sigma:>5}'
+            fStr += f'{sigma:>5} \n'
         else:
-            fStr += f'{i:10}'
-
+            fStr += f'{i:5}'
+    
     return fStr
