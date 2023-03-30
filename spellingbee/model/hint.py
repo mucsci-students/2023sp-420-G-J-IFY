@@ -162,7 +162,7 @@ class hint:
             """ SELECT COUNT(fullWord)
                         FROM pangrams
                         WHERE uniqueLetters LIKE %
-                        """ + ulString + ";"
+                        '""" + ulString + "';"
         )
         # catch return from querey
         resultResult = wordDictC.fetchone()
@@ -195,7 +195,7 @@ class hint:
             """ SELECT COUNT(fullWord)
                         FROM pangrams join dictionary
                         WHERE uniqueLetters like
-                        """ + ulString + " AND score = 14;"
+                        '""" + ulString + "' AND score = 14;"
         )
         # catch return from querey
         resultResult = wordDictC.fetchone()
