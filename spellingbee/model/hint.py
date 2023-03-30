@@ -166,12 +166,12 @@ class hint:
         )
         # catch return from querey
         resultResult = wordDictC.fetchone()
-        
+        (num, ) = resultResult
 
         # close DB
         wordDict.commit()
         wordDict.close()
-        return resultResult
+        return num
 
 
     ############################################################################
@@ -199,12 +199,13 @@ class hint:
         )
         # catch return from querey
         resultResult = wordDictC.fetchone()
+        (num, ) = resultResult
         
 
         # close DB
         wordDict.commit()
         wordDict.close()
-        return resultResult
+        return num
 
     ############################################################################
     # twoLetterList(obj: puzzle.Puzzle)
