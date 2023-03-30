@@ -12,8 +12,7 @@
 ################################################################################
 import puzzle
 import MakePuzzle
-
-# import sqlite3
+import sqlite3
 
 
 class hint:
@@ -171,8 +170,30 @@ class hint:
     # Parameters:
     #   None
     ############################################################################
-    def numPangrams() -> int:
-        pass
+    def numPangrams(self, obj: puzzle.Puzzle) -> int:
+        ulString = obj.getUniqueLetters()
+        # SQLite Connections
+        wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
+
+        # Used to execute SQL commands
+        wordDictC = wordDict.cursor()
+        # Grabs a random baseword from the list
+        wordDictC.execute(
+            """ SELECT COUNT(fullWord)
+                        FROM pangrams
+                        WHERE uniqueLetters LIKE
+                        '"""
+            + ulString
+            + "';"
+        )
+        # catch return from querey
+        resultResult = wordDictC.fetchone()
+        (num,) = resultResult
+
+        # close DB
+        wordDict.commit()
+        wordDict.close()
+        return num
 
     ############################################################################
     # numPerfectPangram()
@@ -183,8 +204,30 @@ class hint:
     # Parameters:
     #   None
     ############################################################################
-    def numPerfectPangram() -> int:
-        pass
+    def numPerfectPangram(self, obj: puzzle.Puzzle) -> int:
+        ulString = obj.getUniqueLetters()
+        # SQLite Connections
+        wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
+
+        # Used to execute SQL commands
+        wordDictC = wordDict.cursor()
+        # Grabs a random baseword from the list
+        wordDictC.execute(
+            """ SELECT COUNT(pangrams.fullWord)
+                        FROM pangrams inner join dictionary ON pangrams.fullWord=dictionary.fullWord
+                        WHERE pangrams.uniqueLetters like
+                        '"""
+            + ulString
+            + "' AND wordScore = 14;"
+        )
+        # catch return from querey
+        resultResult = wordDictC.fetchone()
+        (num,) = resultResult
+
+        # close DB
+        wordDict.commit()
+        wordDict.close()
+        return num
 
     ############################################################################
     # numTwoLettCombo(obj: puzzle.Puzzle)
@@ -293,10 +336,11 @@ class hint:
 # and play around with any puzzle
 
 # PUZZLES
-# newPuzzle = puzzle.Puzzle("a", "acklrow")
+# newPuzzle = puzzle.Puzzle("a", "acklorw")
 # newPuzzle = puzzle.Puzzle("s", "eflnpsu")
 # newPuzzle = puzzle.Puzzle("n", "cenorsu")
 # newPuzzle = puzzle.Puzzle("p", "cenopty")
+# newPuzzle = puzzle.Puzzle("e", "aeinrst")
 # hints = hint(newPuzzle)
 
 # HINT GRID
@@ -310,3 +354,7 @@ class hint:
 # print(hints.getTwoLetterList())
 # hints.printTwoLetterList()
 # print(hints.numTwoLettCombo(newPuzzle))
+
+# PANGRAMS
+# print(hints.numPangrams(newPuzzle))
+# print(hints.numPerfectPangram(newPuzzle))
