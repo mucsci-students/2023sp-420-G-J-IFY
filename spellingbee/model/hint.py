@@ -21,6 +21,9 @@ class hint:
         rows, cols = (8, 14)
         self.hint = [[0 for i in range(cols)] for j in range(rows)]
         obj.findAllWords()
+        self.twoLettList = [
+            [0 for i in range(2)] for j in range(self.numTwoLettCombo(obj))
+        ]
         # self.bingo = obj.bingo()
 
     ############################################################################
@@ -184,31 +187,124 @@ class hint:
         pass
 
     ############################################################################
+    # numTwoLettCombo(obj: puzzle.Puzzle)
+    #
+    # Description:
+    #   A specific helper for list length to initialize the two letter list
+    #   using each two letter combination.
+    #
+    # Parameters:
+    #   obj
+    #      puzzle object to create the list from the words in the puzzle
+    ############################################################################
+    def numTwoLettCombo(self, obj: puzzle.Puzzle) -> int:
+        allWords = obj.getAllWords()
+        letters = obj.getUniqueLetters()
+        counter = 0
+
+        # For each letter
+        for i in range(len(obj.getUniqueLetters())):
+            # Store that letter
+            currLett = letters[i]
+
+            # For each letter
+            for j in range(len(obj.getUniqueLetters())):
+                # String is first stored letter then second stored letter
+                # which checks all two letter combinations
+                check = currLett + letters[j]
+
+                # Check each word for a new two letter combination
+                for x in allWords:
+                    # If it is a new combination, count it and loop back to
+                    # check the next new combination.
+                    if x.startswith(check):
+                        counter += 1
+                        break
+        return counter
+
+    ############################################################################
     # twoLetterList(obj: puzzle.Puzzle)
     #
     # Description:
     #   Creates the two letter list for a given puzzle
     #
     # Parameters:
+    #   obj
+    #      puzzle object to create the list from the words in the puzzle
+    ############################################################################
+    def twoLetterList(self, obj: puzzle.Puzzle):
+        allWords = obj.getAllWords()
+        letters = obj.getUniqueLetters()
+        counter = 0
+
+        # For each letter
+        for i in range(len(obj.getUniqueLetters())):
+            # Store that letter
+            currLett = letters[i]
+
+            # For each letter
+            for j in range(len(obj.getUniqueLetters())):
+                # String is first stored letter then second stored letter
+                # which checks all two letter combinations
+                check = currLett + letters[j]
+
+                # Check each word for a new two letter combination
+                for x in allWords:
+                    # If it is a new combination, store that string in the list,
+                    # then count it and loop back to check the next new combination.
+                    if x.startswith(check):
+                        self.twoLettList[counter][0] = check
+                        counter += 1
+                        break
+
+        # Now count all the words starting with the set of two letters
+        for y in allWords:
+            for k in range(len(self.twoLettList)):
+                if y.startswith(self.twoLettList[k][0]):
+                    self.twoLettList[k][1] += 1
+
+    ############################################################################
+    # getTwoLetterList() -> list[list[int]]
+    #
+    # Description:
+    #   Gives the caller the two letter list for a given puzzle
+    #
+    # Parameters:
     #   None
     ############################################################################
-    def twoLetterList(obj: puzzle.Puzzle):
-        pass
+    def getTwoLetterList(self) -> list[list[int]]:
+        return self.twoLettList
 
-    def getTwoLetterList(self):
-        pass
-
-    def printTwoLetterList(obj: puzzle.Puzzle):
-        pass
+    ############################################################################
+    # printTwoLetterList()
+    #
+    # Description:
+    #   Prints the two letter list for a given puzzle
+    #
+    # Parameters:
+    #   None
+    ############################################################################
+    def printTwoLetterList(self):
+        for rows in self.twoLettList:
+            print(rows)
 
 
 # For displaying and testing functionality, remove comments here
 # and play around with any puzzle
+
+# PUZZLES
 # newPuzzle = puzzle.Puzzle("a", "acklrow")
 # newPuzzle = puzzle.Puzzle("s", "eflnpsu")
 # newPuzzle = puzzle.Puzzle("n", "cenorsu")
 # hints = hint(newPuzzle)
+
+# HINT GRID
 # hints.makeHintGrid(newPuzzle)
 # get = hints.getHintGrid()
 # hints.printHint()
 # print(hints.countWords(newPuzzle))
+
+# TWO LETTER LIST:
+# hints.twoLetterList(newPuzzle)
+# print(hints.getTwoLetterList())
+# hints.printTwoLetterList()
