@@ -12,7 +12,7 @@
 ################################################################################
 import puzzle
 import MakePuzzle
-#import sqlite3
+import sqlite3
 
 class hint:
     def __init__(self, obj: puzzle.Puzzle):
@@ -150,8 +150,29 @@ class hint:
     # Parameters:
     #   None
     ############################################################################
-    def numPangrams() -> int:
-        pass
+    def numPangrams(self) -> int:
+        ulString = puzzle.getUniqueLetters()
+        # SQLite Connections
+        wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
+
+        # Used to execute SQL commands
+        wordDictC = wordDict.cursor()
+        # Grabs a random baseword from the list
+        wordDictC.execute(
+            """ SELECT COUNT(fullWord)
+                        FROM pangrams
+                        WHERE uniqueLetters LIKE %
+                        '""" + ulString + "';"
+        )
+        # catch return from querey
+        resultResult = wordDictC.fetchone()
+        (num, ) = resultResult
+
+        # close DB
+        wordDict.commit()
+        wordDict.close()
+        return num
+
 
     ############################################################################
     # numPerfectPangram()
@@ -162,8 +183,29 @@ class hint:
     # Parameters:
     #   None
     ############################################################################
-    def numPerfectPangram() -> int:
-        pass
+    def numPerfectPangram(self) -> int:
+        ulString = puzzle.getUniqueLetters()
+        # SQLite Connections
+        wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
+
+        # Used to execute SQL commands
+        wordDictC = wordDict.cursor()
+        # Grabs a random baseword from the list
+        wordDictC.execute(
+            """ SELECT COUNT(fullWord)
+                        FROM pangrams join dictionary
+                        WHERE uniqueLetters like
+                        '""" + ulString + "' AND score = 14;"
+        )
+        # catch return from querey
+        resultResult = wordDictC.fetchone()
+        (num, ) = resultResult
+        
+
+        # close DB
+        wordDict.commit()
+        wordDict.close()
+        return num
 
     ############################################################################
     # twoLetterList(obj: puzzle.Puzzle)
