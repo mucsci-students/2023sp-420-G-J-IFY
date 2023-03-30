@@ -161,7 +161,7 @@ class hint:
         wordDictC.execute(
             """ SELECT COUNT(fullWord)
                         FROM pangram
-                        WHERE uniqueLetters LIKE 
+                        WHERE uniqueLetters LIKE %
                         """ + ulString
         )
         # catch return from querey
