@@ -410,9 +410,12 @@ def finalGame(finishedPuzzle : object, outty) -> None:
 ################################################################################
 def hints(game: object, outty: object) -> None:
     gameLetters = formatGameLetts(game)
+    hintGrid = hint.hint(game)
+    hintGrid.makeHintGrid(game)
     hintHeader = ('Spelling Bee Hint Grid \n\n\n'
                   'Center letter is capitalized. \n\n '
-                  f'{gameLetters}'
+                  f'{gameLetters} \n\n'
+                  'WORDS: ' + f'{hintGrid.countWords(game)}, POINTS: ' + str(game.maxScore) + ', PANGRAMS: ' +  str(hintGrid.numPangrams(game)) + ' ('  + str(hintGrid.numPerfectPangram(game)) + ' Perfect)' 
 
                 )
     hintGrid = hint.hint(game)
