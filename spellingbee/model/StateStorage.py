@@ -405,11 +405,9 @@ def checkLoad(dictDict):
         # load specific dictionary fields into local variables
         # THROWS EXCEPTION IF KEY IS NOT IN DICT
         guessedWords = allLower(dictDict["GuessedWords"])
-        wordList = allLower(dictDict["WordList"])
         puzzleLetters = dictDict["PuzzleLetters"].lower()
         requiredLetter = dictDict["RequiredLetter"].lower()
         currentPoints = dictDict["CurrentPoints"]
-        maxPoints = dictDict["MaxPoints"]
 
         # check if the unique letters/keyletter combo is in our DB
         # append requiredLetter to puzzleLetters just in case they fucked
@@ -428,18 +426,22 @@ def checkLoad(dictDict):
         if score == None:
             raise KeyError
 
-        # if score mismatch, remake word list from our DB
-        if score[0] != maxPoints:
-            maxPoints = score[0]
-            # generateWordList
-            wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, requiredLetter)
+        # just remake score and word list from our DB
+        maxPoints = score[0]
+        # generateWordList every time
+        wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, requiredLetter)
+
+        badWords = []
 
         # check to make sure all guesses are valid
         if not set(guessedWords).issubset(set(wordList)):
             for word in guessedWords:
-                # prune any bad guesses from list
+                # make a list of all the bad guesses
                 if word not in wordList:
-                    guessedWords.remove(word)
+                    badWords.append(word)
+            for thing in badWords:
+                guessedWords.remove(thing)
+            print(badWords + " were not valid words in the game and have been removed")
 
         # rescore the validated guess list
         tempTable = "create temporary table guessWords (guesses);"
@@ -465,7 +467,7 @@ def checkLoad(dictDict):
         # at this point, all fields are validates in our game, remake dictionary
         dictDict["GuessedWords"] = guessedWords
         dictDict["WordList"] = wordList
-        dictDict["PuzzleLetters"] = puzzleLetters
+        dictDict["PuzzleLetters"] = uniqueLetters
         dictDict["RequiredLetter"] = requiredLetter
         dictDict["CurrentPoints"] = currentPoints
         dictDict["MaxPoints"] = maxPoints
