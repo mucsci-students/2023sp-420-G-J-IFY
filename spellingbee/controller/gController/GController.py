@@ -321,7 +321,7 @@ class GController():
         dlg.setGeometry(700,300,600,600)
      
         # format String containing the Grid
-        fStr = self.buildHintGrid(lst)
+        fStr = self.buildHintGrid(lst, obj)
 
         mDlg.setPlainText(fStr)
         
@@ -346,7 +346,7 @@ class GController():
     #   fStr : str
     #       format String that contains the hint grid header
     ################################################################################
-    def formatHintsHeader(self) -> str:
+    def formatHintsHeader(self, hint) -> str:
         fStr = 'Spelling Bee Grid \n\n\n'
         fStr += 'Center Letter is Capitalized.\n\n'
         letters = self.puzzle.getShuffleLetters()
@@ -359,6 +359,8 @@ class GController():
                 fStr += i + ' '
             counter += 1
         fStr += '\n\n\n'
+        fStr += 'WORDS: ' + str(hint.countWords(self.puzzle)) + ', POINTS: ' + str(self.puzzle.maxScore) + ', PANGRAMS: ' +  str(hint.numPangrams(self.puzzle)) + ' ('  + str(hint.numPerfectPangram(self.puzzle)) + ' Perfect)\n\n\n' 
+
         return fStr
     
     ################################################################################
@@ -394,11 +396,11 @@ class GController():
     #   fStr: str
     #       format string containing the complete hint grid
     ################################################################################
-    def buildHintGrid(self,lst : hint) -> str:
+    def buildHintGrid(self,lst, hint) -> str:
         #build hint grid
         fStr =''
         letters = ''
-        fStr += self.formatHintsHeader()
+        fStr += self.formatHintsHeader(hint)
         # builds a string of the unique letters from the 2d list
         letters = self.getLettersFromGrid(lst)
         
