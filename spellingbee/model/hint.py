@@ -296,7 +296,7 @@ class hint:
 # newPuzzle = puzzle.Puzzle("a", "acklrow")
 # newPuzzle = puzzle.Puzzle("s", "eflnpsu")
 # newPuzzle = puzzle.Puzzle("n", "cenorsu")
-# newPuzzle = puzzle.Puzzle("p", "cenopt")
+# newPuzzle = puzzle.Puzzle("p", "cenopty")
 # hints = hint(newPuzzle)
 
 # HINT GRID
@@ -309,3 +309,4 @@ class hint:
 # hints.twoLetterList(newPuzzle)
 # print(hints.getTwoLetterList())
 # hints.printTwoLetterList()
+# print(hints.numTwoLettCombo(newPuzzle))
