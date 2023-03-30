@@ -410,21 +410,22 @@ def finalGame(finishedPuzzle : object, outty) -> None:
 ################################################################################
 def hints(game: object, outty: object) -> None:
     gameLetters = formatGameLetts(game)
-    hintHeader = ('Spelling Bee Hint Grid \ '
-                  ' \ '
-                  'Center letter is capitalized. \ '
-                  ' \ '
+    hintHeader = ('Spelling Bee Hint Grid \n\n\n'
+                  'Center letter is capitalized. \n\n '
                   f'{gameLetters}'
-                  
+
                 )
-    
+    hintGrid = hint.hint(game)
+    hintGrid.makeHintGrid(game)
+    lst = hintGrid.hint
+    letters = getLettersFromGrid(lst)
     lengthHeaderStr = lengthHeader()
-    hintGrid = formatHintGrid(game)
+    hintGrid = formatHintGrid(lst, letters)
 
     grid = (f'{lengthHeaderStr}'
             f'{hintGrid}')
-    
-    print(grid)
+    finalView = hintHeader + '\n\n\n' + grid
+    print(finalView)
 
 ################################################################################
 # formatGameLetts(game:object) -> str
@@ -465,19 +466,17 @@ def formatGameLetts(game:object) -> str:
 #       a format string of the hint grid
 
 ################################################################################
-def formatHintGrid(game:object) -> str:
-    hintGrid = hint.hint(game)
-    hintGrid.makeHintGrid(game)
-    lst = hintGrid.hint
+def formatHintGrid(lst, letters: str) -> str:
     fStr = ''
-    for i in range(len(str)):
-        fStr += f'{str[i]}'
-    for y in range(16):
-        if y == 0:
-            fStr += f'{lst[i][y]: 3}'
-        else:
-            fStr += f'{lst[i][y]: 4}'
-        
+    for i in range(len(letters)):
+        fStr += f'{letters[i]}'
+        for y in range(13):
+            if y == 0:
+                fStr += f'{lst[i][y]: 4}'
+            else:
+                fStr += f'{lst[i][y]: 5}'
+        fStr+= '\n'
+            
     fStr += '\n'
 
     return fStr
@@ -505,3 +504,10 @@ def lengthHeader() -> str:
             fStr += f'{i:5}'
     
     return fStr
+
+def getLettersFromGrid(lst) -> str:
+        letters = ''
+        for i in range(8):
+            letters += str(lst[i][0]).capitalize()
+            lst[i].pop(0)
+        return letters
