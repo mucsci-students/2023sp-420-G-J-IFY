@@ -315,7 +315,7 @@ class GController():
         obj = hint.hint(self.puzzle)
         obj.makeHintGrid(self.puzzle)
         button.accepted.connect(dlg.accept)
-        font = QFont('Consolas', 11)
+        font = QFont('Courier', 11)
         # list representation of the hint grid
         lst = obj.hint
         dlg.setGeometry(700,300,600,600)
