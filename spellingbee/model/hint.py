@@ -19,7 +19,7 @@ import sqlite3
 
 class hint:
     def __init__(self, obj: puzzle.Puzzle):
-        rows, cols = (8, 14)
+        rows, cols = (9, 14)
         self.hint = [[0 for i in range(cols)] for j in range(rows)]
         obj.findAllWords()
         self.twoLettList = [
@@ -71,11 +71,18 @@ class hint:
     def makeHintGrid(self, obj: puzzle.Puzzle):
         # Store the letters in their own row
         for i in range(len(obj.getUniqueLetters())):
-            self.hint[i][0] = obj.uniqueLett[i]
+            self.hint[i + 1][0] = obj.uniqueLett[i]
 
         # Set fields appropriately
-        self.hint[7][0] = "Σ"
-        self.hint[7][13] = self.countWords(obj)
+        self.hint[0][0] = ""
+        self.hint[8][0] = "Σ"
+        self.hint[0][13] = "Σ"
+        self.hint[8][13] = self.countWords(obj)
+
+        wordLen = 4
+        for x in range(len(self.hint[0]) - 2):
+            self.hint[0][x + 1] = wordLen
+            wordLen += 1
 
         # Prepare for keeping track of many values in the loop
         allWords = obj.getAllWords()
@@ -84,7 +91,7 @@ class hint:
         lett = 0
         total = 0
 
-        # For each letter
+        # For each letter in uniqueLetters
         for x in range(len(obj.getUniqueLetters())):
             # Check each word in the list of all words
             for i in allWords:
@@ -97,13 +104,15 @@ class hint:
                             total += 1
                             break
                     # All words of a length counted so record that value
-                    self.hint[lett][wordLen - 3] = counter
+                    self.hint[lett + 1][wordLen - 3] = counter
                 else:
                     # New word of next length up
                     counter = 0
                     wordLen += 1
+                    # Increment wordLen until it is at the next word of the
+                    # correct length
                     if len(i) != wordLen:
-                        for i in range((wordLen - len(i)) - 1):
+                        for z in range(len(i) - wordLen):
                             wordLen += 1
 
                     if len(i) == wordLen:
@@ -111,11 +120,10 @@ class hint:
                             # Count the word and add to the total
                             counter += 1
                             total += 1
-                            if allWords[len(allWords) - 1 : len(allWords)] != []:
-                                self.hint[lett][wordLen - 3] = counter
+                            self.hint[lett + 1][wordLen - 3] = counter
 
                 # Record total since all words have been counted of a starting letter
-                self.hint[lett][13] = total
+                self.hint[lett + 1][13] = total
             # Reset variables to count the next words with a new starting letter
             wordLen = 4
             counter = 0
@@ -126,16 +134,11 @@ class hint:
         lenTotal = 0
         # The -1 in both loops for the ranges omits the last column and last row to avoid double counting
         for i in range(len(self.hint[0]) - 1):
-            for j in range(len(self.hint) - 1):
-                # The -2 here checks if the i is at column 12, which is the last column
-                if i == len(self.hint[0]) - 2:
-                    # If it is, -1 to be at column 11
-                    # i -= 1
-                    pass
+            for j in range(len(self.hint) - 2):
                 # Add total in this column (i+1 is to skip the first column entirely)
-                lenTotal += self.hint[j][i + 1]
+                lenTotal += self.hint[j + 1][i + 1]
             # Record total for this column then set column total to 0
-            self.hint[7][i + 1] = lenTotal
+            self.hint[8][i + 1] = lenTotal
             lenTotal = 0
 
     ############################################################################
@@ -338,11 +341,13 @@ class hint:
 # and play around with any puzzle
 
 # PUZZLES
-# newPuzzle = puzzle.Puzzle("a", "acklorw")
+# newPuzzle = puzzle.Puzzle("a", "acklorw")  # base test puzzle
 # newPuzzle = puzzle.Puzzle("s", "eflnpsu")
 # newPuzzle = puzzle.Puzzle("n", "cenorsu")
 # newPuzzle = puzzle.Puzzle("p", "cenopty")
-# newPuzzle = puzzle.Puzzle("e", "aeinrst")
+# newPuzzle = puzzle.Puzzle("e", "aeinrst")  # longest puzzle
+# newPuzzle = puzzle.Puzzle("j", "aeijklm")  # shortest puzzle
+# newPuzzle = puzzle.Puzzle("i", "einortv")
 # hints = hint(newPuzzle)
 
 # HINT GRID
