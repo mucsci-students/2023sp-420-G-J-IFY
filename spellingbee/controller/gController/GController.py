@@ -394,7 +394,8 @@ class GController():
     #       list representaion of the hints grid
     ################################################################################
     def removeZeroColumns(self,lst):
-        count = len(lst[8]) -1
+        count = len(lst[8]) - 1
+
         for i in reversed(lst[8]) :
             if i == 0:
                 self.removeColumn(count, lst)
