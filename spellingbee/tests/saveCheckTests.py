@@ -16,10 +16,9 @@
 #
 ################################################################################
 
-import sqlite3
 import unittest
 import json
-from model import StateStorage
+import StateStorage
 import os
 import sys
 current = os.path.dirname(os.path.realpath(__file__))
@@ -27,9 +26,8 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 import os.path
 from os import path
-from model import MakePuzzle
 from pathlib import Path
-import model.output as output
+import model.output
 
 def Load(fileName):
     # checks if file exists
@@ -168,7 +166,7 @@ class saveCheckTests(unittest.TestCase):
 
         # tests to see if the wordlist is correctly converted
         try:
-            outty = output.Output()
+            outty = model.output.Output()
             dict = Load('warlock')
             dictlen = len(dict['WordList'])
             assert(len(dict2['WordList']) == dictlen)
