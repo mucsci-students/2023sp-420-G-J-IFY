@@ -363,10 +363,10 @@ class GController():
         return fStr
     
     ################################################################################
-    # removeEmptyColumn(self, lst):
+    # removeColumn(self, col, lst) -> list[list[int]]:
     #
     # DESCRIPTION:
-    #   removes empty columns from the grid
+    #   removes empty column from the grid
     #
     # PARAMETERS:
     #   self
@@ -375,8 +375,32 @@ class GController():
     #   lst : List[List[int]]
     #
     ################################################################################
-    def removeEmptyColumn(self, lst):
-        pass
+    def removeColumn(self, col, lst) -> list[list[int]]:
+        for i in lst:
+            del i[col]
+        return lst
+
+    ################################################################################
+    # removeColumn(self, col, lst) -> list[list[int]]:
+    #
+    # DESCRIPTION:
+    #   removes all columns from the grid whos sumation is Zero
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #   
+    #   lst : List[List[int]]
+    #       list representaion of the hints grid
+    ################################################################################
+    def removeZeroColumns(self,lst):
+        count = len(lst[8]) -1
+        for i in reversed(lst[8]) :
+            if i == 0:
+                self.removeColumn(count, lst)
+            count += -1
+        return lst
+
 
     ################################################################################
     # buildHintGrid(self,lst : hint):
@@ -407,7 +431,7 @@ class GController():
 
         #print the word lengths from 4 - sigma
         
-        fStr += self.formatLengthHeader()
+        #fStr += self.formatLengthHeader()
 
         fStr += self.formatHintsGrid(lst, letters)
         #print the body of the grid
@@ -433,45 +457,27 @@ class GController():
     ################################################################################
     def getLettersFromGrid(self, lst) -> str:
         letters = ''
-        for i in range(8):
+        for i in range(9):
             letters += str(lst[i][0]).capitalize()
             lst[i].pop(0)
         return letters
     
     def formatHintsGrid(self,lst ,letters) -> str:
-        fStr =''
-        for i in range(8):
-            fStr += f'{letters[i]}:'
-            for y in range(0, 13):
+        fStr =' '
+
+        self.removeZeroColumns(lst)
+        #print lengths
+
+        for i in range((len(lst[0]))):
+            fStr += f'{lst[0][i]:<4}'
+        fStr += '\n\n'
+        for i in range(1,9):
+            fStr += f'{letters[i - 1]}:'
+            for y in range(len(lst[0])):
                 fStr += f' {lst[i][y]:>3}'
                 
             fStr += '\n\n'
-        return fStr
-    ################################################################################
-    # formatLengthHeader() -> str:
-    #
-    # DESCRIPTION:
-    #   formats the lengths of the words to be displayed for the hint grid
-    #
-    # PARAMETERS:
-    #   None
-    #
-    # RETURN:
-    #   fStr : str
-    #       format String of the lengths Header
-    ################################################################################
-    def formatLengthHeader(self) -> str:
-        sigma = 'Σ'
-        fStr = ' '
-        for i in range(4, 17):
-            if i != 0 and i != 16:   
-                fStr += f'{i:<4}'
-            if i == 16:
-                fStr += f'{sigma:3}'
-        fStr += '\n\n'
-
-        return fStr
-    
+        return fStr 
 
 
     ################################################################################
@@ -495,19 +501,19 @@ class GController():
         count = 0
         fStr = ''
         for i in lst:
-            letters = i[0]
+            letters = str(i[0]).capitalize()
             num = i[1]
             if count > 0:
-                prevLetters = lst[count - 1][0]
+                prevLetters = str(lst[count - 1][0]).capitalize()
                 if letters[0] == prevLetters[0]:
                     if count == len(lst) - 1:
                         fStr += f'{letters}: {num}'
                     else:
                         fStr += f'{letters}: {num}, '
                 else:
-                    fStr += f'\n{letters}: {num} '
+                    fStr += f'\n{letters}: {num}, '
             else:
-                fStr += f'{letters}: {num} '
+                fStr += f'{letters}: {num}, '
             count += 1
         return fStr
     ################################################################################
