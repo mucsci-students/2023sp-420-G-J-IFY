@@ -21,13 +21,45 @@ def puzzleFixture():
     return spellingbee.newPuzzle('friends', 'i', outty, False)
 
 @pytest.fixture
+def blankPuzzleFixture():
+    return spellingbee.newPuzzle('', '', outty, False)
+
+@pytest.fixture
 def guessFixture(puzzleFixture):
     spellingbee.guess(puzzleFixture, 'friend', False, outty)
     return puzzleFixture
 
+@pytest.fixture
+def shortGuessFixture(puzzleFixture):
+    spellingbee.guess(puzzleFixture, "end", False, outty)
+
+@pytest.fixture
+def longGuessFixture(puzzleFixture):
+    spellingbee.guess(puzzleFixture, "thisguessistoolongforourgame", False, outty)
+
+@pytest.fixture
+def shortGuessFixture(puzzleFixture):
+    spellingbee.guess(puzzleFixture, "end", False, outty)
+
+@pytest.fixture
+def nonalphaGuessFixture(puzzleFixture):
+    spellingbee.guess(puzzleFixture, ":123", False, outty)
+
+@pytest.fixture
+def nonsenseGuessFixture(puzzleFixture):
+    spellingbee.guess(puzzleFixture, "notaword", False, outty)
+
+@pytest.fixture
+def missingCenterGuessFixture(puzzleFixture):
+    spellingbee.guess(puzzleFixture, "fenders", False, outty)
 
 
-    
+
+
+#test to see if blank puzzle is generated correctly
+def testBlankNewPuzzle(blankPuzzleFixture):
+    assert(len(blankPuzzleFixture.uniqueLett) ==7)
+
     # testing if make puzzle correctly produces a new game
 def testKeyLett(puzzleFixture):
     assert(puzzleFixture.keyLett == 'i')
@@ -66,7 +98,6 @@ def testCheckDB(puzzleFixture):
     
 
     #test guess
-    
 def testGuessIsInFoundWords(guessFixture):
     assert(guessFixture.getFoundWords() == ['friend'])
 
@@ -76,3 +107,18 @@ def testGuessScoreUpdated(guessFixture):
 def testGuessRankUpdated(guessFixture):
     assert(guessFixture.getRank() == 'Good Start')
     
+def testShortGuess(shortGuessFixture):
+    assert(outty.getField() == "END is too short!\nGuess need to be at least 4 letters long")
+
+def testLongGuess(longGuessFixture):
+    assert(outty.getField() == "That guess is too long.Max length is only 15 characters")
+
+def testNonAlphaGuess(nonalphaGuessFixture):
+    assert(outty.getField() == ":123 contains non alphabet characters")
+
+def testNonAlphaGuess(nonsenseGuessFixture):
+    assert(outty.getField() == "NOTAWORD isnt't a word in the dictionary")
+
+def testMissingCenterGuess(missingCenterGuessFixture):
+    assert(outty.getField() == "FENDERS is missing center letter, I")
+
