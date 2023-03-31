@@ -348,18 +348,17 @@ class GController():
     ################################################################################
     def formatHintsHeader(self, hint) -> str:
         fStr = 'Spelling Bee Grid \n\n\n'
-        fStr += 'Center Letter is Capitalized.\n\n'
+        fStr += 'Center Letter is Underlined.\n\n'
         letters = self.puzzle.getShuffleLetters()
 
         counter = 0
         for i in letters:
-            if counter == 0:
-                fStr += i.capitalize() + ' '
-            else:
-                fStr += i + ' '
+            fStr += str(i).capitalize() + ' '
             counter += 1
-        fStr += '\n\n\n'
-        fStr += 'WORDS: ' + str(hint.countWords(self.puzzle)) + ', POINTS: ' + str(self.puzzle.maxScore) + ', PANGRAMS: ' +  str(hint.numPangrams(self.puzzle)) + ' ('  + str(hint.numPerfectPangram(self.puzzle)) + ' Perfect), BINGO: '+ str(self.puzzle.checkBingo())+ '\n\n\n' 
+        fStr += '\n-\n\n'
+        fStr += ('WORDS: ' + str(hint.countWords(self.puzzle)) + ', POINTS: ' + str(self.puzzle.maxScore) + ', PANGRAMS: ' +  
+                 str(hint.numPangrams(self.puzzle)) + ' ('  + str(hint.numPerfectPangram(self.puzzle)) + ' Perfect), BINGO: '+ 
+                 str(self.puzzle.checkBingo())+ '\n\n\n' )
 
         return fStr
     
@@ -415,7 +414,7 @@ class GController():
         
 
         fStr += "\nTwo Letter List:\n\n"
-        
+        fStr += self.formatTwoLetterList(hint)
         return fStr
         #return a formated string of the grid
     
@@ -472,7 +471,47 @@ class GController():
         fStr += '\n\n'
 
         return fStr
+    
+
+
+    ################################################################################
+    # formatTwoLetterList(hint : object) -> str:
+    #
+    # DESCRIPTION:
+    #   formats the two letter list for th hints dialog
+    #
+    # PARAMETERS:
+    #   hint : object
+    #       is a hint object
+    #
+    # RETURN:
+    #   fStr : str
+    #       A string that contains the formated string
+    ################################################################################
+    def formatTwoLetterList(self, hint : object) -> str:
         
+        hint.twoLetterList(self.puzzle)
+        lst = hint.getTwoLetterList()
+        count = 0
+        fStr = ''
+        print (len(lst))
+        for i in lst:
+            letters = i[0]
+            num = i[1]
+            if count > 0:
+                prevLetters = lst[count - 1][0]
+                if letters[0] == prevLetters[0]:
+                    if count == len(lst) - 1:
+                        fStr += f'{letters}: {num}'
+                    else:
+                        fStr += f'{letters}: {num}, '
+                else:
+                    fStr += f'\n{letters}: {num} '
+            else:
+                fStr += f'{letters}: {num} '
+            count += 1
+        print(count)
+        return fStr
     ################################################################################
     # populateHintGrid(self, parent, grid) -> QGridLayout:
     #
