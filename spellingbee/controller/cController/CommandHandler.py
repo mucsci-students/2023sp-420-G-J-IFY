@@ -410,23 +410,26 @@ def finalGame(finishedPuzzle : object, outty) -> None:
 ################################################################################
 def hints(game: object, outty: object) -> None:
     gameLetters = formatGameLetts(game)
-    hintGrid = hint.hint(game)
-    hintGrid.makeHintGrid(game)
+    hints = hint.hint(game)
+    hints.makeHintGrid(game)
     hintHeader = ('Spelling Bee Hint Grid \n\n\n'
-                  'Center letter is capitalized. \n\n '
-                  f'{gameLetters} \n\n\n'
-                  'WORDS: ' + f'{hintGrid.countWords(game)}, POINTS: ' + str(game.maxScore) + ', PANGRAMS: ' +  str(hintGrid.numPangrams(game)) + ' ('  + str(hintGrid.numPerfectPangram(game)) + ' Perfect) BINGO: '+ str(game.checkBingo())+ '\n'
+                  'Center letter is underlined. \n\n '
+                  f'{gameLetters} \n -\n\n'
+                  'WORDS: ' + (f'{hints.countWords(game)}, POINTS: ' + str(game.maxScore) + ', PANGRAMS: ' +  str(hints.numPangrams(game)) + 
+                   ' ('  + str(hints.numPerfectPangram(game)) + ' Perfect) BINGO: '+ str(game.checkBingo())+ '\n')
                 )
-    hintGrid = hint.hint(game)
-    hintGrid.makeHintGrid(game)
-    lst = hintGrid.hint
+    lst = hints.hint
     letters = getLettersFromGrid(lst)
     lengthHeaderStr = lengthHeader()
     hintGrid = formatHintGrid(lst, letters)
 
     grid = (f'{lengthHeaderStr}'
             f'{hintGrid}')
-    finalView = hintHeader + '\n\n\n' + grid
+    
+    twoLetterList = ('Two letter list:\n\n'
+                     f'{formatTwoLetterList(hints, game)}')
+    
+    finalView = hintHeader + '\n\n\n' + grid + '\n' + twoLetterList + '\n\n'
     print(finalView)
 
 ################################################################################
@@ -513,3 +516,41 @@ def getLettersFromGrid(lst) -> str:
             letters += str(lst[i][0]).capitalize()
             lst[i].pop(0)
         return letters
+
+################################################################################
+    # formatTwoLetterList(hint : object) -> str:
+    #
+    # DESCRIPTION:
+    #   formats the two letter list for th hints dialog
+    #
+    # PARAMETERS:
+    #   hint : object
+    #       is a hint object
+    #
+    # RETURN:
+    #   fStr : str
+    #       A string that contains the formated string
+    ################################################################################
+def formatTwoLetterList(hint : object, game) -> str:
+        
+    hint.twoLetterList(game)
+    lst = hint.getTwoLetterList()
+    count = 0
+    fStr = ''
+    for i in lst:
+        letters = i[0]
+        num = i[1]
+        if count > 0:
+            prevLetters = lst[count - 1][0]
+            if letters[0] == prevLetters[0]:
+                if count == len(lst) - 1:
+                    fStr += f'{letters}: {num}'
+                else:
+                    fStr += f'{letters}: {num}, '
+            else:
+                fStr += f'\n{letters}: {num} '
+        else:
+            fStr += f'{letters}: {num} '
+        count += 1
+
+    return fStr
