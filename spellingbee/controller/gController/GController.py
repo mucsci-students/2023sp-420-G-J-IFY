@@ -494,7 +494,6 @@ class GController():
         lst = hint.getTwoLetterList()
         count = 0
         fStr = ''
-        print (len(lst))
         for i in lst:
             letters = i[0]
             num = i[1]
@@ -510,7 +509,6 @@ class GController():
             else:
                 fStr += f'{letters}: {num} '
             count += 1
-        print(count)
         return fStr
     ################################################################################
     # populateHintGrid(self, parent, grid) -> QGridLayout:
