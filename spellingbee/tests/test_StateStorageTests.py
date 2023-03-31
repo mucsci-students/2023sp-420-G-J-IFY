@@ -208,9 +208,3 @@ def testLoad(playedPuzzle):
     os.remove( './saves/TESTFILE5.json')
     print("testLoadPuzzle1: PASSED")
     
-
-
-
-if __name__ == '__main__':
-    unittest.main()
-

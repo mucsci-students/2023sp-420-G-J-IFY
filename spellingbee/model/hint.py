@@ -51,7 +51,7 @@ class hint:
     #   obj
     #      Object to be lengthed
     ############################################################################
-    def countWordsCheck(obj: puzzle.Puzzle) -> int:
+    def countWordsCheck(self, obj: puzzle.Puzzle) -> int:
         return len(
             MakePuzzle.getAllWordsFromPangram(
                 obj.getUniqueLetters(), obj.getKeyLetter()
