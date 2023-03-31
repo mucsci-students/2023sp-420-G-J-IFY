@@ -420,11 +420,9 @@ def hints(game: object, outty: object) -> None:
                 )
     lst = hints.hint
     letters = getLettersFromGrid(lst)
-    lengthHeaderStr = lengthHeader()
     hintGrid = formatHintGrid(lst, letters)
 
-    grid = (f'{lengthHeaderStr}'
-            f'{hintGrid}')
+    grid =(f'{hintGrid}')
     
     twoLetterList = ('Two letter list:\n\n'
                      f'{formatTwoLetterList(hints, game)}')
@@ -451,10 +449,7 @@ def formatGameLetts(game:object) -> str:
 
     counter = 0
     for i in uniqueLetters:
-        if counter == 0:
-            fStr += i.capitalize() + ' '
-        else:
-            fStr += i + ' '
+        fStr += i.capitalize() + ' '
         counter += 1
     return fStr
 
@@ -472,47 +467,41 @@ def formatGameLetts(game:object) -> str:
 
 ################################################################################
 def formatHintGrid(lst, letters: str) -> str:
-    fStr = ''
-    for i in range(len(letters)):
-        fStr += f'{letters[i]}'
-        for y in range(13):
-            if y == 0:
-                fStr += f'{lst[i][y]: 4}'
-            else:
-                fStr += f'{lst[i][y]: 5}'
-        fStr+= '\n'
-            
-    fStr += '\n'
+    fStr ='     '
+    #remove all columns whos sigma is zero
+    removeZeroColumns(lst)
 
-    return fStr
+    #print lengths
+    for i in range((len(lst[0]))):
+        fStr += f'{lst[0][i]:<4}'
+
+    fStr += '\n\n'
+    for i in range(1,9):
+        fStr += f'{letters[i - 1]}:'
+        for y in range(len(lst[0])):
+            fStr += f' {lst[i][y]:>3}'
+                
+        fStr += '\n\n'
+    return fStr 
+    
 
 ################################################################################
-# lengthHeader() -> str
+# formatTwoLetterList(hint : object) -> str:
 #
 # DESCRIPTION:
-#   Formats the word lengths of the Game to be printed
+#   gets the letters from the list and removes that column
+#
 # PARAMETERS:
-#   puzzle : object
-#     - puzzle object for the currently active game.
-# Returns:
-#   fStr: str
-#       a format string of the lengths of the words including sigma
-
-################################################################################
-def lengthHeader() -> str:
-    fStr =''
-    sigma = "Σ"
-    for i in range(4,17):
-        if i == 16:
-            fStr += f'{sigma:>5} \n'
-        else:
-            fStr += f'{i:5}'
-    
-    return fStr
-
+#   lst : object
+#       list representation of the hints grid
+#
+# RETURN:
+#   letters : str
+#       A string that contains the letters of the puzzle
+    ################################################################################
 def getLettersFromGrid(lst) -> str:
         letters = ''
-        for i in range(8):
+        for i in range(9):
             letters += str(lst[i][0]).capitalize()
             lst[i].pop(0)
         return letters
@@ -548,9 +537,49 @@ def formatTwoLetterList(hint : object, game) -> str:
                 else:
                     fStr += f'{letters}: {num}, '
             else:
-                fStr += f'\n{letters}: {num} '
+                fStr += f'\n{letters}: {num}, '
         else:
-            fStr += f'{letters}: {num} '
+            fStr += f'{letters}: {num}, '
         count += 1
 
     return fStr
+
+################################################################################
+# removeColumn(self, col, lst) -> list[list[int]]:
+#
+# DESCRIPTION:
+#   removes empty column from the grid
+#
+# PARAMETERS:
+#   self
+#       Gcontroller object
+#
+#   lst : List[List[int]]
+#       list representation of the hints grid
+################################################################################
+def removeColumn(col, lst) -> list[list[int]]:
+    for i in lst:
+        del i[col]
+    return lst
+
+################################################################################
+# removeColumn(self, col, lst) -> list[list[int]]:
+#
+# DESCRIPTION:
+#   removes all columns from the grid whos sumation is Zero
+#
+# PARAMETERS:
+#   self
+#       Gcontroller object
+#   
+#   lst : List[List[int]]
+#       list representaion of the hints grid
+################################################################################
+def removeZeroColumns(lst):
+    count = len(lst[8]) - 1
+
+    for i in reversed(lst[8]) :
+        if i == 0:
+            removeColumn(count, lst)
+        count += -1
+    return lst
