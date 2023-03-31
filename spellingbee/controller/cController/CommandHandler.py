@@ -538,10 +538,10 @@ def formatTwoLetterList(hint : object, game) -> str:
     count = 0
     fStr = ''
     for i in lst:
-        letters = i[0]
+        letters = str(i[0]).capitalize()
         num = i[1]
         if count > 0:
-            prevLetters = lst[count - 1][0]
+            prevLetters = str(lst[count - 1][0]).capitalize()
             if letters[0] == prevLetters[0]:
                 if count == len(lst) - 1:
                     fStr += f'{letters}: {num}'
