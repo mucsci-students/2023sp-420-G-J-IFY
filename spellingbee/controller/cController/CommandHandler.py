@@ -277,7 +277,7 @@ def loadGame(game : object, outty) -> None:
 #   as a list of all available commands.
 ################################################################################
 def help() -> None:
-    f = open('spellingbee/controller/cController/cliHints.txt', 'r')
+    f = open('spellingbee/controller/cController/helpOut.txt', 'r')
     fileContents = f.read()
     print (fileContents)
     f.close()
