@@ -277,39 +277,11 @@ def loadGame(game : object, outty) -> None:
 #   as a list of all available commands.
 ################################################################################
 def help() -> None:
-    descHead = ('How to play: \ ')
-    descBody = ("Simply type a word after the '> ' prompt and press enter "
-                "to submit a guess. \ \ "
-                "To enter a command, simply type '!' followed by the command "
-                "you wish to use.")
-
-    commHead = ('Available Commands: \ ')
-    commBody = ('!new: \ '
-                'Generates a new puzzle from a base word with exactly 7 '
-                'unique characters, or an auto-generated base word. \ '
-                '!puzzle: \ '
-                'Prints the current puzzle to the screen \ '
-                '!found-words: \ '
-                'Displays the list of all discovered words \ '
-                '!status: \ '
-                'Prints your achieved level for the active game \ '
-                '!shuffle: \ '
-                'Shuffle the order of the active puzzle for a fresh view \ '
-                '!save: \ '
-                'Create a new save for the current game \ '
-                '!savePuzzle: \ '
-                'Create a new save for a blank version of the current game '
-                '(not including any progress from current session) \ '
-                '!load: \ '
-                'Load a previously saved game \ '
-                '!help: \ '
-                'Show the list of all available commands with a brief '
-                "description. (You're here now!) \ "
-                '!exit: \ '
-                'Exit the game ')
-    
-    CLI.drawTextBox([descHead, descBody], 40, '<')
-    CLI.drawTextBox([commHead, commBody], 40, '<')
+    f = open('spellingbee/controller/cController/helpOut.txt', 'r')
+    fileContents = f.read()
+    print (fileContents)
+    f.close()
+    input("Press enter to return to the game: ")
 
 
 ################################################################################
