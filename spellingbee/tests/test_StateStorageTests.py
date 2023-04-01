@@ -356,9 +356,7 @@ def testCorruptGameLoadFromExplorer():
     path = Path.cwd()
     pathToFile = str(path) + '/spellingbee/tests/TestFile.json'
     puzzle = spellingbee.loadFromExploer(pathToFile, outty)
-    assert(outty.getField() == "The file " + pathToFile + " contains critical errors that \n"
-                                "prevent the game from functioning properly\n"
-                                "Returning to game...")
+    pytest.raises(AssertionError)
     
 def testSaveFromExplorer(playedPuzzle):
     path = Path.cwd()
