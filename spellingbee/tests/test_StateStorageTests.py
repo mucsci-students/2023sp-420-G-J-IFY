@@ -177,8 +177,6 @@ def testOverwriteSave3(playedPuzzle):
     fileNameJson = fileName + ".json"
     MakePuzzle.guess(playedPuzzle, 'acock', False, outty)
     spellingbee.saveCurrent(playedPuzzle, fileName)
-    with open(fileNameJson) as file:
-        dict2 = json.load(file)
     assert(checkIfExists(fileNameJson))
 
 
@@ -207,10 +205,30 @@ def testLoad(playedPuzzle):
     assert(dict1 == dict2)
     os.remove( './saves/TESTFILE5.json')
     print("testLoadPuzzle1: PASSED")
-    
 
+def test__CheckFileExitsBadFile():
+    with pytest.raises(FileNotFoundError):
+        spellingbee.__checkFileExists(Path("./saves/KEEPTHISHERE.TX"))
 
+def testLoadWithJson(playedPuzzle):
+    fileName = 'TESTFILE5'
+    fileNameJson = fileName + ".json"
+    dict1 = __makeDict(playedPuzzle)
+    spellingbee.saveCurrent(playedPuzzle, fileName)
+    os.replace('./TESTFILE5.json', './saves/TESTFILE5.json')
+    puzzle = spellingbee.__Load(fileNameJson, outty)
+    dict2 = __makeDict(puzzle)
+    path = str(Path.cwd()) + '/saves/' + fileNameJson
+    os.remove(path)
+    assert(dict1 == dict2)
 
-if __name__ == '__main__':
-    unittest.main()
-
+def testLoadNoFile():
+        fileName = 'him'
+        fileNameJson = fileName
+        spellingbee.saveCurrent(playedPuzzle, fileName)
+        puzzle = spellingbee.__Load(fileNameJson, outty)
+        assert(outty.field != '')
+def testLoadFromExplorer():
+    puzzle = spellingbee.loadFromExploer('./spellingbee/tests/Game2.json', outty)
+    dict = __makeDict(puzzle)
+    assert()
