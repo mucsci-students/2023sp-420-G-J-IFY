@@ -327,18 +327,6 @@ def loadFromExploer(path: Path, outty):
 
 
 ################################################################################
-# move3dirBack()
-#
-# DESCRIPTION:
-#   This helper function moves the directory up three levels
-################################################################################
-def move3dirBack():
-    os.chdir("..")
-    os.chdir("..")
-    os.chdir("..")
-
-
-################################################################################
 # allLower(my_list : list(str)) -> list(str)
 #
 # DESCRIPTION:
