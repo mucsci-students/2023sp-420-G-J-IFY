@@ -16,6 +16,12 @@ from model.puzzle import Puzzle
 def puzzleFixture():
     return Puzzle('a', 'warlock')
 
+@pytest.fixture
+def puzzleFixtureHundredScore():
+    puzzle = Puzzle('a', 'warlock')
+    puzzle.maxScore = 100
+    return puzzle
+
 def testEmptyPuzzleKeyLett(puzzleFixture):
     assert(puzzleFixture.keyLett == 'a')
 
@@ -140,6 +146,52 @@ def testShuffleChars(puzzleFixture):
     puzzleFixture.shuffleChars()
     assert( not puzzleFixture.shuffleLett == puzzleFixture.uniqueLett)
        
+def testGetFinishedFlag(puzzleFixture):
+    puzzleFixture.finishedFlag = True
+    assert(puzzleFixture.getFinishedFlag() == True)
 
+def testSetFinishedFlag(puzzleFixture):
+    puzzleFixture.setFinishedFlag(True)
+    assert(puzzleFixture.finishedFlag == True)
 
-    
+def testGetPointsTilRank(puzzleFixture):
+    assert(puzzleFixture.getPointsTilRank() == 1)
+
+def testSetKeyLetter(puzzleFixture):
+    puzzleFixture.setKeyLetter('z')
+    assert(puzzleFixture.getKeyLetter() == 'z')
+
+def testSetUniqueLetters(puzzleFixture):
+    puzzleFixture.setUniqueLetters('abcdefg')
+    assert(puzzleFixture.uniqueLett == 'abcdefg')
+
+def testCheckBingoNewGame(puzzleFixture):
+    assert(puzzleFixture.checkBingo() == False)
+
+def testCheckBingoGood(puzzleFixture):
+    puzzleFixture.setFoundWords(['warlock', 'lock', 'crack', 'arco', 'kaka','rack', 'orca'])
+    assert(puzzleFixture.checkBingo() == True)
+
+def testCheckBingoBad(puzzleFixture):
+    puzzleFixture.setFoundWords(['callaloo', 'lock', 'crack', 'arco', 'kaka','rack', 'orca'])
+    assert(puzzleFixture.checkBingo() == False)
+
+def testRank1(puzzleFixtureHundredScore):
+    puzzleFixtureHundredScore.score = 24
+    puzzleFixtureHundredScore.updateRank()
+    assert(puzzleFixtureHundredScore.rank == 'Solid')
+
+def testRank2(puzzleFixtureHundredScore):
+    puzzleFixtureHundredScore.score = 33
+    puzzleFixtureHundredScore.updateRank()
+    assert(puzzleFixtureHundredScore.rank == 'Nice')
+
+def testRank3(puzzleFixtureHundredScore):
+    puzzleFixtureHundredScore.score = 59
+    puzzleFixtureHundredScore.updateRank()
+    assert(puzzleFixtureHundredScore.rank == 'Amazing')
+
+def testRank4(puzzleFixtureHundredScore):
+    puzzleFixtureHundredScore.score = 99
+    puzzleFixtureHundredScore.updateRank()
+    assert(puzzleFixtureHundredScore.rank == 'Genius')
