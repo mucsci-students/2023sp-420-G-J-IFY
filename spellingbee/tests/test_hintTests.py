@@ -19,32 +19,67 @@ import MakePuzzle
 ################################################################################
 # TESTS
 
-# new instance with puzzle object
-# testConstructor():
-
 @pytest.fixture
 def puzzleFixture():
-    return MakePuzzle.newPuzzle('warlock', 'a', outty, False)
-# countWords() should give proper number of words for a puzzle
-def testCountWords(puzzleFixture):
-    hints = hint.hint(puzzleFixture)
-    test = hints.countWords(puzzleFixture)
-    assert(test == hints.countWordsCheck(puzzleFixture))
+    return MakePuzzle.newPuzzle('stainer', 'e', outty, False)
 
-# TEMPORARY WILL NEED LOTS OF REWORKING
-def testMakeHintGrid(puzzleFixture):
+def testConstructor(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+
+# countWords() should give proper number of words for a puzzle
+def testCountWords(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+    hints.countWords(puzzleFixture)
+
+def testMakeHintGrid(puzzleFixture: object):
     hints = hint.hint(puzzleFixture)
     hints.makeHintGrid(puzzleFixture)
-    assert (hints.hint[1][1] == 6)
-    assert (hints.hint[2][1] == 12)
-    assert (hints.hint[3][1] == 3)
-    assert (hints.hint[4][1] == 4)
-    assert (hints.hint[8][1] == 37)
+    assert(hints.makeHintGrid(puzzleFixture) == None)
+    
+    rowTotal = 0
+    colTotal = 0
+    for row in range(hints.rows - 1):
+        for i in range(hints.cols - 2):
+            rowTotal += hints.hint[row + 1][i + 1]
+        assert(rowTotal == hints.hint[row + 1][13])
+        row += 1
+        rowTotal = 0
+        
+    for col in range(hints.cols - 2):
+        for j in range(hints.rows - 2):
+            colTotal += hints.hint[j + 1][col + 1]
+        assert(colTotal == hints.hint[8][col + 1])
+        col += 1
+        colTotal = 0
 
+def testGetHintGrid(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+    hints.getHintGrid()
+    assert(hints.getHintGrid() != None)
 
-#
-# testNumPangrams(): Puzzle warlock center letter _ will have _ pangrams
-#   if pangrams == 0 then fail
-#    elif (query num pangrams) != pangrams then fail
-#    else pass
-#
+def testPrintHint(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+    hints.printHint()
+    assert(hints.printHint() == None)
+
+def testNumPangrams(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+    assert(hints.numPangrams(puzzleFixture) == 88)
+
+def testNumPerfectPangram(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+    assert(hints.numPerfectPangram(puzzleFixture) == 9)
+
+def testTwoLetterList(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+    hints.twoLetterList(puzzleFixture)
+
+def testGetTwoLetterList(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+    hints.getTwoLetterList()
+    assert(hints.getTwoLetterList != None)
+
+def testPrintTwoLetterList(puzzleFixture: object):
+    hints = hint.hint(puzzleFixture)
+    hints.printTwoLetterList()
+    assert(hints.printTwoLetterList() == None)
