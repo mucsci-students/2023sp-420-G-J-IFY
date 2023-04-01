@@ -304,8 +304,28 @@ def testLoadNoFile(playedPuzzle):
 
 def testLoadFromExplorer():
     path = Path.cwd()
-    puzzle = spellingbee.loadFromExploer(str(path) + '/spellingbee/tests/.json', outty)
+    dict1 = {
+        "RequiredLetter": "w",
+        "PuzzleLetters": "cehinrw",
+        "CurrentPoints": 7,
+        "MaxPoints": 269,
+        "GuessedWords": [
+            "wine",
+            "winner"
+        ],
+        "WordList": [
+            "chew","crew","eeew","ewer","hewn","ween","weer","weir","were","whee","when","whew",
+            "whin","whir","wich","wine","wire","wren","hewer","newer","newie","renew","rewin",
+            "wench","wheen","where","which","whine","whirr","wince","winch","wirer","wrier",
+            "chewer","rechew","rewire","weenie","weewee","weiner","whence","whiner","wiener",
+            "wienie","wincer","winier","winner","wirier","wrench","chewier","icewine","renewer",
+            "weenier","wencher","wennier","wherein","whinier","wincher","whinnier","wrencher"
+        ]
+    }
+    
+    puzzle = spellingbee.__setFields(dict1)
     dict = __makeDict(puzzle)
+    spellingbee.saveCurrent(puzzle, '')
     dict2 = {
         "RequiredLetter": "w",
         "PuzzleLetters": "cehinrw",
