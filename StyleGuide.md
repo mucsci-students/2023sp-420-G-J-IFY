@@ -10,11 +10,11 @@ enterpereter. The line `#!/usr/bin/env` should be sufficient.
 ### Header Block
 
 1. Module Name
-2. Date of creation
-3. Contributors to Function in oder of most Contributed
-4. Functions in that module
-5. Description of module
-6. Imports
+2. Contributors to Function in order of most Contributed
+3. Date of creation
+4. Description of module
+5. Functions in that module
+6. Imports (Imports will be below the header block)
 
 ### Example
 
@@ -47,10 +47,9 @@ enterpereter. The line `#!/usr/bin/env` should be sufficient.
 Use a line of `#` with a length of 80 chars to separate methods.
 Public methods use standard camel case, and 
 
-1. Have parameters and description at the top of the function
-2. Function names in camel case
-3. If functions have similar functionality within them create a general helper
-function.
+1. Function names in camel case
+2. Have parameters and description at the top of the function
+3. Return values are stated
 4. Utilize exception handling for code that can take bad input
 
 ### Example
@@ -64,17 +63,17 @@ function.
 #
 # PARAMETERS:
 #   arg1 : int
-#     - an example integer parameter
+#     - An example integer parameter
 #   arg2 : int, optional
-#     - an example string parameter
+#     - An example string parameter
 #
 # RETURNS:
 #   bool
-#     - a boolean return type
+#     - A boolean return type
 #
 # RAISES:
 #   Exception
-#     - if arg1 is less than or equal to o
+#     - If arg1 is less than or equal to 0
 ################################################################################
 def functionName(arg1 : int, arg2='defaultVal' : str) -> bool:
     if arg1 > 0:

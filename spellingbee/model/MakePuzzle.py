@@ -38,23 +38,23 @@ class TooManyKeyLettersException(Exception):
 #   Finds legitimate base word and creates a puzzle based on that
 #
 # PARAMETERS:
-#  baseWord : str
-#   takes a baseword that is either an empty string or a pangram and makes a
-#   puzzle from it
-#  outty : object
-#     - output object storing output strings
-#  flag : bool
-#    flag to check if we are using cli or gui (True for Gui False for Cli)
+#   baseWord : str
+#     - Takes a baseword that is either an empty string or a pangram and makes a
+#       puzzle from it
+#   outty : object
+#     - Output object storing output strings
+#   flag : bool
+#     - Flag to check if we are using cli or gui (True for Gui False for Cli)
 #
 #
 # RETURNS:
-#  puzzle
-#   empty game object
+#   puzzle
+#     - Empty game object
 #
 # RAISES:
-#  BadQueryException
-#   if check is baseword contains nonalphas
-#   if word is in the database
+#   BadQueryException
+#     - If check is baseword contains nonalphas
+#       if word is in the database
 ################################################################################
 def newPuzzle(baseWord: str, keyLetter: str, outty: output, flag: bool) -> object:
     try:

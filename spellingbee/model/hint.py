@@ -207,7 +207,8 @@ class hint:
     #   Gives the number of pangrams for a given puzzle
     #
     # Parameters:
-    #   None
+    #   obj
+    #      Puzzle object
     ############################################################################
     def numPangrams(self, obj: puzzle.Puzzle) -> int:
         ulString = obj.getUniqueLetters()
@@ -241,7 +242,8 @@ class hint:
     #   Gives the number of perfect pangrams for a given puzzle
     #
     # Parameters:
-    #   None
+    #   obj
+    #      Puzzle object
     ############################################################################
     def numPerfectPangram(self, obj: puzzle.Puzzle) -> int:
         ulString = obj.getUniqueLetters()

@@ -8,21 +8,11 @@
 #   updates the display to reflect those changes.
 #
 # CLASSES:
-# GUIController
+#   GUIController
 #
 # FUNCTIONS:
-# connectSignals(keySymbol: str, button)
+#   connectSignals(keySymbol: str, button)
 ################################################################################
-
-#LaunchSetting() { 
-#Ask user for gui or cli 
-#While not gui or cli 
-    #Print invalid input 
-    #If CLI then CLI 
-        #Else if GUI then GUI 
-        #Else GUI 
-#maybe return the setting to somewhere else 
-#} 
 
 import sys
 import os
@@ -41,8 +31,6 @@ from PyQt6.QtWidgets import QVBoxLayout, QTextEdit, QLabel, QGridLayout, QPlainT
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
-        
-#Global Var
 
         
 class GController():
@@ -67,9 +55,10 @@ class GController():
     #   functionality.
     #
     # PARAMETERS:
-    #  keySymbol : str
-    #  button : unsure
-    #  user input as a single character (one at a time)
+    #   None
+    #
+    # RETURNS:
+    #   None
     ############################################################################
     def connectSignals(self):
         '''
@@ -104,11 +93,13 @@ class GController():
     # newPuzzle(userInput) -> object:
     #
     # DESCRIPTION:
-    #   prompts for input and directs functionality to create a new puzzle object.
+    #   Prompts for input and directs functionality to create a new puzzle object.
     #
-    # RETURN:
-    #   object
-    #     - new puzzle object
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def newPuzzle(self) -> None:
         dlg = self.window.newDialog
@@ -126,6 +117,7 @@ class GController():
         else:
             #dlg.setMessage('Invalid base word')
             pass
+    
     ################################################################################
     # guess(window: object) -> None
     #
@@ -134,27 +126,33 @@ class GController():
     #   words that do not exist
     #
     # PARAMETERS:
-    #  window : Obj
-    #   the GUI window we will be manipulating
+    #   None
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def guess(self):
         self.window.setStatusTip('')
-        #Connect to text field in view and grab 
+        # Connect to text field in view and grab 
         text = self.window.centralWidget.uInput.text()
         self.window.centralWidget.uInput.clear()
         MakePuzzle.guess(self.puzzle, text, True, self.outty)    
         self.window.statsPanel.update(self.puzzle)
         self.window.setStatus(self.outty.getField())
+    
     ################################################################################
     # saveGame(Game : object) -> None:
     #
     # DESCRIPTION:
-    #   creates a new save entry for the overall status of the game.
+    #   Creates a new save entry for the overall status of the game.
     #   creates a new save entry for JUST the puzzle data of the game.
     #
     # PARAMETERS:
     #   game : object
-    #     - puzzle object storing the current game state
+    #     - Puzzle object storing the current game state
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def saveGame(self) -> None:
         # Takes file name
@@ -174,7 +172,8 @@ class GController():
 
 
             self.window.setStatus(self.outty.getField())
-            dialog.accept() 
+            dialog.accept()
+    
     ################################################################################
     # handleSave(game : object, num) -> None:
     #
@@ -188,6 +187,9 @@ class GController():
     #   num : int
     #     - an integer value to determin if we are saving all the game progress
     #       or just the pzzle. 0 for saveCurrent() and 1 for savePuzzle().
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def handleSave(self, game : object, fileName: str ,num : int, folder : str) -> None:
         saveStatus = False
@@ -207,27 +209,41 @@ class GController():
             elif(num == 1):
                 StateStorage.saveFromExplorer(folder, fileName, game, True)
                 saveStatus = True
-                #    if saveStatus:
+                    #if saveStatus:
                 # Run dialog window for successful save
-        #        pass
-        #    else:
+                #pass
+            #else:
                 # Run dialog window for failed save
-        #        pass       
+                #pass
+    
     ################################################################################
     # help() -> None
     #
     # DESCRIPTION:
     #   provides a brief description of game rules and generally how to play as well
     #   as a list of all available commands.
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def help() -> None:
         # Display Game Intructions
         pass
+    
     ################################################################################
     # shuffleLetters() -> None
     #
     # DESCRIPTION:
     #   Shuffles the letters in the GUI View
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def shuffleLetters(self) -> None:
         centralWidget = self.window.centralWidget
@@ -235,6 +251,7 @@ class GController():
         letters = [*self.puzzle.getShuffleLetters().upper()]
         centralWidget.setLetters(letters)
         centralWidget.update()
+        
     ################################################################################
     # loadGame() -> None:
     #
@@ -242,7 +259,10 @@ class GController():
     #   load an existing save entry into memory
     #
     # PARAMETERS:
-    # 
+    #   None
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def loadGame(self) -> None:
         '''
@@ -270,25 +290,33 @@ class GController():
         else:
             self.puzzle = newPuzzle
             self.window.newGame(self.puzzle)
+    
     ################################################################################
     # deleteInput() -> None:
     #
     # DESCRIPTION:
-    #   deletes char from input field
+    #   Deletes char from input field
     #
     # PARAMETERS:
-    #   none
+    #   None
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def deleteInput(self):
         self.window.centralWidget.uInput.backspace()
+        
     ################################################################################
     # toOverwrite() -> None:
     #
     # DESCRIPTION:
-    #   completes save overwrite
+    #   Completes save overwrite
     #
     # PARAMETERS:
-    #   none
+    #   None
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def toOverwrite(self, num, game, fileName, folder):
         if(num == 0):
@@ -307,7 +335,10 @@ class GController():
     #
     # PARAMETERS:
     #   self
-    #       Gcontroller object
+    #     - Gcontroller object
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def hint(self) -> None:
         # dialog window
@@ -326,11 +357,11 @@ class GController():
         button.accepted.connect(dlg.accept)
         font = QFont('Courier', 11)
         self.clear()
-        # list representation of the hint grid
+        # List representation of the hint grid
         lst = obj.hint
         dlg.setGeometry(700,300,600,600)
      
-        # format String containing the Grid
+        # Format String containing the Grid
         fStr = self.buildHintGrid(lst, obj)
 
         mDlg.setPlainText(fStr)
@@ -339,23 +370,23 @@ class GController():
         #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
         self.clear()
-        #execute command
-        #parse data
-        #display 2 user
+        # Execute command
+        # Parse data
+        # Display to user
     
     ################################################################################
     # formatHintsHeader(self) -> str:
     #
     # DESCRIPTION:
-    #   formats the hint grids header
+    #   Formats the hint grids header
     #
     # PARAMETERS:
     #   self
-    #       Gcontroller object
+    #     - Gcontroller object
     #
     # RETURNS:
     #   fStr : str
-    #       format String that contains the hint grid header
+    #     - Format String that contains the hint grid header
     ################################################################################
     def formatHintsHeader(self, hint) -> str:
         fStr = 'Spelling Bee Grid \n\n\n'
@@ -381,10 +412,12 @@ class GController():
     #
     # PARAMETERS:
     #   self
-    #       Gcontroller object
-    #   
-    #   lst : List[List[int]]
+    #     - Gcontroller object
+    #   lst
+    #     - The hint grid to remove a column from
     #
+    # RETURNS:
+    #   lst : list[list[int]]
     ################################################################################
     def removeColumn(self, col, lst) -> list[list[int]]:
         for i in lst:
@@ -395,14 +428,17 @@ class GController():
     # removeColumn(self, col, lst) -> list[list[int]]:
     #
     # DESCRIPTION:
-    #   removes all columns from the grid whos sumation is Zero
+    #   Removes all columns from the grid whos sumation is Zero
     #
     # PARAMETERS:
     #   self
-    #       Gcontroller object
+    #     - Gcontroller object
     #   
     #   lst : List[List[int]]
-    #       list representaion of the hints grid
+    #     - List representaion of the hints grid
+    #
+    # RETURNS:
+    #   None
     ################################################################################
     def removeZeroColumns(self,lst):
         count = len(lst[8]) - 1
@@ -413,46 +449,45 @@ class GController():
             count += -1
         return lst
 
-
     ################################################################################
     # buildHintGrid(self,lst : hint):
     #
     # DESCRIPTION:
-    #   builds the Hints grid
+    #   Builds the Hints grid
     #
     # PARAMETERS:
     #   self
-    #       Gcontroller object
+    #      - Gcontroller object
     #
     #   lst: List[List[int]]
-    #       list representation of the hint grid
+    #      - List representation of the hint grid
     #
-    # RETURN:
+    # RETURNS:
     #   fStr: str
-    #       format string containing the complete hint grid
+    #      - Format string containing the complete hint grid
     ################################################################################
     def buildHintGrid(self,lst, hint) -> str:
-        #build hint grid
+        # Build hint grid
         fStr =''
         letters = ''
         fStr += self.formatHintsHeader(hint)
-        # builds a string of the unique letters from the 2d list
+        # Builds a string of the unique letters from the 2d list
         letters = self.getLettersFromGrid(lst)
         
         fStr += '    '
 
-        #print the word lengths from 4 - sigma
+        # Print the word lengths from 4 - sigma
         
-        #fStr += self.formatLengthHeader()
+        # fStr += self.formatLengthHeader()
 
         fStr += self.formatHintsGrid(lst, letters)
-        #print the body of the grid
+        # Print the body of the grid
         
 
         fStr += "\nTwo Letter List:\n\n"
         fStr += self.formatTwoLetterList(hint)
         return fStr
-        #return a formated string of the grid
+        # Return a formated string of the grid
     
     ################################################################################
     # getLettersFromGrid(lst) -> str:
@@ -463,9 +498,9 @@ class GController():
     # PARAMETERS:
     #   lst : list[list[str]]
     #
-    # RETURN:
+    # RETURNS:
     #   letters : str
-    #       letters of the puzzle
+    #       Letters of the puzzle
     ################################################################################
     def getLettersFromGrid(self, lst) -> str:
         letters = ''
@@ -491,20 +526,19 @@ class GController():
             fStr += '\n\n'
         return fStr 
 
-
     ################################################################################
     # formatTwoLetterList(hint : object) -> str:
     #
     # DESCRIPTION:
-    #   formats the two letter list for th hints dialog
+    #   Formats the two letter list for th hints dialog
     #
     # PARAMETERS:
     #   hint : object
-    #       is a hint object
+    #      - A hint object
     #
-    # RETURN:
+    # RETURNS:
     #   fStr : str
-    #       A string that contains the formated string
+    #      - A string that contains the formated string
     ################################################################################
     def formatTwoLetterList(self, hint : object) -> str:
         
@@ -529,13 +563,12 @@ class GController():
             count += 1
         return fStr
 
-
     def clear(self):
-        # for windows
+        # For windows
         if name == 'nt':
             _ = system('cls')
     
-        # for mac and linux(here, os.name is 'posix')
+        # For mac and linux(here, os.name is 'posix')
         else:
             _ = system('clear')
 
@@ -547,3 +580,4 @@ def main():
     
 if __name__ == '__main__':
     main()
+    

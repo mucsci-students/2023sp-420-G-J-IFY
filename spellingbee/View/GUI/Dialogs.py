@@ -39,10 +39,10 @@ from PyQt6.QtWidgets import (
 #   uInput : QLineEdit
 #     - User input field
 #   btns : QDialogButtonBox
-#     - standard buttons for acceptance or rejection
+#     - Standard buttons for acceptance or rejection
 # FUNCTIONS
 #   initUI() -> None
-#     - initializes and builds the user interface
+#     - Initializes and builds the user interface
 ################################################################################
 class LoadDialog(QDialog):
     def __init__(self, parent: QWidget, *args, **kwargs):
@@ -66,8 +66,8 @@ class LoadDialog(QDialog):
             QDialogButtonBox.StandardButton.Cancel |
             QDialogButtonBox.StandardButton.Open
         )
-        # acceptance event must be handled by controller. Rejection follows
-        # standard rejection procedure.
+        # Acceptance event must be handled by controller. Rejection follows
+        # Standard rejection procedure.
         self.btns.rejected.connect(self.reject)
 
         layout.addWidget(self.uInput)
@@ -87,7 +87,7 @@ class LoadDialog(QDialog):
 #   message : QLabel
 #     - Message for user
 #   btns : QDialogButtonBox
-#     - Stnadard buttons for acceptance/rejection
+#     - Standard buttons for acceptance/rejection
 ################################################################################
 class LoadFailedDialog(QDialog):
     def __init__(self, parent : QWidget, *args, **kwargs):
@@ -173,10 +173,10 @@ class NewDialog(QDialog):
 
         self.btns = QDialogButtonBox(self)
          
-        # initialize display
+        # Initialize display
         self._initUI()
          
-        # display first page on stack
+        # Display first page on stack
         self.display(0)
      
     ############################################################################
@@ -358,9 +358,9 @@ class NewDialog(QDialog):
 #   fileName : QLineEdit
 #     - The name under which the file will be4 saved
 #   justPuzzle : QCheckBox
-#     - a checkbox giving the user to save a blank copy of their game
+#     - A checkbox giving the user to save a blank copy of their game
 #   btns : QDialogButtonBox
-#     - standard buttons for acceptance/rejection
+#     - Standard buttons for acceptance/rejection
 ################################################################################
 class SaveDialog(QDialog):
     def __init__(self, parent : QWidget | None, *args, **kwargs):
@@ -414,9 +414,9 @@ class SaveDialog(QDialog):
 #
 # ATTRIBUTES
 #   message : QLabel
-#       Notification message
+#      - Notification message
 #   btns : QDialogButtonBox
-#       standard buttons for acceptance/rejection
+#      - Standard buttons for acceptance/rejection
 # FUNCTIONS
 ################################################################################
 class SaveOverwriteDialog(QDialog):
@@ -538,5 +538,3 @@ class WelcomeDialog(QDialog):
         layout.addWidget(self.btns)
 
         self.setLayout(layout)
-
-        
