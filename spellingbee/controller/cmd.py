@@ -138,15 +138,16 @@ class SavePuzzle(Command):
 #
 ################################################################################
 class LoadGame(Command):
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: str, outty: object) -> None:
         self._name = '!load'
         self._description = 'Load a previously saved game'
 
         # params
         self._path = path
+        self._outty = outty
 
     def execute(self) -> None:
-        StateStorage.loadFromExploer(self._path)
+        StateStorage.loadFromExploer(self._path, self._outty)
     
 ################################################################################
 # class Shuffle(Command)
