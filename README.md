@@ -57,18 +57,17 @@ python src -c (To launch CLI)
 ```
 
 - To run tests, run:
-Windows:
+Windows/Mac/Linux
 ```
-make tests
+pytest
 ```
-macOS/Linux:
+
+- To run tests along with code coverage of model, run:
 ```
-make tests
+pytest --cov=model
 ```
-- After runing tests run:
-```
-make cleanTests
-```
+
+
 ## Authors
 ---
 
