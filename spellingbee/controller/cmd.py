@@ -154,7 +154,7 @@ class Shuffle(Command):
 #
 ################################################################################
 class Hint(Command):
-    def __init__(self, puzzle: object, outty: object) -> None:
+    def __init__(self, puzzle: object) -> None:
         self._name = '!hint'
         self._description = (
             "Show show data from the current game to help user make a guess"
@@ -162,7 +162,6 @@ class Hint(Command):
 
         # params
         self._puzzle = puzzle
-        self._outty = outty
 
     def execute(self) -> dict:
         hints = hint(self._puzzle)
@@ -176,7 +175,7 @@ class Hint(Command):
         return {
             'letters' : f'\u0332{keyLett}\u0332 {rest}',
             'numWords' : hints.countWords(self._puzzle),
-            'points' : str(self._puzzle.maxScore),
+            'points' : self._puzzle.maxScore,
             'numPan' : hints.numPangrams(self._puzzle),
             'numPerf' : hints.numPerfectPangram(self._puzzle),
             'bingo' : self._puzzle.checkBingo(),
