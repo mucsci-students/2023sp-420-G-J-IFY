@@ -1,13 +1,12 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-import sys
 
 from model import(
     MakePuzzle,
-    output,
     StateStorage
 )
 from model.puzzle import Puzzle
+from model.hint import hint
 
 ################################################################################
 #
@@ -24,7 +23,7 @@ class Command(ABC):
 
     def get_name(self) -> str:
         return self._name
-    
+
     def get_description(self) -> str:
         return self._description
 
@@ -155,14 +154,35 @@ class Shuffle(Command):
 #
 ################################################################################
 class Hint(Command):
-    def __init__(self) -> None:
+    def __init__(self, puzzle: object, outty: object) -> None:
         self._name = '!hint'
         self._description = (
             "Show show data from the current game to help user make a guess"
         )
 
-    def execute(self) -> None:
-        pass 
+        # params
+        self._puzzle = puzzle
+        self._outty = outty
+
+    def execute(self) -> dict:
+        hints = hint(self._puzzle)
+        hints.makeHintGrid(self._puzzle)
+        hints.twoLetterList(self._puzzle)
+
+        shuffleLetts = self._puzzle.getShuffleLetters()
+        keyLett = shuffleLetts[0].upper()
+        rest = ' '.join(shuffleLetts[1 : len(shuffleLetts)]).upper()
+
+        return {
+            'letters' : f'\u0332{keyLett}\u0332{rest}',
+            'numWords' : hints.countWords(self._puzzle),
+            'points' : str(self._puzzle.maxScore),
+            'numPan' : hints.numPangrams(self._puzzle),
+            'numPerf' : hints.numPerfectPangram(self._puzzle),
+            'bingo' : self._puzzle.checkBingo(),
+            'matrix' : hints.getHintGrid(),
+            'twoLetLst' : hints.getTwoLetterList()
+        }
 
 ################################################################################
 # class Guess(Command)
