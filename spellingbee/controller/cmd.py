@@ -163,33 +163,7 @@ class Help(Command):
         )
 
     def execute(self) -> None:
-        pass
-    
-################################################################################
-#
-################################################################################
-class Hint(Command):
-    def __init__(self) -> None:
-        self._name = '!hint'
-        self._description = 'Description Pending'
-
-    def execute(self) -> None:
-        pass
-    
-################################################################################
-# class Exit(Command)
-#
-# DESCRIPTION:
-#   Finds legitimate base word and creates a puzzle based on that
-################################################################################
-class Exit(Command):
-    def __init__(self) -> None:
-        self._name = '!exit'
-        self._description = 'Exit the game'
-
-    def execute(self) -> None:
-        sys.exit()
-    
+        pass 
 
 ################################################################################
 #
