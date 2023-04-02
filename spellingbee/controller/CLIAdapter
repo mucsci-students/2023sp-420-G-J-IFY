@@ -11,12 +11,25 @@
 ################################################################################
 
 import cmd
+import sys
+import os
+import puzzle
 
+current = os.path.dirname(os.path.realpath(__file__))
+
+parent = os.path.dirname(current)
+
+sys.path.append(parent)
+
+from cview import CLI
+from model import MakePuzzle, StateStorage
+from model import hint
+from os import path
   
 
 class CLI_A:
-    def __init(self):
-        pass
+    def __init(self, puzzzle: puzzle.Puzzle):
+        self.puzzle = puzzle
 
     ################################################################################
     # parse(userinput : str, game : object, outty : object) -> object:
@@ -65,10 +78,10 @@ class CLI_A:
             case '!save-list':
                 outty.setField('Implementation Pending...')
             case '!help':
-                help()
+                self.help()
                 return game
             case '!exit':
-                exit(game, outty)
+                self.exit(game, outty)
                 return game
             case _:
                 if usrinput.startswith('!'):
@@ -108,7 +121,8 @@ class CLI_A:
         if word != '':
             keyLetter = input("Enter a letter from your word "
                         "to use as the key letter\n> ")
-        out = MakePuzzle.newPuzzle(word.lower(), keyLetter.lower(), outty, False)
+        out = cmd.NewGame(word.lower(), keyLetter.lower(), outty)
+        out = out.execute()
         if outty.getField().startswith("ERROR"):
             print(outty.getField())
             outty.setField('')
@@ -180,8 +194,8 @@ class CLI_A:
     #   outty : object
     #     - output object storing output strings
     ################################################################################
-    def saveGame(self, game : object, outty : object) -> None:
-        self.handleSave(game, 0, outty)
+    def saveGame(self, game : object) -> None:
+        self.handleSave(game, 0)
 
 
     ################################################################################
@@ -196,8 +210,8 @@ class CLI_A:
     #   outty : object
     #     - output object storing output strings
     ################################################################################
-    def savePuzzle(self, game : object, outty) -> None:
-        self.handleSave(game, 1, outty)
+    def savePuzzle(self, game : object) -> None:
+        self.handleSave(game, 1)
 
 
     ################################################################################
@@ -215,6 +229,9 @@ class CLI_A:
     def loadGame(self, game : object, outty) -> None:
         fileName = input('Please enter the name of the game you are looking for.'
                         '\n> ')
+        os.chdir('./saves')
+        currentPath = os.getcwd()
+
         newGame =  StateStorage.loadPuzzle(fileName, outty)
         if newGame != None:
             game = newGame
@@ -228,7 +245,7 @@ class CLI_A:
     #   provides a brief description of game rules and generally how to play as well
     #   as a list of all available commands.
     ################################################################################
-    def help() -> None:
+    def help(self) -> None:
         descHead = ('How to play: \ ')
         descBody = ("Simply type a word after the '> ' prompt and press enter "
                     "to submit a guess. \ \ "
@@ -270,7 +287,7 @@ class CLI_A:
     # DESCRIPTION:
     #   prompts user for confirmation, then quits the game.
     ################################################################################
-    def exit(game, outty) -> None:
+    def exit(self, game, outty) -> None:
         print('Are you sure? all unsaved progress will be lost. [Y/N]')
         usrinput = input('> ').upper()
         match usrinput:
@@ -282,7 +299,7 @@ class CLI_A:
                 return
             case _:
                 outty.setField('Input Invalid')
-                parse('!exit', game, outty) # recursively calls until valid input provided.
+                self.parse('!exit', game, outty) # recursively calls until valid input provided.
 
 
     ################################################################################
@@ -301,27 +318,34 @@ class CLI_A:
     #   outty : object
     #     - output object storing output strings
     ################################################################################
-    def handleSave(game : object, num : int, outty : object) -> None:
+    def handleSave(self, game : object, num : int) -> None:
         saveStatus = False
         fileName = input('Please enter the name of the file you would like to save '
                         'for example "Game1"\n> ')
         os.chdir('./saves')
-        if(path.isfile(fileName +'.json')):
+        currentPath = os.getcwd()
+        fFileName = fileName + 'json'
+        
+        if(path.isfile(fFileName)):
             yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
                             '\n Enter Y for yes or N for no\n> ')
             if(yesOrNo == 'Y'):
                 if(num == 0):
-                    StateStorage.saveCurrent(game, fileName)
+                    save = cmd.SaveGame(self.puzzle, fFileName, currentPath + fFileName, 0)
+                    save.execute
                     saveStatus = True
                 elif(num == 1):
-                    StateStorage.savePuzzle(game, fileName)
+                    save = cmd.SaveGame(self.puzzle, fFileName, currentPath + fFileName, 1)
+                    save.execute
                     saveStatus = True
         else: 
             if(num == 0):
-                StateStorage.saveCurrent(game, fileName)
+                save = cmd.SaveGame(self.puzzle, fFileName, currentPath + fFileName, 0)
+                save.execute
                 saveStatus = True
             elif(num == 1):
-                StateStorage.savePuzzle(game, fileName)
+                save = cmd.SaveGame(self.puzzle, fFileName, currentPath + fFileName, 1)
+                save.execute
                 saveStatus = True
         
         if saveStatus:
@@ -344,6 +368,13 @@ class CLI_A:
     #   outty : object
     #     - output object storing output strings
     ################################################################################
-    def finalGame(finishedPuzzle : object, outty) -> None:
-        showStatus(finishedPuzzle)
+    def finalGame(self, finishedPuzzle : object, outty) -> None:
+        self.showStatus(finishedPuzzle)
         outty.setField("Congratulations!!!! You have found all of the words for this puzzle!")
+
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
