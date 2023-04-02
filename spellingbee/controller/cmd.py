@@ -166,21 +166,37 @@ class Help(Command):
         pass 
 
 ################################################################################
+# class Guess(Command)
 #
+# DESCRIPTION:
+#   Submits a guess to the model
+#
+# ARGUMENTS:
+#   puzzle: Puzzle
+#       the object representing the currently running game
+#   word: str
+#       the word to be submitted as a guess
+#   outty: object
+#       the output object
+#
+# FUNCTIONS:
+#   execute() -> None:
+#       exectutes the attached function call to make a guess
 ################################################################################
 class Guess(Command):
-    def __init__(self, puzzle: Puzzle, word: str) -> None:
+    def __init__(self, puzzle: Puzzle, word: str, outty: object) -> None:
         self._name = '!guess'
         self._description = 'description pending'
 
         # params
         self._puzzle = puzzle
         self._word = word
+        self._outty = outty
 
     def execute(self) -> None:
         MakePuzzle.guess(
-            puzzle=self._puzzle, 
+            puzzle=self._puzzle,
             input=self._word,
             flag=False,
-            outty=None
+            outty=self._outty
         )
