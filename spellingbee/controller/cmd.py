@@ -151,6 +151,15 @@ class Shuffle(Command):
         self._receiver.shuffleChars()
 
 ################################################################################
+# class Hint(Command):
+#
+# DESCRIPTION:
+#
+# ARGUMENTS:
+#
+# ATTRIBUTES:
+#
+# FUNCTIONS:
 #
 ################################################################################
 class Hint(Command):
