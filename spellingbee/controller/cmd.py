@@ -103,27 +103,6 @@ class SaveGame(Command):
             puzzle=self._puzzle,
             onlyPuzz=self._onlyPuzz
         )
-
-'''   
-################################################################################
-#
-################################################################################
-class SavePuzzle(Command):
-    def __init__(self) -> None:
-        self._name = '!save-puzzle'
-        self._description = 'Description Pending'
-
-    def execute(self) -> None:
-        return super().execute()
-    
-    # Returns information about the command
-    def get_name(self) -> str:
-        return self._name
-    
-    def get_description(self) -> str:
-        return self._description
-
-'''
     
 ################################################################################
 # class LoadGame(Command)
@@ -146,8 +125,8 @@ class LoadGame(Command):
         self._path = path
         self._outty = outty
 
-    def execute(self) -> None:
-        StateStorage.loadFromExploer(self._path, self._outty)
+    def execute(self) -> object:
+        return StateStorage.loadFromExploer(self._path, self._outty)
     
 ################################################################################
 # class Shuffle(Command)
@@ -184,7 +163,7 @@ class Help(Command):
         )
 
     def execute(self) -> None:
-        return super().execute()
+        pass
     
 ################################################################################
 #
@@ -195,10 +174,13 @@ class Hint(Command):
         self._description = 'Description Pending'
 
     def execute(self) -> None:
-        return super().execute()
+        pass
     
 ################################################################################
+# class Exit(Command)
 #
+# DESCRIPTION:
+#   Finds legitimate base word and creates a puzzle based on that
 ################################################################################
 class Exit(Command):
     def __init__(self) -> None:
