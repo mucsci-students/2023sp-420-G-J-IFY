@@ -1,6 +1,6 @@
 import cview.CLI as CLI
 import model.puzzle as puzzle
-import controller.cController as CommandHandler
+import controller.cController as CLIAdapter
 import model.output as output
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
@@ -12,7 +12,8 @@ outty = output.Output()
 usrinput = ' '
 validIn = False
 puzzle = puzzle.Puzzle('', '')
-tabComp = WordCompleter(CommandHandler.commands)
+adapter = CLIAdapter(puzzle, outty)
+tabComp = WordCompleter(adapter.commandsList)
 
 # inital game loop, loop until valid start is reached
 while not validIn:
@@ -23,26 +24,7 @@ while not validIn:
                      'To start a new game, type "!new". To load a previous '
                      'save, type "!load"'], 40, '^')
     usrinput = prompt('> ', completer=WordCompleter(['!new', '!load', '!exit']))
-    match usrinput:
-        #new game
-        case '!new':
-            puzzle = CommandHandler.newPuzzle(outty)
-            validIn = True
-        #load game
-        case '!load':
-            puzzle = CommandHandler.loadGame(puzzle, outty)
-            #check and see if valid game was loaded
-            if puzzle.maxScore == 0:
-                validIn = False
-            else:
-                validIn = True
-        #exit
-        case '!exit':
-            print('Goodbye!')
-            quit()
-        #invalid command
-        case _:
-            print(usrinput + " is not a valid command")
+    adapter.parse(usrinput)
     #check and see if bad puzzle object was returned somewhere
     if puzzle == None:
         validIn = False
@@ -56,7 +38,7 @@ usrinput = prompt('> ', completer=tabComp)
 while True:
     CLI.clear()
     #parse user input
-    retPuzzle = CommandHandler.parse(usrinput, puzzle, outty)
+    retPuzzle = adapter.parse(usrinput)
     #check to see if return puzzle was None (error occuered)
     if retPuzzle != None:
         puzzle = retPuzzle
@@ -66,6 +48,6 @@ while True:
     outty.setField('')
     #check for end of game flag
     if puzzle.getFinishedFlag():
-        CommandHandler.finalGame(puzzle, outty)
+        adapter.finalGame(puzzle)
     #wait for user's next input
     usrinput = prompt('> ', completer=tabComp)
