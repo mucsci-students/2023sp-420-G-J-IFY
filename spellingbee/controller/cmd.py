@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-import os, sys
+import sys
 
 from model import(
     MakePuzzle,
@@ -43,7 +43,7 @@ class Command(ABC):
 #
 ################################################################################
 class NewGame(Command):
-    def __init__(self, base: str='', keyLett: str='') -> None:
+    def __init__(self, outty: object, base: str='', keyLett: str='') -> None:
         self._name = '!new'
         self._description = (
             'Generates a new puzzle from a base word with exactly 7 unique'
@@ -51,12 +51,15 @@ class NewGame(Command):
         )
         self._base = base
         self._keyLett = keyLett
+        self._outty = outty
 
     # Executes defined function
     def execute(self) -> Puzzle:
         puzzle = MakePuzzle.newPuzzle(
             baseWord=self._base,
-            keyLetter=self._keyLett
+            keyLetter=self._keyLett,
+            outty=self._outty,
+            flag=False
         )
         puzzle.shuffleChars()
         return puzzle

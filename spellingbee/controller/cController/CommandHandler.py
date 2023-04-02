@@ -477,10 +477,10 @@ def formatHintGrid(lst, letters: str) -> str:
 #       A string that contains the letters of the puzzle
     ################################################################################
 def getLettersFromGrid(lst) -> str:
-        letters = ''
-        for i in range(9):
-            letters += str(lst[i][0]).capitalize()
-            lst[i].pop(0)
+    letters = ''
+    for i in range(9):
+        letters += str(lst[i][0]).capitalize()
+        lst[i].pop(0)
         return letters
 
 ################################################################################
