@@ -282,7 +282,169 @@ class CLI_A:
         CLI.drawTextBox([descHead, descBody], 40, '<')
         CLI.drawTextBox([commHead, commBody], 40, '<')
 
+    ################################################################################
+    # hints(puzzle: object, outty: object) -> None
+    #
+    # DESCRIPTION:
+    #   Prints the hints, including the hints gird, number of words, 2 letter list, etc
+    # PARAMETERS:
+    #   puzzle : object
+    #     - puzzle object for the currently active game.
+    #   outty : object
+    #     - output object storing output strings
 
+    ################################################################################
+    def hints(self) -> None:
+        hints = cmd.Hint(self.puzzle)
+        hintsDict = hints.execute()
+        hintHeader = ('Spelling Bee Hint Grid \n\n\n'
+                    'Center letter is underlined. \n\n '
+                    f'{hintsDict["letters"]} \n -\n\n'
+                    'WORDS: ' + (f'{hintsDict["numWords"]}, POINTS: ' + str(hintsDict["points"]) + ', PANGRAMS: ' +  str(hintsDict["numPan"]) + 
+                    ' ('  + str(hintsDict["numPerf"]) + ' Perfect) BINGO: '+ str(hintsDict["bingo"])+ '\n')
+                    )
+        lst = hintsDict["matrix"]
+        letters = self.getLettersFromGrid(lst)
+        hintGrid = self.formatHintGrid(lst, letters)
+
+        grid =(f'{hintGrid}')
+        
+        twoLetterList = ('Two letter list:\n\n'
+                        f'{self.formatTwoLetterList(hintsDict)}')
+        
+        finalView = hintHeader + '\n\n\n' + grid + '\n' + twoLetterList + '\n\n'
+        print(finalView)
+        input("Press enter to return to game")
+    
+    ################################################################################
+    # formatHintGrid(game:object) -> str
+    #
+    # DESCRIPTION:
+    #   Formats the the hints grid of the Game to be printed
+    # PARAMETERS:
+    #   puzzle : object
+    #     - puzzle object for the currently active game.
+    # Returns:
+    #   fStr: str
+    #       a format string of the hint grid
+
+    ################################################################################
+    def formatHintGrid(self, lst, letters: str) -> str:
+        fStr ='     '
+        #remove all columns whos sigma is zero
+        self.removeZeroColumns(lst)
+
+        #print lengths
+        for i in range((len(lst[0]))):
+            fStr += f'{lst[0][i]:<4}'
+
+        fStr += '\n\n'
+        for i in range(1,9):
+            fStr += f'{letters[i - 1]}:'
+            for y in range(len(lst[0])):
+                fStr += f' {lst[i][y]:>3}'
+                    
+            fStr += '\n\n'
+        return fStr 
+        
+
+    ################################################################################
+    # formatTwoLetterList(hint : object) -> str:
+    #
+    # DESCRIPTION:
+    #   gets the letters from the list and removes that column
+    #
+    # PARAMETERS:
+    #   lst : object
+    #       list representation of the hints grid
+    #
+    # RETURN:
+    #   letters : str
+    #       A string that contains the letters of the puzzle
+        ################################################################################
+    def getLettersFromGrid(self, lst) -> str:
+        letters = ''
+        for i in range(9):
+            letters += str(lst[i][0]).capitalize()
+            lst[i].pop(0)
+            return letters
+
+    ################################################################################
+    # formatTwoLetterList(hint : object) -> str:
+    #
+    # DESCRIPTION:
+    #   formats the two letter list for th hints dialog
+    #
+    # PARAMETERS:
+    #   hint : object
+    #       is a hint object
+    #
+    # RETURN:
+    #   fStr : str
+    #       A string that contains the formated string
+    ################################################################################
+    def formatTwoLetterList(self, hint : dict) -> str:
+        lst = hint['twoLetList']
+        count = 0
+        fStr = ''
+        for i in lst:
+            letters = str(i[0]).capitalize()
+            num = i[1]
+            if count > 0:
+                prevLetters = str(lst[count - 1][0]).capitalize()
+                if letters[0] == prevLetters[0]:
+                    if count == len(lst) - 1:
+                        fStr += f'{letters}: {num}'
+                    else:
+                        fStr += f'{letters}: {num}, '
+                else:
+                    fStr += f'\n{letters}: {num}, '
+            else:
+                fStr += f'{letters}: {num}, '
+            count += 1
+
+        return fStr
+
+    ################################################################################
+    # removeColumn(self, col, lst) -> list[list[int]]:
+    #
+    # DESCRIPTION:
+    #   removes empty column from the grid
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #
+    #   lst : List[List[int]]
+    #       list representation of the hints grid
+    ################################################################################
+    def removeColumn(self, col, lst) -> list[list[int]]:
+        for i in lst:
+            del i[col]
+        return lst
+
+    ################################################################################
+    # removeColumn(self, col, lst) -> list[list[int]]:
+    #
+    # DESCRIPTION:
+    #   removes all columns from the grid whos sumation is Zero
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #   
+    #   lst : List[List[int]]
+    #       list representaion of the hints grid
+    ################################################################################
+    def removeZeroColumns(self, lst):
+        count = len(lst[8]) - 1
+
+        for i in reversed(lst[8]) :
+            if i == 0:
+                self.removeColumn(count, lst)
+            count += -1
+        return lst
+    
     ################################################################################
     # exit() -> None:
     #
@@ -356,7 +518,7 @@ class CLI_A:
             print('Game could not be saved.')
             
         os.chdir('..')
-
+        
     ################################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
     #
@@ -374,6 +536,19 @@ class CLI_A:
         self.showStatus(finishedPuzzle)
         self.outty.setField("Congratulations!!!! You have found all of the words for this puzzle!")
         
+    ################################################################################
+    # finalGame(finishedPuzzle : object, outty : object) -> None
+    #
+    # DESCRIPTION:
+    #   Notifies the user that they have found all the words for the currently
+    #   active game.
+    #
+    # PARAMETERS:
+    #   finishedPuzzle : object
+    #     - puzzle object for the currently active (and finished) game.
+    #   outty : object
+    #     - output object storing output strings
+    ################################################################################
     def commandsList(self) -> list:
         commands = [
         '!new',
