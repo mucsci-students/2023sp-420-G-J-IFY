@@ -387,8 +387,7 @@ class Puzzle:
     #
     # Description:
     #   Makes of list of the first letter of all found words
-    #   converts list to a set to get only one instance of each letter
-    #   compares converted list to the unique letters list
+    #   checks to see if length of list is 7
     #
     # Parameters:
     #   none
@@ -397,8 +396,13 @@ class Puzzle:
         if self.foundWordList == []:
             return False
         
-        bingoList = [x[0].lower for x in self.foundWordList]
-        # bingoList = set(bingoList.sort())
+        bingoList = []
+
+        for each in self.foundWordList:
+            if each[0] not in bingoList:
+                bingoList.append(each[0])
+            if len(bingoList) == 7:
+                break
         return len(bingoList) == 7
         
 

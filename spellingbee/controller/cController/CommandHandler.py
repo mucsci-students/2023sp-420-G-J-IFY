@@ -405,6 +405,7 @@ def hints(game: object, outty: object) -> None:
     
     finalView = hintHeader + '\n\n\n' + grid + '\n' + twoLetterList + '\n\n'
     print(finalView)
+    input("Press enter to return to game")
 
 ################################################################################
 # formatGameLetts(game:object) -> str
