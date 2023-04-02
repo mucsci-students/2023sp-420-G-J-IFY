@@ -1,6 +1,6 @@
 ################################################################################
 # hint.py
-# Author: Francesco Spagnolo,
+# Author: Francesco Spagnolo, Yah'hymbey Baruti Ali-Bey
 # Date of Creation: 3-20-2023
 #
 # Makes a hint object to use within the gui and the cli.
@@ -19,8 +19,8 @@ import sqlite3
 
 class hint:
     def __init__(self, obj: puzzle.Puzzle):
-        rows, cols = (9, 14)
-        self.hint = [[0 for i in range(cols)] for j in range(rows)]
+        self.rows, self.cols = (9, 14)
+        self.hint = [[0 for i in range(self.cols)] for j in range(self.rows)]
         obj.findAllWords()
         self.twoLettList = [
             [0 for i in range(2)] for j in range(self.numTwoLettCombo(obj))
@@ -40,23 +40,6 @@ class hint:
     def countWords(self, obj: puzzle.Puzzle) -> int:
         numWords = len(obj.getAllWords())
         return numWords
-
-    ############################################################################
-    # countWordsCheck(obj: puzzle.Puzzle) -> int
-    #
-    # Description:
-    #   Used as an assurance for countWords() for correctness
-    #
-    # Parameters:
-    #   obj
-    #      Object to be lengthed
-    ############################################################################
-    def countWordsCheck(obj: puzzle.Puzzle) -> int:
-        return len(
-            MakePuzzle.getAllWordsFromPangram(
-                obj.getUniqueLetters(), obj.getKeyLetter()
-            )
-        )
 
     ############################################################################
     # makeHintGrid(obj: puzzle.Puzzle)

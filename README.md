@@ -36,7 +36,7 @@ git clone "https://github.com/mucsci-students/2023sp-420-G-J-IFY.git"
 - Then, navigate to `./GitHub/2023sp-420-G-J-IFY/` and run the following command:
 
 ```
-make
+THIS SHOULD BE INSTALLING REQUIREMENTS, I JUST DON'T REMEMBER THE COMMAND!!!
 ```
 
 ### Executing program
@@ -44,31 +44,30 @@ make
 - To run, the program, run:
 Windows:
 ```
-python src (To launch GUI)
+python spellingbee (To launch GUI)
 
-python src -c (To launch CLI)
+python spellingbee --cli (To launch CLI)
 ```
 macOS/Linux:
 ```
-python3 src (To launch GUI)
+python3 spellingbee (To launch GUI)
 
-python src -c (To launch CLI)
+python3 spellingbee --cli (To launch CLI)
 
 ```
 
 - To run tests, run:
-Windows:
+Windows/Mac/Linux
 ```
-make tests
+pytest
 ```
-macOS/Linux:
+
+- To run tests along with code coverage of model, run:
 ```
-make tests
+pytest --cov=model
 ```
-- After runing tests run:
-```
-make cleanTests
-```
+
+
 ## Authors
 ---
 
