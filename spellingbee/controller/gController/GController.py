@@ -26,6 +26,7 @@
 
 import sys
 import os
+from os import name, system
 from os import path
 from functools import partial
 from View.GUI.MainWindow import MainWindow
@@ -321,6 +322,7 @@ class GController():
         obj.makeHintGrid(self.puzzle)
         button.accepted.connect(dlg.accept)
         font = QFont('Courier', 11)
+        self.clear()
         # list representation of the hint grid
         lst = obj.hint
         dlg.setGeometry(700,300,600,600)
@@ -333,6 +335,7 @@ class GController():
         dlg.setFont(font)
         #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
+        self.clear()
         #execute command
         #parse data
         #display 2 user
@@ -522,6 +525,16 @@ class GController():
                 fStr += f'{letters}: {num}, '
             count += 1
         return fStr
+
+
+    def clear(self):
+        # for windows
+        if name == 'nt':
+            _ = system('cls')
+    
+        # for mac and linux(here, os.name is 'posix')
+        else:
+            _ = system('clear')
 
 def main():
     outty = output.Output()
