@@ -409,3 +409,4 @@ def testCheckLoadBadFoundWordList():
         dict = json.load(file)  
     assert(spellingbee.checkLoad(dict)['GuessedWords'] == [])
     '''
+
