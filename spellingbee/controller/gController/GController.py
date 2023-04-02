@@ -254,8 +254,11 @@ class GController():
         os.chdir('..')
         '''
         fileName = QFileDialog.getOpenFileName(self.window, 'File')[0]
-        
-        newPuzzle = StateStorage.loadFromExploer(fileName, self.outty)
+        #check and make sure game is loading a .json file
+        if not fileName.endswith('.json'):
+            newPuzzle = None
+        else:
+            newPuzzle = StateStorage.loadFromExploer(fileName, self.outty)
         if newPuzzle == None:
             self.window.loadFailed.show()
         else:
