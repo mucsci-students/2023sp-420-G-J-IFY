@@ -325,31 +325,35 @@ def handleSave(game : object, num : int, outty : object) -> None:
     saveStatus = False
     fileName = input('Please enter the name of the file you would like to save '
                      'for example "Game1"\n> ')
-    os.chdir('./saves')
-    if(path.isfile(fileName +'.json')):
-        yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
-                        '\n Enter Y for yes or N for no\n> ')
-        if(yesOrNo == 'Y'):
+    if len(fileName) < 1:
+        print('Must enter a file name with a length greater then 0\n')
+        handleSave(game,num,outty)
+    else:
+        os.chdir('./saves')
+        if(path.isfile(fileName +'.json')):
+            yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
+                            '\n Enter Y for yes or N for no\n> ')
+            if(yesOrNo == 'Y'):
+                if(num == 0):
+                    StateStorage.saveCurrent(game, fileName)
+                    saveStatus = True
+                elif(num == 1):
+                    StateStorage.savePuzzle(game, fileName)
+                    saveStatus = True
+        else: 
             if(num == 0):
                 StateStorage.saveCurrent(game, fileName)
                 saveStatus = True
             elif(num == 1):
                 StateStorage.savePuzzle(game, fileName)
                 saveStatus = True
-    else: 
-        if(num == 0):
-            StateStorage.saveCurrent(game, fileName)
-            saveStatus = True
-        elif(num == 1):
-            StateStorage.savePuzzle(game, fileName)
-            saveStatus = True
-    
-    if saveStatus:
-        print('Save Complete!')
-    else:
-        print('Game could not be saved.')
         
-    os.chdir('..')
+        if saveStatus:
+            print('Save Complete!')
+        else:
+            print('Game could not be saved.')
+            
+        os.chdir('..')
 
 ################################################################################
 # finalGame(finishedPuzzle : object, outty : object) -> None
