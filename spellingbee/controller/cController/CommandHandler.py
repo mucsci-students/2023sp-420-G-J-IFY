@@ -277,39 +277,11 @@ def loadGame(game : object, outty) -> None:
 #   as a list of all available commands.
 ################################################################################
 def help() -> None:
-    descHead = ('How to play: \ ')
-    descBody = ("Simply type a word after the '> ' prompt and press enter "
-                "to submit a guess. \ \ "
-                "To enter a command, simply type '!' followed by the command "
-                "you wish to use.")
-
-    commHead = ('Available Commands: \ ')
-    commBody = ('!new: \ '
-                'Generates a new puzzle from a base word with exactly 7 '
-                'unique characters, or an auto-generated base word. \ '
-                '!puzzle: \ '
-                'Prints the current puzzle to the screen \ '
-                '!found-words: \ '
-                'Displays the list of all discovered words \ '
-                '!status: \ '
-                'Prints your achieved level for the active game \ '
-                '!shuffle: \ '
-                'Shuffle the order of the active puzzle for a fresh view \ '
-                '!save: \ '
-                'Create a new save for the current game \ '
-                '!savePuzzle: \ '
-                'Create a new save for a blank version of the current game '
-                '(not including any progress from current session) \ '
-                '!load: \ '
-                'Load a previously saved game \ '
-                '!help: \ '
-                'Show the list of all available commands with a brief '
-                "description. (You're here now!) \ "
-                '!exit: \ '
-                'Exit the game ')
-    
-    CLI.drawTextBox([descHead, descBody], 40, '<')
-    CLI.drawTextBox([commHead, commBody], 40, '<')
+    f = open('spellingbee/controller/cController/helpOut.txt', 'r')
+    fileContents = f.read()
+    print (fileContents)
+    f.close()
+    input("Press enter to return to the game: ")
 
 
 ################################################################################
@@ -353,31 +325,35 @@ def handleSave(game : object, num : int, outty : object) -> None:
     saveStatus = False
     fileName = input('Please enter the name of the file you would like to save '
                      'for example "Game1"\n> ')
-    os.chdir('./saves')
-    if(path.isfile(fileName +'.json')):
-        yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
-                        '\n Enter Y for yes or N for no\n> ')
-        if(yesOrNo == 'Y'):
+    if len(fileName) < 1:
+        print('Must enter a file name with a length greater then 0\n')
+        handleSave(game,num,outty)
+    else:
+        os.chdir('./saves')
+        if(path.isfile(fileName +'.json')):
+            yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
+                            '\n Enter Y for yes or N for no\n> ')
+            if(yesOrNo == 'Y'):
+                if(num == 0):
+                    StateStorage.saveCurrent(game, fileName)
+                    saveStatus = True
+                elif(num == 1):
+                    StateStorage.savePuzzle(game, fileName)
+                    saveStatus = True
+        else: 
             if(num == 0):
                 StateStorage.saveCurrent(game, fileName)
                 saveStatus = True
             elif(num == 1):
                 StateStorage.savePuzzle(game, fileName)
                 saveStatus = True
-    else: 
-        if(num == 0):
-            StateStorage.saveCurrent(game, fileName)
-            saveStatus = True
-        elif(num == 1):
-            StateStorage.savePuzzle(game, fileName)
-            saveStatus = True
-    
-    if saveStatus:
-        print('Save Complete!')
-    else:
-        print('Game could not be saved.')
         
-    os.chdir('..')
+        if saveStatus:
+            print('Save Complete!')
+        else:
+            print('Game could not be saved.')
+            
+        os.chdir('..')
 
 ################################################################################
 # finalGame(finishedPuzzle : object, outty : object) -> None
@@ -429,6 +405,7 @@ def hints(game: object, outty: object) -> None:
     
     finalView = hintHeader + '\n\n\n' + grid + '\n' + twoLetterList + '\n\n'
     print(finalView)
+    input("Press enter to return to game")
 
 ################################################################################
 # formatGameLetts(game:object) -> str

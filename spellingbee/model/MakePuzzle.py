@@ -229,15 +229,6 @@ def checkDataBase(baseWord: str):
 ################################################################################
 def guess(puzzle, input: str, flag: bool, outty: object):
     input = input.lower()
-    """
-    if not flag:
-        input = input.lower()
-    else:
-        #TODO
-        #input = pull from gui
-        outty.setField('Flag: {}'.format(flag))
-        pass
-    """
     conn = sqlite3.connect("spellingbee/model/wordDict.db")
     cursor = conn.cursor()
 
@@ -247,30 +238,12 @@ def guess(puzzle, input: str, flag: bool, outty: object):
     # check for only containing alphabetical characters
     elif not input.isalpha():
         outty.setField(input + " contains non alphabet characters")
-
-        """
-        if not flag:
-            outty.setField(input + " contains non alphabet characters")
-        else:
-            # TODO
-            # pop up window
-            pass
-        """
-
     # checks words in the word list to see if it is valid for the puzzle
     elif input in puzzle.getAllWords():
         # check if it is already found
         outty.setField("input in words list")
         if input in puzzle.getFoundWords():
             outty.setField(input.upper() + " was already found!")
-            """
-            if not flag:
-                outty.setField(input.upper() + " was already found!")
-            else:
-                #TODO
-                #Pop up window
-                pass
-            """
         else:
             # query the database to see how many points to give
             query = "select wordScore from dictionary where fullWord = '" + input + "';"
@@ -283,14 +256,6 @@ def guess(puzzle, input: str, flag: bool, outty: object):
         outty.setField(
             input.upper() + " is too short!\nGuess need to be at least 4 letters long"
         )
-        """
-        if not flag:
-            outty.setField(input.upper() + " is too short!\nGuess need to be at least 4 letters long")
-        else:
-            #TODO
-            #POPUP WINDOW
-            pass
-        """
     else:
         # query the database to see if it is a word at all
         query1 = (
@@ -300,14 +265,6 @@ def guess(puzzle, input: str, flag: bool, outty: object):
         response = cursor.fetchone()
         if response == None:
             outty.setField(input.upper() + " isnt't a word in the dictionary")
-            """
-            if not flag:
-                outty.setField(input.upper() + " isn't a word in the dictionary")
-            else:
-                #TODO
-                #Popup window
-                pass
-            """
         # check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())):
             outty.setField(
@@ -315,14 +272,6 @@ def guess(puzzle, input: str, flag: bool, outty: object):
                 + " is missing center letter, "
                 + puzzle.getKeyLetter().upper()
             )
-            """
-            if not flag:
-                outty.setField(input.upper() + " is missing center letter, " + puzzle.getKeyLetter().upper())
-            else:
-                #TODO
-                #popup Window
-                pass
-            """
         else:
             # must be letters not in the puzzle in this case
             outty.setField(
@@ -330,15 +279,6 @@ def guess(puzzle, input: str, flag: bool, outty: object):
                 + " contains letters not in "
                 + puzzle.getShuffleLetters().upper()
             )
-            """
-            if not flag:
-                outty.setField(input.upper() + " contains letters not in " + puzzle.getShuffleLetters().upper())
-            else:
-                #TODO
-                #popup window
-                pass
-            """
-
     conn.commit()
     conn.close()
 
@@ -363,28 +303,8 @@ def guess(puzzle, input: str, flag: bool, outty: object):
 #
 ################################################################################
 def newPuzzCli(baseWord: str, uniqueLetters: dict) -> str:
-    keyLetter = input(
-        "Enter a letter from your word to use as the key letter\n> "
-    )  #####i believe these are fully depricated now Jacob Lovegren 3/1/23
-    keyLetter = keyLetter.lower()
-    # test to see if keyletter is valid
-    while keyLetter not in uniqueLetters or keyLetter == "":
-        # catch if they enter nothing
-        if keyLetter == "":
-            keyLetter = input("Must enter character from " + baseWord + ": ")
-        else:
-            keyLetter = input(
-                keyLetter
-                + " is not part of "
-                + baseWord
-                + " - Please enter a letter from your word: "
-            )
-    return keyLetter
-
-
-def newPuzzGui(baseWord: str):
-    # TODO
-    pass
+    keyLetter = input("Enter a letter from your word to use as the key letter\n> ")  
+    return keyLetter.lower()
 
 
 ################################################################################

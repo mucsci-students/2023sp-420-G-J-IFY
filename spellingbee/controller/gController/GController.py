@@ -26,6 +26,7 @@
 
 import sys
 import os
+from os import name, system
 from os import path
 from functools import partial
 from View.GUI.MainWindow import MainWindow
@@ -159,16 +160,21 @@ class GController():
         # Takes file name
         dialog = self.window.saveDialog
         fileName = dialog.fileName.text()
-        path = str(QFileDialog.getExistingDirectory(self.window, "Select Directory"))
+        if len(fileName) < 1:
+            badSaveNameDlg = QMessageBox(parent=self.window)
+            badSaveNameDlg.setText('Must enter a file name with a length greater than 0.')
+            badSaveNameDlg.show()
+        else:
+            path = str(QFileDialog.getExistingDirectory(self.window, "Select Directory"))
 
-        if dialog.justPuzzle.isChecked():
-            self.handleSave(self.puzzle, fileName, 1, path)
-        else: 
-            self.handleSave(self.puzzle, fileName,  0, path)   
+            if dialog.justPuzzle.isChecked():
+                self.handleSave(self.puzzle, fileName, 1, path)
+            else: 
+                self.handleSave(self.puzzle, fileName,  0, path)   
 
 
-        self.window.setStatus(self.outty.getField())
-        dialog.accept() 
+            self.window.setStatus(self.outty.getField())
+            dialog.accept() 
     ################################################################################
     # handleSave(game : object, num) -> None:
     #
@@ -254,8 +260,11 @@ class GController():
         os.chdir('..')
         '''
         fileName = QFileDialog.getOpenFileName(self.window, 'File')[0]
-        
-        newPuzzle = StateStorage.loadFromExploer(fileName, self.outty)
+        #check and make sure game is loading a .json file
+        if not fileName.endswith('.json'):
+            newPuzzle = None
+        else:
+            newPuzzle = StateStorage.loadFromExploer(fileName, self.outty)
         if newPuzzle == None:
             self.window.loadFailed.show()
         else:
@@ -316,6 +325,7 @@ class GController():
         obj.makeHintGrid(self.puzzle)
         button.accepted.connect(dlg.accept)
         font = QFont('Courier', 11)
+        self.clear()
         # list representation of the hint grid
         lst = obj.hint
         dlg.setGeometry(700,300,600,600)
@@ -328,6 +338,7 @@ class GController():
         dlg.setFont(font)
         #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
+        self.clear()
         #execute command
         #parse data
         #display 2 user
@@ -517,38 +528,16 @@ class GController():
                 fStr += f'{letters}: {num}, '
             count += 1
         return fStr
-    ################################################################################
-    # populateHintGrid(self, parent, grid) -> QGridLayout:
-    #
-    # DESCRIPTION:
-    #   populate the hints grid
-    #
-    # PARAMETERS:
-    #   self
-    #       Gcontroller object
-    #   parent : 
-    #       parent of the window
-    #   grid : List[List[int]]
-    #       List representation of the hint grid
-    #
-    # RETURN:
-    #   gridLayout : QGridLayout
-    #       The layout of the hint grid
-    ################################################################################
-    def populateHintGrid(self, parent, grid) -> QGridLayout:
 
-        # Create QGridLayout object
-        gridLayout = QGridLayout(parent)
-            
-        # Iterate 2D List
-        for row in grid:
-            for col in row:
-            # For each element in the grid, create a label with text as element,
-            #  then add label to the grid layout at position [row][col]
-                lbl = QLabel(text=grid[row][col])
-                gridLayout.addWidget(lbl, row, col)
-            
-        return gridLayout
+
+    def clear(self):
+        # for windows
+        if name == 'nt':
+            _ = system('cls')
+    
+        # for mac and linux(here, os.name is 'posix')
+        else:
+            _ = system('clear')
 
 def main():
     outty = output.Output()
