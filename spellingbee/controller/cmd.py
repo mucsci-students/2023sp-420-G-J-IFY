@@ -174,7 +174,7 @@ class Hint(Command):
         rest = ' '.join(shuffleLetts[1 : len(shuffleLetts)]).upper()
 
         return {
-            'letters' : f'\u0332{keyLett}\u0332{rest}',
+            'letters' : f'\u0332{keyLett}\u0332 {rest}',
             'numWords' : hints.countWords(self._puzzle),
             'points' : str(self._puzzle.maxScore),
             'numPan' : hints.numPangrams(self._puzzle),
