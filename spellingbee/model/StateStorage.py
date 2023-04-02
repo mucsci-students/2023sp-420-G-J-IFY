@@ -73,30 +73,6 @@ def __Save(dict, fileName):
     saveCur = cwd / fileName
     if path.exists(saveCur):
         os.replace(saveCur, saveCur)
-    else:
-        saveNew = cwd / "spellingbee" / "data" / "saves" / fileName
-        os.replace(str(saveCur), str(saveNew))
-
-
-################################################################################
-# __SearchDict(dict: dict, fileName: str) -> Element
-#
-# DESCRIPTION:
-#   Searches a dictionary to find a specific element and returns true if it is
-#   found and false if it is not.
-#
-# PARAMETERS:
-#  dict : dict
-#   dictionary to search
-#  element: E generic
-#   element to search for in dict
-# RETURNS:
-#  element
-#   Returns a searched for element in the dictionary
-################################################################################
-def __SearchDict(dict, element):
-    dictionaryKeys = dict.keys()
-    return element in dictionaryKeys
 
 
 ################################################################################
@@ -241,7 +217,7 @@ def saveCurrent(puzzle, fileName):
 def __checkFileExists(pathToFile):
     p = pathToFile
     if not p.exists():
-        raise FileNotFoundError("file not Found")
+        raise FileNotFoundError
     else:
         return p.exists()
 
@@ -306,7 +282,7 @@ def __Load(fileName, outty):
             "The file " + fileName + " does not exist in this directory\n"
             "Returning to game..."
         )
-        move3dirBack()
+        os.chdir('..')
     except BadJSONException:
         outty.setField(
             "The file " + fileName + " contains critical errors that \n"
@@ -348,18 +324,6 @@ def loadFromExploer(path: Path, outty):
             "prevent the game from functioning properly\n"
             "Returning to game..."
         )
-
-
-################################################################################
-# move3dirBack()
-#
-# DESCRIPTION:
-#   This helper function moves the directory up three levels
-################################################################################
-def move3dirBack():
-    os.chdir("..")
-    os.chdir("..")
-    os.chdir("..")
 
 
 ################################################################################
