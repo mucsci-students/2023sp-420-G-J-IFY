@@ -150,16 +150,15 @@ class Shuffle(Command):
 
     def execute(self) -> None:
         self._receiver.shuffleChars()
-    
+
 ################################################################################
 #
 ################################################################################
-class Help(Command):
+class Hint(Command):
     def __init__(self) -> None:
-        self._name = '!help'
+        self._name = '!hint'
         self._description = (
-            "Show the list of all available commands with a brief description. "
-            "(You're here now!)"
+            "Show show data from the current game to help user make a guess"
         )
 
     def execute(self) -> None:
