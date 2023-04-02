@@ -118,6 +118,79 @@ def completedPuzzle():
     MakePuzzle.guess(obj, 'kamotiq', False, outty) 
     return obj
 
+@pytest.fixture
+def makeBadFoundWordList():
+    dict = {
+    "RequiredLetter": "w",
+    "PuzzleLetters": "cehinrw",
+    "CurrentPoints": 7,
+    "MaxPoints": 269,
+    "GuessedWords": [
+        "help me ",
+        "I hate Python"
+    ],
+    "WordList": [
+        "chew","crew","eeew","ewer","hewn","ween","weer","weir","were",
+        "whee","when","whew","whin","whir","wich","wine","wire","wren",
+        "hewer","newer","newie","renew","rewin","wench","wheen","where",
+        "which","whine","whirr","wince","winch","wirer","wrier","chewer",
+        "rechew","rewire","weenie","weewee","weiner","whence","whiner",
+        "wiener","wienie","wincer","winier","winner","wirier","wrench",
+        "chewier","icewine","renewer","weenier","wencher","wennier",
+        "wherein","whinier","wincher","whinnier","wrencher"
+        ]
+    }
+    return spellingbee.__setFields(dict)
+
+@pytest.fixture
+def makeBadScoreGame():
+   dict = {
+    "RequiredLetter": "w",
+    "PuzzleLetters": "cehinrw",
+    "CurrentPoints": 600,
+    "MaxPoints": 10000,
+    "GuessedWords": [
+        "wine",
+        "winner"
+    ],
+    "WordList": [
+        "chew","crew","eeew","ewer","hewn","ween","weer","weir","were",
+        "whee","when","whew","whin","whir","wich","wine","wire","wren",
+        "hewer","newer","newie","renew","rewin","wench","wheen","where",
+        "which","whine","whirr","wince","winch","wirer","wrier","chewer",
+        "rechew","rewire","weenie","weewee","weiner","whence","whiner",
+        "wiener","wienie","wincer","winier","winner","wirier","wrench",
+        "chewier","icewine","renewer","weenier","wencher","wennier",
+        "wherein","whinier","wincher","whinnier","wrencher"
+        ]
+    }
+   return spellingbee.__setFields(dict)
+
+@pytest.fixture
+def makeBadUniqueLetters():
+    dict =  {
+    "RequiredLetter": "w",
+    "PuzzleLetters": "zaplwq",
+    "CurrentPoints": 7,
+    "MaxPoints": 269,
+    "GuessedWords": [
+        "wine",
+        "winner"
+    ],
+    "WordList": [
+        "chew","crew","eeew","ewer","hewn","ween","weer","weir","were",
+        "whee","when","whew","whin","whir","wich","wine","wire","wren",
+        "hewer","newer","newie","renew","rewin","wench","wheen","where",
+        "which","whine","whirr","wince","winch","wirer","wrier","chewer",
+        "rechew","rewire","weenie","weewee","weiner","whence","whiner",
+        "wiener","wienie","wincer","winier","winner","wirier","wrench",
+        "chewier","icewine","renewer","weenier","wencher","wennier",
+        "wherein","whinier","wincher","whinnier","wrencher"
+        ]
+    }
+    
+    return spellingbee.__setFields(dict)
+
 def testSaveCurrent1(puzzleFixture):
     spellingbee.saveCurrent(puzzleFixture[0], 'test1')
     assert(True == checkIfExists('test1.json'))
@@ -177,8 +250,6 @@ def testOverwriteSave3(playedPuzzle):
     fileNameJson = fileName + ".json"
     MakePuzzle.guess(playedPuzzle, 'acock', False, outty)
     spellingbee.saveCurrent(playedPuzzle, fileName)
-    with open(fileNameJson) as file:
-        dict2 = json.load(file)
     assert(checkIfExists(fileNameJson))
 
 
@@ -207,10 +278,134 @@ def testLoad(playedPuzzle):
     assert(dict1 == dict2)
     os.remove( './saves/TESTFILE5.json')
     print("testLoadPuzzle1: PASSED")
+
+def test__CheckFileExitsBadFile():
+    with pytest.raises(FileNotFoundError):
+        spellingbee.__checkFileExists(Path("./saves/KEEPTHISHERE.TX"))
+
+def testLoadWithJson(playedPuzzle):
+    fileName = 'TESTFILE5'
+    fileNameJson = fileName + ".json"
+    dict1 = __makeDict(playedPuzzle)
+    spellingbee.saveCurrent(playedPuzzle, fileName)
+    os.replace('./TESTFILE5.json', './saves/TESTFILE5.json')
+    puzzle = spellingbee.__Load(fileNameJson, outty)
+    dict2 = __makeDict(puzzle)
+    path = str(Path.cwd()) + '/saves/' + fileNameJson
+    os.remove(path)
+    assert(dict1 == dict2)
+
+def testLoadNoFile(playedPuzzle):
+        fileName = 'him'
+        fileNameJson = fileName +'.json'
+        spellingbee.saveCurrent(playedPuzzle, fileNameJson)
+        puzzle = spellingbee.__Load(fileNameJson, outty)
+        assert(outty.field != '')
+
+def testLoadFromExplorer():
+    path = Path.cwd()
+    dict1 = {
+        "RequiredLetter": "w",
+        "PuzzleLetters": "cehinrw",
+        "CurrentPoints": 7,
+        "MaxPoints": 269,
+        "GuessedWords": [
+            "wine",
+            "winner"
+        ],
+        "WordList": [
+            "chew","crew","eeew","ewer","hewn","ween","weer","weir","were","whee","when","whew",
+            "whin","whir","wich","wine","wire","wren","hewer","newer","newie","renew","rewin",
+            "wench","wheen","where","which","whine","whirr","wince","winch","wirer","wrier",
+            "chewer","rechew","rewire","weenie","weewee","weiner","whence","whiner","wiener",
+            "wienie","wincer","winier","winner","wirier","wrench","chewier","icewine","renewer",
+            "weenier","wencher","wennier","wherein","whinier","wincher","whinnier","wrencher"
+        ]
+    }
     
+    puzzle = spellingbee.__setFields(dict1)
+    dict = __makeDict(puzzle)
+    spellingbee.saveCurrent(puzzle, '')
+    dict2 = {
+        "RequiredLetter": "w",
+        "PuzzleLetters": "cehinrw",
+        "CurrentPoints": 7,
+        "MaxPoints": 269,
+        "GuessedWords": [
+            "wine",
+            "winner"
+        ],
+        "WordList": [
+            "chew","crew","eeew","ewer","hewn","ween","weer","weir","were","whee","when","whew",
+            "whin","whir","wich","wine","wire","wren","hewer","newer","newie","renew","rewin",
+            "wench","wheen","where","which","whine","whirr","wince","winch","wirer","wrier",
+            "chewer","rechew","rewire","weenie","weewee","weiner","whence","whiner","wiener",
+            "wienie","wincer","winier","winner","wirier","wrench","chewier","icewine","renewer",
+            "weenier","wencher","wennier","wherein","whinier","wincher","whinnier","wrencher"
+        ]
+}
+    assert(dict == dict2)
 
+def testFileNotFoundLoad():
+    fileNameJson = 'helpme.json'
+    puzzle = spellingbee.__Load('helpme', outty)
+    assert(outty.getField() ==  "The file " + fileNameJson + " does not exist in this directory\n"
+            "Returning to game...")
+    
+def testCorruptGameLoadFromExplorer():
+    path = Path.cwd()
+    pathToFile = str(path) + '/spellingbee/tests/TestFile.json'
+    puzzle = spellingbee.loadFromExploer(pathToFile, outty)
+    pytest.raises(AssertionError)
+    
+def testSaveFromExplorer(playedPuzzle):
+    path = Path.cwd()
+    savePath = str(path)
+    fileName = 'TestFile2'
+    spellingbee.saveFromExplorer(savePath, fileName, playedPuzzle, False)
+    dict = __makeDict(playedPuzzle)
+    assert(checkContents(fileName + '.json', dict))
+    removeSave(fileName + '.json')
 
+def testSaveFromExplorerPuzzleOnly(playedPuzzle, puzzleFixture):
+    path = Path.cwd()
+    savePath = str(path)
+    fileName = 'TestFile2'
+    spellingbee.saveFromExplorer(savePath, fileName, playedPuzzle, True)
+    dict = puzzleFixture[1]
+    
+    assert(checkContents(fileName + '.json', dict))
+    removeSave(fileName + '.json')
 
-if __name__ == '__main__':
-    unittest.main()
+def testCheckLoadGood(playedPuzzle):
+    dict1 = __makeDict(playedPuzzle)
+    dict2 = spellingbee.checkLoad(__makeDict(playedPuzzle))
+    assert(dict1 == dict2)
 
+def testCheckLoadBadScore(makeBadScoreGame):
+    path = Path.cwd()
+    pathToFile = str(path) + '/spellingbee/tests/checkSavesTestFiles/badScoreGame.json'
+    spellingbee.saveFromExplorer('./spellingbee/tests/checkSavesTestFiles','badScoreGame', makeBadScoreGame, False)
+    with open(pathToFile) as file:
+        dict = json.load(file)    
+    assert(spellingbee.checkLoad(dict)['MaxPoints'] == 269 and spellingbee.checkLoad(dict)['CurrentPoints'] == 7)
+    os.remove(pathToFile)
+
+def testCheckLoadBadUniqueLetters(makeBadUniqueLetters):
+    path = Path.cwd()
+    pathToFile = str(path) + '/spellingbee/tests/checkSavesTestFiles/badUniqueLetters.json'
+    spellingbee.saveFromExplorer('./spellingbee/tests/checkSavesTestFiles','badUniqueLetters', makeBadUniqueLetters, False)
+    with open(pathToFile) as file:
+        dict = json.load(file)  
+    
+    assert(spellingbee.checkLoad(dict) == None)
+    os.remove(pathToFile)
+'''
+def testCheckLoadBadFoundWordList():
+    path = Path.cwd()
+    pathToFile = str(path) + '/spellingbee/tests/checkSavesTestFiles/badFoundWordList.json'
+    
+    with open(pathToFile) as file:
+        dict = json.load(file)  
+    assert(spellingbee.checkLoad(dict)['GuessedWords'] == [])
+    '''
