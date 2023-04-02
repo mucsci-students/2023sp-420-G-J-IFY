@@ -1,7 +1,6 @@
 # SpellingBee by G-J-IFY
 
 ## Description
----
 Welcome to SpellingBee by G-J-IFY. 
 
 This is an homage to the New York Times word puzzle, Spelling Bee. Users are
@@ -10,7 +9,8 @@ word must include the center letter. Letters can be repeated within a word.
 
 Can you guess all the words and become the Queen Bee you're meant to be?
 
-### Dependencies
+
+## Dependencies
 
 This application runs on the following operating systems
   - Windows 10, 11
@@ -18,83 +18,123 @@ This application runs on the following operating systems
   - Linux
 
 Before running the program, you must have Python installed 
-  (3.11.2 at the time). (https://www.python.org/downloads/)
+  (3.11.2 at the time).<br>
+Installation instructions can be found on the [official python site.](https://www.python.org/downloads/)
 
-Also be sure to download Chocolatey if you are on windows.
-  Run this command in Administrative PowerShell window to install Choclatey:
-  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+**These dependencies will be automatically isntalled:**
+- pytest 7.2.2
+- pyqt6 6.4.2
+- prompt_toolkit 3.0.38
+- pytest-cov 4.0.0
+- coverage 7.2.2
 
+## Installation
 
-### Installing
-
-- First, clone repository with:
+First, clone repository with:
 
 ```
 git clone "https://github.com/mucsci-students/2023sp-420-G-J-IFY.git"
 ```
 
-- Then, navigate to `./GitHub/2023sp-420-G-J-IFY/` and run the following command:
+Then, navigate to `./GitHub/2023sp-420-G-J-IFY/
 
-```
-THIS SHOULD BE INSTALLING REQUIREMENTS, I JUST DON'T REMEMBER THE COMMAND!!!
-```
+If you would like to install in a virtual environment, run:
 
-### Executing program
-
-- To run, the program, run:
 Windows:
 ```
-python spellingbee (To launch GUI)
-
-python spellingbee --cli (To launch CLI)
+>python -m venv venv
 ```
+MacOS/Linux
+```
+$ python3 -m venv venv
+```
+
+then activate the environment:
+
+Windows:
+```
+>source venv/bin/activate
+```
+MacOS/Linux:
+```
+$ source venv/bin/activate
+```
+
+To install the requirements
+
+Windows:
+```
+>pip install -r requirements.txt
+```
+
+MacOS/Linux
+```
+$ pip3 install -r requirements.txt
+```
+
+## Executing program
+
+### Running the GUI
+
+Windows:
+```
+>python spellingbee
+```
+
+MacOS/Linux:
+```
+$ python3 spellingbee
+```
+
+### Running the CLI
+
+Windows:
+```
+>python spellingbee --cli
+```
+
 macOS/Linux:
 ```
-python3 spellingbee (To launch GUI)
-
-python3 spellingbee --cli (To launch CLI)
-
+$ python3 spellingbee --cli
 ```
 
-- To run tests, run:
-Windows/Mac/Linux
+### Running the tests
+
 ```
 pytest
 ```
 
-- To run tests along with code coverage of model, run:
+### Running the tests with code coverage
+
 ```
 pytest --cov=model
 ```
 
+## Design Patterns
 
 ## Authors
----
 
-Contributors' names and contact info
-
-Isaak Weidman
+**Isaak Weidman**
 - @IRWeidman
 - irweidma@millersville.edu
 
-Gaige Zakroski
+**Gaige Zakroski**
 - @gmzakros
 - gmzakros@millersville.edu
 
-Yah'hymbey Baruti Ali-Bey
+**Yah'hymbey Baruti Ali-Bey**
 - @ybaruti
 - yabaruti@millersville.edu
 
-Jacob M Lovegren
+**Jacob M Lovegren**
 - @JMLovegren
 - jmlovegr@millersville.edu
 
-Francesco Spagnolo
+**Francesco Spagnolo**
 - @Frannyspag24
 - fnspagno@millersville.edu
 
 ## Version History
----
 - 1.0.0
   - Initial CLI release
 
@@ -102,6 +142,5 @@ Francesco Spagnolo
   - Initial GUI release
 
 ## License
----
 
 This project is licensed under the `MIT` License - see the `LICENSE.md` file for details.
