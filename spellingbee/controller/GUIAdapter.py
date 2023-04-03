@@ -13,10 +13,16 @@
 
 import sys
 import os
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QFileDialog, 
     QMessageBox, 
-    QApplication
+    QApplication,
+    QDialog,
+    QPlainTextEdit,
+    QVBoxLayout,
+    QDialogButtonBox,
+    QTextEdit,
 )
 from model import (
     MakePuzzle,
@@ -167,19 +173,20 @@ class GUI_A():
                 'Select Directory'
             ))
 
+            saveGame = cmd.SaveGame(
+                puzzle=self._puzzle,
+                fileName=fileName,
+                path=path,
+                onlyPuzz=self._window.saveDialog.justPuzzle.isChecked()
+            )
+
             if(os.path.isfile(path + '/' + fileName + '.json')):
                 self._window.owDialog.show()
                 self._window.owDialog.btns.accepted.connect(
-                    print('implementation pending...')
-                )
+                    lambda: self.overwrite(saveGame)
+            )
             
             else:
-                saveGame = cmd.SaveGame(
-                    puzzle=self._puzzle,
-                    fileName=fileName,
-                    path=path,
-                    onlyPuzz=self._window.saveDialog.justPuzzle.isChecked()
-                )
                 saveGame.execute()
 
             self._window.saveDialog.fileName.clear()
@@ -187,6 +194,10 @@ class GUI_A():
             
             self._window.setStatus(self._outty.getField())
             dialog.accept()
+
+    def overwrite(self, command):
+        command.execute()
+        self._window.owDialog.accept()
 
     ############################################################################
     # <function name>
@@ -229,4 +240,61 @@ class GUI_A():
     #
     ############################################################################
     def _hint(self):
-        pass
+        # dialog window
+        dlg = QDialog(parent=self._window)
+        display = QTextEdit(dlg)
+        #display.setFont(QFont('Courier', 11))
+        #display.setBackgroundVisible(False)
+        display.setReadOnly(True)
+        layout = QVBoxLayout()
+        dlg.setLayout(layout)
+        button = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
+        button.accepted.connect(dlg.accept)
+        layout.addWidget(display)
+        layout.addWidget(button)
+        # hint object
+        hint = cmd.Hint(self._puzzle)
+        output = hint.execute()
+        display.setMarkdown(self._formatHint(output))
+        dlg.show()
+
+    def _formatHint(self, data: dict) -> str:
+
+        out = (
+            '## Spelling Bee Hints\n\n\n'
+            'Center Letter is underlined.\n\n'
+            '{letters}\n\n'
+            '---\n\n'
+            '* Words: {numWrds}\n'
+            '* Points: {numPts}\n'
+            '* Total Pangrams: {numPan}\n'
+            '* Total Perfect Pangrams: {numPerf}\n'
+            '* Bingo: {bingo}\n'
+            '---\n\n'
+        ).format(
+            letters=data['letters'],
+            numWrds=data['numWords'],
+            numPts=data['points'],
+            numPan=data['numPan'],
+            numPerf=data['numPerf'],
+            bingo=data['bingo']
+        )
+        return out
+    
+    ################################################################################
+    # removeColumn(self, col, lst) -> list[list[int]]:
+    #
+    # DESCRIPTION:
+    #   removes empty column from the grid
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #   
+    #   lst : List[List[int]]
+    #
+    ################################################################################
+    def _removeColumn(self, col, lst) -> list[list[int]]:
+        for i in lst:
+            del i[col]
+        return lst
