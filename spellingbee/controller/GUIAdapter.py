@@ -219,7 +219,7 @@ class GUI_A():
         if not fileName.endswith('.json'):
             newPuzzle = None
         else:
-            loadGame = cmd.LoadGame(fileName, self._outty)
+            loadGame = cmd.LoadGame(fileName, '', self._outty)
             newPuzzle = loadGame.execute()
 
         if newPuzzle == None:
