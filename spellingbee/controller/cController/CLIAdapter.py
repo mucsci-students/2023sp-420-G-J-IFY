@@ -341,13 +341,13 @@ class CLI_A():
 
         fStr += '\n\n'
         for i in range(1,9):
-            fStr += f'{letters[i - 1]}:'
+            fStr += f'{letters[i-1]}:'
             for y in range(len(lst[0])):
                 fStr += f' {lst[i][y]:>3}'
                     
             fStr += '\n\n'
         return fStr 
-        
+            
 
     ################################################################################
     # formatTwoLetterList(hint : object) -> str:
@@ -366,9 +366,9 @@ class CLI_A():
     def getLettersFromGrid(self, lst) -> str:
         letters = ''
         for i in range(9):
-            letters += str(lst[i][0]).capitalize()
+            letters += str(lst[i][0]).upper()
             lst[i].pop(0)
-            return letters
+        return letters
 
     ################################################################################
     # formatTwoLetterList(hint : object) -> str:
@@ -385,7 +385,7 @@ class CLI_A():
     #       A string that contains the formated string
     ################################################################################
     def formatTwoLetterList(self, hint : dict) -> str:
-        lst = hint['twoLetList']
+        lst = hint['twoLetLst']
         count = 0
         fStr = ''
         for i in lst:
