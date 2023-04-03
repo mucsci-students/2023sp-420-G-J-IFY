@@ -6,7 +6,7 @@ from model.output import Output
 
 outty = Output()
 gui = GUI_A(
-    puzzle=cmd.NewGame(outty, 'warlock', 'w').execute(),
+    puzzle=cmd.NewGame(outty, '', '').execute(),
     outty=outty,
 )
 

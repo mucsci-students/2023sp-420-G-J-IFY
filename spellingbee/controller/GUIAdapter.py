@@ -242,44 +242,64 @@ class GUI_A():
     def _hint(self):
         # dialog window
         dlg = QDialog(parent=self._window)
-        display = QTextEdit(dlg)
-        #display.setFont(QFont('Courier', 11))
-        #display.setBackgroundVisible(False)
-        display.setReadOnly(True)
+        mDlg = QPlainTextEdit(dlg)
+        mDlg.setBackgroundVisible(False)
         layout = QVBoxLayout()
+        layout.addWidget(mDlg)
         dlg.setLayout(layout)
+        mDlg.setReadOnly(True)
         button = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
-        button.accepted.connect(dlg.accept)
-        layout.addWidget(display)
         layout.addWidget(button)
         # hint object
-        hint = cmd.Hint(self._puzzle)
-        output = hint.execute()
-        display.setMarkdown(self._formatHint(output))
+        obj = hint(self._puzzle)
+        obj.makeHintGrid(self._puzzle)
+        button.accepted.connect(dlg.accept)
+        font = QFont('Courier', 11)
+        # list representation of the hint grid
+        lst = obj.hint
+        dlg.setGeometry(700,300,600,600)
+     
+        # format String containing the Grid
+        fStr = self.buildHintGrid(lst, obj)
+
+        mDlg.setPlainText(fStr)
+        
+        dlg.setFont(font)
+        #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
+        #execute command
+        #parse data
+        #display 2 user
 
-    def _formatHint(self, data: dict) -> str:
+    ################################################################################
+    # formatHintsHeader(self) -> str:
+    #
+    # DESCRIPTION:
+    #   formats the hint grids header
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #
+    # RETURNS:
+    #   fStr : str
+    #       format String that contains the hint grid header
+    ################################################################################
+    def formatHintsHeader(self, hint) -> str:
+        fStr = 'Spelling Bee Grid \n\n\n'
+        fStr += 'Center Letter is Underlined.\n\n'
+        letters = self._puzzle.getShuffleLetters()
 
-        out = (
-            '## Spelling Bee Hints\n\n\n'
-            'Center Letter is underlined.\n\n'
-            '{letters}\n\n'
-            '---\n\n'
-            '* Words: {numWrds}\n'
-            '* Points: {numPts}\n'
-            '* Total Pangrams: {numPan}\n'
-            '* Total Perfect Pangrams: {numPerf}\n'
-            '* Bingo: {bingo}\n'
-            '---\n\n'
-        ).format(
-            letters=data['letters'],
-            numWrds=data['numWords'],
-            numPts=data['points'],
-            numPan=data['numPan'],
-            numPerf=data['numPerf'],
-            bingo=data['bingo']
-        )
-        return out
+        counter = 0
+        for i in letters:
+            fStr += str(i).capitalize() + ' '
+            counter += 1
+        fStr += '\n-\n\n'
+        fStr += ('WORDS: ' + str(hint.countWords(self._puzzle)) + ', POINTS: ' + str(self._puzzle.maxScore) + ', PANGRAMS: ' +  
+                 str(hint.numPangrams(self._puzzle)) + ' ('  + str(hint.numPerfectPangram(self._puzzle)) + ' Perfect), BINGO: '+ 
+                 str(self._puzzle.checkBingo())+ '\n\n\n' )
+
+        return fStr
     
     ################################################################################
     # removeColumn(self, col, lst) -> list[list[int]]:
@@ -294,7 +314,143 @@ class GUI_A():
     #   lst : List[List[int]]
     #
     ################################################################################
-    def _removeColumn(self, col, lst) -> list[list[int]]:
+    def removeColumn(self, col, lst) -> list[list[int]]:
         for i in lst:
             del i[col]
         return lst
+    
+    ################################################################################
+    # removeColumn(self, col, lst) -> list[list[int]]:
+    #
+    # DESCRIPTION:
+    #   removes all columns from the grid whos sumation is Zero
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #   
+    #   lst : List[List[int]]
+    #       list representaion of the hints grid
+    ################################################################################
+    def removeZeroColumns(self,lst):
+        count = len(lst[8]) - 1
+
+        for i in reversed(lst[8]) :
+            if i == 0:
+                self.removeColumn(count, lst)
+            count += -1
+        return lst
+    
+    ################################################################################
+    # buildHintGrid(self,lst : hint):
+    #
+    # DESCRIPTION:
+    #   builds the Hints grid
+    #
+    # PARAMETERS:
+    #   self
+    #       Gcontroller object
+    #
+    #   lst: List[List[int]]
+    #       list representation of the hint grid
+    #
+    # RETURN:
+    #   fStr: str
+    #       format string containing the complete hint grid
+    ################################################################################
+    def buildHintGrid(self,lst, hint) -> str:
+        #build hint grid
+        fStr =''
+        letters = ''
+        fStr += self.formatHintsHeader(hint)
+        # builds a string of the unique letters from the 2d list
+        letters = self.getLettersFromGrid(lst)
+        
+        fStr += '    '
+
+        #print the word lengths from 4 - sigma
+        
+        #fStr += self.formatLengthHeader()
+
+        fStr += self.formatHintsGrid(lst, letters)
+        #print the body of the grid
+        
+
+        fStr += "\nTwo Letter List:\n\n"
+        fStr += self.formatTwoLetterList(hint)
+        return fStr
+        #return a formated string of the grid
+    
+    ################################################################################
+    # getLettersFromGrid(lst) -> str:
+    #
+    # DESCRIPTION:
+    #   Gets the letters from the 2d list and removes them the returns the letters
+    #
+    # PARAMETERS:
+    #   lst : list[list[str]]
+    #
+    # RETURN:
+    #   letters : str
+    #       letters of the puzzle
+    ################################################################################
+    def getLettersFromGrid(self, lst) -> str:
+        letters = ''
+        for i in range(9):
+            letters += str(lst[i][0]).capitalize()
+            lst[i].pop(0)
+        return letters
+    
+    def formatHintsGrid(self,lst ,letters) -> str:
+        fStr =' '
+
+        self.removeZeroColumns(lst)
+        #print lengths
+
+        for i in range((len(lst[0]))):
+            fStr += f'{lst[0][i]:<4}'
+        fStr += '\n\n'
+        for i in range(1,9):
+            fStr += f'{letters[i - 1]}:'
+            for y in range(len(lst[0])):
+                fStr += f' {lst[i][y]:>3}'
+                
+            fStr += '\n\n'
+        return fStr 
+    
+    ################################################################################
+    # formatTwoLetterList(hint : object) -> str:
+    #
+    # DESCRIPTION:
+    #   formats the two letter list for th hints dialog
+    #
+    # PARAMETERS:
+    #   hint : object
+    #       is a hint object
+    #
+    # RETURN:
+    #   fStr : str
+    #       A string that contains the formated string
+    ################################################################################
+    def formatTwoLetterList(self, hint : object) -> str:
+        
+        hint.twoLetterList(self._puzzle)
+        lst = hint.getTwoLetterList()
+        count = 0
+        fStr = ''
+        for i in lst:
+            letters = str(i[0]).capitalize()
+            num = i[1]
+            if count > 0:
+                prevLetters = str(lst[count - 1][0]).capitalize()
+                if letters[0] == prevLetters[0]:
+                    if count == len(lst) - 1:
+                        fStr += f'{letters}: {num}'
+                    else:
+                        fStr += f'{letters}: {num}, '
+                else:
+                    fStr += f'\n{letters}: {num}, '
+            else:
+                fStr += f'{letters}: {num}, '
+            count += 1
+        return fStr
