@@ -505,8 +505,8 @@ class CLI_A():
     #   outty : object
     #     - output object storing output strings
     ################################################################################
-    def finalGame(self, finishedPuzzle : object) -> None:
-        self.showStatus(finishedPuzzle)
+    def finalGame(self) -> None:
+        self.showStatus()
         self.outty.setField("Congratulations!!!! You have found all of the words for this puzzle!")
         
     ################################################################################

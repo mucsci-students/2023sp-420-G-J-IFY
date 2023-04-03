@@ -51,6 +51,6 @@ while True:
     outty.setField('')
     #check for end of game flag
     if puzzle.getFinishedFlag():
-        adapter.finalGame(puzzle)
+        adapter.finalGame()
     #wait for user's next input
     usrinput = prompt('> ', completer=tabComp)
