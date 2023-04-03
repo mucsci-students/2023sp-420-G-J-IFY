@@ -124,7 +124,7 @@ class CLI_A():
         if word != '':
             keyLetter = input("Enter a letter from your word "
                         "to use as the key letter\n> ")
-        out = cmd.NewGame(word.lower(), keyLetter.lower(), self.outty)
+        out = cmd.NewGame( self.outty, word.lower(), keyLetter.lower())
         self.puzzle = out.execute()
         if self.outty.getField().startswith("ERROR"):
             print(self.outty.getField())
