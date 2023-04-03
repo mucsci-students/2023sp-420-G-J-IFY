@@ -13,7 +13,7 @@
 
 import sys
 import os
-from PyQt6.QtWidgets import QFileDialog
+from PyQt6.QtWidgets import QFileDialog, QApplication
 from model import (
     MakePuzzle,
     StateStorage,
@@ -46,11 +46,15 @@ class GUI_A():
         self._puzzle = puzzle
         self._puzzle.shuffleChars()
         self._outty = outty
-        self._window = MainWindow(self._puzzle)
+        self._window = None
 
 
     def start(self):
-        pass
+        app = QApplication([])
+        self._window = MainWindow(self._puzzle)
+        self._connectSignals()
+        self._window.show()
+        sys.exit(app.exec())
 
     def _connectSignals(self):
 
