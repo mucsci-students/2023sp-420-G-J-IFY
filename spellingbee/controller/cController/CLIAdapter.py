@@ -82,12 +82,15 @@ class CLI_A():
             case '!help':
                 self.help()
                 return self.puzzle
+            case '!hint':
+                self.hints()
+                return self.puzzle
             case '!exit':
                 self.exit()
                 return self.puzzle
             case _:
                 if usrinput.startswith('!'):
-                    self.utty.setField('Command not recognized. Type \"!help\" for a list of '
+                    self.outty.setField('Command not recognized. Type \"!help\" for a list of '
                         'valid commands...')
                     return self.puzzle
 
@@ -129,8 +132,6 @@ class CLI_A():
         if self.outty.getField().startswith("ERROR"):
             print(self.outty.getField())
             self.outty.setField('')
-        else:
-            self.puzzle.shuffleChars()
 
 
     ################################################################################
@@ -232,7 +233,7 @@ class CLI_A():
         fileName = input('Please enter the name of the game you are looking for.'
                         '\n> ')
         os.chdir('./saves')
-        currentPath = os.getcwd() + fileName
+        currentPath = os.getcwd() + "\\"+ fileName
 
         newGame =  cmd.LoadGame(currentPath, self.outty)
         newGame = newGame.execute()
@@ -489,26 +490,26 @@ class CLI_A():
         os.chdir('./saves')
         currentPath = os.getcwd()
         fFileName = fileName + 'json'
-        
+        print(currentPath)
         if(path.isfile(fFileName)):
             yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
                             '\n Enter Y for yes or N for no\n> ')
             if(yesOrNo == 'Y'):
                 if(num == 0):
-                    save = cmd.SaveGame(self.puzzle, fFileName, currentPath + fFileName, 0)
+                    save = cmd.SaveGame(self.puzzle, fFileName, './saves', 0)
                     save.execute
                     saveStatus = True
                 elif(num == 1):
-                    save = cmd.SaveGame(self.puzzle, fFileName, currentPath + fFileName, 1)
+                    save = cmd.SaveGame(self.puzzle, fFileName, './saves', 1)
                     save.execute
                     saveStatus = True
         else: 
             if(num == 0):
-                save = cmd.SaveGame(self.puzzle, fFileName, currentPath + fFileName, 0)
+                save = cmd.SaveGame(self.puzzle, fFileName, './saves', 0)
                 save.execute
                 saveStatus = True
             elif(num == 1):
-                save = cmd.SaveGame(self.puzzle, fFileName, currentPath + fFileName, 1)
+                save = cmd.SaveGame(self.puzzle, fFileName, './saves', 1)
                 save.execute
                 saveStatus = True
         
