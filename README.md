@@ -42,34 +42,34 @@ If you would like to install in a virtual environment, run:
 
 Windows:
 ```
->python -m venv venv
+python -m venv venv
 ```
 MacOS/Linux
 ```
-$ python3 -m venv venv
+python3 -m venv venv
 ```
 
 then activate the environment:
 
 Windows:
 ```
->source venv/bin/activate
+source venv/bin/activate
 ```
 MacOS/Linux:
 ```
-$ source venv/bin/activate
+source venv/bin/activate
 ```
 
 To install the requirements
 
 Windows:
 ```
->pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 MacOS/Linux
 ```
-$ pip3 install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ## Executing program
@@ -78,24 +78,24 @@ $ pip3 install -r requirements.txt
 
 Windows:
 ```
->python spellingbee
+python spellingbee
 ```
 
 MacOS/Linux:
 ```
-$ python3 spellingbee
+python3 spellingbee
 ```
 
 ### Running the CLI
 
 Windows:
 ```
->python spellingbee --cli
+python spellingbee --cli
 ```
 
 macOS/Linux:
 ```
-$ python3 spellingbee --cli
+python3 spellingbee --cli
 ```
 
 ### Running the tests
