@@ -1,6 +1,6 @@
 import cview.CLI as CLI
 import model.puzzle as puzzle
-import controller.cController as CLIAdapter
+from controller.cController import CLIAdapter
 import model.output as output
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
@@ -12,7 +12,7 @@ outty = output.Output()
 usrinput = ' '
 validIn = False
 puzzle = puzzle.Puzzle('', '')
-adapter = CLIAdapter(puzzle, outty)
+adapter = CLIAdapter.CLI_A(puzzle, outty)
 tabComp = WordCompleter(adapter.commandsList)
 
 # inital game loop, loop until valid start is reached
