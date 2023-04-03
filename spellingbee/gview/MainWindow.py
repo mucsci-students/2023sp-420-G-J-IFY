@@ -133,7 +133,7 @@ class MainWindow(QMainWindow):
         self.hintAction = QAction('Hint', self)
 
         newAction.triggered.connect(self.newDialog.show)
-        #saveAction.triggered.connect(self.saveDialog.show)
+        saveAction.triggered.connect(self.saveDialog.show)
         #loadAction.triggered.connect(self.loadDialog.show)
         helpAction.triggered.connect(self.helpDialog.show)
 
