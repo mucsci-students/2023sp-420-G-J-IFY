@@ -123,13 +123,12 @@ class CLI_A():
             keyLetter = input("Enter a letter from your word "
                         "to use as the key letter\n> ")
         out = cmd.NewGame(word.lower(), keyLetter.lower(), self.outty)
-        out = out.execute()
+        self.puzzle = out.execute()
         if self.outty.getField().startswith("ERROR"):
             print(self.outty.getField())
             self.outty.setField('')
         else:
-            out.shuffleChars()
-            return(out)
+            self.puzzle.shuffleChars()
 
 
     ################################################################################
@@ -212,7 +211,7 @@ class CLI_A():
     #     - output object storing output strings
     ################################################################################
     def savePuzzle(self) -> None:
-        self.handleSave( 1)
+        self.handleSave(1)
 
 
     ################################################################################
@@ -231,13 +230,12 @@ class CLI_A():
         fileName = input('Please enter the name of the game you are looking for.'
                         '\n> ')
         os.chdir('./saves')
-        currentPath = os.getcwd()
+        currentPath = os.getcwd() + fileName
 
-        newGame =  cmd.LoadGame(currentPath)
+        newGame =  cmd.LoadGame(currentPath, self.outty)
         newGame = newGame.execute()
         if newGame != None:
             self.puzzle = newGame
-        return self.puzzle
 
 
     ################################################################################
