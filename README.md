@@ -112,6 +112,28 @@ pytest --cov=spellingbee/model
 
 ## Design Patterns
 
+### MVC
+
+Organized out into applicable folders, our project has all of our backend business logic stored in `2023sp-420-g-j-ify/SpellingBee/model`
+
+For the visual representation of the game's underlying logic, we have two classes, `2023sp-420-g-j-ify/cview/cli.py` and `2023sp-420-g-j-ify/gview/MainWindow.py`.
+
+Finally, to bridge the gap between the model and the two views, we have a combination of `2023sp-420-g-j-ify/controller/GUIAdapter.py`, `2023sp-420-g-j-ify/controller/CLIAdapter.py`, and `2023sp-420-g-j-ify/controller/cmd.py` that act as the controller.
+
+## Behavioral Patterns
+
+### Command
+
+To implement a command pattern, we created `2023sp-420-g-j-ify/controller/cmd.py` that contains a collection of classes that are used to execute commonly used commands. Many of those classes are directly accessed in the CLI through "!" commands, and those same commands are accessed by the GUI through its buttons.
+
+### Adapter
+
+In order to improve our code reusability, we needed to employ two adapters, `2023sp-420-g-j-ify/controller/GUIAdapter.py` and `2023sp-420-g-j-ify/controller/CLIAdapter.py`, to allow both views to use the commands added in `cmd.py`. These adapters allow the entire model to be completely independent of the view.
+
+### Chain of Responsibility
+
+As requests are are made by the user (either through "!" commands in the CLI or button presses in the GUI), the request is passed along a chain of different modules, being processed and prepared for the model. The combination of both views, their adapters, the command pattern and the model all make up the totality of our chain of responsibility.
+
 ## Authors
 
 **Isaak Weidman**
