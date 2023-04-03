@@ -118,14 +118,18 @@ class GController():
         if len(set(baseWord)) == 7 or (baseWord == '' and keyLetter == ''):
             #dlg.setMessage('')
             #print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLetter}\n')
-            self.puzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
-            self.puzzle.shuffleChars()
-            self.window.newGame(self.puzzle)
-            dlg.baseWrd.clear()
-            dlg.accept()
+            retPuzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
+            if retPuzzle == None:
+                pass
+            else:
+                self.puzzle = retPuzzle
+                self.puzzle.shuffleChars()
+                self.window.newGame(self.puzzle)
         else:
             #dlg.setMessage('Invalid base word')
             pass
+        dlg.baseWrd.clear()
+        dlg.accept()
     ################################################################################
     # guess(window: object) -> None
     #
