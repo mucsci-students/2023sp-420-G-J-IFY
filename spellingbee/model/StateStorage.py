@@ -8,16 +8,16 @@
 #
 # (Global, public) functions:
 #   savePuzzle(saveStateObj: Obj, fileName : str)
-#       - saves a blank puzzle state
+#       - Saves a blank puzzle state
 #   loadPuzzle(fileName : str) -> Puzzle Obj
-#       - loads a saved puzzle
+#       - Loads a saved puzzle
 #   saveCurrent(puzzle: Obj, fileName : str)
-#       - saves a current state of a puzzle
+#       - Saves a current state of a puzzle
 ################################################################################
 import sys
 import os
-import sqlite3  # for saveGameChecker
-import MakePuzzle  # for saveGameChecker
+import sqlite3  # For saveGameChecker
+import MakePuzzle  # For saveGameChecker
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -62,9 +62,12 @@ class BadJSONException(Exception):
 #
 # PARAMETERS:
 #  dict : dict
-#   dictionary that will be saved to a json
+#   Dictionary that will be saved to a json
 #  filename: str
-#   string that contains the file name that will be saved.
+#   String that contains the file name that will be saved.
+#
+# RETURNS:
+#   None
 ################################################################################
 def __Save(dict, fileName):
     with open(fileName, "w") as file:
@@ -79,16 +82,16 @@ def __Save(dict, fileName):
 # __makeDict(saveStateObj: obj) -> dict
 #
 # DESCRIPTION:
-#   takes a saveState objects fields and puts them into a dictionary to make
+#   Takes a saveState objects fields and puts them into a dictionary to make
 #   saving easier
 #
 # PARAMETERS:
-#  saveStateObj: obj
-#   a saveState object
+#   saveStateObj: obj
+#     - A saveState object
 #
 # RETURNS:
-#  dict
-#   Returns a dictionary of all fields of a saveState object
+#   dict
+#     - Returns a dictionary of all fields of a saveState object
 ################################################################################
 def __makeDict(saveStateObj):
     dict = {
@@ -106,15 +109,15 @@ def __makeDict(saveStateObj):
 # __setFields(dict: dict) -> obj
 #
 # DESCRIPTION:
-#   sets the fields of the saveState object to the corisponing value in the dictionary
+#   Sets the fields of the saveState object to the corisponing value in the dictionary
 #
 # PARAMETERS:
-#  dict: dict
-#   a dictionary that contains the values of each feild of a saveState Object
+#   dict: dict
+#     - A dictionary that contains the values of each feild of a saveState Object
 #
 # RETURNS:
-#  obj
-#   returns a saveState Object with all its fields set
+#   obj
+#     - Returns a saveState Object with all its fields set
 ################################################################################
 def __setFields(dict):
     obj = model.Puzzle(dict["RequiredLetter"], dict["PuzzleLetters"])
@@ -141,16 +144,16 @@ def __setFields(dict):
 #   'puzzleLetters' an error is raised
 #
 # PRECONDITION:
-#   dict the puzzle of x amount of letters. dict must not include any found words, rank.
+#      - Dict the puzzle of x amount of letters. dict must not include any found words, rank.
 #
 # PARAMETERS:
 #  saveStateObj: obj
-#   a saveState object
+#     - A saveState object
 #  fileName: str
-#   string that contains the file name that will be saved
+#     - String that contains the file name that will be saved
 ################################################################################
 def savePuzzle(saveStateObj, fileName):
-    # creates dict to be saved
+    # Creates dict to be saved
     newObj = model.Puzzle(saveStateObj.getKeyLetter(), saveStateObj.getUniqueLetters())
     newObj.setMaxScore(saveStateObj.getMaxScore())
     newObj.setAllWordList(saveStateObj.getAllWords())
@@ -164,17 +167,17 @@ def savePuzzle(saveStateObj, fileName):
 # loadPuzzle(fileName: str, outty : object) -> obj
 #
 # DESCRIPTION:
-#   loads the puzzle given a file name
+#   Loads the puzzle given a file name
 #
 # PARAMETERS:
-#  fileName: str
-#   name of the file you are loading
+#   fileName: str
+#      - Name of the file you are loading
 #
 # RETURNS:
-#  __Load(fileName)
-#   Loaded puzzle obj
+#   __Load(fileName)
+#      - Loaded puzzle obj
 #   outty : object
-#     - output object storing output strings
+#      - Output object storing output strings
 ################################################################################
 def loadPuzzle(fileName, outty):
     return __Load(fileName, outty)
@@ -184,13 +187,13 @@ def loadPuzzle(fileName, outty):
 # saveCurrent(puzzle: obj, fileName: str)
 #
 # DESCRIPTION:
-#   saves a current iteration of the puzzle
+#   Saves a current iteration of the puzzle
 #
 # PARAMETERS:
-#  puzzle: obj
-#   object you want to be saved
-#  fileName: str
-#   name of the file you are loading
+#   puzzle: obj
+#      - Object you want to be saved
+#   fileName: str
+#      - Name of the file you are loading
 ################################################################################
 def saveCurrent(puzzle, fileName):
     __Save(__makeDict(puzzle), fileName + ".json")
@@ -200,19 +203,19 @@ def saveCurrent(puzzle, fileName):
 # __checkFileExists(pathToFile: str) -> bool
 #
 # DESCRIPTION:
-#   checks to see if a file exists in the current directory
+#   Checks to see if a file exists in the current directory
 #
 # PARAMETERS:
-#  pathToFIle : str
-#   path to a specified file
+#   pathToFIle : str
+#     - Path to a specified file
 #
 # RETURNS:
-#  p.exists()
-#   true if file does exist and false otherwise
+#   p.exists()
+#     - True if file does exist and false otherwise
 #
 # RAISES:
 #  FileNotFoundError
-#   if path to file does not exist
+#     - If path to file does not exist
 ################################################################################
 def __checkFileExists(pathToFile):
     p = pathToFile
@@ -226,49 +229,49 @@ def __checkFileExists(pathToFile):
 # __Load(fileName: str, outty : object) -> Obj
 #
 # DESCRIPTION:
-#   loads the file and creates a dictionary that will be returned
+#   Loads the file and creates a dictionary that will be returned
 #
 # PARAMETERS:
-#  fileName : str
-#   the name of the file ex 'help'
+#   fileName : str
+#     - The name of the file ex 'help'
 #   outty : object
 #     - output object storing output strings
 #
 # RETURNS:
 #  obj
-#   a dictionary that contains all the game data
+#     - A dictionary that contains all the game data
 #
 # RAISES:
 #  FileNotFoundError
-#   file that is trying to be loaded does not exist
+#     - File that is trying to be loaded does not exist
 ################################################################################
 def __Load(fileName, outty):
-    # checks if file exists
+    # Checks if file exists
     try:
         os.chdir('./saves')
-        # check if user ended their save with the .json filename
+        # Check if user ended their save with the .json filename
         if fileName.endswith(".json"):
             fileName = fileName
         else:
             fileName = fileName + ".json"
-        # create a path to the current directory
+        # Create a path to the current directory
         path1 = Path(Path.cwd())
-        # append the file in question to the path
+        # Append the file in question to the path
         a = path1 / fileName
         __checkFileExists(a)
 
-        # opens file
+        # Opens file
         file = open(fileName)
 
-        # puts elements in the file in a dictionary
+        # Puts elements in the file in a dictionary
         dict = json.load(file)
 
         os.chdir('..')
     
 
-        # check that dict contains valid save data
+        # Check that dict contains valid save data
         dict = checkLoad(dict)
-        # if corrupt file happens, throw exception
+        # If corrupt file happens, throw exception
         if dict == None:
             raise BadJSONException
 
@@ -276,7 +279,7 @@ def __Load(fileName, outty):
 
         return obj
     except FileNotFoundError:
-        # if fileName does not exist then a FileNotFoundError is
+        # If fileName does not exist then a FileNotFoundError is
         # raised saying the file does not exist
         outty.setField(
             "The file " + fileName + " does not exist in this directory\n"
@@ -295,11 +298,13 @@ def __Load(fileName, outty):
 # LoadFromExplorer(pathTOFile, outty)
 #
 # DESCRIPTION:
-#   will load a file using its path instead of its fileName
+#   Will load a file using its path instead of its fileName
 # PARAMETERS:
 #   path : Path
-#       the path to the file being loaded
+#      - The path to the file being loaded
 #
+# RETURNS:
+#   None
 ################################################################################
 def loadFromExploer(path: Path, outty):
     try:
@@ -312,7 +317,7 @@ def loadFromExploer(path: Path, outty):
         obj = __setFields(dict)
         return obj
     except FileNotFoundError:
-        # if fileName does not exist then a FileNotFoundError is
+        # If fileName does not exist then a FileNotFoundError is
         # raised saying the file does not exist
         outty.setField(
             "The file " + path + " does not exist in this directory\n"
@@ -334,11 +339,11 @@ def loadFromExploer(path: Path, outty):
 #
 # PARAMETERS:
 #   my_list
-#       - a list of strings of unkown case
+#       - A list of strings of unkown case
 #
 # RETURNS:
 #   list(str)
-#       - a list of strings in lower case
+#       - A list of strings in lower case
 ################################################################################
 def allLower(my_list):
     return [x.lower() for x in my_list]
@@ -352,10 +357,10 @@ def allLower(my_list):
 #   a foreign load
 #
 # PARAMETERS:
-#   dictDict - a dictionary of the .json fields
+#   - dictDict - a dictionary of the .json fields
 #
 # RETURNS:
-#   valid dictionary for game or None if invalid save file
+#   - Valid dictionary for game or None if invalid save file
 #
 # RAISES:
 #   Exception for any load that will crash our program
@@ -366,16 +371,16 @@ def checkLoad(dictDict):
     cursor = wordDict.cursor()
 
     try:
-        # load specific dictionary fields into local variables
+        # Load specific dictionary fields into local variables
         # THROWS EXCEPTION IF KEY IS NOT IN DICT
         guessedWords = allLower(dictDict["GuessedWords"])
         puzzleLetters = dictDict["PuzzleLetters"].lower()
         requiredLetter = dictDict["RequiredLetter"].lower()
         currentPoints = dictDict["CurrentPoints"]
 
-        # check if the unique letters/keyletter combo is in our DB
-        # append requiredLetter to puzzleLetters just in case they fucked
-        # up how they store the required letters
+        # Check if the unique letters/keyletter combo is in our DB
+        # Append requiredLetter to puzzleLetters just in case they fucked
+        # Up how they store the required letters
         uniqueLetters = "".join(sorted(set(puzzleLetters + requiredLetter)))
         cursor.execute(
             "select score from allGames where uniqueLetters = '"
@@ -385,29 +390,29 @@ def checkLoad(dictDict):
             + "';"
         )
         score = cursor.fetchone()
-        # if the score isn't in our DB, then its not a valid game,
-        # reject the game
+        # If the score isn't in our DB, then its not a valid game,
+        # Reject the game
         if score == None:
             raise KeyError
 
-        # just remake score and word list from our DB
+        # Just remake score and word list from our DB
         maxPoints = score[0]
-        # generateWordList every time
+        # GenerateWordList every time
         wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters, requiredLetter)
 
         badWords = []
 
-        # check to make sure all guesses are valid
+        # Check to make sure all guesses are valid
         if not set(guessedWords).issubset(set(wordList)):
             for word in guessedWords:
-                # make a list of all the bad guesses
+                # Make a list of all the bad guesses
                 if word not in wordList:
                     badWords.append(word)
             for thing in badWords:
                 guessedWords.remove(thing)
             print(badWords + " were not valid words in the game and have been removed")
 
-        # rescore the validated guess list
+        # Rescore the validated guess list
         tempTable = "create temporary table guessWords (guesses);"
         cursor.execute(tempTable)
         querey = "insert into guessWords (guesses) values ('"
@@ -420,15 +425,15 @@ def checkLoad(dictDict):
             on dictionary.fullWord is guessWords.guesses;
             """
         cursor.execute(join)
-        # this is what our score should be
+        # This is what our score should be
         ourScore = cursor.fetchone()[0]
-        # if there's doesn't match, set it to ours
+        # If there's doesn't match, set it to ours
         if ourScore == None:
             ourScore = 0
         if ourScore != currentPoints:
             currentPoints = ourScore
 
-        # at this point, all fields are validates in our game, remake dictionary
+        # At this point, all fields are validates in our game, remake dictionary
         dictDict["GuessedWords"] = guessedWords
         dictDict["WordList"] = wordList
         dictDict["PuzzleLetters"] = uniqueLetters
@@ -444,13 +449,13 @@ def checkLoad(dictDict):
     except NotInDBException:
         dictDict = None
 
-    # regardless of end, close connection to DB
+    # Regardless of end, close connection to DB
     finally:
-        # close DB
+        # Close DB
         wordDict.commit()
         wordDict.close()
 
-        #return validated dictionary or NONE if exception occured
+        # Return validated dictionary or NONE if exception occured
         return dictDict
 
 
@@ -458,18 +463,18 @@ def checkLoad(dictDict):
 # saveFromExplorer(path : string, fileName : str, puzzle : object, onlyPuzz : bool) -> None:
 #
 # DESCRIPTION:
-
 #   This function saves a puzzle either with current progress or just the puzzle its self
+#
 # PARAMETERS:
-
-# path : str
-#       path to the folder where the save needs to go
-# fileName: str
-#       name of the file
-# puzzle : object
-#       the game object that needs to be saved
-# onlyPuzz: bool
-#       A flag true if we are to only save the puzzle with no progress and false if we are to
+#
+#   path : str
+#      - Path to the folder where the save needs to go
+#   fileName: str
+#      - Name of the file
+#   puzzle : object
+#      - The game object that needs to be saved
+#   onlyPuzz: bool
+#      - A flag true if we are to only save the puzzle with no progress and false if we are to
 #       save the current state   
 #       
 #

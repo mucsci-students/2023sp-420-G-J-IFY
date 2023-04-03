@@ -6,17 +6,68 @@
 # Makes a hint object to use within the gui and the cli.
 # Main functionality includes a 2D list that contains all calculated words
 # with specific starting letters and lengths (with sums of each). Additionally,
-# a two letter list is provided for all counted instances of words with two
+# a two letter list is provided as a 2D list for all counted instances of words with two
 # specific starting characters.
 #
+# (Global, public) functions:
+#   hint() -> hint object
+#
+# Imports:
+#   puzzle
+#   sqlite3
+#
 ################################################################################
+
 import puzzle
-import MakePuzzle
 import sqlite3
 
-import sqlite3
-
-
+################################################################################
+# class hint()
+# Description:
+#   This module is meant to create and store a hint to the puzzle object
+#   and have ready to use within the CLI and the GUI.
+#
+# Arguments:
+#   obj: puzzle.Puzzle
+#
+# <public> Attributes:
+#   rows, cols : int tuple
+#   hint : list[list[int]]
+#   obj.findAllWords : None
+#   twoLettList : list[list[int]]
+#
+# <public> Functions:
+#   countWords(self, obj: puzzle.Puzzle) -> int
+#     - Counts all of the words in a puzzle
+#   
+#   makeHintGrid(self, obj: puzzle.Puzzle) -> None
+#     - Creates and stores the hint grid with the correct information
+#   
+#   getHintGrid(self) -> list[list[int]]
+#     - Returns the hint grid to the user to use
+#   
+#   printHint(self)-> None
+#     - Prints the hint grid
+#   
+#   numPangrams(self, obj: puzzle.Puzzle) -> int
+#     - Finds the number of total pangrams for a puzzle
+#   
+#   numPerfectPangram(self, obj: puzzle.Puzzle) -> int
+#     - Finds the number of perfect pangrams for a puzzle
+#   
+#   numTwoLettCombo(self, obj: puzzle.Puzzle) -> int
+#     - Calculates the number of two letter combinations for a puzzle
+#   
+#   twoLetterList(self, obj: puzzle.Puzzle) -> None
+#     - Creates and stores the information for the two letter list for a puzzle
+#   
+#   getTwoLetterList(self) -> list[list[int]]
+#     - Returns the two letter list for the user to use
+#   
+#   printTwoLetterList(self)-> None
+#     - Prints the two letter list
+#   
+################################################################################
 class hint:
     def __init__(self, obj: puzzle.Puzzle):
         self.rows, self.cols = (9, 14)
@@ -156,7 +207,8 @@ class hint:
     #   Gives the number of pangrams for a given puzzle
     #
     # Parameters:
-    #   None
+    #   obj
+    #      Puzzle object
     ############################################################################
     def numPangrams(self, obj: puzzle.Puzzle) -> int:
         ulString = obj.getUniqueLetters()
@@ -190,7 +242,8 @@ class hint:
     #   Gives the number of perfect pangrams for a given puzzle
     #
     # Parameters:
-    #   None
+    #   obj
+    #      Puzzle object
     ############################################################################
     def numPerfectPangram(self, obj: puzzle.Puzzle) -> int:
         ulString = obj.getUniqueLetters()

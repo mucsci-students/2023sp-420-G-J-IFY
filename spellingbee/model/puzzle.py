@@ -30,59 +30,59 @@ import MakePuzzle
 #
 # <public> Functions:
 #   getKeyLetter() -> str
-#     - returns the key letter of the puzzle
+#     - Returns the key letter of the puzzle
 #   getUniqueLetters() -> set
-#     - returns the set of unique letters
+#     - Returns the set of unique letters
 #   getShuffleLetters() -> set
-#     - returns the set of uniques letters that can be shuffled
+#     - Returns the set of uniques letters that can be shuffled
 #   getMaxScore() -> int
-#     - returns the max possible score for the puzzle
+#     - Returns the max possible score for the puzzle
 #   getFoundWords() -> list
-#     - returns a list of the found words
+#     - Returns a list of the found words
 #   getAllWords() -> list
-#     - returns a list of all possible words for the puzzle
+#     - Returns a list of all possible words for the puzzle
 #   getScore() -> int
-#     - returns the current score of the game
+#     - Returns the current score of the game
 #   getRank() -> str
-#     - returns the a current rank of the player
+#     - Returns the a current rank of the player
 #   getFinishedFlag() -> bool
-#     - returns whether the game is finished or not
+#     - Returns whether the game is finished or not
 #   getPointsTilRank() -> int
-#     - returns the points needed until the next rank
+#     - Returns the points needed until the next rank
 #   setKeyLetter(letter: str)
-#     - takes a given key letter and set to a key letter in the puzzle
+#     - Takes a given key letter and set to a key letter in the puzzle
 #   setUniqueLetters(uniqueLetters: set)
-#     - takes a set of uniques letters and set to unique letters in puzzle
+#     - Takes a set of uniques letters and set to unique letters in puzzle
 #   setShuffleLetters(shuffleLetters: set)
-#     - sets given shuffleLetters set to shuffleLettes in puzzle
+#     - Sets given shuffleLetters set to shuffleLettes in puzzle
 #   setScore(gameScore: int)
-#     - takes a score and sets it to the score in puzzle
+#     - Takes a score and sets it to the score in puzzle
 #   setMaxScore(maxGameScore: int)
-#     - sets max score of the game
+#     - Sets max score of the game
 #   setFoundWords(foundWords: list)
-#     - sets the found words list
+#     - Sets the found words list
 #   setAllWordList(wordList: list)
-#     - sets the availiable word list
+#     - Sets the availiable word list
 #   setRank(newRank: str)
-#     - sets the rank of the puzzle
+#     - Sets the rank of the puzzle
 #   setFinishedFlag(update: bool)
-#     - sets the finished flag in puzzle
+#     - Sets the finished flag in puzzle
 #   setPointsTilRank(points: int)
-#     - sets the points til rank
+#     - Sets the points til rank
 #   checkBingo() -> bool
-#     - parses the words list to determine if the game has a bingo
+#     - Parses the words list to determine if the game has a bingo
 #   findAllWords()
-#     - generates a list of valid guessable words
+#     - Generates a list of valid guessable words
 #   updateFoundWords(word: str)
-#     - adds a word to the found word list
+#     - Adds a word to the found word list
 #   updateScore(pointIncrease: int)
-#     - adds pointIncrease to the score
+#     - Adds pointIncrease to the score
 #   updateRank()
-#     - updates puzzle rank based off score
+#     - Updates puzzle rank based off score
 #   calcPointsTilRank(rankPer : double)
-#     - updates the points til rank based on current max and level
+#     - Updates the points til rank based on current max and level
 #   shuffleChars()
-#     - shuffles the order or shuffle letter list
+#     - Shuffles the order or shuffle letter list
 ################################################################################
 class Puzzle:
     def __init__(self, keyLett, uniqueLett):
@@ -101,14 +101,14 @@ class Puzzle:
     # getKeyLetter() -> str
     #
     # Description:
-    #   displays the key letter of the puzzle
+    #   Displays the key letter of the puzzle
     #
     # Parameters:
-    #   none
+    #   None
     #
     # Returns:
     #   self.keyLett
-    #       the puzzles key letter
+    #       The puzzles key letter
     ############################################################################
     def getKeyLetter(self):
         return self.keyLett
@@ -120,11 +120,11 @@ class Puzzle:
     #   Returns the string of unique letters
     #
     # Parameters:
-    #   none
+    #   None
     #
     # Returns:
     #   self.uniqueLett
-    #       string of unique letters in the puzzle
+    #       String of unique letters in the puzzle
     ############################################################################
     def getUniqueLetters(self):
         return self.uniqueLett
@@ -133,14 +133,14 @@ class Puzzle:
     # getShuffleLetters() -> str
     #
     # Description:
-    #   returns a string of the unique letters to shuffle freely
+    #   Returns a string of the unique letters to shuffle freely
     #
     # Parameters:
-    #   none
+    #   None
     #
     # Returns:
     #   self.shuffleLett
-    #       string of unique letters
+    #       String of unique letters
     ############################################################################
     def getShuffleLetters(self):
         return self.shuffleLett
@@ -149,14 +149,14 @@ class Puzzle:
     # getMaxScore() -> int
     #
     # Description:
-    #   returns max score for the puzzle
+    #   Returns max score for the puzzle
     #
     # Parameters:
-    #   none
+    #   None
     #
     # Returns:
     #   self.maxScore
-    #       integer
+    #       Integer
     ############################################################################
     def getMaxScore(self):
         return self.maxScore
@@ -168,11 +168,11 @@ class Puzzle:
     #   Returns a list of all the found words guessed by user
     #
     # Parameters:
-    #   none
+    #   None
     #
     # Returns:
     #   self.foundWordList
-    #       list of found words
+    #       List of found words
     ############################################################################
     def getFoundWords(self):
         return self.foundWordList
@@ -182,14 +182,14 @@ class Puzzle:
     # getAllWords() -> list
     #
     # Description:
-    #   returns a list of all the words for a given puzzle
+    #   Returns a list of all the words for a given puzzle
     #
     # Parameters:
-    #   none
+    #   None
     #
     # Returns:
     #   self.allWordList
-    #       list of all available guessable words
+    #       List of all available guessable words
     ############################################################################
     def getAllWords(self):
         return self.allWordList
@@ -198,14 +198,14 @@ class Puzzle:
     # getScore() -> int
     #
     # Description:
-    #   current user scores
+    #   Current user scores
     #
     # Parameters:
-    #   none
+    #   None
     #
     # Returns:
     #   self.score
-    #       user score
+    #       User score
     ############################################################################
     def getScore(self):
         return self.score
@@ -214,14 +214,14 @@ class Puzzle:
     # getRank() -> str
     #
     # Description:
-    #   returns a string with the current rank
+    #   Returns a string with the current rank
     #
     # Parameters:
-    #   none
+    #   None
     #
     # Returns:
     #   self.rank
-    #       current rank
+    #       Current rank
     ############################################################################
     def getRank(self):
         return self.rank
@@ -230,7 +230,7 @@ class Puzzle:
     # getFinishedFlag() - bool
     #
     # Description:
-    #   display the finished flag
+    #   Display the finished flag
     #
     # Returns:
     #   self.finishedFlag
@@ -243,7 +243,7 @@ class Puzzle:
     # getPointsTilRank() - int
     #
     # Description:
-    #   returns the points needed until next level
+    #   Returns the points needed until next level
     #
     # Returns:
     #   self.pointsTilRank
@@ -256,11 +256,11 @@ class Puzzle:
     # setKeyLetter(letter: str)
     #
     # Description:
-    #   sets the key letter of the puzzle
+    #   Sets the key letter of the puzzle
     #
     # Parameters:
     #   letter
-    #       the manditory character
+    #       The manditory character
     ############################################################################
     def setKeyLetter(self, letter):
         self.keyLett = letter
@@ -269,11 +269,11 @@ class Puzzle:
     # setUniqueLetters(uniqueLetters: str)
     #
     # Description:
-    #   string the unique letters to a set of unique letters
+    #   String the unique letters to a set of unique letters
     #
     # Parameters:
     #   uniqueLetters
-    #       the string of unique letters
+    #       The string of unique letters
     ############################################################################
     def setUniqueLetters(self, uniqueLetters):
         self.uniqueLett = uniqueLetters
@@ -282,11 +282,11 @@ class Puzzle:
     # setShuffleLetters(shuffleLetters: str)
     #
     # Description:
-    #   to be messed with freely, with shuffleLetters[0] being the key
+    #   To be messed with freely, with shuffleLetters[0] being the key
     #
     # Parameters:
     #   shuffleLetters
-    #       the string of shuffled letters
+    #       The string of shuffled letters
     ############################################################################
     def setShuffleLetters(self, shuffleLetters):
         self.shuffleLett = shuffleLetters
@@ -295,11 +295,11 @@ class Puzzle:
     # setScore(gameScore: int)
     #
     # Description:
-    #   sets the score to a specified score
+    #   Sets the score to a specified score
     #
     # Parameters:
     #   gameScore
-    #       score of a game
+    #       Score of a game
     ############################################################################
     def setScore(self, gameScore):
         self.score = gameScore
@@ -308,11 +308,11 @@ class Puzzle:
     # setMaxScore(maxGameScore: int)
     #
     # Description:
-    #   sets the max score of a game
+    #   Sets the max score of a game
     #
     # Parameters:
     #   maxGameScore
-    #       max score of a game
+    #       Max score of a game
     ############################################################################
     def setMaxScore(self, maxGameScore):
         self.maxScore = maxGameScore
@@ -321,11 +321,11 @@ class Puzzle:
     # setFoundWords(foundWords: list)
     #
     # Description:
-    #   sets the foundWordList to another list of found words
+    #   Sets the foundWordList to another list of found words
     #
     # Parameters:
     #   foundWords
-    #       list of found words
+    #       List of found words
     ############################################################################
     def setFoundWords(self, foundWords):
         self.foundWordList = foundWords
@@ -334,11 +334,11 @@ class Puzzle:
     # setAllWordList(wordList: list)
     #
     # Description:
-    #  sets the allWordList to a given word list
+    #  Sets the allWordList to a given word list
     #
     # Parameters:
     #   wordList
-    #       list of all posible words for puzzle
+    #       List of all posible words for puzzle
     ############################################################################
     def setAllWordList(self, wordList):
         self.allWordList = wordList
@@ -347,11 +347,11 @@ class Puzzle:
     # setRank(newRank: str)
     #
     # Description:
-    #   sets the rank to the new rank
+    #   Sets the rank to the new rank
     #
     # Parameters:
     #   newRank
-    #       string of the rank
+    #       String of the rank
     ############################################################################
     def setRank(self, newRank):
         self.rank = newRank
@@ -360,11 +360,11 @@ class Puzzle:
     # setFinishedFlag(update)
     #
     # Description:
-    #   sets the finished flag to the update
+    #   Sets the finished flag to the update
     #
     # Parameters:
     #   update
-    #       the new status of the flag
+    #       The new status of the flag
     ############################################################################
     def setFinishedFlag(self, update):
         self.finishedFlag = update
@@ -373,11 +373,11 @@ class Puzzle:
     # setPointsTilRank(points)
     #
     # Description:
-    #   sets the points til rank up
+    #   Sets the points til rank up
     #
     # Parameters:
     #   points
-    #       points needed to rank up
+    #       Points needed to rank up
     ############################################################################
     def setPointsTilRank(self, points):
         self.pointsTilRank = round(points)
@@ -390,7 +390,7 @@ class Puzzle:
     #   checks to see if length of list is 7
     #
     # Parameters:
-    #   none
+    #   None
     ############################################################################
     def checkBingo(self):
         if self.foundWordList == []:
@@ -414,7 +414,7 @@ class Puzzle:
     #   All words for current puzzle
     #
     # Parameters:
-    #   none
+    #   None
     ############################################################################
     def findAllWords(self):
         self.allWordList = MakePuzzle.getAllWordsFromPangram(
@@ -429,7 +429,7 @@ class Puzzle:
     #
     # Parameters:
     #   word
-    #     new found word
+    #     New found word
     ############################################################################
     def updateFoundWords(self, word):
         self.foundWordList.append(word)
@@ -438,11 +438,11 @@ class Puzzle:
     # updateScore(pointIncrease: int)
     #
     # Description:
-    #   increases the score of the puzzle
+    #   Increases the score of the puzzle
     #
     # Parameters:
     #   pointIncrease
-    #       number of points to increase by
+    #       Number of points to increase by
     ############################################################################
     def updateScore(self, pointIncrease):
         self.score += pointIncrease
@@ -456,7 +456,7 @@ class Puzzle:
     #   and sets the rank field to the appropriate level
     #
     # Parameters:
-    #   none
+    #   None
     ############################################################################
     def updateRank(self):
         currentPercent = self.score / self.maxScore
@@ -487,9 +487,9 @@ class Puzzle:
         elif currentPercent < 1:
             self.rank = "Genius"
             self.calcPointsTilRank(1)
-        else:  # all words found
+        else:  # All words found
             self.rank = "Queen Bee"
-            # set final flag
+            # Set final flag
             self.setFinishedFlag(True)
             self.setPointsTilRank(0)
 
@@ -502,7 +502,7 @@ class Puzzle:
     #
     # Parameters:
     #   rankPer
-    #       a floating point number for the next rank to hit
+    #       A floating point number for the next rank to hit
     ############################################################################
     def calcPointsTilRank(self, rankPer):
         self.setPointsTilRank(self.maxScore * rankPer - self.score)
@@ -511,25 +511,25 @@ class Puzzle:
     # shuffleChars()
     #
     # Description:
-    #   shuffleChars reshuffles the string of letters to display to the user
+    #   ShuffleChars reshuffles the string of letters to display to the user
     #
     # Parameters:
-    #   none
+    #   None
     ############################################################################
     def shuffleChars(self):
-        # strings are imutable, need a place to temporarily hold new shuffle pattern
-        # explode into list
+        # Strings are imutable, need a place to temporarily hold new shuffle pattern
+        # Explode into list
         letters = random.sample(self.getUniqueLetters(), len(self.getUniqueLetters()))
 
-        # looping through to find the main letter in shuffled list
+        # Looping through to find the main letter in shuffled list
         ctr = 0
         while ctr < 7:
             if self.getKeyLetter() == letters[ctr]:
-                # copy whatever is in front of the line to later
+                # Copy whatever is in front of the line to later
                 letters[ctr] = letters[0]
-                # repalce first char with key letter
+                # Repalce first char with key letter
                 letters[0] = self.getKeyLetter()
                 break
             ctr += 1
-        # set the shuffleLetters field to the list rejoined to string
+        # Set the shuffleLetters field to the list rejoined to string
         self.setShuffleLetters("".join(letters))

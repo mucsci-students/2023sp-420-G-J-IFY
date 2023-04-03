@@ -15,10 +15,10 @@
 #
 # <public> Functions:
 #   setField(self, inStr : str)
-#     - set the field field with a string
+#     - Set the field field with a string
 #
 #   getField(self)
-#     - return the string from field
+#     - Return the string from field
 ################################################################################
 class Output:
     def __init__(self):

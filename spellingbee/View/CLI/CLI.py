@@ -10,9 +10,9 @@
 #
 # FUNCTIONS:
 #   drawTextBox(message : str, width : int, align : str) -> None
-#     - draws a text box containing message, width wide, and alignment align.
+#     - Draws a text box containing message, width wide, and alignment align.
 #   drawProgressBox(size : int, val : float) -> str
-#     - draws a progress bar of size width and displaying float %
+#     - Draws a progress bar of size width and displaying float %
 #   drawPuzzle(letters : list[str]) -> str
 #     - Draws a hex pattern of 7 letters
 #   drawGameBox(game : object) -> None
@@ -54,17 +54,17 @@ def drawTextBox(message : list[str], width : int, align : str) -> None:
     wall = '╟{:─<{}}╢'.format('', width-2)
     floor = '╚{:═<{}}╝'.format('', width-2)
 
-    words = [] # a list of strings where each string is a tier
-    blocks = [] # a list of lists, where each list represents a tier,
-                  # and each sub-list represents a line in that tier
-    txtBox = '' # a string storing the final, properly formatted text box
+    words = [] # A list of strings where each string is a tier
+    blocks = [] # A list of lists, where each list represents a tier,
+                # and each sub-list represents a line in that tier
+    txtBox = '' # A string storing the final, properly formatted text box
 
     # Split each string in message into list of the words, split by spaces.
     for string in message:
         words.append(string.split())
     
     # Format words lists back into strings where each element in the list
-    #   is a line in the block, aligned and spaced correctly.
+    # is a line in the block, aligned and spaced correctly.
     for list in words:
         lines = []
         line = ' '
@@ -109,18 +109,18 @@ def drawTextBox(message : list[str], width : int, align : str) -> None:
 #
 # PARAMETERS:
 #   size : int
-#     - the number of characters wide to draw the text box
+#     - The number of characters wide to draw the text box
 #   val : float
-#     - percent to be displayed on ptrogress bar
+#     - Percent to be displayed on ptrogress bar
 #
 # RETURNS:
 #   str
-#     - a formatted string containing the resulting progress bar.
+#     - A formatted string containing the resulting progress bar.
 ################################################################################
 def drawProgressBar(size : int, val : float) -> str:
     fill = int(float(size-2) * val)
     remaining = ((size-2) - fill)
-    # print a string with fill number of =, and remaining number of -
+    # Print a string with fill number of =, and remaining number of -
     bar = '<{0:=<{1}}{2:-<{3}}>'.format('', fill, '', remaining)
     return(bar)
 
@@ -130,15 +130,15 @@ def drawProgressBar(size : int, val : float) -> str:
 # drawPuzzle(letters : list) -> str:
 #
 # DESCRIPTION:
-#   formats a string representing a hex pattern of 7 characters.
+#   Formats a string representing a hex pattern of 7 characters.
 #
 # PARAMETERS:
 #   letters : list
-#     - list of 7 characters
+#     - List of 7 characters
 #
 # RETURNS:
 #   str:
-#     - formatted string containing the puzzle representation
+#     - Formatted string containing the puzzle representation
 ################################################################################
 def drawPuzzle(letters : list) -> str:
     # Pretty much just hard coded the output, letters are simple swapped in
@@ -160,13 +160,13 @@ def drawPuzzle(letters : list) -> str:
 #
 # PARAMETERS:
 #   game : object
-#     - puzzle object storing current game state
+#     - Puzzle object storing current game state
 #   outty : object
-#     - output object storing output string
+#     - Output object storing output string
 ################################################################################
 def drawGameBox(game : object, outty : object) -> None:
 
-    # calculate game progression
+    # Calculate game progression
     score = game.getScore()
     max = game.getMaxScore()
     prog = score/max
@@ -186,7 +186,7 @@ def drawGameBox(game : object, outty : object) -> None:
 # clear() -> None
 #
 # DESCRIPTION:
-#   calls appliciable clear console command depending on operating system.
+#   Calls appliciable clear console command depending on operating system.
 ################################################################################
 def clear() -> None:
     if name == 'nt':
