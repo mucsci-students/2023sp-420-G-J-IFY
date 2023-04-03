@@ -24,7 +24,7 @@ while not validIn:
                      'To start a new game, type "!new". To load a previous '
                      'save, type "!load"'], 40, '^')
     usrinput = prompt('> ', completer=WordCompleter(['!new', '!load', '!exit']))
-    adapter.parse(usrinput)
+    puzzle = adapter.parse(usrinput)
     #check and see if bad puzzle object was returned somewhere
     if puzzle == None:
         validIn = False
