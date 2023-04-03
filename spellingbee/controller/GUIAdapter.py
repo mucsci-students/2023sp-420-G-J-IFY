@@ -174,12 +174,13 @@ class GUI_A():
                 )
             
             else:
-                cmd.SaveGame(
+                saveGame = cmd.SaveGame(
                     puzzle=self._puzzle,
                     fileName=fileName,
                     path=path,
                     onlyPuzz=self._window.saveDialog.justPuzzle.isChecked()
                 )
+                saveGame.execute()
 
             self._window.saveDialog.fileName.clear()
             self._window.saveDialog.justPuzzle.setChecked(False)
