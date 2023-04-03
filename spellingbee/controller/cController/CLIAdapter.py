@@ -235,8 +235,8 @@ class CLI_A():
         os.chdir('./saves')
         currentPath = os.getcwd() + "\\"+ fileName
 
-        newGame =  cmd.LoadGame(currentPath, fileName,self.outty)
-        newGame = newGame.execute()
+        newGame =  cmd.LoadGame(currentPath, fileName, self.outty)
+        newGame = newGame.executeCLI()
         if newGame != None:
             self.puzzle = newGame
 
@@ -489,28 +489,28 @@ class CLI_A():
                         'for example "Game1"\n> ')
         os.chdir('./saves')
         currentPath = os.getcwd()
-        fFileName = fileName + 'json'
+        fFileName = fileName + '.json'
         print(currentPath)
         if(path.isfile(fFileName)):
             yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
                             '\n Enter Y for yes or N for no\n> ')
             if(yesOrNo == 'Y'):
                 if(num == 0):
-                    save = cmd.SaveGame(self.puzzle, fileName, './saves', 0)
-                    save.execute
+                    save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
+                    save.executeCLI()
                     saveStatus = True
                 elif(num == 1):
-                    save = cmd.SaveGame(self.puzzle, fileName, './saves', 1)
-                    save.execute
+                    save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
+                    save.executeCLI()
                     saveStatus = True
         else: 
             if(num == 0):
-                save = cmd.SaveGame(self.puzzle, fileName, './saves', 0)
-                save.execute
+                save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
+                save.executeCLI()
                 saveStatus = True
             elif(num == 1):
-                save = cmd.SaveGame(self.puzzle, fileName, './saves', 1)
-                save.execute
+                save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
+                save.executeCLI()
                 saveStatus = True
         
         if saveStatus:
