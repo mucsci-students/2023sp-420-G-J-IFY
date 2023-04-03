@@ -53,7 +53,8 @@ class CLI_A():
     def parse(self, usrinput : str) -> object:
         match usrinput:
             case '!new':
-                return self.newPuzzle()
+                self.newPuzzle()
+                return self.puzzle
             case '!puzzle':
                 self.printPuzzle()
                 return self.puzzle
