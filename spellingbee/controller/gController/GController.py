@@ -29,7 +29,7 @@ import os
 from os import name, system
 from os import path
 from functools import partial
-from View.GUI.MainWindow import MainWindow
+from gview.MainWindow import MainWindow
 from model import MakePuzzle, StateStorage, output
 from model.puzzle import Puzzle
 import PyQt6
