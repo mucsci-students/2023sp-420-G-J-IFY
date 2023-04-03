@@ -75,7 +75,8 @@ class CLI_A():
                 self.savePuzzle()
                 return self.puzzle
             case '!load':
-                return self.loadGame()
+                self.loadGame()
+                return self.puzzle
             case '!save-list':
                 self.outty.setField('Implementation Pending...')
             case '!help':
