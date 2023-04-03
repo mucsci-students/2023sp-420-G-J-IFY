@@ -10,7 +10,7 @@
 #   
 ################################################################################
 
-import cmd
+from controller import cmd
 import sys
 import os
 import puzzle
