@@ -235,7 +235,7 @@ class CLI_A():
         os.chdir('./saves')
         currentPath = os.getcwd() + "\\"+ fileName
 
-        newGame =  cmd.LoadGame(currentPath, self.outty)
+        newGame =  cmd.LoadGame(currentPath, fileName,self.outty)
         newGame = newGame.execute()
         if newGame != None:
             self.puzzle = newGame
@@ -496,20 +496,20 @@ class CLI_A():
                             '\n Enter Y for yes or N for no\n> ')
             if(yesOrNo == 'Y'):
                 if(num == 0):
-                    save = cmd.SaveGame(self.puzzle, fFileName, './saves', 0)
+                    save = cmd.SaveGame(self.puzzle, fileName, './saves', 0)
                     save.execute
                     saveStatus = True
                 elif(num == 1):
-                    save = cmd.SaveGame(self.puzzle, fFileName, './saves', 1)
+                    save = cmd.SaveGame(self.puzzle, fileName, './saves', 1)
                     save.execute
                     saveStatus = True
         else: 
             if(num == 0):
-                save = cmd.SaveGame(self.puzzle, fFileName, './saves', 0)
+                save = cmd.SaveGame(self.puzzle, fileName, './saves', 0)
                 save.execute
                 saveStatus = True
             elif(num == 1):
-                save = cmd.SaveGame(self.puzzle, fFileName, './saves', 1)
+                save = cmd.SaveGame(self.puzzle, fileName, './saves', 1)
                 save.execute
                 saveStatus = True
         

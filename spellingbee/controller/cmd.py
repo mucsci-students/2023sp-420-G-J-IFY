@@ -102,6 +102,13 @@ class SaveGame(Command):
             puzzle=self._puzzle,
             onlyPuzz=self._onlyPuzz
         )
+    def executeCLI(self) -> None:
+        
+        # pass responsibility off to State Storage
+        StateStorage.savePuzzle(
+            puzzle = self._puzzle,
+            fileName = self._fileName
+        )
     
 ################################################################################
 # class LoadGame(Command)
