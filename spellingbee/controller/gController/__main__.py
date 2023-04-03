@@ -1,5 +1,13 @@
 from gview import *
 
-from .GController import *
+from controller.GUIAdapter import GUI_A
+from controller import cmd
+from model.output import Output
 
-main()
+outty = Output()
+gui = GUI_A(
+    puzzle=cmd.NewGame(outty, 'warlock', 'w').execute(),
+    outty=outty,
+)
+
+gui.start()
