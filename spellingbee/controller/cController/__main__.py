@@ -1,4 +1,4 @@
-import cview.CLI as CLI
+from View.CLI import CLI
 import model.puzzle as puzzle
 from controller.cController import CLIAdapter
 import model.output as output
