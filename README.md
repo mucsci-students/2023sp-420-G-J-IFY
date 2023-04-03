@@ -107,7 +107,7 @@ pytest
 ### Running the tests with code coverage
 
 ```
-pytest --cov=model
+pytest --cov=spellingbee/model
 ```
 
 ## Design Patterns
