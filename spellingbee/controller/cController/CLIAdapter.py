@@ -26,8 +26,8 @@ from model import MakePuzzle, StateStorage, hint, output
 from os import path
   
 
-class CLI_A:
-    def __init(self, puzzle: puzzle.Puzzle, outty: object):
+class CLI_A():
+    def __init__(self, puzzle: puzzle.Puzzle, outty: object):
         self.puzzle = puzzle
         self.outty = outty
 
