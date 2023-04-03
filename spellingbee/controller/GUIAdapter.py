@@ -154,7 +154,7 @@ class GUI_A():
     def _save(self):
         # Open file dialog for user to choose location
         dialog = self._window.saveDialog
-        fileName = dialog.filename.text()
+        fileName = dialog.fileName.text()
         if len(fileName) < 1:
             badSaveNameDlg = QMessageBox(parent=self._window)
             badSaveNameDlg.setText(
