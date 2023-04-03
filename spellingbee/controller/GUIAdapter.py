@@ -13,7 +13,11 @@
 
 import sys
 import os
-from PyQt6.QtWidgets import QFileDialog, QApplication
+from PyQt6.QtWidgets import (
+    QFileDialog, 
+    QMessageBox, 
+    QApplication
+)
 from model import (
     MakePuzzle,
     StateStorage,
@@ -149,19 +153,39 @@ class GUI_A():
     ############################################################################
     def _save(self):
         # Open file dialog for user to choose location
-        fileName = QFileDialog.getSaveFileName(
-            parent=self._window,
-            caption='Save',
-            directory='../saves',
-            filter='GameFiles (*.json)'
-        )
+        dialog = self._window.saveDialog
+        fileName = dialog.filename.text()
+        if len(fileName) < 1:
+            badSaveNameDlg = QMessageBox(parent=self._window)
+            badSaveNameDlg.setText(
+                'Must enter a file name with a length greater than 0.'
+            )
+            badSaveNameDlg.show()
+        else:
+            path = str(QFileDialog.getExistingDirectory(
+                self._window,
+                'Select Directory'
+            ))
 
-        saveGame = cmd.SaveGame(
-            puzzle=self._puzzle,
-            fileName=fileName,
-            onlyPuzz=False
-        )
-        saveGame.execute()
+            if(os.path.isfile(path + '/' + fileName + '.json')):
+                self._window.owDialog.show()
+                self._window.owDialog.btns.accepted.connect(
+                    print('implementation pending...')
+                )
+            
+            else:
+                cmd.SaveGame(
+                    puzzle=self._puzzle,
+                    fileName=fileName,
+                    path=path,
+                    onlyPuzz=self._window.saveDialog.justPuzzle.isChecked()
+                )
+
+            self._window.saveDialog.fileName.clear()
+            self._window.saveDialog.justPuzzle.setChecked(False)
+            
+            self._window.setStatus(self._outty.getField())
+            dialog.accept()
 
     ############################################################################
     # <function name>
@@ -178,10 +202,13 @@ class GUI_A():
             caption='Load a game file',
             directory='../saves',
             filter='GameFiles (*.json)'
-        )
+        )[0]
 
-        loadGame = cmd.LoadGame(fileName, self._outty)
-        newPuzzle = loadGame.execute()
+        if not fileName.endswith('.json'):
+            newPuzzle = None
+        else:
+            loadGame = cmd.LoadGame(fileName, self._outty)
+            newPuzzle = loadGame.execute()
 
         if newPuzzle == None:
             self._window.loadFailed.show()
