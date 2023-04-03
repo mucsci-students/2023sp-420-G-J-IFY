@@ -10,13 +10,13 @@ import os
 #Start of game declarations for needed objects and fields
 outty = output.Output()
 usrinput = ' '
-validIn = False
+notValidIn = True
 puzzle = puzzle.Puzzle('', '')
 adapter = CLIAdapter.CLI_A(puzzle, outty)
 tabComp = WordCompleter(adapter.commandsList)
 
 # inital game loop, loop until valid start is reached
-while not validIn:
+while notValidIn:
     if outty.getField() != '':
         print(outty.getField())
     CLI.drawTextBox(['Welcome to Spelling Bee! \ '
@@ -27,7 +27,10 @@ while not validIn:
     puzzle = adapter.parse(usrinput)
     #check and see if bad puzzle object was returned somewhere
     if puzzle == None:
-        validIn = False
+        notValidIn = True
+    else:
+        notValidIn = False
+
 
 #after start of game loop, draw new game for first time
 CLI.clear()
