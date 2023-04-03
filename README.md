@@ -64,7 +64,7 @@ pytest
 
 - To run tests along with code coverage of model, run:
 ```
-pytest --cov=model
+pytest --cov=spellingbee/model
 ```
 
 
