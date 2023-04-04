@@ -84,19 +84,19 @@ def testBlankNewPuzzle(blankPuzzleFixture):
     assert(len(blankPuzzleFixture.uniqueLett) ==7)
     
 def testNonAlphaNewPuzzle(nonAlphaPuzzleFixture):
-    assert (pytest.raises(spellingbee.BadQueryException))
+    pytest.raises(spellingbee.BadQueryException)
     
 def testBadNewPuzzle(badPuzzleFixture):
-    assert (pytest.raises(spellingbee.BadQueryException))
+    pytest.raises(spellingbee.BadQueryException)
     
 def testBadKeyLettNewPuzzle(badKeyLettPuzzleFixture):
-    assert (pytest.raises(spellingbee.EmptyKeyLetterException))
+    pytest.raises(spellingbee.EmptyKeyLetterException)
     
 def testExtraKeyLettNewPuzzle(extraKeyLettPuzzleFixture):
-    assert (pytest.raises(spellingbee.TooManyKeyLettersException))
+    pytest.raises(spellingbee.TooManyKeyLettersException)
     
 def testWrongKeyLettNewPuzzle(wrongKeyLettPuzzleFixture):
-    assert (pytest.raises(spellingbee.LetterMismatchException))
+    pytest.raises(spellingbee.LetterMismatchException)
 
     # testing if make puzzle correctly produces a new game
 def testKeyLett(puzzleFixture):

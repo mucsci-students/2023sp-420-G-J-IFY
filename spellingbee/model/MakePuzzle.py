@@ -121,9 +121,6 @@ def newPuzzle(baseWord: str, keyLetter: str, outty: output, flag: bool) -> objec
     except BadQueryException:
         if flag == False:
             outty.setField("ERROR!: " + baseWord.upper() + " is not a valid word")
-        else:
-            # TODO
-            pass
     except LetterMismatchException:
         outty.setField("ERROR!: " + keyLetter.upper() + " is not a valid key letter")
     except EmptyKeyLetterException:
@@ -281,30 +278,6 @@ def guess(puzzle, input: str, flag: bool, outty: object):
             )
     conn.commit()
     conn.close()
-
-
-################################################################################
-# newPuzzCli(baseWord: str, uniqueLetters: dict) -> str
-#
-# DESCRIPTION:
-#   This function takes a string and a dictionary and handles input to determine
-#   the key Letter for CLI
-#
-# PARAMETERS:
-#   baseWord: str
-#       base word of a puzzle
-#
-#   uniqueLetters: dict
-#       dict of unique letters
-#
-# RETURNS:
-#   keyLetter: str
-#       key letter for the game
-#
-################################################################################
-def newPuzzCli(baseWord: str, uniqueLetters: dict) -> str:
-    keyLetter = input("Enter a letter from your word to use as the key letter\n> ")  
-    return keyLetter.lower()
 
 
 ################################################################################
