@@ -196,6 +196,11 @@ def testGetPointsTilRank(puzzleFixture):
     assert (puzzleFixture.getPointsTilRank() == 1)
 
 
+def testSetKeyLetter4(puzzleFixture):
+    puzzleFixture.setKeyLetter('z')
+    assert (puzzleFixture.getKeyLetter() == 'z')
+
+
 def testSetUniqueLetters(puzzleFixture):
     puzzleFixture.setUniqueLetters('abcdefg')
     assert (puzzleFixture.uniqueLett == 'abcdefg')
