@@ -36,6 +36,14 @@ def badKeyLettPuzzleFixture():
     return spellingbee.newPuzzle('warlock', '', outty, False)
 
 @pytest.fixture
+def extraKeyLettPuzzleFixture():
+    return spellingbee.newPuzzle('warlock', 'wa', outty, False)
+
+@pytest.fixture
+def wrongKeyLettPuzzleFixture():
+    return spellingbee.newPuzzle('warlock', 'e', outty, False)
+
+@pytest.fixture
 def guessFixture(puzzleFixture):
     spellingbee.guess(puzzleFixture, 'friend', False, outty)
     return puzzleFixture
@@ -65,6 +73,10 @@ def nonsenseGuessFixture(puzzleFixture):
 @pytest.fixture
 def missingCenterGuessFixture(puzzleFixture):
     spellingbee.guess(puzzleFixture, "fenders", False, outty)
+    
+@pytest.fixture
+def wrongLettersGuessFixture(puzzleFixture):
+    spellingbee.guess(puzzleFixture, "benders", False, outty)
 
 
 # test to see if blank puzzle is generated correctly
@@ -79,6 +91,12 @@ def testBadNewPuzzle(badPuzzleFixture):
     
 def testBadKeyLettNewPuzzle(badKeyLettPuzzleFixture):
     assert (pytest.raises(spellingbee.EmptyKeyLetterException))
+    
+def testExtraKeyLettNewPuzzle(extraKeyLettPuzzleFixture):
+    assert (pytest.raises(spellingbee.TooManyKeyLettersException))
+    
+def testWrongKeyLettNewPuzzle(wrongKeyLettPuzzleFixture):
+    assert (pytest.raises(spellingbee.LetterMismatchException))
 
     # testing if make puzzle correctly produces a new game
 def testKeyLett(puzzleFixture):
@@ -160,3 +178,6 @@ def testNonsenseGuess(nonsenseGuessFixture):
 
 def testMissingCenterGuess(missingCenterGuessFixture):
     assert (outty.getField() == "FENDERS is missing center letter, I")
+    
+def testWrongLettersGuessFixture(wrongLettersGuessFixture):
+    assert (outty.getField() == "BENDERS contains letters not in DEFINRS")
