@@ -361,19 +361,19 @@ class CLI_A():
         count = 0
         fStr = ''
         for i in lst:
-            letters = str(i[0]).capitalize()
+            letters = str(i[0]).upper()
             num = i[1]
-            if count > 0:
+            if count >= 0:
                 prevLetters = str(lst[count - 1][0]).capitalize()
                 if letters[0] == prevLetters[0]:
                     if count == len(lst) - 1:
                         fStr += f'{letters}: {num}'
                     else:
-                        fStr += f'{letters}: {num}, '
+                        fStr += f'{letters}: {num}  '
                 else:
-                    fStr += f'\n{letters}: {num}, '
+                    fStr += f'\n{letters}: {num}  '
             else:
-                fStr += f'{letters}: {num}, '
+                fStr += f'{letters}: {num} '
             count += 1
 
         return fStr
