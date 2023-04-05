@@ -1,4 +1,4 @@
-################################################################################
+###############################################################################
 # GUIAdapter.py
 # Author: Isaak Weidman
 # Date of Creation: 04/02/2023
@@ -9,24 +9,21 @@
 #
 # FUNCTIONS:
 #
-################################################################################
+###############################################################################
 
 import sys
 import os
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
-    QFileDialog, 
-    QMessageBox, 
+    QFileDialog,
+    QMessageBox,
     QApplication,
     QDialog,
     QPlainTextEdit,
     QVBoxLayout,
     QDialogButtonBox,
-    QTextEdit,
 )
 from model import (
-    MakePuzzle,
-    StateStorage,
     output
 )
 from model.hint import hint
@@ -38,7 +35,7 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-################################################################################
+###############################################################################
 # Class GUI_A()
 #
 # DESCRIPTION:
@@ -49,7 +46,9 @@ sys.path.append(parent)
 #
 # FUNCTIONS:
 #
-################################################################################
+###############################################################################
+
+
 class GUI_A():
 
     def __init__(self, puzzle: Puzzle, outty: output.Output):
@@ -57,7 +56,6 @@ class GUI_A():
         self._puzzle.shuffleChars()
         self._outty = outty
         self._window = None
-
 
     def start(self):
         app = QApplication([])
@@ -80,13 +78,15 @@ class GUI_A():
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
 
-    ############################################################################
+    ###########################################################################
     # _guess() -> None
     #
     # DESCRIPTION:
-    #   Checks the database for valid words, already found words, and words that
+    #   Checks the database for valid words, already found words,
+    # and words that
     #   do not exist for currently active puzzle.
-    ############################################################################
+    ###########################################################################
+
     def _guess(self) -> None:
         # Clear the status tip
         self._window.setStatus('')
@@ -101,12 +101,13 @@ class GUI_A():
         # Display info
         self._window.setStatus(self._outty.getField())
 
-    ############################################################################
+    ###########################################################################
     # _shuffle() -> None
     #
     # DESCRIPTION:
     #   Shuffles the order of the letters for a fresh perspective
-    ############################################################################
+    ###########################################################################
+
     def _shuffle(self) -> None:
         shuffle = cmd.Shuffle(self._puzzle)
         shuffle.execute()
@@ -116,24 +117,26 @@ class GUI_A():
         )
         self._window.centralWidget.update()
 
-    ############################################################################
+    ###########################################################################
     # _delete() -> None
     #
     # DESCRIPTION:
     #   Mimics the action of pressing backspace
-    ############################################################################
+    ###########################################################################
+
     def _delete(self) -> None:
         self._window.centralWidget.uInput.backspace()
 
-    ############################################################################
+    ###########################################################################
     # _newPuzzle() -> None
     #
     # DESCRIPTION:
     #   Prompts for input and directs functionality to create a new puzzle
     #   object.
-    ############################################################################
+    ###########################################################################
+
     def _newPuzzle(self) -> None:
-        dlg = self._window.newDialog # Quick reference to newDialog object
+        dlg = self._window.newDialog  # Quick reference to newDialog object
         # Extract user input
         baseWord = str(dlg.baseWrd.text()).lower()
         keyLetter = str(dlg.keyLett.currentText()).lower()
@@ -149,14 +152,15 @@ class GUI_A():
         else:
             dlg.setMessage('Invalid base word')
 
-    ############################################################################
+    ###########################################################################
     # <function name>
     #
     # DESCRIPTION:
     #
     # PARAMETERS:
     #
-    ############################################################################
+    ###########################################################################
+
     def _save(self):
         # Open file dialog for user to choose location
         dialog = self._window.saveDialog
@@ -180,18 +184,17 @@ class GUI_A():
                 onlyPuzz=self._window.saveDialog.justPuzzle.isChecked()
             )
 
-            if(os.path.isfile(path + '/' + fileName + '.json')):
+            if (os.path.isfile(path + '/' + fileName + '.json')):
                 self._window.owDialog.show()
                 self._window.owDialog.btns.accepted.connect(
                     lambda: self.overwrite(saveGame)
-            )
-            
+                )
             else:
                 saveGame.execute()
 
             self._window.saveDialog.fileName.clear()
             self._window.saveDialog.justPuzzle.setChecked(False)
-            
+
             self._window.setStatus(self._outty.getField())
             dialog.accept()
 
@@ -199,14 +202,15 @@ class GUI_A():
         command.execute()
         self._window.owDialog.accept()
 
-    ############################################################################
+    ###########################################################################
     # <function name>
     #
     # DESCRIPTION:
     #
     # PARAMETERS:
     #
-    ############################################################################
+    ###########################################################################
+
     def _load(self):
         # Open file dialog for user to choose file
         fileName = QFileDialog.getOpenFileName(
@@ -222,7 +226,7 @@ class GUI_A():
             loadGame = cmd.LoadGame(fileName, '', self._outty)
             newPuzzle = loadGame.execute()
 
-        if newPuzzle == None:
+        if newPuzzle is None:
             self._window.loadFailed.show()
         else:
             # Update puzzle object
@@ -230,17 +234,16 @@ class GUI_A():
             # Update view
             self._window.newGame(self._puzzle)
 
-
-    ############################################################################
+    ###########################################################################
     # <function name>
     #
     # DESCRIPTION:
     #
     # PARAMETERS:
     #
-    ############################################################################
+    ###########################################################################
+
     def _hint(self):
-        # dialog window
         dlg = QDialog(parent=self._window)
         mDlg = QPlainTextEdit(dlg)
         mDlg.setBackgroundVisible(False)
@@ -250,28 +253,24 @@ class GUI_A():
         mDlg.setReadOnly(True)
         button = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
         layout.addWidget(button)
-        # hint object
+
         obj = hint(self._puzzle)
         obj.makeHintGrid(self._puzzle)
         button.accepted.connect(dlg.accept)
         font = QFont('Courier', 11)
+
         # list representation of the hint grid
         lst = obj.hint
-        dlg.setGeometry(700,300,600,600)
-     
+        dlg.setGeometry(700, 300, 600, 600)
+
         # format String containing the Grid
         fStr = self.buildHintGrid(lst, obj)
 
         mDlg.setPlainText(fStr)
-        
         dlg.setFont(font)
-        #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
-        #execute command
-        #parse data
-        #display 2 user
 
-    ################################################################################
+    ###########################################################################
     # formatHintsHeader(self) -> str:
     #
     # DESCRIPTION:
@@ -284,7 +283,9 @@ class GUI_A():
     # RETURNS:
     #   fStr : str
     #       format String that contains the hint grid header
-    ################################################################################
+    #
+    ###########################################################################
+
     def formatHintsHeader(self, hint) -> str:
         fStr = 'Spelling Bee Grid \n\n\n'
         fStr += 'Center Letter is Underlined.\n\n'
@@ -295,13 +296,16 @@ class GUI_A():
             fStr += str(i).upper() + ' '
             counter += 1
         fStr += '\n-\n\n'
-        fStr += ('WORDS: ' + str(hint.countWords(self._puzzle)) + ', POINTS: ' + str(self._puzzle.maxScore) + ', PANGRAMS: ' +  
-                 str(hint.numPangrams(self._puzzle)) + ' ('  + str(hint.numPerfectPangram(self._puzzle)) + ' Perfect), BINGO: '+ 
-                 str(self._puzzle.checkBingo())+ '\n\n\n' )
+        fStr += ('WORDS: ' + str(hint.countWords(self._puzzle)) +
+                 ', POINTS: ' + str(self._puzzle.maxScore) + ', PANGRAMS: ' +
+                 str(hint.numPangrams(self._puzzle)) + ' (' +
+                 str(hint.numPerfectPangram(self._puzzle)) +
+                 ' Perfect), BINGO: ' +
+                 str(self._puzzle.checkBingo()) + '\n\n\n')
 
         return fStr
-    
-    ################################################################################
+
+    ###########################################################################
     # removeColumn(self, col, lst) -> list[list[int]]:
     #
     # DESCRIPTION:
@@ -310,16 +314,17 @@ class GUI_A():
     # PARAMETERS:
     #   self
     #       Gcontroller object
-    #   
+    #
     #   lst : List[List[int]]
     #
-    ################################################################################
+    ###########################################################################
+
     def removeColumn(self, col, lst) -> list[list[int]]:
         for i in lst:
             del i[col]
         return lst
-    
-    ################################################################################
+
+    ###########################################################################
     # removeColumn(self, col, lst) -> list[list[int]]:
     #
     # DESCRIPTION:
@@ -328,20 +333,21 @@ class GUI_A():
     # PARAMETERS:
     #   self
     #       Gcontroller object
-    #   
+    #
     #   lst : List[List[int]]
     #       list representaion of the hints grid
-    ################################################################################
-    def removeZeroColumns(self,lst):
+    ###########################################################################
+
+    def removeZeroColumns(self, lst):
         count = len(lst[8]) - 1
 
-        for i in reversed(lst[8]) :
+        for i in reversed(lst[8]):
             if i == 0:
                 self.removeColumn(count, lst)
             count += -1
         return lst
-    
-    ################################################################################
+
+    ###########################################################################
     # buildHintGrid(self,lst : hint):
     #
     # DESCRIPTION:
@@ -357,35 +363,30 @@ class GUI_A():
     # RETURN:
     #   fStr: str
     #       format string containing the complete hint grid
-    ################################################################################
-    def buildHintGrid(self,lst, hint) -> str:
-        #build hint grid
-        fStr =''
+    ###########################################################################
+
+    def buildHintGrid(self, lst, hint) -> str:
+        # build hint grid
+        fStr = ''
         letters = ''
         fStr += self.formatHintsHeader(hint)
         # builds a string of the unique letters from the 2d list
         letters = self.getLettersFromGrid(lst)
-        
+
         fStr += '    '
 
-        #print the word lengths from 4 - sigma
-        
-        #fStr += self.formatLengthHeader()
-
         fStr += self.formatHintsGrid(lst, letters)
-        #print the body of the grid
-        
-
+        # print the body of the grid
         fStr += "\nTwo Letter List:\n\n"
         fStr += self.formatTwoLetterList(hint)
         return fStr
-        #return a formated string of the grid
-    
-    ################################################################################
+
+    ###########################################################################
     # getLettersFromGrid(lst) -> str:
     #
     # DESCRIPTION:
-    #   Gets the letters from the 2d list and removes them the returns the letters
+    #   Gets the letters from the 2d list and removes them the
+    # returns the letters
     #
     # PARAMETERS:
     #   lst : list[list[str]]
@@ -393,32 +394,48 @@ class GUI_A():
     # RETURN:
     #   letters : str
     #       letters of the puzzle
-    ################################################################################
+    ###########################################################################
+
     def getLettersFromGrid(self, lst) -> str:
         letters = ''
         for i in range(9):
             letters += str(lst[i][0]).capitalize()
             lst[i].pop(0)
         return letters
-    
-    def formatHintsGrid(self,lst ,letters) -> str:
-        fStr =' '
+
+    ###########################################################################
+    # getLettersFromGrid(self, lst) -> str:
+    #
+    # DESCRIPTION:
+    #   formats the hints grid
+    #
+    # PARAMETERS:
+    #   lst : list[list[int]]
+    #       list representation of the hints gri
+    #   letters : str
+    #       letters of the puzzle
+    # RETURN:
+    #   fStr : str
+    #       letters of the puzzle
+    ###########################################################################
+
+    def formatHintsGrid(self, lst, letters) -> str:
+        fStr = ' '
 
         self.removeZeroColumns(lst)
-        #print lengths
+        # print lengths
 
         for i in range((len(lst[0]))):
             fStr += f'{lst[0][i]:<4}'
         fStr += '\n\n'
-        for i in range(1,9):
+        for i in range(1, 9):
             fStr += f'{letters[i - 1]}:'
             for y in range(len(lst[0])):
                 fStr += f' {lst[i][y]:>3}'
-                
             fStr += '\n\n'
-        return fStr 
-    
-    ################################################################################
+        return fStr
+
+    ###########################################################################
     # formatTwoLetterList(hint : object) -> str:
     #
     # DESCRIPTION:
@@ -431,9 +448,9 @@ class GUI_A():
     # RETURN:
     #   fStr : str
     #       A string that contains the formated string
-    ################################################################################
-    def formatTwoLetterList(self, hint : object) -> str:
-        
+    ###########################################################################
+
+    def formatTwoLetterList(self, hint: object) -> str:
         hint.twoLetterList(self._puzzle)
         lst = hint.getTwoLetterList()
         count = 0
