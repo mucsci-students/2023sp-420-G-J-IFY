@@ -173,6 +173,8 @@ class GUI_A():
             encrypt=dialog.isEncrypted()
         )
         
+        saveGame.execute()
+        
         dialog.reset()
         dialog.accept()
 
