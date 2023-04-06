@@ -469,6 +469,11 @@ class SaveDialog(QDialog):
     ############################################################################
     def getPath(self) -> str:
         return self.fileName.text()
+    
+    def reset(self) -> None:
+        self.justPuzzle.setChecked(False)
+        self.encrypt.setChecked(False)
+        self.fileName.setText(f'{os.getcwd()}/untitled.json')
 
 
 

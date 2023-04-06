@@ -29,6 +29,7 @@ from model import (
 from model.hint import hint
 from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
+from gview import Dialogs
 from controller import cmd
 
 current = os.path.dirname(os.path.realpath(__file__))
@@ -164,39 +165,15 @@ class GUI_A():
     def _save(self):
         # Open file dialog for user to choose location
         dialog = self._window.saveDialog
-        fileName = dialog.fileName.text()
-        if len(fileName) < 1:
-            badSaveNameDlg = QMessageBox(parent=self._window)
-            badSaveNameDlg.setText(
-                'Must enter a file name with a length greater than 0.'
-            )
-            badSaveNameDlg.show()
-        else:
-            path = str(QFileDialog.getExistingDirectory(
-                self._window,
-                'Select Directory'
-            ))
-
-            saveGame = cmd.SaveGame(
-                puzzle=self._puzzle,
-                fileName=fileName,
-                path=path,
-                onlyPuzz=self._window.saveDialog.justPuzzle.isChecked()
-            )
-
-            if (os.path.isfile(path + '/' + fileName + '.json')):
-                self._window.owDialog.show()
-                self._window.owDialog.btns.accepted.connect(
-                    lambda: self.overwrite(saveGame)
-                )
-            else:
-                saveGame.execute()
-
-            self._window.saveDialog.fileName.clear()
-            self._window.saveDialog.justPuzzle.setChecked(False)
-
-            self._window.setStatus(self._outty.getField())
-            dialog.accept()
+        
+        saveGame = cmd.SaveGame(
+            puzzle=self._puzzle,
+            path=dialog.getPath(),
+            onlyPuzz=dialog.isOnlyPuzz(),
+            encrypt=dialog.isEncrypted(self)
+        )
+        
+        dialog.reset()
 
     def overwrite(self, command):
         command.execute()
