@@ -169,11 +169,12 @@ class GUI_A():
         saveGame = cmd.SaveGame(
             puzzle=self._puzzle,
             path=dialog.getPath(),
-            onlyPuzz=dialog.isOnlyPuzz(),
-            encrypt=dialog.isEncrypted(self)
+            onlyPuzz=dialog.isOnlyPuzzle(),
+            encrypt=dialog.isEncrypted()
         )
         
         dialog.reset()
+        dialog.accept()
 
     def overwrite(self, command):
         command.execute()
