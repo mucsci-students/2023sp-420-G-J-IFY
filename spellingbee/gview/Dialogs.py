@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from PyQt6.QtCore import (
     Qt,
     QRegularExpression,
@@ -7,6 +7,7 @@ from PyQt6.QtGui import (
     QFont,
     QRegularExpressionValidator,
     QCursor,
+    QAction
 )
 from PyQt6.QtWidgets import (
     QApplication,
@@ -25,6 +26,8 @@ from PyQt6.QtWidgets import (
     QComboBox,
     QDialogButtonBox,
     QComboBox,
+    QStyle,
+    QFileDialog
 )
 
 
@@ -365,43 +368,107 @@ class NewDialog(QDialog):
 class SaveDialog(QDialog):
     def __init__(self, parent : QWidget | None, *args, **kwargs):
         super(SaveDialog, self).__init__(parent, *args, **kwargs)
-
+        
+        # Dialog is persistent
+        self.setModal(True)
+        # Declare attributes/widgets
         self.fileName = QLineEdit(self)
         self.justPuzzle = QCheckBox(self)
+        self.encrypt = QCheckBox(self)
         self.btns = QDialogButtonBox(self)
 
-        self.setFixedSize(200, 150)
-        self.setSizePolicy(
-            QSizePolicy.Policy.Fixed,
-            QSizePolicy.Policy.Fixed
-        )
-
+        # initialize widgets and build ui
         self._initUI()
 
+    ############################################################################
+    # _initUI() -> None
+    #
+    # DESCRIPTION:
+    #   initializes widget data and populates dialog with them
+    ############################################################################
     def _initUI(self):
 
         layout = QVBoxLayout()
-
-        regex = QRegularExpression(
-            '[A-Z|a-z|0-9|\.|_|-]+'
-        )
-        validator = QRegularExpressionValidator(regex)
-        self.fileName.setValidator(validator)
-        self.fileName.setPlaceholderText('File Name')
-
+        # Add labels to checkboxes
         self.justPuzzle.setText('Save blank puzzle')
-
+        self.encrypt.setText('Encrypt words list')
+        # Initialize fileName with default path and name
+        self.fileName.setText(f'{os.getcwd()}/untitled.json')
+        # Add button at end of fileName to open file dialog
+        icon = self.style().standardIcon(
+            QStyle.StandardPixmap.SP_DialogOpenButton
+        )
+        self._open_dlg_action = self.fileName.addAction(
+            icon,
+            QLineEdit.ActionPosition.TrailingPosition
+        )
+        self._open_dlg_action.triggered.connect(self._open)
+        # Add save and cancel buttons
         self.btns.setStandardButtons(
             QDialogButtonBox.StandardButton.Cancel
             | QDialogButtonBox.StandardButton.Save
         )
+        # Connect cacel button to default rejection (save is user defined)
         self.btns.rejected.connect(self.reject)
-
-        layout.addWidget(self.fileName)
+        # Populate dialog with widgets
         layout.addWidget(self.justPuzzle)
+        layout.addWidget(self.encrypt)
+        layout.addWidget(self.fileName)
         layout.addWidget(self.btns)
-
         self.setLayout(layout)
+        
+    ############################################################################
+    # _validatePath(self, str) -> bool:
+    #
+    # DESCRIPTION:
+    #   private function that returns true if path exists and file name ends
+    #   with '.json'
+    ############################################################################
+    def _validatePath(self, str) -> bool:
+        return self.getPath().endswith('.json')
+    
+    ############################################################################
+    # _open() -> None
+    #
+    # DESCRIPTION:
+    #   private function that opens a file dialog and returns path + user 
+    #   defined filename
+    ############################################################################
+    def _open(self) -> None:
+        path = QFileDialog.getSaveFileName(
+            self,
+            'Save Game',
+            os.getcwd(),
+            "Game Files (*.json)"
+        )
+        self.fileName.setText(path[0])
+    
+    ############################################################################
+    # isOnlyPuzzle() -> bool
+    #
+    # DESCRIPTION:
+    #   returns true if user checked 'save puzzle only' option, otherwise false
+    ############################################################################
+    def isOnlyPuzzle(self) -> bool:
+        return self.justPuzzle.isChecked()
+    
+    ############################################################################
+    # isEncrypted() -> bool
+    #
+    # DESCRIPTION:
+    #   returns true if user checked 'encrypt word list' option, otherwise false
+    ############################################################################
+    def isEncrypted(self) -> bool:
+        return self.encrypt.isChecked()
+    
+    ############################################################################
+    # getPath() -> str
+    #
+    # DESCRIPTION:
+    #   returns the full path to the new file to be saved
+    ############################################################################
+    def getPath(self) -> str:
+        return self.fileName.text()
 
 
 
