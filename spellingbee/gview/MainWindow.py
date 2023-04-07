@@ -18,15 +18,13 @@ filePath = os.path.dirname(__file__)
 sys.path.append(filePath)
 
 from model.puzzle import Puzzle
-from StatsPanel import StatsPanel
-from HexCluster import HexCluster
-import Dialogs
+from gview.StatsPanel import StatsPanel
+from gview.HexCluster import HexCluster
+from gview import Dialogs
 from PyQt6.QtGui import (
     QAction,
     QFont,
     QRegularExpressionValidator,
-    QValidator,
-    QKeyEvent,
 )
 from PyQt6.QtCore import (
     Qt,
@@ -34,7 +32,6 @@ from PyQt6.QtCore import (
     QEvent,
 )
 from PyQt6.QtWidgets import (
-    QApplication,
     QMainWindow,
     QSizePolicy,
     QToolBar,
@@ -46,7 +43,6 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QSpacerItem,
-    QFileDialog,
 )
 
 ################################################################################
@@ -79,15 +75,11 @@ class MainWindow(QMainWindow):
         self.status = QLabel(self.statusBar)
         self.statusBar.addWidget(self.status)
         self.setStatusBar(self.statusBar)
-        #self.welcomeDialog = Dialogs.WelcomeDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
-        #self.loadDialog = QFileDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
-
-        #self.loadDialog.rejected.connect(self.loadDialog.reject)
 
         self.toolBar = self._createToolBar()
         self.infoBar = self._createInfoBar()

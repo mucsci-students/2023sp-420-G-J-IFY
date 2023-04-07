@@ -11,7 +11,7 @@
 #
 ################################################################################
 
-import sys
+import sys, os
 import math
 from PyQt6.QtCore import (
     Qt,
@@ -29,7 +29,8 @@ from PyQt6.QtGui import (
     QColor,
     QFont,
     QPolygonF,
-    QPixmap
+    QPixmap,
+    QFontDatabase,
 )
 from PyQt6.QtWidgets import (
     QApplication,
@@ -102,7 +103,7 @@ class HexCluster(QWidget):
             button = HexButton(self, c)
             self.buttons.append(button)
 
-        self.buttons[0].setColor(QColor(247, 218, 33))
+        self.buttons[0].setColor(QColor('#FFCC2F'))
 
     ############################################################################
     # _arrangeButtons()
@@ -194,7 +195,7 @@ class HexButton(QPushButton):
         **kwargs
     ):
         super(HexButton, self).__init__(parent, *args, **kwargs)
-
+        
         self.color = QColor(210, 210, 210)
         self.textColor = QColor(Qt.GlobalColor.black)
         self.text = text
@@ -202,7 +203,7 @@ class HexButton(QPushButton):
         self.width = int(45 * math.sqrt(3))
         self.x = 3
         self.y = 3
-        self.boundingBox = QRect(self.x, self.y, self.width, self.height)
+        self.boundingBox = QRect(self.x, self.y + 1, self.width, self.height)
         self.radius = self.height/2
         self.hexagon = self._calcHex()
         self.setFlat(True)
@@ -355,8 +356,13 @@ class HexButton(QPushButton):
     #     - painter object that draws the text
     ############################################################################
     def _drawText(self, painter : QPainter) -> None:
+        font_id = QFontDatabase.addApplicationFont(
+            os.getcwd()+'/fonts/Comfortaa-VariableFont_wght.ttf'
+        )
+        families = QFontDatabase.applicationFontFamilies(font_id)
+        
         font = QFont()
-        font.setFamily('Helvetica')
+        font.setFamily(families[0])
         font.setBold(True)
         font.setPointSize(25)
         
@@ -504,7 +510,7 @@ class HexLabel(QWidget):
         painter.setPen(pen)
 
         painter.drawText(
-            QRectF(self._x, self._y, self._width, self._height),
+            QRectF(self._x, self._y + 7, self._width, self._height),
             Qt.AlignmentFlag.AlignCenter,
             self._text
         )
