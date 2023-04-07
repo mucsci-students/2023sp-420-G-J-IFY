@@ -395,3 +395,35 @@ class HexButton(QPushButton):
             rads += math.pi/3
 
         return hexagon
+    
+    
+################################################################################
+# class HexLabel()
+#
+# DESCRIPTION:
+#   A custom widget that draws a label within a hexagon
+#
+# ARGUMENTS:
+#   parent : QWidget | None,
+#     - This widgets parent widget
+#   text : str | None,
+#     - The label text
+#   radius : int | None,
+#     - The radius of the hexagon
+#   color : str | None,
+#     - The color of the hexagon
+# ATTRIBUTES:
+#
+# FUNCTIONS:
+################################################################################
+class HexLabel(QWidget):
+    def __init__(
+        self,
+        parent : QWidget | None,
+        text : str | None,
+        radius : int | None,
+        color : str | None,
+        *args,
+        **kwargs,
+    ):
+        super(HexLabel, self).__init__(parent, *args, **kwargs)
