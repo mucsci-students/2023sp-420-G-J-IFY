@@ -463,7 +463,7 @@ class HexLabel(QWidget):
         self._lbl.setAlignment(
             Qt.AlignmentFlag.AlignCenter
         )
-        self._lbl.setPixmap(self.paintHex())
+        #self._lbl.setPixmap(self.paintHex())
         layout = QVBoxLayout()
         layout.addWidget(self._lbl)
         self.setLayout(layout)
@@ -523,7 +523,7 @@ class HexLabel(QWidget):
     ############################################################################
     def setFont(self, font: QFont) -> None:
         self._font = font
-        self._lbl.setPixmap(self.paintHex())
+        #self._lbl.setPixmap(self.paintHex())
         
     ############################################################################
     # setFontColor(color: QColor) -> None
@@ -533,7 +533,7 @@ class HexLabel(QWidget):
     ############################################################################
     def setFontColor(self, color: QColor) -> None:
         self._fontColor = color
-        self._lbl.setPixmap(self.paintHex())
+        #self._lbl.setPixmap(self.paintHex())
         
     ############################################################################
     # setColor(color: QColor) -> None
@@ -543,7 +543,7 @@ class HexLabel(QWidget):
     ############################################################################
     def setColor(self, color: QColor) -> None:
         self._color = color
-        self._lbl.setPixmap(self.paintHex())
+        #self._lbl.setPixmap(self.paintHex())
         
     ############################################################################
     # setText(text: str) -> None
@@ -553,7 +553,7 @@ class HexLabel(QWidget):
     ############################################################################
     def setText(self, text: str) -> None:
         self._text = text
-        self._lbl.setPixmap(self.paintHex())
+        #self._lbl.setPixmap(self.paintHex())
         
     ############################################################################
     # paintEvent(event) -> None
@@ -565,14 +565,15 @@ class HexLabel(QWidget):
     #   event : QEvent
     #     - event signaling repaint of button
     ############################################################################
-    def paintHex(self) -> QPixmap:
-        canvas = QPixmap(int(self._width), int(self._height))
-        painter = QPainter(canvas)
-        #painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+    def paintEvent(self, event) -> QPixmap:
+        #canvas = QPixmap(int(self._width), int(self._height))
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        painter.setRenderHint(QPainter.RenderHint.LosslessImageRendering, True)
         self._drawHex(painter)
         self._drawText(painter)
         painter.end()
-        return canvas
+        #return canvas
         
         
         
