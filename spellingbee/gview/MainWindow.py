@@ -20,6 +20,7 @@ sys.path.append(filePath)
 from model.puzzle import Puzzle
 from gview.StatsPanel import StatsPanel
 from gview.HexCluster import HexCluster
+from gview.WelcomePage import WelcomePage
 from gview import Dialogs
 from PyQt6.QtGui import (
     QAction,
@@ -43,6 +44,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QSpacerItem,
+    QStackedWidget
 )
 
 ################################################################################
@@ -62,44 +64,64 @@ class MainWindow(QMainWindow):
     def __init__(self, puzzle : Puzzle, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         
-        self.statsPanel = StatsPanel(self)
-
-        self.centralWidget = GameWidget(
+        self.gameWidget = GameWidget(
             self, 
             puzzle.getShuffleLetters().upper(),
             puzzle.getKeyLetter()
         )
-        self.setCentralWidget(self.centralWidget)
-
+        self.statsPanel = StatsPanel(self)
+        
+        self.stack = QStackedWidget(self)
+        self.centralWidget = self._buildGameWidget()
+        self.landingPage = WelcomePage(self)
+        
         self.statusBar = QStatusBar(self)
-        self.status = QLabel(self.statusBar)
-        self.statusBar.addWidget(self.status)
-        self.setStatusBar(self.statusBar)
         self.newDialog = Dialogs.NewDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
-
         self.toolBar = self._createToolBar()
-        self.infoBar = self._createInfoBar()
-
+        
+        self.status = QLabel(self.statusBar)
+        self.statusBar.addWidget(self.status)
+        
+        self._initUI()
+        
+    def _initUI(self) -> None:
+        
         self.setWindowTitle('Spelling Bee')
         self.setMinimumSize(700, 400)
         self.setSizePolicy(
             QSizePolicy.Policy.Minimum,
             QSizePolicy.Policy.Minimum
         )
-
+        
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
-        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.infoBar)
+        self.setStatusBar(self.statusBar)
+        
+        self.stack.addWidget(self.landingPage)
+        self.stack.addWidget(self.centralWidget)
+        self.stack.setCurrentIndex(0)
+        
+        self.setCentralWidget(self.stack)
+       
+        
+    def _buildGameWidget(self) -> QWidget:
+        layout = QHBoxLayout()
+        layout.addWidget(self.gameWidget)
+        layout.addWidget(self.statsPanel)
+        widget = QWidget()
+        widget.setLayout(layout)
+        return widget
 
     def newGame(self, puzzle: Puzzle) -> None:
 
-        self.centralWidget.cluster.setLetters(puzzle.getShuffleLetters().upper())
+        self.gameWidget.cluster.setLetters(puzzle.getShuffleLetters().upper())
         self.statsPanel.update(puzzle)
-        self.centralWidget.newGame(puzzle.getShuffleLetters().upper())
+        self.gameWidget.newGame(puzzle.getShuffleLetters().upper())
         self.status.clear()
+        self.stack.setCurrentIndex(1)
 
     def setStatus(self, text):
         self.status.setText(text)
@@ -126,7 +148,6 @@ class MainWindow(QMainWindow):
 
         newAction.triggered.connect(self.newDialog.show)
         saveAction.triggered.connect(self.saveDialog.show)
-        #loadAction.triggered.connect(self.loadDialog.show)
         helpAction.triggered.connect(self.helpDialog.show)
 
         # add actions to tool bar

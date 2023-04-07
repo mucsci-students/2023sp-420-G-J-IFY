@@ -1,6 +1,6 @@
 import sys, os
 from PyQt6 import QtCore, QtWidgets, QtGui
-from gview.HexCluster import HexLabel
+from gview.HexCluster import HexLabel, HexButton
 
 class WelcomePage(QtWidgets.QWidget):
     def __init__(self, parent=None):

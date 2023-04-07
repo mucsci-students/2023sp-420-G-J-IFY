@@ -65,12 +65,16 @@ class GUI_A():
         sys.exit(app.exec())
 
     def _connectSignals(self):
+        
+        # Welcome Buttons
+        self._window.landingPage.new_btn.clicked.connect(self._newPuzzle)
+        self._window.landingPage.load_btn.clicked.connect(self._load)
 
         # Gameplay Buttons
-        self._window.centralWidget.entrBtn.clicked.connect(self._guess)
-        self._window.centralWidget.uInput.returnPressed.connect(self._guess)
-        self._window.centralWidget.shflBtn.clicked.connect(self._shuffle)
-        self._window.centralWidget.delBtn.clicked.connect(self._delete)
+        self._window.gameWidget.entrBtn.clicked.connect(self._guess)
+        self._window.gameWidget.uInput.returnPressed.connect(self._guess)
+        self._window.gameWidget.shflBtn.clicked.connect(self._shuffle)
+        self._window.gameWidget.delBtn.clicked.connect(self._delete)
 
         # Game State Buttons
         self._window.newDialog.btns.accepted.connect(self._newPuzzle)
@@ -91,12 +95,12 @@ class GUI_A():
         # Clear the status tip
         self._window.setStatus('')
         # retrieve text and make guess
-        txt = self._window.centralWidget.uInput.text()
+        txt = self._window.gameWidget.uInput.text()
         # create and execute guess command
         guess = cmd.Guess(self._puzzle, txt, self._outty)
         guess.execute()
         # Update view
-        self._window.centralWidget.uInput.clear()
+        self._window.gameWidget.uInput.clear()
         self._window.statsPanel.update(self._puzzle)
         # Display info
         self._window.setStatus(self._outty.getField())
@@ -112,10 +116,10 @@ class GUI_A():
         shuffle = cmd.Shuffle(self._puzzle)
         shuffle.execute()
         # Update view
-        self._window.centralWidget.setLetters(
+        self._window.gameWidget.setLetters(
             [*self._puzzle.getShuffleLetters().upper()]
         )
-        self._window.centralWidget.update()
+        self._window.gameWidget.update()
 
     ###########################################################################
     # _delete() -> None
@@ -125,7 +129,7 @@ class GUI_A():
     ###########################################################################
 
     def _delete(self) -> None:
-        self._window.centralWidget.uInput.backspace()
+        self._window.gameWidget.uInput.backspace()
 
     ###########################################################################
     # _newPuzzle() -> None
