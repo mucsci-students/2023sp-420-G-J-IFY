@@ -214,9 +214,9 @@ def printWords(game: object) -> None:
 def showStatus(game: object) -> None:
     score = game.getScore()
     max = game.getMaxScore()
-    prog = score/max
+    prog = score / max
     bar = game.getRank() + ' ' + CLI.drawProgressBar(20, prog)
-    stats = 'Score: {} \ Progress: {}%'.format(score, int(prog*100))
+    stats = 'Score: {} \ Progress: {}%'.format(score, int(prog * 100))
     CLI.drawTextBox(['Level: \ ' + bar + ' \ ' + stats], 40, '^')
 
 
