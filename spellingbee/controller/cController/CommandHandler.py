@@ -116,12 +116,12 @@ def parse(usrinput: str, game: object, outty) -> object:
             hints(game, outty)
         case _:
             if usrinput.startswith('!'):
-                outty.setField('Command not recognized. Type \"!help\" ' +
+                outty.setField('Command not recognized. Type \"!help\" '
                                'for a list of valid commands...')
                 return game
             elif not usrinput.isalpha():
-                outty.setField('Input not accepted:\n' +
-                               '\t~Guesses should only contain ' +
+                outty.setField('Input not accepted:\n'
+                               '\t~Guesses should only contain '
                                'alphabetical characters.')
                 return game
             else:
@@ -144,12 +144,12 @@ def parse(usrinput: str, game: object, outty) -> object:
 #     - New puzzle object
 ###############################################################################
 def newPuzzle(outty) -> object:
-    print('Please enter a base word with exactly 7 unique characters. \n' +
+    print('Please enter a base word with exactly 7 unique characters. \n'
           'For auto-generated base word, press enter.')
     word = input('> ')
     keyLetter = ''
     if word != '':
-        keyLetter = input("Enter a letter from your word " +
+        keyLetter = input("Enter a letter from your word "
                           "to use as the key letter\n> ")
     out = MakePuzzle.newPuzzle(word.lower(), keyLetter.lower(), outty, False)
     if outty.getField().startswith("ERROR"):
@@ -360,9 +360,8 @@ def handleSave(game: object, num: int, outty: object) -> None:
     else:
         os.chdir('./saves')
         if (path.isfile(fileName + '.json')):
-            yesOrNo = input('Would you like to overwrite the file ' + fileName
-                            + '?'
-                            '\n Enter Y for yes or N for no\n> ')
+            print('Would you like to overwrite the file ' + fileName + '?')
+            yesOrNo = input('Enter Y for yes or N for no\n> ')
             if (yesOrNo == 'Y'):
                 if (num == 0):
                     StateStorage.saveCurrent(game, fileName)
@@ -402,7 +401,7 @@ def handleSave(game: object, num: int, outty: object) -> None:
 ###############################################################################
 def finalGame(finishedPuzzle: object, outty) -> None:
     showStatus(finishedPuzzle)
-    outty.setField("Congratulations!!!!" +
+    outty.setField("Congratulations!!!!"
                    " You have found all of the words for this puzzle!")
 
 
@@ -425,15 +424,7 @@ def hints(game: object, outty: object) -> None:
     gameLetters = formatGameLetts(game)
     hints = hint.hint(game)
     hints.makeHintGrid(game)
-    hintHeader = ('Spelling Bee Hint Grid \n\n\n'
-                  'Center letter is underlined. \n\n '
-                  f'{gameLetters} \n -\n\n'
-                  'WORDS: ' + (f'{hints.countWords(game)}, POINTS: ' +
-                               str(game.maxScore) + ', PANGRAMS: ' +
-                               str(hints.numPangrams(game)) +
-                               ' (' + str(hints.numPerfectPangram(game)) +
-                               ' Perfect) BINGO: ' + str(game.checkBingo()) +
-                               '\n'))
+    hintHeader = ('Spelling Bee Hint Grid \n\n\n' + 'Center letter is underlined. \n\n ' + f'{gameLetters} \n -\n\n' + 'WORDS: ' + (f'{hints.countWords(game)}, POINTS: ' + str(game.maxScore) + ', PANGRAMS: ' + str(hints.numPangrams(game)) + ' (' + str(hints.numPerfectPangram(game)) + ' Perfect) BINGO: ' + str(game.checkBingo()) + '\n'))
     lst = hints.hint
     letters = getLettersFromGrid(lst)
     hintGrid = formatHintGrid(lst, letters)
