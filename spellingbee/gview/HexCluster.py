@@ -568,7 +568,7 @@ class HexLabel(QWidget):
     def paintHex(self) -> QPixmap:
         canvas = QPixmap(int(self._width), int(self._height))
         painter = QPainter(canvas)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        #painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         self._drawHex(painter)
         self._drawText(painter)
         painter.end()

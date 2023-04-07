@@ -90,6 +90,36 @@ class MainWindow(QMainWindow):
         
     def _initUI(self) -> None:
         
+        self.setStyleSheet("""
+            QPushButton {
+                font-family: "Comfortaa";
+                font-size: 14pt;
+                background-color: rgb(210, 210, 210);
+                border-radius: 18px;
+            }
+            QPushButton:pressed {
+                background-color: rgb(200, 200, 200);
+            }
+            QTextEdit {
+                font-family: "Comfortaa";
+                background-Color: rgba(0, 0, 0, 0);
+                border-radius: 18px;
+                border: 1px solid;
+                border-color: rgb(210, 210, 210);
+                padding: 7px;
+            }   
+            QToolBar {
+                background-color: rgba(0, 0, 0, 0);
+            }
+            QLabel {
+                font-Family: "Comfortaa";
+            }
+            QStatusBar {
+                background-color: rgba(0, 0, 0, 0);
+            }
+        """
+        )
+        
         self.setWindowTitle('Spelling Bee')
         self.setMinimumSize(700, 400)
         self.setSizePolicy(
@@ -315,6 +345,10 @@ class GameWidget(QWidget):
             QSizePolicy.Policy.Minimum,
             QSizePolicy.Policy.MinimumExpanding
         )
+        
+        self.delBtn.setFixedSize(90, 40)
+        self.shflBtn.setFixedSize(90, 40)
+        self.entrBtn.setFixedSize(90, 40)
 
         # Populate layouts, moving top to bottom
         outerLayout.addWidget(self.uInput)

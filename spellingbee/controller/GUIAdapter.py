@@ -69,6 +69,7 @@ class GUI_A():
         # Welcome Buttons
         self._window.landingPage.new_btn.clicked.connect(self._newPuzzle)
         self._window.landingPage.load_btn.clicked.connect(self._load)
+        self._window.landingPage.exit_btn.clicked.connect(sys.exit)
 
         # Gameplay Buttons
         self._window.gameWidget.entrBtn.clicked.connect(self._guess)

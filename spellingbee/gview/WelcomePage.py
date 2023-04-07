@@ -10,6 +10,7 @@ class WelcomePage(QtWidgets.QWidget):
         self.sub_title = QtWidgets.QLabel()
         self.new_btn = QtWidgets.QPushButton()
         self.load_btn = QtWidgets.QPushButton()
+        self.exit_btn = QtWidgets.QPushButton()
         
         self._initUI()
         
@@ -20,6 +21,7 @@ class WelcomePage(QtWidgets.QWidget):
         self.sub_title.setText("Presented by: G[J]IFY")
         self.new_btn.setText("New Game")
         self.load_btn.setText("Load Save")
+        self.exit_btn.setText("Quit To Desktop")
         
         # Formatting
         font_id = QtGui.QFontDatabase.addApplicationFont(
@@ -36,31 +38,67 @@ class WelcomePage(QtWidgets.QWidget):
         self.title.setColor(title_color)
         self.sub_title.setFont(sub_font)
         
+        self.new_btn.setFixedSize(200, 45)
+        self.load_btn.setFixedSize(200, 45)
+        self.exit_btn.setFixedSize(200, 45)
+        
         # Alignment
-        # self.title.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.sub_title.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignHCenter
             | QtCore.Qt.AlignmentFlag.AlignTop
         )
         
         # Layout
-        layout = QtWidgets.QGridLayout()
-        layout.addWidget(self.title, 0, 0, 1, 2)
-        layout.addWidget(self.sub_title, 1, 0, 1, 2)
-        layout.addWidget(
-            self.new_btn,
-            2,
+        imageLayout = QtWidgets.QVBoxLayout()
+        imageLayout.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignCenter
+        )
+        imageLayout.addWidget(self.title)
+        imageLayout.addWidget(self.sub_title)
+        imageWidget = QtWidgets.QWidget()
+        imageWidget.setLayout(imageLayout)
+        
+        btnsLayout = QtWidgets.QVBoxLayout()
+        btnsLayout.addSpacerItem(QtWidgets.QSpacerItem(
             0,
-            QtCore.Qt.AlignmentFlag.AlignTop
-            | QtCore.Qt.AlignmentFlag.AlignRight
+            30,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding
+        ))
+        btnsLayout.addWidget(
+            self.new_btn,
+            QtCore.Qt.AlignmentFlag.AlignBottom 
+            | QtCore.Qt.AlignmentFlag.AlignHCenter   
         )
-        layout.addWidget(
+        btnsLayout.addWidget(
             self.load_btn,
-            2,
-            1,
-            QtCore.Qt.AlignmentFlag.AlignTop
-            | QtCore.Qt.AlignmentFlag.AlignLeft
+            QtCore.Qt.AlignmentFlag.AlignVCenter
+            | QtCore.Qt.AlignmentFlag.AlignHCenter
         )
+        btnsLayout.addWidget(
+            self.exit_btn,
+            QtCore.Qt.AlignmentFlag.AlignTop
+            | QtCore.Qt.AlignmentFlag.AlignHCenter
+        )
+        btnsLayout.addSpacerItem(QtWidgets.QSpacerItem(
+            0,
+            30,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding
+        ))
+        btnsWidget = QtWidgets.QWidget()
+        btnsWidget.setLayout(btnsLayout)
+        
+        layout = QtWidgets.QHBoxLayout()
+        layout.addSpacerItem(QtWidgets.QSpacerItem(
+            30,
+            0,
+            QtWidgets.QSizePolicy.Policy.Preferred,
+            QtWidgets.QSizePolicy.Policy.Preferred
+        ))
+        layout.addWidget(imageWidget)
+        layout.addWidget(btnsWidget)
+        
         self.setLayout(layout)
         
         
