@@ -1,5 +1,5 @@
 {
-    "editor.rulers": [ 80],
+    "editor.rulers": [ 79],
     "python.analysis.extraPaths": [
         "./spellingbee/model"
     ],
