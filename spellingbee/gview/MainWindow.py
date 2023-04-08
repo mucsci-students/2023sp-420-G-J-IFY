@@ -1,5 +1,4 @@
 #!/usr/bin/env
-
 ###############################################################################
 # MainWindow.py
 # Author: Isaak Weidman
@@ -8,9 +7,7 @@
 # CLASSES:
 #   MainWindow()
 #
-# FUNCTIONS:
-#
-#
+#   GameWidget()
 ###############################################################################
 
 from gview.StatsPanel import StatsPanel
@@ -53,11 +50,8 @@ sys.path.append(filePath)
 #   represents the main window of the application, handles overall layout
 #
 # ARGUMENTS:
-#   *args :
-#
-#   **kwargs :
-#
-#
+#   puzzle: Puzzle
+#     - the puzzle object the window is initialized with
 ###############################################################################
 class MainWindow(QMainWindow):
     def __init__(self, puzzle: Puzzle, *args, **kwargs):

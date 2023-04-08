@@ -10,9 +10,7 @@
 #       - Makes a basic puzzle
 ################################################################################
 
-
 import sqlite3
-from random import randrange
 import puzzle
 import itertools
 import output
