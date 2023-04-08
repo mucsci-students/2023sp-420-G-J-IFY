@@ -424,7 +424,15 @@ def hints(game: object, outty: object) -> None:
     gameLetters = formatGameLetts(game)
     hints = hint.hint(game)
     hints.makeHintGrid(game)
-    hintHeader = ('Spelling Bee Hint Grid \n\n\n' + 'Center letter is underlined. \n\n ' + f'{gameLetters} \n -\n\n' + 'WORDS: ' + (f'{hints.countWords(game)}, POINTS: ' + str(game.maxScore) + ', PANGRAMS: ' + str(hints.numPangrams(game)) + ' (' + str(hints.numPerfectPangram(game)) + ' Perfect) BINGO: ' + str(game.checkBingo()) + '\n'))
+
+    hintHeader = 'Spelling Bee Hint Grid \n\n\n'
+    hintHeader += 'Center letter is underlined. \n\n '
+    hintHeader += f'{gameLetters} \n -\n\n' + 'WORDS: '
+    hintHeader += f'{hints.countWords(game)}, POINTS: ' + str(game.maxScore)
+    hintHeader += ', PANGRAMS: ' + str(hints.numPangrams(game))
+    hintHeader += ' (' + str(hints.numPerfectPangram(game))
+    hintHeader += ' Perfect) BINGO: ' + str(game.checkBingo()) + '\n'
+
     lst = hints.hint
     letters = getLettersFromGrid(lst)
     hintGrid = formatHintGrid(lst, letters)
