@@ -239,6 +239,8 @@ class CLI_A():
         newGame = newGame.executeCLI()
         if newGame != None:
             self.puzzle = newGame
+        else:
+            self.puzzle = None
 
 
     ################################################################################
