@@ -264,7 +264,16 @@ class CLI_A():
     def hints(self) -> None:
         hints = cmd.Hint(self.puzzle)
         hintsDict = hints.execute()
-        hintHeader = ('Spelling Bee Hint Grid \n\n\n' 'Center letter is underlined. \n\n ' f'{hintsDict["letters"]} \n -\n\n' 'WORDS: ' + (f'{hintsDict["numWords"]}, POINTS: ' + str(hintsDict["points"]) + ', PANGRAMS: ' + str(hintsDict["numPan"]) + ' (' + str(hintsDict["numPerf"]) + ' Perfect) BINGO: ' + str(hintsDict["bingo"]) + '\n'))
+
+        hintHeader = 'Spelling Bee Hint Grid \n\n\n'
+        hintHeader += 'Center letter is underlined. \n\n '
+        hintHeader += f'{hintsDict["letters"]} \n\n\n'
+        hintHeader += 'WORDS: ' + f'{hintsDict["numWords"]}, POINTS: '
+        hintHeader += str(hintsDict["points"]) + ', PANGRAMS: '
+        hintHeader += str(hintsDict["numPan"]) + ' ('
+        hintHeader += str(hintsDict["numPerf"]) + ' Perfect) BINGO: '
+        hintHeader += str(hintsDict["bingo"]) + '\n'
+
         lst = hintsDict["matrix"]
         letters = self.getLettersFromGrid(lst)
         hintGrid = self.formatHintGrid(lst, letters)
