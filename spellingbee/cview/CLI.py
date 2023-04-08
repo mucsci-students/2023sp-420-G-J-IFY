@@ -143,12 +143,12 @@ def drawProgressBar(size: int, val: float) -> str:
 def drawPuzzle(letters: list) -> str:
     # Pretty much just hard coded the output, letters are simple swapped in
     out = (' ┌───┬───┐ \ '
-            '│ {0[1]} │ {0[2]} │ \ '
-            '┌─┴─╥─┴─╥─┴─┐ \ '
-            '│ {0[3]} ║ {0[0]} ║ {0[4]} │ \ '
-            '└─┬─╨─┬─╨─┬─┘ \ '
-            '│ {0[5]} │ {0[6]} │ \ '
-            '└───┴───┘ ').format(letters)
+           '│ {0[1]} │ {0[2]} │ \ '
+           '┌─┴─╥─┴─╥─┴─┐ \ '
+           '│ {0[3]} ║ {0[0]} ║ {0[4]} │ \ '
+           '└─┬─╨─┬─╨─┬─┘ \ '
+           '│ {0[5]} │ {0[6]} │ \ '
+           '└───┴───┘ ').format(letters)
     return (out)
 
 

@@ -1,3 +1,4 @@
+# flake8: noqa
 import sys
 sys.path.append('spellingbee/model')
 from .MakePuzzle import *

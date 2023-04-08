@@ -23,6 +23,12 @@ jobs:
           pip install ruff pytest
           pip install pytest-cov
           if [] -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Lint with flake8
+        run: |
+          flake8 --ignore=W605 spellingbee/controller
+          flake8 --ignore=W605 spellingbee/cview
+          flake8 spellingbee/model
+          flake8 spellingbee/tests
       - name: Test with pytest
         run: |
           pytest --cov=spellingbee/model
