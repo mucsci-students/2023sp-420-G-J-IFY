@@ -296,12 +296,12 @@ class GUI_A():
             fStr += str(i).upper() + ' '
             counter += 1
         fStr += '\n-\n\n'
-        fStr += ('WORDS: ' + str(hint.countWords(self._puzzle)) +
-                 ', POINTS: ' + str(self._puzzle.maxScore) + ', PANGRAMS: ' +
-                 str(hint.numPangrams(self._puzzle)) + ' (' +
-                 str(hint.numPerfectPangram(self._puzzle)) +
-                 ' Perfect), BINGO: ' +
-                 str(self._puzzle.checkBingo()) + '\n\n\n')
+        fStr += 'WORDS: ' + str(hint.countWords(self._puzzle))
+        fStr += ', POINTS: ' + str(self._puzzle.maxScore) + ', PANGRAMS: '
+        fStr += str(hint.numPangrams(self._puzzle)) + ' ('
+        fStr += str(hint.numPerfectPangram(self._puzzle))
+        fStr += ' Perfect), BINGO: '
+        fStr += str(self._puzzle.checkBingo()) + '\n\n\n'
 
         return fStr
 
