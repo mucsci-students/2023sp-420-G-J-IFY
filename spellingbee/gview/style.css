@@ -10,12 +10,19 @@ QPushButton:pressed {
 }
 QTextEdit {
     font-family: "Comfortaa";
-    background-Color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
     border-radius: 18px;
     border: 1px solid;
     border-color: rgb(210, 210, 210);
     padding: 7px;
-}   
+}
+QLineEdit {
+    font-family: "Comfortaa";
+    font-weight: 900;
+    font-size: 25pt;
+    color: #262626;
+    background-color : rgba(0, 0, 0, 0); 
+}
 QToolBar {
     background-color: rgba(0, 0, 0, 0);
 }

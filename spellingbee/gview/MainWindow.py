@@ -13,7 +13,7 @@
 #
 ################################################################################
 
-import sys, os
+import sys, os, time
 filePath = os.path.dirname(__file__)
 sys.path.append(filePath)
 
@@ -26,7 +26,7 @@ from PyQt6.QtGui import (
     QAction,
     QFont,
     QRegularExpressionValidator,
-    QFontDatabase
+    QFontDatabase,
 )
 from PyQt6.QtCore import (
     Qt,
@@ -45,7 +45,8 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QSpacerItem,
-    QStackedWidget
+    QStackedWidget,
+    QFrame
 )
 
 ################################################################################
@@ -76,16 +77,12 @@ class MainWindow(QMainWindow):
         self.centralWidget = self._buildGameWidget()
         self.landingPage = WelcomePage(self)
         
-        self.statusBar = QStatusBar(self)
         self.newDialog = Dialogs.NewDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
         self.toolBar = self._createToolBar()
-        
-        self.status = QLabel(self.statusBar)
-        self.statusBar.addWidget(self.status)
         
         self._initUI()
         
@@ -103,7 +100,6 @@ class MainWindow(QMainWindow):
         )
         
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
-        self.setStatusBar(self.statusBar)
         
         self.stack.addWidget(self.landingPage)
         self.stack.addWidget(self.centralWidget)
@@ -125,11 +121,13 @@ class MainWindow(QMainWindow):
         self.gameWidget.cluster.setLetters(puzzle.getShuffleLetters().upper())
         self.statsPanel.update(puzzle)
         self.gameWidget.newGame(puzzle.getShuffleLetters().upper())
-        self.status.clear()
+        self.setStatus('')
         self.stack.setCurrentIndex(1)
+        self.gameWidget.uInput.setFocus()
 
     def setStatus(self, text):
-        self.status.setText(text)
+        self.gameWidget.uInput.clearFocus()
+        self.gameWidget.uInput.setPlaceholderText(text)
 
 
     ############################################################################
@@ -225,6 +223,7 @@ class GameWidget(QWidget):
 
         # Declare primary attributes
         self.uInput = QLineEdit(self)
+        self.hLine = QFrame(self)
         self.cluster = HexCluster(self, letters, keyLett)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
@@ -298,10 +297,7 @@ class GameWidget(QWidget):
         # Set formatting attributes of user input field
         self.uInput.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.uInput.setFrame(False)
-        font = QFont("Arial", 30)
-        font.setBold(True)
-        self.uInput.setFont(font)
-        self.uInput.setStyleSheet("background : rgba(0, 0, 0, 0)")
+        self.uInput.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         # regular expression that only allows key letters, upper and lower.
         # ex. [W|A|R|L|O|C|K]+|[w|a|r|l|o|c|k]+
@@ -312,12 +308,14 @@ class GameWidget(QWidget):
         # Create and set uInput validator
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)
-
         # Set size policies
         self.uInput.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.MinimumExpanding
         )
+        
+        self.hLine.setFrameShape(QFrame.Shape.HLine)
+        self.hLine.setStyleSheet('color: rgb(210, 210, 210);')
 
         self.cluster.setSizePolicy(
             QSizePolicy.Policy.Minimum,
@@ -330,6 +328,8 @@ class GameWidget(QWidget):
 
         # Populate layouts, moving top to bottom
         outerLayout.addWidget(self.uInput)
+        
+        outerLayout.addWidget(self.hLine)
 
         outerLayout.addSpacerItem(spacer)
         
