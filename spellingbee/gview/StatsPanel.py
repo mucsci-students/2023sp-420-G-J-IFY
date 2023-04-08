@@ -64,6 +64,9 @@ class StatsPanel(QWidget):
     #   initialize attributes and layout
     ############################################################################
     def initUI(self) -> None:
+        
+        with open("spellingbee/gview/style.css","r") as file:
+            self.setStyleSheet(file.read())
 
         self.setSizePolicy(
             QSizePolicy.Policy.Preferred,

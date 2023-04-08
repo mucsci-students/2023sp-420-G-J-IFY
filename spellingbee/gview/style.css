@@ -1,0 +1,27 @@
+QPushButton {
+    font-family: "Comfortaa";
+    font-size: 14pt;
+    background-color: rgb(210, 210, 210);
+    color: #262626;
+    border-radius: 18px;
+}
+QPushButton:pressed {
+    background-color: rgb(200, 200, 200);
+}
+QTextEdit {
+    font-family: "Comfortaa";
+    background-Color: rgba(0, 0, 0, 0);
+    border-radius: 18px;
+    border: 1px solid;
+    border-color: rgb(210, 210, 210);
+    padding: 7px;
+}   
+QToolBar {
+    background-color: rgba(0, 0, 0, 0);
+}
+QLabel {
+    font-Family: "Comfortaa";
+}
+QStatusBar {
+    background-color: rgba(0, 0, 0, 0);
+}

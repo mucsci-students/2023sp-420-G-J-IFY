@@ -30,6 +30,8 @@ from PyQt6.QtGui import (
     QFont,
     QPolygonF,
     QPixmap,
+    QPicture,
+    QIcon,
     QFontDatabase,
 )
 from PyQt6.QtWidgets import (
@@ -442,12 +444,12 @@ class HexLabel(QWidget):
         
         self._lbl = QLabel()
         self._text = text
-        self._x = pos[0]
-        self._y = pos[1]
+        self._x = pos[0]+12
+        self._y = pos[1]+12
         self._radius = radius
         self._width = radius * math.sqrt(3)
         self._height = radius * 2
-        self._hex = calcHex(radius, pos)
+        self._hex = calcHex(radius, self._x, self._y)
         self._color = Qt.GlobalColor.gray
         self._font = QFont('Helvetica', 12)
         self._fontColor = Qt.GlobalColor.black
@@ -456,7 +458,7 @@ class HexLabel(QWidget):
         self._initUI()
         
     def _initUI(self):
-        self._lbl.setMinimumSize(
+        self._lbl.setFixedSize(
             int(self._width),
             int(self._height)
         )
@@ -566,14 +568,11 @@ class HexLabel(QWidget):
     #     - event signaling repaint of button
     ############################################################################
     def paintEvent(self, event) -> QPixmap:
-        #canvas = QPixmap(int(self._width), int(self._height))
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        painter.setRenderHint(QPainter.RenderHint.LosslessImageRendering, True)
         self._drawHex(painter)
         self._drawText(painter)
         painter.end()
-        #return canvas
         
         
         
@@ -587,7 +586,7 @@ class HexLabel(QWidget):
 #   QPolygonF:
 #     - an equilateral hexagon of size radius
 ################################################################################
-def calcHex(radius: int, pos: tuple[int, int]) -> QPolygonF:
+def calcHex(radius: int, x, y) -> QPolygonF:
         
     hexagon = QPolygonF()
     # radius is from point to point.
@@ -595,8 +594,8 @@ def calcHex(radius: int, pos: tuple[int, int]) -> QPolygonF:
     minorRad = radius*(math.sqrt(3)/2)
     
 
-    posX = minorRad + pos[0]
-    posY = radius + pos[1]
+    posX = minorRad + x
+    posY = radius + y
     rads = math.pi/2
 
     # calculate and append coords to each corner of the hex

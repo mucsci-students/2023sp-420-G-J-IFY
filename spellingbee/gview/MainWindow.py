@@ -26,6 +26,7 @@ from PyQt6.QtGui import (
     QAction,
     QFont,
     QRegularExpressionValidator,
+    QFontDatabase
 )
 from PyQt6.QtCore import (
     Qt,
@@ -90,34 +91,8 @@ class MainWindow(QMainWindow):
         
     def _initUI(self) -> None:
         
-        self.setStyleSheet("""
-            QPushButton {
-                font-family: "Comfortaa";
-                font-size: 14pt;
-                background-color: rgb(210, 210, 210);
-                border-radius: 18px;
-            }
-            QPushButton:pressed {
-                background-color: rgb(200, 200, 200);
-            }
-            QTextEdit {
-                font-family: "Comfortaa";
-                background-Color: rgba(0, 0, 0, 0);
-                border-radius: 18px;
-                border: 1px solid;
-                border-color: rgb(210, 210, 210);
-                padding: 7px;
-            }   
-            QToolBar {
-                background-color: rgba(0, 0, 0, 0);
-            }
-            QLabel {
-                font-Family: "Comfortaa";
-            }
-            QStatusBar {
-                background-color: rgba(0, 0, 0, 0);
-            }
-        """
+        QFontDatabase.addApplicationFont(
+            os.getcwd() + '/fonts/Comfortaa-VariableFont_wght.ttf'
         )
         
         self.setWindowTitle('Spelling Bee')
@@ -302,6 +277,9 @@ class GameWidget(QWidget):
     ############################################################################
     def _initUI(self):
 
+        with open("spellingbee/gview/style.css","r") as file:
+            self.setStyleSheet(file.read())
+        
         # Create layouts and set allignment attributes
         outerLayout = QVBoxLayout()
         outerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)

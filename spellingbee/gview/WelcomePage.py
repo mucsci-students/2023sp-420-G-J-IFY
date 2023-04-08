@@ -1,6 +1,6 @@
 import sys, os
 from PyQt6 import QtCore, QtWidgets, QtGui
-from gview.HexCluster import HexLabel, HexButton
+from gview.HexCluster import HexLabel
 
 class WelcomePage(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -16,6 +16,9 @@ class WelcomePage(QtWidgets.QWidget):
         
     def _initUI(self):
         
+        with open("spellingbee/gview/style.css","r") as file:
+            self.setStyleSheet(file.read())
+        
         # Initialize widgets
         self.title.setText("Spelling\nBee")
         self.sub_title.setText("Presented by: G[J]IFY")
@@ -29,7 +32,7 @@ class WelcomePage(QtWidgets.QWidget):
         )
         families = QtGui.QFontDatabase.applicationFontFamilies(font_id)
         
-        title_font = QtGui.QFont(families[0], 36, 700)
+        title_font = QtGui.QFont(families[0], 36, 900)
         title_f_color = QtGui.QColor('#262626')
         title_color = QtGui.QColor('#FFCC2F')
         sub_font = QtGui.QFont(families[0], 18, 400)
@@ -68,17 +71,17 @@ class WelcomePage(QtWidgets.QWidget):
         btnsLayout.addWidget(
             self.new_btn,
             QtCore.Qt.AlignmentFlag.AlignBottom 
-            | QtCore.Qt.AlignmentFlag.AlignHCenter   
+            | QtCore.Qt.AlignmentFlag.AlignRight   
         )
         btnsLayout.addWidget(
             self.load_btn,
             QtCore.Qt.AlignmentFlag.AlignVCenter
-            | QtCore.Qt.AlignmentFlag.AlignHCenter
+            | QtCore.Qt.AlignmentFlag.AlignRight
         )
         btnsLayout.addWidget(
             self.exit_btn,
             QtCore.Qt.AlignmentFlag.AlignTop
-            | QtCore.Qt.AlignmentFlag.AlignHCenter
+            | QtCore.Qt.AlignmentFlag.AlignRight
         )
         btnsLayout.addSpacerItem(QtWidgets.QSpacerItem(
             0,
@@ -100,10 +103,3 @@ class WelcomePage(QtWidgets.QWidget):
         layout.addWidget(btnsWidget)
         
         self.setLayout(layout)
-        
-        
-if __name__ == '__main__':
-    app = QtWidgets.QApplication([])
-    window = WelcomePage()
-    window.show()
-    sys.exit(app.exec())
