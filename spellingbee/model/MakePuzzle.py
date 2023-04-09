@@ -233,6 +233,7 @@ def guess(puzzle, input: str, flag: bool, outty: object):
         outty.setField("Guess is too long...")
         # outty.setField("That guess is too long." + "Max length is only 15
         # characters")
+
     # check for every case in the user's guess to give points or output error
     # check for only containing alphabetical characters
     elif not input.isalpha():
@@ -265,8 +266,7 @@ def guess(puzzle, input: str, flag: bool, outty: object):
         cursor.execute(query1)
         response = cursor.fetchone()
         if response is None:
-            # outty.setField(input.upper() +
-            # " isn't a word in the dictionary")
+            # outty.setField(input.upper() + " isn't a word in the dictionary")
             outty.setField(f"{input.upper()} isn't a word...")
         # check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())):
