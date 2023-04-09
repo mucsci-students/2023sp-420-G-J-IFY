@@ -154,13 +154,24 @@ class MainWindow(QMainWindow):
         # Create static tool bar
         toolBar = QToolBar('Tools', self)
         toolBar.setMovable(False)
+        toolBar.setBaseSize(30, 30)
+        toolBar.setStyleSheet(
+            '''
+            border: none;
+            background-color: rgba(0, 0, 0, 0);
+            '''
+        )
 
         # add buttons to tool bar
+        menuAction = QAction('Menu', self)
         newAction = QAction('New', self)
         saveAction = QAction('Save', self)
         self.loadAction = QAction('Load', self)
         helpAction = QAction('Help', self)
         self.hintAction = QAction('Hint', self)
+
+        # Add style
+        menuAction.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
 
         # Make connections to simple actions
         newAction.triggered.connect(self.newDialog.show)
@@ -168,6 +179,7 @@ class MainWindow(QMainWindow):
         helpAction.triggered.connect(self.helpDialog.show)
 
         # add actions to tool bar
+        toolBar.addAction(menuAction)
         toolBar.addAction(newAction)
         toolBar.addAction(saveAction)
         toolBar.addAction(self.loadAction)
