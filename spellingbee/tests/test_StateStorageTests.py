@@ -434,7 +434,7 @@ def testCheckCorruptJSONExplorer():
     pathToFile = (str(path) + '/saves/badJSON.json')
     output = " contains critical errors that \nprevent the game from "
     output += "functioning properly\nReturning to game..."
-    spellingbee.__Load('badJson.json', outty)
+    spellingbee.__Load('badJSON.json', outty)
     assert (outty.getField().endswith(output))
     os.remove(pathToFile)
 
