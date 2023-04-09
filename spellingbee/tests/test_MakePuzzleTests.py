@@ -159,13 +159,11 @@ def testGuessRankUpdated(guessFixture):
 
 
 def testShortGuess(shortGuessFixture):
-    assert (outty.getField() == "END is too short!\nGuess need to be at " +
-            "least 4 letters long")
+    assert (outty.getField() == "END is too short...")
 
 
 def testLongGuess(longGuessFixture):
-    assert (outty.getField() == "That guess is too long.Max length is only" +
-            " 15 characters")
+    assert (outty.getField() == "Guess is too long...")
 
 
 def testNonAlphaGuess(nonalphaGuessFixture):
@@ -173,11 +171,12 @@ def testNonAlphaGuess(nonalphaGuessFixture):
 
 
 def testNonsenseGuess(nonsenseGuessFixture):
-    assert (outty.getField() == "NOTAWORD isnt't a word in the dictionary")
+    assert (outty.getField() == "NOTAWORD isn't a word...")
 
 
 def testMissingCenterGuess(missingCenterGuessFixture):
     assert (outty.getField() == "FENDERS is missing center letter, I")
-    
+
+
 def testWrongLettersGuessFixture(wrongLettersGuessFixture):
     assert (outty.getField() == "BENDERS contains letters not in DEFINRS")
