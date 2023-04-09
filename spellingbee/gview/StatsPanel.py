@@ -60,8 +60,9 @@ class StatsPanel(QWidget):
         with open("spellingbee/gview/style.css", "r") as file:
             self.setStyleSheet(file.read())
 
+        self.setFixedWidth(300)
         self.setSizePolicy(
-            QSizePolicy.Policy.Preferred,
+            QSizePolicy.Policy.Minimum,
             QSizePolicy.Policy.MinimumExpanding
         )
 

@@ -285,9 +285,14 @@ class GameWidget(QWidget):
     #   initialize layout of widgets and set important attributes
     ###########################################################################
     def _initUI(self):
-
+        # Set style sheet
         with open("spellingbee/gview/style.css", "r") as file:
             self.setStyleSheet(file.read())
+            
+        self.setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.MinimumExpanding
+        )
 
         # Create layouts and set allignment attributes
         outerLayout = QVBoxLayout()
