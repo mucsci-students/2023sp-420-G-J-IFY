@@ -439,6 +439,24 @@ def testCheckCorruptJSONExplorer():
     os.remove(pathToFile)
 
 
+"""
+Gaige, this is the only test needed to be finished.
+I keep running into an issue with not finding the needed save where it
+needs to be.
+def testCheckCorruptJSONsaveFolder():
+    os.chdir('./saves')
+    with open('badJSON.json', 'w') as fp:
+        json.dump({"makeGarbage": "stilltrying"}, fp)
+    fp.close()
+    os.chdir('..')
+    output = "The file badJSON.json contains critical errors that \n"
+    output += "prevent the game from functioning properly\n"
+    output += "Returning to game..."
+    spellingbee.loadFromExploer('badJSON.json', outty)
+    assert (outty.getField() == output)
+"""
+
+
 def testCheckGoodFile(puzzleFixture):
     with open('good.json', 'w') as fp:
         json.dump(puzzleFixture[1], fp)
@@ -467,7 +485,6 @@ def testCheckLoadBadUniqueLetters(makeBadUniqueLetters):
     os.remove(pathToFile)
 
 
-
 def testCheckLoadBadFoundWordList(makeBadFoundWordList):
     dictDict = spellingbee.checkLoad(makeBadFoundWordList)
-    assert(dictDict['GuessedWords'] == [])
+    assert (dictDict['GuessedWords'] == [])
