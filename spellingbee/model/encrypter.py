@@ -3,52 +3,70 @@
 # Author: Yah'hymbey Baruti Ali-Bey
 # Date of Creation: 4-8-2023
 #
-# Gets a dictionary and encrypts the word list from that dictionary
+# Gets a dictionary and encrypts the word list from that dictionary 
+# or decrypts a wordlist from the dictionary
 #
 # (Global, public) functions:
-#   encryptList(key, wordList, dict) -> Dict
-#   decrpytList(key, wordList, dict) -> Dict
 #   encryptionHandler(dict, toEncrypt) -> Dict
 #
 ###############################################################################
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Util.Padding import pad, unpad
-
-
-# Test Code
-def compareList(l1, l2):
-    if (len(l1) != len(l2)):
-        print("Lengths do not match")
-        return
     
-    for i in range(len(l1)):
-        if l1[i] != l2[i]:
-            print("Word at index " + i + "does not equal")
-            return
-            
-    print("It works!!")
-
 ################################################################################
-# encryptList(key, wordList : list, dict : dict) -> dict:
+# encryptionHandler(dict : dict, toEncrypt: bool) -> dict:
 #
 # DESCRIPTION:
-#   Directs game functionality based on string input, game object
+#   Handles whether a dict needs to be encrypted or decrypted
 # 
 # PARAMETERS:
 #   usrinput : str
 #     - String provided by user containing either a guess, a command, or bad
 #       input.
-#   game : object
-#     - Puzzle object storing current game state
-#   outty : object
-#     - Output object storing output strings
+#   toEncrypt : bool
+#     - boolean value to determine if the file needs to be encrypted or 
+#       decrypted
 #
 # RETURNS:
-#   object
-#     - Updated puzzle object
+#   dict
+#     - encrypted or decrypted dict
 ################################################################################
-def encryptList(key, wordList, dict):
+def encryptionHandler(dict : dict, toEncrypt: bool) -> dict:
+    # Set password and plaintext
+    password = dict["Author"]
+
+    # Generate a random salt
+    salt = _saltGrabber()
+    # Derive a key from the password and salt using PBKDF2
+    key = PBKDF2(password, salt, dkLen=32)
+    
+    if toEncrypt: 
+       newDict = _encryptList(key, dict["WordList"], dict)
+    if not toEncrypt:
+       newDict = _decryptList(key, dict["WordList"], dict)
+    
+    return newDict
+
+################################################################################
+# encryptList(key, wordList : list, dict : dict) -> dict:
+#
+# DESCRIPTION:
+#   Encryptes a wordlist
+# 
+# PARAMETERS:
+#   key
+#     - Key needed to encrypt the list
+#   wordList : List
+#     - List that needs to be encrypted
+#   dict : dict
+#     - Dictionary containing the wordlist
+#
+# RETURNS:
+#   dict
+#     - dictionary with encrypted word list
+################################################################################
+def _encryptList(key, wordList: list, dict: dict) -> dict:
     # Create an AES cipher object
     cipher = AES.new(key, AES.MODE_CBC)
         
@@ -63,25 +81,24 @@ def encryptList(key, wordList, dict):
     return dict
 
 ################################################################################
-# parse(key, wordList : list, dict : dict) -> dict:
+# decryptList(key, wordList : list, dict : dict) -> dict:
 #
 # DESCRIPTION:
-#   Directs game functionality based on string input, game object
+#   decryptes a wordlist
 # 
 # PARAMETERS:
-#   usrinput : str
-#     - String provided by user containing either a guess, a command, or bad
-#       input.
-#   game : object
-#     - Puzzle object storing current game state
-#   outty : object
-#     - Output object storing output strings
+#   key
+#     - Key needed to decrypt the list
+#   wordList : List
+#     - List that needs to be encrypted
+#   dict : dict
+#     - Dictionary containing the wordlist
 #
 # RETURNS:
-#   object
-#     - Updated puzzle object
+#   dict
+#     - dictionary with decrypted word list
 ################################################################################
-def decryptList(key, wordList, dict):
+def _decryptList(key, wordList: list, dict: dict) -> dict:
     iv = eval(wordList[0].encode('utf-8'))
     decryptData = eval(wordList[1].encode('utf-8'))
 
@@ -96,63 +113,21 @@ def decryptList(key, wordList, dict):
 
     # Grab file info
     return dict
-        
-################################################################################
-# parse(dict : dict, toEncrypt: bool) -> dict:
-#
-# DESCRIPTION:
-#   Directs game functionality based on string input, game object
-# 
-# PARAMETERS:
-#   usrinput : str
-#     - String provided by user containing either a guess, a command, or bad
-#       input.
-#   game : object
-#     - Puzzle object storing current game state
-#   outty : object
-#     - Output object storing output strings
-#
-# RETURNS:
-#   object
-#     - Updated puzzle object
-################################################################################
-def encryptionHandler(dict, toEncrypt):
-    # Set password and plaintext
-    password = dict["Author"]
-
-    # Generate a random salt
-    salt = _saltGrabber()
-    # Derive a key from the password and salt using PBKDF2
-    key = PBKDF2(password, salt, dkLen=32)
-    
-    if toEncrypt: 
-       newDict = encryptList(key, dict["WordList"], dict)
-    if not toEncrypt:
-       newDict = decryptList(key, dict["WordList"], dict)
-    
-    return newDict
     
 
 ################################################################################
-# parse() -> bytes:
+# _saltGrabber() -> bytes:
 #
 # DESCRIPTION:
-#   Directs game functionality based on string input, game object
+#   grabs salt for encryptions
 # 
 # PARAMETERS:
-#   usrinput : str
-#     - String provided by user containing either a guess, a command, or bad
-#       input.
-#   game : object
-#     - Puzzle object storing current game state
-#   outty : object
-#     - Output object storing output strings
 #
 # RETURNS:
-#   object
-#     - Updated puzzle object
+#   salt
+#     - random binary for encryption
 ################################################################################
-def _saltGrabber():
+def _saltGrabber() -> bytes:
     salt = " "
     with open("DO_NOT_REMOVE.bin", "wb") as file:
         salt = file.read()
@@ -165,17 +140,11 @@ def _saltGrabber():
 #   Directs game functionality based on string input, game object
 # 
 # PARAMETERS:
-#   usrinput : str
-#     - String provided by user containing either a guess, a command, or bad
-#       input.
-#   game : object
-#     - Puzzle object storing current game state
-#   outty : object
-#     - Output object storing output strings
-#
+#   wordList : list
+#     - wordList that needs to be converted to a stringS
 # RETURNS:
-#   object
-#     - Updated puzzle object
+#   wordList
+#     - string representation of wordlist
 ################################################################################
 def _convertWordListToString(wordList):
     # initialize an empty string
@@ -185,23 +154,18 @@ def _convertWordListToString(wordList):
     return (str1.join(wordList))
 
 ################################################################################
-# parse(string: str) -> list:
+# _convertToList(string: str) -> list:
 #
 # DESCRIPTION:
-#   Directs game functionality based on string input, game object
+#   converts a string to a list
 # 
 # PARAMETERS:
-#   usrinput : str
+#   string : str
 #     - String provided by user containing either a guess, a command, or bad
-#       input.
-#   game : object
-#     - Puzzle object storing current game state
-#   outty : object
-#     - Output object storing output strings
 #
 # RETURNS:
-#   object
-#     - Updated puzzle object
+#   li
+#     - list representation of a string
 ################################################################################
 def _convertToList(string):
     li = list(string.split(" "))
