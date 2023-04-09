@@ -18,10 +18,12 @@ from PyQt6.QtGui import (
     QAction,
     QRegularExpressionValidator,
     QFontDatabase,
+    QIcon,
 )
 from PyQt6.QtCore import (
     Qt,
     QRegularExpression,
+    QSize
 )
 from PyQt6.QtWidgets import (
     QMainWindow,
@@ -34,7 +36,7 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QSpacerItem,
     QStackedWidget,
-    QFrame
+    QFrame,
 )
 from model.puzzle import Puzzle
 import sys
@@ -236,8 +238,8 @@ class GameWidget(QWidget):
         self.uInput = QLineEdit(self)
         self.hLine = QFrame(self)
         self.cluster = HexCluster(self, letters, keyLett)
-        self.menuBtn = QPushButton('Menu', self)
-        self.hintBtn = QPushButton('Hint', self)
+        self.menuBtn = QPushButton()
+        self.hintBtn = QPushButton(self)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
         self.entrBtn = QPushButton('Enter', self)
@@ -313,8 +315,18 @@ class GameWidget(QWidget):
         )
 
         # Fromat tool buttons
+        self.menuBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.menuBtn.setStatusTip('Menu')
+        self.menuBtn.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
+        self.menuBtn.setIconSize(QSize(30, 30))
+        self.hintBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.hintBtn.setStatusTip('Hint')
+        self.hintBtn.setIcon(QIcon('SpellingBee/gview/assets/hint.png'))
+        self.hintBtn.setIconSize(QSize(20, 20))
+        self.hintBtn.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum
+        )
 
         # Set formatting attributes of user input field
         self.uInput.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -338,9 +350,13 @@ class GameWidget(QWidget):
 
         self.hLine.setFrameShape(QFrame.Shape.HLine)
         self.hLine.setStyleSheet('color: rgb(210, 210, 210);')
+        self.hLine.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.MinimumExpanding
+        )
 
         self.cluster.setSizePolicy(
-            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
         )
 
@@ -350,23 +366,20 @@ class GameWidget(QWidget):
 
         # Populate layouts, moving top to bottom
         toolsLayout.addWidget(
-            self.menuBtn,
-            alignment=Qt.AlignmentFlag.AlignLeft
-        )
-        toolsLayout.addWidget(
             self.hintBtn,
             alignment=Qt.AlignmentFlag.AlignRight
         )
 
-        outerLayout.addLayout(toolsLayout)
+        # outerLayout.addLayout(toolsLayout)
         outerLayout.addWidget(self.uInput)
         outerLayout.addWidget(self.hLine)
-        outerLayout.addSpacerItem(spacer)
-
-        clusterLayout.addSpacerItem(spacer)
-        clusterLayout.addWidget(self.cluster)
-        clusterLayout.addSpacerItem(spacer)
-
+        # outerLayout.addSpacerItem(spacer)
+        outerLayout.addLayout(toolsLayout)
+        
+        clusterLayout.addWidget(
+            self.cluster,
+            alignment=Qt.AlignmentFlag.AlignCenter
+        )
         outerLayout.addLayout(clusterLayout)
         outerLayout.addSpacerItem(spacer)
 
