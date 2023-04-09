@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
             QSizePolicy.Policy.Minimum
         )
         # Add toolbar to the top of window
-        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
+        # self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
         # Add pages to the stack, showing landingPage initially
         self.stack.addWidget(self.landingPage)
         self.stack.addWidget(self.centralWidget)
@@ -152,13 +152,13 @@ class MainWindow(QMainWindow):
     ###########################################################################
     def _createToolBar(self) -> QToolBar:
         # Create static tool bar
-        toolBar = QToolBar('Tools', self)
+        toolBar = QToolBar('Tools')
         toolBar.setMovable(False)
-        toolBar.setBaseSize(30, 30)
+        toolBar.setBaseSize(100, 100)
         toolBar.setStyleSheet(
             '''
             border: none;
-            background-color: rgba(0, 0, 0, 0);
+            background-color: rgb(200, 200, 200);
             '''
         )
 
@@ -250,7 +250,7 @@ class GameWidget(QWidget):
         self.uInput = QLineEdit(self)
         self.hLine = QFrame(self)
         self.cluster = HexCluster(self, letters, keyLett)
-        self.menuBtn = QPushButton()
+        self.menuBtn = QPushButton(self)
         self.hintBtn = QPushButton(self)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
@@ -327,6 +327,10 @@ class GameWidget(QWidget):
         )
 
         # Fromat tool buttons
+        self.menuBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
+        self.menuBtn.setStatusTip('Menu')
+        self.menuBtn.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
+        self.menuBtn.setIconSize(QSize(30, 30))
         self.hintBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.hintBtn.setStatusTip('Hint')
         self.hintBtn.setIcon(QIcon('SpellingBee/gview/assets/hint.png'))
@@ -352,12 +356,13 @@ class GameWidget(QWidget):
         self.uInput.setValidator(validator)
         # Set size policies
         self.uInput.setSizePolicy(
-            QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.MinimumExpanding
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.Minimum
         )
 
         self.hLine.setFrameShape(QFrame.Shape.HLine)
         self.hLine.setStyleSheet('color: rgb(210, 210, 210);')
+        self.hLine.setFixedHeight(3)
         self.hLine.setSizePolicy(
             QSizePolicy.Policy.Minimum,
             QSizePolicy.Policy.MinimumExpanding
@@ -373,6 +378,10 @@ class GameWidget(QWidget):
         self.entrBtn.setFixedSize(90, 40)
 
         # Populate layouts, moving top to bottom
+        toolsLayout.addWidget(
+            self.menuBtn,
+            alignment=Qt.AlignmentFlag.AlignLeft
+        )
         toolsLayout.addWidget(
             self.hintBtn,
             alignment=Qt.AlignmentFlag.AlignRight

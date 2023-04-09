@@ -23,9 +23,6 @@ QLineEdit {
     color: #262626;
     background-color : rgba(0, 0, 0, 0); 
 }
-QToolBar {
-    background-color: rgba(0, 0, 0, 0);
-}
 QLabel {
     font-Family: "Comfortaa";
 }
