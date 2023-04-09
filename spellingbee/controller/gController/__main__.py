@@ -1,5 +1,3 @@
-from gview import *
-
 from controller.GUIAdapter import GUI_A
 from controller import cmd
 from model.output import Output

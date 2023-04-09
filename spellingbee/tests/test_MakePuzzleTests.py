@@ -23,25 +23,31 @@ def puzzleFixture():
 def blankPuzzleFixture():
     return spellingbee.newPuzzle('', '', outty, False)
 
+
 @pytest.fixture
 def nonAlphaPuzzleFixture():
     return spellingbee.newPuzzle(':123@#$', '2', outty, False)
+
 
 @pytest.fixture
 def badPuzzleFixture():
     return spellingbee.newPuzzle('grimer', 'g', outty, False)
 
+
 @pytest.fixture
 def badKeyLettPuzzleFixture():
     return spellingbee.newPuzzle('warlock', '', outty, False)
+
 
 @pytest.fixture
 def extraKeyLettPuzzleFixture():
     return spellingbee.newPuzzle('warlock', 'wa', outty, False)
 
+
 @pytest.fixture
 def wrongKeyLettPuzzleFixture():
     return spellingbee.newPuzzle('warlock', 'e', outty, False)
+
 
 @pytest.fixture
 def guessFixture(puzzleFixture):
@@ -73,7 +79,8 @@ def nonsenseGuessFixture(puzzleFixture):
 @pytest.fixture
 def missingCenterGuessFixture(puzzleFixture):
     spellingbee.guess(puzzleFixture, "fenders", False, outty)
-    
+
+
 @pytest.fixture
 def wrongLettersGuessFixture(puzzleFixture):
     spellingbee.guess(puzzleFixture, "benders", False, outty)
@@ -81,24 +88,30 @@ def wrongLettersGuessFixture(puzzleFixture):
 
 # test to see if blank puzzle is generated correctly
 def testBlankNewPuzzle(blankPuzzleFixture):
-    assert(len(blankPuzzleFixture.uniqueLett) ==7)
-    
+    assert (len(blankPuzzleFixture.uniqueLett) == 7)
+
+
 def testNonAlphaNewPuzzle(nonAlphaPuzzleFixture):
     pytest.raises(spellingbee.BadQueryException)
-    
+
+
 def testBadNewPuzzle(badPuzzleFixture):
     pytest.raises(spellingbee.BadQueryException)
-    
+
+
 def testBadKeyLettNewPuzzle(badKeyLettPuzzleFixture):
     pytest.raises(spellingbee.EmptyKeyLetterException)
-    
+
+
 def testExtraKeyLettNewPuzzle(extraKeyLettPuzzleFixture):
     pytest.raises(spellingbee.TooManyKeyLettersException)
-    
+
+
 def testWrongKeyLettNewPuzzle(wrongKeyLettPuzzleFixture):
     pytest.raises(spellingbee.LetterMismatchException)
 
-    # testing if make puzzle correctly produces a new game
+
+# testing if make puzzle correctly produces a new game
 def testKeyLett(puzzleFixture):
     assert (puzzleFixture.keyLett == 'i')
 
