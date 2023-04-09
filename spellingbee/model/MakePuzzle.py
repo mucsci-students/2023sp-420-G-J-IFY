@@ -230,13 +230,9 @@ def guess(puzzle, input: str, flag: bool, outty: object):
     cursor = conn.cursor()
 
     if len(input) > 15:
-<<<<<<< HEAD
         outty.setField("Guess is too long...")
-        # outty.setField("That guess is too long." + "Max length is only 15 characters")
-=======
-        outty.setField("That guess is too long." +
-                       "Max length is only 15 characters")
->>>>>>> 814dfbc7fe4692e3816f35bcc8f37c43e2dee7d3
+        # outty.setField("That guess is too long." + "Max length is only 15
+        # characters")
     # check for every case in the user's guess to give points or output error
     # check for only containing alphabetical characters
     elif not input.isalpha():
@@ -257,15 +253,9 @@ def guess(puzzle, input: str, flag: bool, outty: object):
             puzzle.updateFoundWords(input)
             outty.setField(input.upper() + " is one of the words!")
     elif len(input) < 4:  # if the word is not in the list check the size
-<<<<<<< HEAD
-        #outty.setField( input.upper() + " is too short!\nGuess need to be at least 4 letters long")
+        # outty.setField( input.upper() + " is too short!\nGuess need to be at
+        # least 4 letters long")
         outty.setField(f'{input.upper()} is too short...')
-=======
-        outty.setField(
-            input.upper() +
-            " is too short!\nGuess need to be at least 4 letters long"
-        )
->>>>>>> 814dfbc7fe4692e3816f35bcc8f37c43e2dee7d3
     else:
         # query the database to see if it is a word at all
         query1 = (
@@ -274,14 +264,10 @@ def guess(puzzle, input: str, flag: bool, outty: object):
         )
         cursor.execute(query1)
         response = cursor.fetchone()
-<<<<<<< HEAD
-        if response == None:
-            #outty.setField(input.upper() + " isn't a word in the dictionary")
-            outty.setField(f"{input.upper()} isn't a word...")
-=======
         if response is None:
-            outty.setField(input.upper() + " isnt't a word in the dictionary")
->>>>>>> 814dfbc7fe4692e3816f35bcc8f37c43e2dee7d3
+            # outty.setField(input.upper() +
+            # " isn't a word in the dictionary")
+            outty.setField(f"{input.upper()} isn't a word...")
         # check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())):
             outty.setField(
