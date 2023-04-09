@@ -165,4 +165,4 @@ src/data/saves
 
 #all json files
 *.json
-spellingbee/model/highScore.py
+spellingbee/model/highScore.db
