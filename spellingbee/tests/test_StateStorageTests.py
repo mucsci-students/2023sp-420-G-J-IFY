@@ -431,10 +431,10 @@ def testCheckCorruptJSONExplorer():
         json.dump({"makeGarbage": "trying"}, fp)
     fp.close()
     path = Path.cwd()
-    pathToFile = (str(path) + '/saves/badJSON.json')
+    pathToFile = (str(path) + '/badJSON.json')
     output = " contains critical errors that \nprevent the game from "
     output += "functioning properly\nReturning to game..."
-    spellingbee.__Load('badJSON.json', outty)
+    spellingbee.loadFromExploer(pathToFile, outty)
     assert (outty.getField().endswith(output))
     os.remove(pathToFile)
 
@@ -448,7 +448,7 @@ def testCheckCorruptJSONsaveFolder():
     output = "The file badJSON.json contains critical errors that \n"
     output += "prevent the game from functioning properly\n"
     output += "Returning to game..."
-    spellingbee.loadFromExploer('badJSON.json', outty)
+    spellingbee.__Load('badJSON.json', outty)
     assert (outty.getField() == output)
 
 
