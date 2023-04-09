@@ -229,18 +229,19 @@ class NewDialog(QDialog):
         )
 
         # Advanced button setup and formatting
-        font = QFont()
+        font = QFont('Comfortaa')
         font.setUnderline(True)
-        self.advBtn.setStyleSheet("color: blue; border: none")
+        self.advBtn.setStyleSheet("color: blue;")
         self.advBtn.setFont(font)
         self.advBtn.setText('Advanced')
         self.advBtn.setFlat(True)
         self.advBtn.setCursor(Qt.CursorShape.PointingHandCursor)
+        """
         self.advBtn.setSizePolicy(
             QSizePolicy.Policy.Fixed,
             QSizePolicy.Policy.Fixed
-        )
-        self.advBtn.setFixedSize(self.advBtn.minimumSizeHint())
+        )"""
+        # self.advBtn.setFixedSize(self.advBtn.minimumSizeHint())
         self.advBtn.clicked.connect(lambda: self.display(1))
 
         # Spacer to move Advanced button to the right
