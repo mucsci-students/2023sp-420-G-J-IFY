@@ -236,6 +236,8 @@ class GameWidget(QWidget):
         self.uInput = QLineEdit(self)
         self.hLine = QFrame(self)
         self.cluster = HexCluster(self, letters, keyLett)
+        self.menuBtn = QPushButton('Menu', self)
+        self.hintBtn = QPushButton('Hint', self)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
         self.entrBtn = QPushButton('Enter', self)
@@ -288,13 +290,14 @@ class GameWidget(QWidget):
         # Set style sheet
         with open("spellingbee/gview/style.css", "r") as file:
             self.setStyleSheet(file.read())
-            
+
         self.setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
         )
 
         # Create layouts and set allignment attributes
+        toolsLayout = QHBoxLayout()
         outerLayout = QVBoxLayout()
         outerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         clusterLayout = QHBoxLayout()
@@ -308,6 +311,10 @@ class GameWidget(QWidget):
             QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
         )
+
+        # Fromat tool buttons
+        self.menuBtn.setStatusTip('Menu')
+        self.hintBtn.setStatusTip('Hint')
 
         # Set formatting attributes of user input field
         self.uInput.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -342,6 +349,16 @@ class GameWidget(QWidget):
         self.entrBtn.setFixedSize(90, 40)
 
         # Populate layouts, moving top to bottom
+        toolsLayout.addWidget(
+            self.menuBtn,
+            alignment=Qt.AlignmentFlag.AlignLeft
+        )
+        toolsLayout.addWidget(
+            self.hintBtn,
+            alignment=Qt.AlignmentFlag.AlignRight
+        )
+
+        outerLayout.addLayout(toolsLayout)
         outerLayout.addWidget(self.uInput)
         outerLayout.addWidget(self.hLine)
         outerLayout.addSpacerItem(spacer)
