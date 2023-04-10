@@ -43,7 +43,7 @@ def encryptionHandler(dict : dict, toEncrypt: bool) -> dict:
     
     if toEncrypt: 
        newDict = _encryptList(key, dict["WordList"], dict)
-    if not toEncrypt:
+    elif not toEncrypt:
        newDict = _decryptList(key, dict["WordList"], dict)
     
     return newDict
