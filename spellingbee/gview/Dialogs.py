@@ -123,9 +123,7 @@ class LoadFailedDialog(QDialog):
         self.setLayout(layout)
 
 
-
-
-################################################################################
+##############################################################################
 # class NewDialog()
 #
 # DESCRIPTION
@@ -147,9 +145,9 @@ class LoadFailedDialog(QDialog):
 #   reject() -> None:
 #
 #   accept() -> None:
-################################################################################
+##############################################################################
 class NewDialog(QDialog):
-    def __init__(self, parent : QWidget=None, *args, **kwargs):
+    def __init__(self, parent: QWidget = None, *args, **kwargs):
         super(NewDialog, self).__init__(parent, *args, **kwargs)
 
         self.setFixedSize(self.minimumSize())
@@ -540,4 +538,50 @@ class WelcomeDialog(QDialog):
 
         self.setLayout(layout)
 
-        
+
+class OptionsDialog(QDialog):
+    def __init__(self, parent: QWidget):
+        super(OptionsDialog, self).__init__(parent)
+        self.title = QLabel(self)
+        self.backToGameBtn = QPushButton(self)
+        self.leaderboardBtn = QPushButton(self)
+        self.helpBtn = QPushButton(self)
+        self.mainMenuBtn = QPushButton(self)
+
+        self._initUI()
+        self._connectSignals()
+
+    def _initUI(self):
+        with open("spellingbee/gview/style.css", "r") as file:
+            self.setStyleSheet(file.read())
+
+        self.setSizePolicy(
+            QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Fixed
+        )
+
+        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
+        self.setModal(True)
+        self.setWindowTitle('Options')
+
+        self.title.setText('Options')
+        self.backToGameBtn.setText('Back to game')
+        self.backToGameBtn.setFixedSize(180, 40)
+        self.leaderboardBtn.setText('Leaderboard')
+        self.leaderboardBtn.setFixedSize(180, 40)
+        self.helpBtn.setText('Help')
+        self.helpBtn.setFixedSize(180, 40)
+        self.mainMenuBtn.setText('Quit to Main Menu')
+        self.mainMenuBtn.setFixedSize(180, 40)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.title)
+        layout.addWidget(self.backToGameBtn)
+        layout.addWidget(self.leaderboardBtn)
+        layout.addWidget(self.helpBtn)
+        layout.addWidget(self.mainMenuBtn)
+        self.setLayout(layout)
+        self.setMaximumSize(self.width(), self.height())
+
+    def _connectSignals(self):
+        self.backToGameBtn.clicked.connect(self.close)

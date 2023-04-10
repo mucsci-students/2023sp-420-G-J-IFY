@@ -70,6 +70,7 @@ class MainWindow(QMainWindow):
         self.centralWidget = self._buildGameWidget()
         self.landingPage = WelcomePage(self)
 
+        self.options = Dialogs.OptionsDialog(self.stack)
         self.newDialog = Dialogs.NewDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
@@ -78,6 +79,7 @@ class MainWindow(QMainWindow):
         self.toolBar = self._createToolBar()
 
         self._initUI()
+        self.gameWidget.menuBtn.clicked.connect(self._openOptions)
 
     ###########################################################################
     # _initUI(self) -> None:
@@ -188,13 +190,13 @@ class MainWindow(QMainWindow):
 
         return toolBar
 
-    ###########################################################################
+    ##########################################################################
     # _createInfoBar()
     #
     # DESCRIPTION:
     #   creates status bar to the right to display user progress and found
     #   words
-    ###########################################################################
+    ##########################################################################
     def _createInfoBar(self) -> QToolBar:
 
         # create static tool
@@ -205,6 +207,12 @@ class MainWindow(QMainWindow):
         infoBar.addWidget(self.statsPanel)
 
         return infoBar
+
+    ##########################################################################
+    #
+    ##########################################################################
+    def _openOptions(self):
+        self.options.show()
 
 
 ###############################################################################
@@ -314,13 +322,14 @@ class GameWidget(QWidget):
         toolsLayout = QHBoxLayout()
         outerLayout = QVBoxLayout()
         outerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        outerLayout.setContentsMargins(0, 0, 0, 0)
         clusterLayout = QHBoxLayout()
         btnsLayout = QHBoxLayout()
         btnsLayout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         # create spacer item to keep cluster centered
         spacer = QSpacerItem(
-            50,
+            0,
             0,
             QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
@@ -392,7 +401,7 @@ class GameWidget(QWidget):
         outerLayout.addWidget(self.hLine)
         # outerLayout.addSpacerItem(spacer)
         outerLayout.addLayout(toolsLayout)
-        
+
         clusterLayout.addWidget(
             self.cluster,
             alignment=Qt.AlignmentFlag.AlignCenter
@@ -404,6 +413,7 @@ class GameWidget(QWidget):
         btnsLayout.addWidget(self.shflBtn)
         btnsLayout.addWidget(self.entrBtn)
         outerLayout.addLayout(btnsLayout)
+        outerLayout.addSpacerItem(spacer)
 
         self.setLayout(outerLayout)
 

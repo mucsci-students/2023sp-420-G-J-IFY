@@ -25,6 +25,7 @@ QLineEdit {
 }
 QLabel {
     font-Family: "Comfortaa";
+    font-size: 15pt;
 }
 QStatusBar {
     background-color: rgba(0, 0, 0, 0);
