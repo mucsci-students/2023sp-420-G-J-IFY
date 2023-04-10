@@ -442,7 +442,6 @@ class OptionsDialog(QDialog):
         self.helpBtn = QPushButton(self)
         self.mainMenuBtn = QPushButton(self)
         self._initUI()
-        self._connectSignals()
 
     ##########################################################################
     # _initUI(self)
