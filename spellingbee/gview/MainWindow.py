@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stack)
         # Connect basic signals
         self.gameWidget.menuBtn.clicked.connect(self.options.show)
-        self.options.mainMenuBtn.clicked.connect(self._returnToMenu)
+        self.options.mainMenuBtn.clicked.connect(self.saveDialog.show)
         self.options.helpBtn.clicked.connect(self.helpDialog.show)
 
     ###########################################################################

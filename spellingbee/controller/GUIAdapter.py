@@ -230,6 +230,8 @@ class GUI_A():
 
             self._window.setStatus(self._outty.getField())
             dialog.accept()
+            self._window.options.close()
+            self._window.stack.setCurrentIndex(0)
 
     def overwrite(self, command):
         command.execute()

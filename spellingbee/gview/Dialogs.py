@@ -364,7 +364,7 @@ class NewDialog(QDialog):
 class SaveDialog(QDialog):
     def __init__(self, parent : QWidget | None, *args, **kwargs):
         super(SaveDialog, self).__init__(parent, *args, **kwargs)
-
+        self.setModal(True)
         self.fileName = QLineEdit(self)
         self.justPuzzle = QCheckBox(self)
         self.btns = QDialogButtonBox(self)
