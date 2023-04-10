@@ -79,7 +79,6 @@ class MainWindow(QMainWindow):
         self.toolBar = self._createToolBar()
 
         self._initUI()
-        self.gameWidget.menuBtn.clicked.connect(self._openOptions)
 
     ###########################################################################
     # _initUI(self) -> None:
@@ -106,6 +105,9 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(self.centralWidget)
         self.stack.setCurrentIndex(0)
         self.setCentralWidget(self.stack)
+        # Connect basic signals
+        self.gameWidget.menuBtn.clicked.connect(self.options.show)
+        self.options.mainMenuBtn.clicked.connect(self._returnToMenu)
 
     ###########################################################################
     # _buildGameWidget() -> QWidget
@@ -209,10 +211,14 @@ class MainWindow(QMainWindow):
         return infoBar
 
     ##########################################################################
+    # _returnToMenu() -> None
     #
+    # DESCRIPTION:
+    #   Begins wrap up sequence
     ##########################################################################
-    def _openOptions(self):
-        self.options.show()
+    def _returnToMenu(self) -> None:
+        self.stack.setCurrentIndex(0)
+        self.options.close()
 
 
 ###############################################################################
