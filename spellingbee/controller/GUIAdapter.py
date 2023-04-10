@@ -184,6 +184,7 @@ class GUI_A():
             self._window.newGame(self._puzzle)
             dlg.baseWrd.clear()
             dlg.accept()
+            self._window.stack.setCurrentIndex(1)
         else:
             dlg.setMessage('Invalid base word')
 

@@ -70,8 +70,8 @@ class MainWindow(QMainWindow):
         self.centralWidget = self._buildGameWidget()
         self.landingPage = WelcomePage(self)
 
-        self.options = Dialogs.OptionsDialog(self.stack)
-        self.newDialog = Dialogs.NewDialog(self.options)
+        self.options = Dialogs.OptionsDialog(self)
+        self.newDialog = Dialogs.NewDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
@@ -182,6 +182,7 @@ class MainWindow(QMainWindow):
         newAction.triggered.connect(self.newDialog.show)
         saveAction.triggered.connect(self.saveDialog.show)
         helpAction.triggered.connect(self.helpDialog.show)
+        self.landingPage.custom_btn.clicked.connect(self.newDialog.show)
 
         # add actions to tool bar
         toolBar.addAction(menuAction)
