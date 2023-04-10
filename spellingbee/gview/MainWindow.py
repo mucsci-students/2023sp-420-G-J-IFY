@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
         self.landingPage = WelcomePage(self)
 
         self.options = Dialogs.OptionsDialog(self.stack)
-        self.newDialog = Dialogs.NewDialog(self)
+        self.newDialog = Dialogs.NewDialog(self.options)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
@@ -108,6 +108,7 @@ class MainWindow(QMainWindow):
         # Connect basic signals
         self.gameWidget.menuBtn.clicked.connect(self.options.show)
         self.options.mainMenuBtn.clicked.connect(self._returnToMenu)
+        self.options.helpBtn.clicked.connect(self.helpDialog.show)
 
     ###########################################################################
     # _buildGameWidget() -> QWidget
@@ -200,14 +201,11 @@ class MainWindow(QMainWindow):
     #   words
     ##########################################################################
     def _createInfoBar(self) -> QToolBar:
-
         # create static tool
         infoBar = QToolBar('Stats', self)
         infoBar.setMovable(False)
-
         self.statsPanel.setParent(infoBar)
         infoBar.addWidget(self.statsPanel)
-
         return infoBar
 
     ##########################################################################

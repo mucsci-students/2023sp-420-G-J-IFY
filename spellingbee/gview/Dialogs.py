@@ -482,11 +482,11 @@ class HelpDialog(QDialog):
     def _initUI(self):
         
         layout = QVBoxLayout()
-
+        self.setModal(True)
         self.instructions.setText(
-            'Welcome to Spelling Bee! (presented by G(J)IFY)'
-            'To play, simply enter a word using only the letters in the'
-            'honey comb (must include the center letter) by either typing'
+            'Welcome to Spelling Bee! (presented by G(J)IFY)\n'
+            'To play, simply enter a word using only the letters in the '
+            'honey comb (must include the center letter) by either typing '
             'on your keyboard or by clicking on the letters directly.'
         )
         self.instructions.setWordWrap(True)

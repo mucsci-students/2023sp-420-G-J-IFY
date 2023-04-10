@@ -111,6 +111,7 @@ class GUI_A():
         self._window.gameWidget.uInput.returnPressed.connect(self._guess)
         self._window.gameWidget.shflBtn.clicked.connect(self._shuffle)
         self._window.gameWidget.delBtn.clicked.connect(self._delete)
+        self._window.gameWidget.hintBtn.clicked.connect(self._hint)
         # Game State Buttons
         self._window.newDialog.btns.accepted.connect(self._newPuzzle)
         self._window.saveDialog.btns.accepted.connect(self._save)
