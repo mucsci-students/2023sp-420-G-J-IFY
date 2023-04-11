@@ -1,4 +1,4 @@
-import sys, os
+import os
 from PyQt6.QtCore import (
     Qt,
     QRegularExpression,
@@ -6,11 +6,8 @@ from PyQt6.QtCore import (
 from PyQt6.QtGui import (
     QFont,
     QRegularExpressionValidator,
-    QCursor,
-    QAction
 )
 from PyQt6.QtWidgets import (
-    QApplication,
     QWidget,
     QDialog,
     QSizePolicy,
@@ -25,13 +22,12 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QComboBox,
     QDialogButtonBox,
-    QComboBox,
     QStyle,
     QFileDialog
 )
 
 
-################################################################################
+###############################################################################
 # class LoadDialog()
 #
 # DESCRIPTION
@@ -46,7 +42,7 @@ from PyQt6.QtWidgets import (
 # FUNCTIONS
 #   initUI() -> None
 #     - initializes and builds the user interface
-################################################################################
+###############################################################################
 class LoadDialog(QDialog):
     def __init__(self, parent: QWidget, *args, **kwargs):
         super(LoadDialog, self).__init__(parent, *args, **kwargs)
@@ -57,15 +53,15 @@ class LoadDialog(QDialog):
         self.initUI()
 
     def initUI(self):
-        
+
         self.setFixedSize(200, 100)
-        
+
         layout = QVBoxLayout()
         layout.setSpacing(20)
 
         self.uInput.setPlaceholderText('Save File Name')
 
-        self.btns.setStandardButtons (
+        self.btns.setStandardButtons(
             QDialogButtonBox.StandardButton.Cancel |
             QDialogButtonBox.StandardButton.Open
         )
@@ -79,8 +75,7 @@ class LoadDialog(QDialog):
         self.setLayout(layout)
 
 
-
-################################################################################
+###############################################################################
 # class LoadFailedDialog()
 #
 # DESCRIPTION
@@ -91,9 +86,9 @@ class LoadDialog(QDialog):
 #     - Message for user
 #   btns : QDialogButtonBox
 #     - Stnadard buttons for acceptance/rejection
-################################################################################
+###############################################################################
 class LoadFailedDialog(QDialog):
-    def __init__(self, parent : QWidget, *args, **kwargs):
+    def __init__(self, parent: QWidget, *args, **kwargs):
         super(LoadFailedDialog, self).__init__(parent, *args, **kwargs)
 
         self.message = QLabel(self)
@@ -126,9 +121,7 @@ class LoadFailedDialog(QDialog):
         self.setLayout(layout)
 
 
-
-
-################################################################################
+###############################################################################
 # class NewDialog()
 #
 # DESCRIPTION
@@ -143,16 +136,16 @@ class LoadFailedDialog(QDialog):
 #   baseWrd : QLineEdit
 #   keyLett : QComboBox
 #   btns : QDialogButtonBox
-# 
+#
 # FUNCTIONS
 #   display(i : int=0) -> None
 #
 #   reject() -> None:
 #
 #   accept() -> None:
-################################################################################
+###############################################################################
 class NewDialog(QDialog):
-    def __init__(self, parent : QWidget=None, *args, **kwargs):
+    def __init__(self, parent: QWidget = None, *args, **kwargs):
         super(NewDialog, self).__init__(parent, *args, **kwargs)
 
         self.setFixedSize(self.minimumSize())
@@ -163,7 +156,7 @@ class NewDialog(QDialog):
         # Sets dialog to modal meaning nothing can be done in parent widget
         # until this dialog is either accepted or rejected.
         self.setModal(True)
-         
+
         # Declare attributes
         self.stack = QStackedWidget(self)
 
@@ -175,20 +168,20 @@ class NewDialog(QDialog):
         self.keyLett = QComboBox(self)
 
         self.btns = QDialogButtonBox(self)
-         
+
         # initialize display
         self._initUI()
-         
+
         # display first page on stack
         self.display(0)
-     
-    ############################################################################
+
+    ###########################################################################
     # _initUI() -> None
-    ############################################################################
+    ###########################################################################
     def _initUI(self) -> None:
 
         layout = QVBoxLayout()
-        
+
         # Create pages
         warning = self._initWarningPage()
         advanced = self._initAdvNewPage()
@@ -211,10 +204,9 @@ class NewDialog(QDialog):
 
         self.setLayout(layout)
 
-
-    ############################################################################
+    ###########################################################################
     # _initWarningPage() -> QWidget
-    ############################################################################
+    ###########################################################################
     def _initWarningPage(self) -> QWidget:
 
         page = QWidget(self)
@@ -258,10 +250,9 @@ class NewDialog(QDialog):
         page.setLayout(layout)
         return page
 
-
-    ############################################################################
+    ###########################################################################
     # _initAdvNewPage() -> QWidget
-    ############################################################################
+    ###########################################################################
     def _initAdvNewPage(self) -> QWidget:
 
         # Create page attributes
@@ -309,39 +300,35 @@ class NewDialog(QDialog):
         page.setLayout(layout)
         return page
 
-
-    ############################################################################
+    ###########################################################################
     # _populateCombo(word : str) -> None
-    ############################################################################
+    ###########################################################################
     def _populateCombo(self, word: str) -> None:
         self.keyLett.clear()
 
         uniqueLett = list(set(word))
 
-        for l in uniqueLett:
-            self.keyLett.addItem(l.upper())
+        for lett in uniqueLett:
+            self.keyLett.addItem(lett.upper())
 
-
-    ############################################################################
+    ###########################################################################
     # display(i : int=0) -> None
-    ############################################################################
-    def display(self, i : int=0) -> None:
+    ###########################################################################
+    def display(self, i: int = 0) -> None:
         self.stack.setCurrentIndex(i)
 
-
-    ############################################################################
+    ###########################################################################
     # reject() -> None
-    ############################################################################
+    ###########################################################################
     def reject(self) -> None:
         self.baseWrd.clear()
         self.keyLett.clear()
         self.display(0)
         super().reject()
 
-
-    ############################################################################
+    ###########################################################################
     # accept() -> None
-    ############################################################################
+    ###########################################################################
     def accept(self) -> None:
         self.baseWrd.clear()
         self.keyLett.clear()
@@ -349,8 +336,7 @@ class NewDialog(QDialog):
         super().accept()
 
 
-
-################################################################################
+###############################################################################
 # class SaveDialog()
 #
 # DESCRIPTION
@@ -364,11 +350,11 @@ class NewDialog(QDialog):
 #     - a checkbox giving the user to save a blank copy of their game
 #   btns : QDialogButtonBox
 #     - standard buttons for acceptance/rejection
-################################################################################
+###############################################################################
 class SaveDialog(QDialog):
-    def __init__(self, parent : QWidget | None, *args, **kwargs):
+    def __init__(self, parent: QWidget | None, *args, **kwargs):
         super(SaveDialog, self).__init__(parent, *args, **kwargs)
-        
+
         # Dialog is persistent
         self.setModal(True)
         # Declare attributes/widgets
@@ -380,12 +366,12 @@ class SaveDialog(QDialog):
         # initialize widgets and build ui
         self._initUI()
 
-    ############################################################################
+    ###########################################################################
     # _initUI() -> None
     #
     # DESCRIPTION:
     #   initializes widget data and populates dialog with them
-    ############################################################################
+    ###########################################################################
     def _initUI(self):
 
         layout = QVBoxLayout()
@@ -416,24 +402,24 @@ class SaveDialog(QDialog):
         layout.addWidget(self.fileName)
         layout.addWidget(self.btns)
         self.setLayout(layout)
-        
-    ############################################################################
+
+    ###########################################################################
     # _validatePath(self, str) -> bool:
     #
     # DESCRIPTION:
     #   private function that returns true if path exists and file name ends
     #   with '.json'
-    ############################################################################
+    ###########################################################################
     def _validatePath(self, str) -> bool:
         return self.getPath().endswith('.json')
-    
-    ############################################################################
+
+    ###########################################################################
     # _open() -> None
     #
     # DESCRIPTION:
-    #   private function that opens a file dialog and returns path + user 
+    #   private function that opens a file dialog and returns path + user
     #   defined filename
-    ############################################################################
+    ###########################################################################
     def _open(self) -> None:
         path = QFileDialog.getSaveFileName(
             self,
@@ -442,42 +428,42 @@ class SaveDialog(QDialog):
             "Game Files (*.json)"
         )
         self.fileName.setText(path[0])
-    
-    ############################################################################
+
+    ###########################################################################
     # isOnlyPuzzle() -> bool
     #
     # DESCRIPTION:
     #   returns true if user checked 'save puzzle only' option, otherwise false
-    ############################################################################
+    ###########################################################################
     def isOnlyPuzzle(self) -> bool:
         return self.justPuzzle.isChecked()
-    
-    ############################################################################
+
+    ###########################################################################
     # isEncrypted() -> bool
     #
     # DESCRIPTION:
-    #   returns true if user checked 'encrypt word list' option, otherwise false
-    ############################################################################
+    #   returns true if user checked 'encrypt word list' option, otherwise
+    #   false
+    ###########################################################################
     def isEncrypted(self) -> bool:
         return self.encrypt.isChecked()
-    
-    ############################################################################
+
+    ###########################################################################
     # getPath() -> str
     #
     # DESCRIPTION:
     #   returns the full path to the new file to be saved
-    ############################################################################
+    ###########################################################################
     def getPath(self) -> str:
         return self.fileName.text()
-    
+
     def reset(self) -> None:
         self.justPuzzle.setChecked(False)
         self.encrypt.setChecked(False)
         self.fileName.setText(f'{os.getcwd()}/untitled.json')
 
 
-
-################################################################################
+###############################################################################
 # class SaveOverwriteDialog()
 #
 # DESCRIPTION
@@ -490,9 +476,9 @@ class SaveDialog(QDialog):
 #   btns : QDialogButtonBox
 #       standard buttons for acceptance/rejection
 # FUNCTIONS
-################################################################################
+###############################################################################
 class SaveOverwriteDialog(QDialog):
-    def __init__(self, parent : QWidget | None, *args, **kwargs):
+    def __init__(self, parent: QWidget | None, *args, **kwargs):
         super(SaveOverwriteDialog, self).__init__(parent, *args, **kwargs)
 
         self.message = QLabel(self)
@@ -529,15 +515,14 @@ class SaveOverwriteDialog(QDialog):
         self.setLayout(layout)
 
 
-
-################################################################################
+###############################################################################
 # class HelpDialog()
 #
 # DESCRIPTION
 #   Gives the user a breif overview of the game and how its played.
-################################################################################
+###############################################################################
 class HelpDialog(QDialog):
-    def __init__(self, parent : QWidget | None, *args, **kwargs):
+    def __init__(self, parent: QWidget | None, *args, **kwargs):
         super(HelpDialog, self).__init__(parent, *args, **kwargs)
 
         self.instructions = QLabel(self)
@@ -553,7 +538,7 @@ class HelpDialog(QDialog):
         self._initUI()
 
     def _initUI(self):
-        
+
         layout = QVBoxLayout()
 
         self.instructions.setText(
@@ -575,13 +560,12 @@ class HelpDialog(QDialog):
         self.setLayout(layout)
 
 
-
-################################################################################
+###############################################################################
 # class WelcomeDialog()
 #
 # DESCRIPTION
 #   Welcome page that can be showed at launch.
-################################################################################
+###############################################################################
 class WelcomeDialog(QDialog):
     def __init__(self, parent=None, *args, **kwargs):
         super(WelcomeDialog, self).__init__(parent=None, *args, **kwargs)
@@ -610,5 +594,3 @@ class WelcomeDialog(QDialog):
         layout.addWidget(self.btns)
 
         self.setLayout(layout)
-
-        
