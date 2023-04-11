@@ -23,25 +23,31 @@ def puzzleFixture():
 def blankPuzzleFixture():
     return spellingbee.newPuzzle('', '', outty, False)
 
+
 @pytest.fixture
 def nonAlphaPuzzleFixture():
     return spellingbee.newPuzzle(':123@#$', '2', outty, False)
+
 
 @pytest.fixture
 def badPuzzleFixture():
     return spellingbee.newPuzzle('grimer', 'g', outty, False)
 
+
 @pytest.fixture
 def badKeyLettPuzzleFixture():
     return spellingbee.newPuzzle('warlock', '', outty, False)
+
 
 @pytest.fixture
 def extraKeyLettPuzzleFixture():
     return spellingbee.newPuzzle('warlock', 'wa', outty, False)
 
+
 @pytest.fixture
 def wrongKeyLettPuzzleFixture():
     return spellingbee.newPuzzle('warlock', 'e', outty, False)
+
 
 @pytest.fixture
 def guessFixture(puzzleFixture):
@@ -73,7 +79,8 @@ def nonsenseGuessFixture(puzzleFixture):
 @pytest.fixture
 def missingCenterGuessFixture(puzzleFixture):
     spellingbee.guess(puzzleFixture, "fenders", False, outty)
-    
+
+
 @pytest.fixture
 def wrongLettersGuessFixture(puzzleFixture):
     spellingbee.guess(puzzleFixture, "benders", False, outty)
@@ -81,24 +88,30 @@ def wrongLettersGuessFixture(puzzleFixture):
 
 # test to see if blank puzzle is generated correctly
 def testBlankNewPuzzle(blankPuzzleFixture):
-    assert(len(blankPuzzleFixture.uniqueLett) ==7)
-    
+    assert (len(blankPuzzleFixture.uniqueLett) == 7)
+
+
 def testNonAlphaNewPuzzle(nonAlphaPuzzleFixture):
     pytest.raises(spellingbee.BadQueryException)
-    
+
+
 def testBadNewPuzzle(badPuzzleFixture):
     pytest.raises(spellingbee.BadQueryException)
-    
+
+
 def testBadKeyLettNewPuzzle(badKeyLettPuzzleFixture):
     pytest.raises(spellingbee.EmptyKeyLetterException)
-    
+
+
 def testExtraKeyLettNewPuzzle(extraKeyLettPuzzleFixture):
     pytest.raises(spellingbee.TooManyKeyLettersException)
-    
+
+
 def testWrongKeyLettNewPuzzle(wrongKeyLettPuzzleFixture):
     pytest.raises(spellingbee.LetterMismatchException)
 
-    # testing if make puzzle correctly produces a new game
+
+# testing if make puzzle correctly produces a new game
 def testKeyLett(puzzleFixture):
     assert (puzzleFixture.keyLett == 'i')
 
@@ -159,13 +172,11 @@ def testGuessRankUpdated(guessFixture):
 
 
 def testShortGuess(shortGuessFixture):
-    assert (outty.getField() == "END is too short!\nGuess need to be at " +
-            "least 4 letters long")
+    assert (outty.getField() == "END is too short...")
 
 
 def testLongGuess(longGuessFixture):
-    assert (outty.getField() == "That guess is too long.Max length is only" +
-            " 15 characters")
+    assert (outty.getField() == "Guess is too long...")
 
 
 def testNonAlphaGuess(nonalphaGuessFixture):
@@ -173,11 +184,12 @@ def testNonAlphaGuess(nonalphaGuessFixture):
 
 
 def testNonsenseGuess(nonsenseGuessFixture):
-    assert (outty.getField() == "NOTAWORD isnt't a word in the dictionary")
+    assert (outty.getField() == "NOTAWORD isn't a word...")
 
 
 def testMissingCenterGuess(missingCenterGuessFixture):
     assert (outty.getField() == "FENDERS is missing center letter, I")
-    
+
+
 def testWrongLettersGuessFixture(wrongLettersGuessFixture):
     assert (outty.getField() == "BENDERS contains letters not in DEFINRS")

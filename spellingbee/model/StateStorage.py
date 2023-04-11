@@ -275,7 +275,7 @@ def __Load(fileName, outty):
         dict = checkLoad(dict)
         # If corrupt file happens, throw exception
         if dict is None:
-            raise BadJSONException
+            raise BadJSONException  # #########################################
 
         obj = __setFields(dict)
 
@@ -288,7 +288,7 @@ def __Load(fileName, outty):
             "Returning to game..."
         )
         os.chdir('..')
-    except BadJSONException:
+    except BadJSONException:  # ###############################################
         outty.setField(
             "The file " + fileName + " contains critical errors that \n"
             "prevent the game from functioning properly\n"
@@ -379,7 +379,11 @@ def checkLoad(dictDict):
         puzzleLetters = dictDict["PuzzleLetters"].lower()
         requiredLetter = dictDict["RequiredLetter"].lower()
         currentPoints = dictDict["CurrentPoints"]
+    # KeyError is raised IF the fields in the .json do not match the standard
+    except KeyError:
+        return None
 
+    try:
         # Check if the unique letters/keyletter combo is in our DB
         # Append requiredLetter to puzzleLetters just in case they fucked
         # Up how they store the required letters
@@ -395,73 +399,65 @@ def checkLoad(dictDict):
         # If the score isn't in our DB, then its not a valid game,
         # Reject the game
         if score is None:
-            raise KeyError
-
-        # Just remake score and word list from our DB
-        maxPoints = score[0]
-        # GenerateWordList every time
-        wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters,
-                                                     requiredLetter)
-
-        badWords = []
-
-        # Check to make sure all guesses are valid
-        if not set(guessedWords).issubset(set(wordList)):
-            for word in guessedWords:
-                # Make a list of all the bad guesses
-                if word not in wordList:
-                    badWords.append(word)
-            for thing in badWords:
-                guessedWords.remove(thing)
-            print(badWords +
-                  " were not valid words in the game and have been removed")
-
-        # Rescore the validated guess list
-        tempTable = "create temporary table guessWords (guesses);"
-        cursor.execute(tempTable)
-        querey = "insert into guessWords (guesses) values ('"
-        for a in guessedWords:
-            querey += a + "'), ('"
-        querey += "');"
-        cursor.execute(querey)
-        join = """
-            select sum(wordScore) from dictionary join guessWords
-            on dictionary.fullWord is guessWords.guesses;
-            """
-        cursor.execute(join)
-        # This is what our score should be
-        ourScore = cursor.fetchone()[0]
-        # If there's doesn't match, set it to ours
-        if ourScore is None:
-            ourScore = 0
-        if ourScore != currentPoints:
-            currentPoints = ourScore
-
-        # At this point, all fields are validates in our game,
-        # remake dictionary
-        dictDict["GuessedWords"] = guessedWords
-        dictDict["WordList"] = wordList
-        dictDict["PuzzleLetters"] = uniqueLetters
-        dictDict["RequiredLetter"] = requiredLetter
-        dictDict["CurrentPoints"] = currentPoints
-        dictDict["MaxPoints"] = maxPoints
-
-    # KeyError is raised IF the fields in the .json do not match the standard
-    except KeyError:
-        dictDict = None
-
+            raise NotInDBException
     # NotinDBException is raised IF the game doesn't exist in our DB
     except NotInDBException:
-        dictDict = None
-
-    # Regardless of end, close connection to DB
-    finally:
-        # Close DB
         wordDict.commit()
         wordDict.close()
+        return None
 
-        # Return validated dictionary or NONE if exception occured
-        return dictDict
+    # Just remake score and word list from our DB
+    maxPoints = score[0]
+    # GenerateWordList every time
+    wordList = MakePuzzle.getAllWordsFromPangram(puzzleLetters,
+                                                 requiredLetter)
+
+    badWords = []
+
+    # Check to make sure all guesses are valid
+    if not set(guessedWords).issubset(set(wordList)):
+        for word in guessedWords:
+            # Make a list of all the bad guesses
+            if word not in wordList:
+                badWords.append(word)
+        for thing in badWords:
+            guessedWords.remove(thing)
+
+    # Rescore the validated guess list
+    tempTable = "create temporary table guessWords (guesses);"
+    cursor.execute(tempTable)
+    querey = "insert into guessWords (guesses) values ('"
+    for a in guessedWords:
+        querey += a + "'), ('"
+    querey += "');"
+    cursor.execute(querey)
+    join = """
+        select sum(wordScore) from dictionary join guessWords
+        on dictionary.fullWord is guessWords.guesses;
+        """
+    cursor.execute(join)
+    # This is what our score should be
+    ourScore = cursor.fetchone()[0]
+    # If there's doesn't match, set it to ours
+    if ourScore is None:
+        ourScore = 0
+    if ourScore != currentPoints:
+        currentPoints = ourScore
+
+    # At this point, all fields are validates in our game,
+    # remake dictionary
+    dictDict["GuessedWords"] = guessedWords
+    dictDict["WordList"] = wordList
+    dictDict["PuzzleLetters"] = uniqueLetters
+    dictDict["RequiredLetter"] = requiredLetter
+    dictDict["CurrentPoints"] = currentPoints
+    dictDict["MaxPoints"] = maxPoints
+
+    # Close DB
+    wordDict.commit()
+    wordDict.close()
+    # Return validated dictionary
+    return dictDict
 
 
 ###############################################################################
