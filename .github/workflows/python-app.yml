@@ -32,7 +32,7 @@ jobs:
           flake8 spellingbee/tests
       - name: Test with pytest
         run: |
-          pytest --cov=spellingbee/model
+          pytest --cov=spellingbee/model --cov-fail-under=100
 
 
           
