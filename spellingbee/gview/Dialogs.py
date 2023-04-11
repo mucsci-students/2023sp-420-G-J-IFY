@@ -21,6 +21,7 @@ from PyQt6.QtWidgets import (
     QCheckBox,
     QLineEdit,
     QDialogButtonBox,
+    QComboBox,
     QStyle,
     QFileDialog
 )
