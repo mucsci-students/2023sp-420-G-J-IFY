@@ -1,4 +1,4 @@
-################################################################################
+###############################################################################
 # CommandHandler.py
 # AUTHOR: Isaak Weidman, Jacob Lovegren
 # DATE OF CREATION: -
@@ -20,7 +20,7 @@
 #
 #   saveGame(game : object, outty : object) -> None
 #
-#   savePuzzle(game : object, outty : object) -> None 
+#   savePuzzle(game : object, outty : object) -> None
 #
 #   loadGame(game : object, outty : object) -> None
 #
@@ -31,7 +31,11 @@
 #   handleSave(game : object, num : int) -> None
 #
 #   finalGame(finishedPuzzle : object) -> None
-################################################################################
+###############################################################################
+from cview import CLI
+from model import MakePuzzle, StateStorage
+from model import hint
+from os import path
 import sys
 import os
 
@@ -40,12 +44,6 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 
 sys.path.append(parent)
-
-from cview import CLI
-from model import MakePuzzle, StateStorage
-from model import hint
-from os import path
-
 
 commands = [
     '!new',
@@ -61,12 +59,13 @@ commands = [
     '!hint'
 ]
 
-################################################################################
+
+###############################################################################
 # parse(userinput : str, game : object, outty : object) -> object:
 #
 # DESCRIPTION:
 #   Directs game functionality based on string input, game object
-# 
+#
 # PARAMETERS:
 #   usrinput : str
 #     - String provided by user containing either a guess, a command, or bad
@@ -79,8 +78,8 @@ commands = [
 # RETURNS:
 #   object
 #     - Updated puzzle object
-################################################################################
-def parse(usrinput : str, game : object, outty) -> object:
+###############################################################################
+def parse(usrinput: str, game: object, outty) -> object:
     match usrinput:
         case '!new':
             return newPuzzle(outty)
@@ -117,21 +116,20 @@ def parse(usrinput : str, game : object, outty) -> object:
             hints(game, outty)
         case _:
             if usrinput.startswith('!'):
-                outty.setField('Command not recognized. Type \"!help\" for a list of '
-                      'valid commands...')
+                outty.setField('Command not recognized. Type \"!help\" '
+                               'for a list of valid commands...')
                 return game
-
             elif not usrinput.isalpha():
                 outty.setField('Input not accepted:\n'
-                      '\t~Guesses should only contain alphabetical characters.')
+                               '\t~Guesses should only contain '
+                               'alphabetical characters.')
                 return game
-                
             else:
                 MakePuzzle.guess(game, usrinput, False, outty)
                 return game
 
 
-################################################################################
+###############################################################################
 # newPuzzle() -> None:
 #
 # DESCRIPTION:
@@ -144,25 +142,25 @@ def parse(usrinput : str, game : object, outty) -> object:
 # RETURNS:
 #   object
 #     - New puzzle object
-################################################################################
+###############################################################################
 def newPuzzle(outty) -> object:
-    print('Please enter a base word with exactly 7 unique characters. \n' +
-    'For auto-generated base word, press enter.')
+    print('Please enter a base word with exactly 7 unique characters. \n'
+          'For auto-generated base word, press enter.')
     word = input('> ')
     keyLetter = ''
     if word != '':
         keyLetter = input("Enter a letter from your word "
-                      "to use as the key letter\n> ")
+                          "to use as the key letter\n> ")
     out = MakePuzzle.newPuzzle(word.lower(), keyLetter.lower(), outty, False)
     if outty.getField().startswith("ERROR"):
         print(outty.getField())
         outty.setField('')
     else:
         out.shuffleChars()
-        return(out)
+        return (out)
 
 
-################################################################################
+###############################################################################
 # printPuzzle(game : object) -> None:
 #
 # DESCRIPTION:
@@ -174,13 +172,13 @@ def newPuzzle(outty) -> object:
 #
 # RETURNS:
 #   None
-################################################################################
-def printPuzzle(game : object) -> None:
-    CLI.drawTextBox([CLI.drawPuzzle(game.getShuffleLetters().upper())], 
+###############################################################################
+def printPuzzle(game: object) -> None:
+    CLI.drawTextBox([CLI.drawPuzzle(game.getShuffleLetters().upper())],
                     40, '^')
 
 
-################################################################################
+###############################################################################
 # printWords(game : object) -> None
 #
 # DESCRIPTION:
@@ -192,14 +190,14 @@ def printPuzzle(game : object) -> None:
 #
 # RETURNS:
 #   None
-################################################################################
-def printWords(game : object) -> None:
+###############################################################################
+def printWords(game: object) -> None:
     CLI.drawTextBox(
-        ['Discovered Words: \ {wrds}'.format(wrds = game.getFoundWords())], 
+        ['Discovered Words: \ {wrds}'.format(wrds=game.getFoundWords())],
         40, '^')
 
 
-################################################################################
+###############################################################################
 # showStatus(game : object) -> None
 #
 # DESCRIPTION:
@@ -212,17 +210,17 @@ def printWords(game : object) -> None:
 #
 # RETURNS:
 #   None
-################################################################################
-def showStatus(game : object) -> None:
+###############################################################################
+def showStatus(game: object) -> None:
     score = game.getScore()
     max = game.getMaxScore()
-    prog = score/max
+    prog = score / max
     bar = game.getRank() + ' ' + CLI.drawProgressBar(20, prog)
-    stats = 'Score: {} \ Progress: {}%'.format(score, int(prog*100))
+    stats = 'Score: {} \ Progress: {}%'.format(score, int(prog * 100))
     CLI.drawTextBox(['Level: \ ' + bar + ' \ ' + stats], 40, '^')
 
 
-################################################################################
+###############################################################################
 # saveGame(Game : object) -> None:
 #
 # DESCRIPTION:
@@ -236,12 +234,12 @@ def showStatus(game : object) -> None:
 #
 # RETURNS:
 #   None
-################################################################################
-def saveGame(game : object, outty : object) -> None:
+###############################################################################
+def saveGame(game: object, outty: object) -> None:
     handleSave(game, 0, outty)
 
 
-################################################################################
+###############################################################################
 # savePuzzle(game : object) -> None:
 #
 # DESCRIPTION:
@@ -255,12 +253,12 @@ def saveGame(game : object, outty : object) -> None:
 #
 # RETURNS:
 #   None
-################################################################################
-def savePuzzle(game : object, outty) -> None:
+###############################################################################
+def savePuzzle(game: object, outty) -> None:
     handleSave(game, 1, outty)
 
 
-################################################################################
+###############################################################################
 # loadGame(game : object) -> None:
 #
 # DESCRIPTION:
@@ -274,38 +272,38 @@ def savePuzzle(game : object, outty) -> None:
 #
 # RETURNS:
 #   None
-################################################################################
-def loadGame(game : object, outty) -> None:
+###############################################################################
+def loadGame(game: object, outty) -> None:
     fileName = input('Please enter the name of the game you are looking for.'
                      '\n> ')
-    newGame =  StateStorage.loadPuzzle(fileName, outty)
-    if newGame != None:
+    newGame = StateStorage.loadPuzzle(fileName, outty)
+    if newGame is not None:
         game = newGame
-    return(game)
+    return (game)
 
 
-################################################################################
+###############################################################################
 # help() -> None
 #
 # DESCRIPTION:
-#   Provides a brief description of game rules and generally how to play as well
-#   as a list of all available commands.
+#   Provides a brief description of game rules and generally how to play as
+#   well as a list of all available commands.
 #
 # PARAMETERS:
 #   None
 #
 # RETURNS:
 #   None
-################################################################################
+###############################################################################
 def help() -> None:
     f = open('spellingbee/controller/cController/helpOut.txt', 'r')
     fileContents = f.read()
-    print (fileContents)
+    print(fileContents)
     f.close()
     input("Press enter to return to the game: ")
 
 
-################################################################################
+###############################################################################
 # exit() -> None:
 #
 # DESCRIPTION:
@@ -316,29 +314,30 @@ def help() -> None:
 #
 # RETURNS:
 #   None
-################################################################################
+###############################################################################
 def exit(game, outty) -> None:
     print('Are you sure? all unsaved progress will be lost. [Y/N]')
     usrinput = input('> ').upper()
     match usrinput:
         case 'Y':
             outty.setField("Thank you for playing!")
-    
+
             quit()
         case 'N':
             return
         case _:
             outty.setField('Input Invalid')
-            parse('!exit', game, outty) # recursively calls until valid input provided.
+            # recursively calls until valid input provided.
+            parse('!exit', game, outty)
 
 
-################################################################################
+###############################################################################
 # handleSave(game : object, num : int, outty : object) -> None:
 #
 # DESCRIPTION:
 #   Saves the games state and handles input from the user to determin if they
 #   want to overwrite a file or not
-# 
+#
 # PARAMETERS:
 #   game : object
 #     - Puzzle object storing current game state
@@ -350,42 +349,41 @@ def exit(game, outty) -> None:
 #
 # RETURNS:
 #   None
-################################################################################
-def handleSave(game : object, num : int, outty : object) -> None:
+###############################################################################
+def handleSave(game: object, num: int, outty: object) -> None:
     saveStatus = False
-    fileName = input('Please enter the name of the file you would like to save '
-                     'for example "Game1"\n> ')
+    fileName = input('Please enter the name of the file you would like to save'
+                     ' for example "Game1"\n> ')
     if len(fileName) < 1:
         print('Must enter a file name with a length greater then 0\n')
-        handleSave(game,num,outty)
+        handleSave(game, num, outty)
     else:
         os.chdir('./saves')
-        if(path.isfile(fileName +'.json')):
-            yesOrNo = input('Would you like to overwrite the file ' + fileName + '?'
-                            '\n Enter Y for yes or N for no\n> ')
-            if(yesOrNo == 'Y'):
-                if(num == 0):
+        if (path.isfile(fileName + '.json')):
+            print('Would you like to overwrite the file ' + fileName + '?')
+            yesOrNo = input('Enter Y for yes or N for no\n> ')
+            if (yesOrNo == 'Y'):
+                if (num == 0):
                     StateStorage.saveCurrent(game, fileName)
                     saveStatus = True
-                elif(num == 1):
+                elif (num == 1):
                     StateStorage.savePuzzle(game, fileName)
                     saveStatus = True
-        else: 
-            if(num == 0):
+        else:
+            if (num == 0):
                 StateStorage.saveCurrent(game, fileName)
                 saveStatus = True
-            elif(num == 1):
+            elif (num == 1):
                 StateStorage.savePuzzle(game, fileName)
                 saveStatus = True
-        
         if saveStatus:
             print('Save Complete!')
         else:
             print('Game could not be saved.')
-            
         os.chdir('..')
 
-################################################################################
+
+###############################################################################
 # finalGame(finishedPuzzle : object, outty : object) -> None
 #
 # DESCRIPTION:
@@ -400,16 +398,19 @@ def handleSave(game : object, num : int, outty : object) -> None:
 #
 # RETURNS:
 #   None
-################################################################################
-def finalGame(finishedPuzzle : object, outty) -> None:
+###############################################################################
+def finalGame(finishedPuzzle: object, outty) -> None:
     showStatus(finishedPuzzle)
-    outty.setField("Congratulations!!!! You have found all of the words for this puzzle!")  
+    outty.setField("Congratulations!!!!"
+                   " You have found all of the words for this puzzle!")
 
-################################################################################
+
+###############################################################################
 # hints(puzzle: object, outty: object) -> None
 #
 # DESCRIPTION:
-#   Prints the hints, including the hints gird, number of words, 2 letter list, etc
+#   Prints the hints, including the hints gird, number of words, 2 letter list,
+#   etc
 # PARAMETERS:
 #   puzzle : object
 #     - Puzzle object for the currently active game.
@@ -418,31 +419,35 @@ def finalGame(finishedPuzzle : object, outty) -> None:
 #
 # RETURNS:
 #   None
-################################################################################
+###############################################################################
 def hints(game: object, outty: object) -> None:
     gameLetters = formatGameLetts(game)
     hints = hint.hint(game)
     hints.makeHintGrid(game)
-    hintHeader = ('Spelling Bee Hint Grid \n\n\n'
-                  'Center letter is underlined. \n\n '
-                  f'{gameLetters} \n -\n\n'
-                  'WORDS: ' + (f'{hints.countWords(game)}, POINTS: ' + str(game.maxScore) + ', PANGRAMS: ' +  str(hints.numPangrams(game)) + 
-                   ' ('  + str(hints.numPerfectPangram(game)) + ' Perfect) BINGO: '+ str(game.checkBingo())+ '\n')
-                )
+
+    hintHeader = 'Spelling Bee Hint Grid \n\n\n'
+    hintHeader += 'Center letter is underlined. \n\n '
+    hintHeader += f'{gameLetters} \n -\n\n' + 'WORDS: '
+    hintHeader += f'{hints.countWords(game)}, POINTS: ' + str(game.maxScore)
+    hintHeader += ', PANGRAMS: ' + str(hints.numPangrams(game))
+    hintHeader += ' (' + str(hints.numPerfectPangram(game))
+    hintHeader += ' Perfect) BINGO: ' + str(game.checkBingo()) + '\n'
+
     lst = hints.hint
     letters = getLettersFromGrid(lst)
     hintGrid = formatHintGrid(lst, letters)
 
-    grid =(f'{hintGrid}')
-    
+    grid = (f'{hintGrid}')
+
     twoLetterList = ('Two letter list:\n\n'
                      f'{formatTwoLetterList(hints, game)}')
-    
+
     finalView = hintHeader + '\n\n\n' + grid + '\n' + twoLetterList + '\n\n'
     print(finalView)
     input("Press enter to return to game")
 
-################################################################################
+
+###############################################################################
 # formatGameLetts(game:object) -> str
 #
 # DESCRIPTION:
@@ -454,8 +459,8 @@ def hints(game: object, outty: object) -> None:
 # RETURNS:
 #   fStr: str
 #     - A format string of the game letters
-################################################################################
-def formatGameLetts(game:object) -> str:
+###############################################################################
+def formatGameLetts(game: object) -> str:
     fStr = ''
     uniqueLetters = game.getShuffleLetters()
 
@@ -465,7 +470,8 @@ def formatGameLetts(game:object) -> str:
         counter += 1
     return fStr
 
-################################################################################
+
+###############################################################################
 # formatHintGrid(game:object) -> str
 #
 # DESCRIPTION:
@@ -477,9 +483,9 @@ def formatGameLetts(game:object) -> str:
 # RETURNS:
 #   fStr: str
 #     - A format string of the hint grid
-################################################################################
+###############################################################################
 def formatHintGrid(lst, letters: str) -> str:
-    fStr ='     '
+    fStr = '     '
     # Remove all columns whos sigma is zero
     removeZeroColumns(lst)
 
@@ -488,16 +494,15 @@ def formatHintGrid(lst, letters: str) -> str:
         fStr += f'{lst[0][i]:<4}'
 
     fStr += '\n\n'
-    for i in range(1,9):
+    for i in range(1, 9):
         fStr += f'{letters[i - 1]}:'
         for y in range(len(lst[0])):
             fStr += f' {lst[i][y]:>3}'
-                
         fStr += '\n\n'
-    return fStr 
-    
+    return fStr
 
-################################################################################
+
+###############################################################################
 # formatTwoLetterList(hint : object) -> str:
 #
 # DESCRIPTION:
@@ -510,7 +515,7 @@ def formatHintGrid(lst, letters: str) -> str:
 # RETURNS:
 #   letters : str
 #     - A string that contains the letters of the puzzle
-################################################################################
+###############################################################################
 def getLettersFromGrid(lst) -> str:
     letters = ''
     for i in range(9):
@@ -518,7 +523,8 @@ def getLettersFromGrid(lst) -> str:
         lst[i].pop(0)
         return letters
 
-################################################################################
+
+###############################################################################
 # formatTwoLetterList(hint : object) -> str:
 #
 # DESCRIPTION:
@@ -531,9 +537,8 @@ def getLettersFromGrid(lst) -> str:
 # RETURNS:
 #   fStr : str
 #     - A string that contains the formated string
-################################################################################
-def formatTwoLetterList(hint : object, game) -> str:
-        
+###############################################################################
+def formatTwoLetterList(hint: object, game) -> str:
     hint.twoLetterList(game)
     lst = hint.getTwoLetterList()
     count = 0
@@ -556,7 +561,8 @@ def formatTwoLetterList(hint : object, game) -> str:
 
     return fStr
 
-################################################################################
+
+###############################################################################
 # removeColumn(self, col, lst) -> list[list[int]]:
 #
 # DESCRIPTION:
@@ -571,13 +577,14 @@ def formatTwoLetterList(hint : object, game) -> str:
 #
 # RETURNS:
 #   lst: list[list[int]]
-################################################################################
+###############################################################################
 def removeColumn(col, lst) -> list[list[int]]:
     for i in lst:
         del i[col]
     return lst
 
-################################################################################
+
+###############################################################################
 # removeColumn(self, col, lst) -> list[list[int]]:
 #
 # DESCRIPTION:
@@ -586,17 +593,17 @@ def removeColumn(col, lst) -> list[list[int]]:
 # PARAMETERS:
 #   self
 #     - Gcontroller object
-#   
+#
 #   lst : List[List[int]]
 #     -List representaion of the hints grid
 #
 # RETURNS:
 #   None
-################################################################################
+###############################################################################
 def removeZeroColumns(lst):
     count = len(lst[8]) - 1
 
-    for i in reversed(lst[8]) :
+    for i in reversed(lst[8]):
         if i == 0:
             removeColumn(count, lst)
         count += -1
