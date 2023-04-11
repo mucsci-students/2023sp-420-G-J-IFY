@@ -15,7 +15,6 @@ import os
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QFileDialog,
-    QMessageBox,
     QApplication,
     QDialog,
     QPlainTextEdit,
@@ -28,7 +27,6 @@ from model import (
 from model.hint import hint
 from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
-from gview import Dialogs
 from controller import cmd
 
 current = os.path.dirname(os.path.realpath(__file__))
@@ -199,16 +197,16 @@ class GUI_A():
     def _save(self) -> None:
         # Open file dialog for user to choose location
         dialog = self._window.saveDialog
-        
+
         saveGame = cmd.SaveGame(
             puzzle=self._puzzle,
             path=dialog.getPath(),
             onlyPuzz=dialog.isOnlyPuzzle(),
             encrypt=dialog.isEncrypted()
         )
-        
+
         saveGame.execute()
-        
+
         dialog.reset()
         dialog.accept()
 
