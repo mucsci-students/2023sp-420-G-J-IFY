@@ -111,6 +111,7 @@ class GUI_A():
         self._window.gameWidget.uInput.returnPressed.connect(self._guess)
         self._window.gameWidget.shflBtn.clicked.connect(self._shuffle)
         self._window.gameWidget.delBtn.clicked.connect(self._delete)
+        self._window.gameWidget.hintBtn.clicked.connect(self._hint)
         # Game State Buttons
         self._window.newDialog.btns.accepted.connect(self._newPuzzle)
         self._window.saveDialog.btns.accepted.connect(self._save)
@@ -183,6 +184,7 @@ class GUI_A():
             self._window.newGame(self._puzzle)
             dlg.baseWrd.clear()
             dlg.accept()
+            self._window.stack.setCurrentIndex(1)
         else:
             dlg.setMessage('Invalid base word')
 
@@ -229,6 +231,8 @@ class GUI_A():
 
             self._window.setStatus(self._outty.getField())
             dialog.accept()
+            self._window.options.close()
+            self._window.stack.setCurrentIndex(0)
 
     def overwrite(self, command):
         command.execute()

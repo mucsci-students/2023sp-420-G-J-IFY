@@ -16,6 +16,7 @@ class WelcomePage(QtWidgets.QWidget):
         self.title = HexLabel(self, radius=100)
         self.sub_title = QtWidgets.QLabel()
         self.new_btn = QtWidgets.QPushButton()
+        self.custom_btn = QtWidgets.QPushButton()
         self.load_btn = QtWidgets.QPushButton()
         self.exit_btn = QtWidgets.QPushButton()
 
@@ -36,6 +37,7 @@ class WelcomePage(QtWidgets.QWidget):
         self.title.setText("Spelling\nBee")
         self.sub_title.setText("Presented by: G[J]IFY")
         self.new_btn.setText("New Game")
+        self.custom_btn.setText("Custom Game")
         self.load_btn.setText("Load Save")
         self.exit_btn.setText("Quit To Desktop")
 
@@ -55,6 +57,7 @@ class WelcomePage(QtWidgets.QWidget):
         self.sub_title.setFont(sub_font)
         # Define btn sizes
         self.new_btn.setFixedSize(200, 45)
+        self.custom_btn.setFixedSize(200, 45)
         self.load_btn.setFixedSize(200, 45)
         self.exit_btn.setFixedSize(200, 45)
         # Alignment
@@ -81,6 +84,11 @@ class WelcomePage(QtWidgets.QWidget):
         ))
         btnsLayout.addWidget(
             self.new_btn,
+            QtCore.Qt.AlignmentFlag.AlignBottom
+            | QtCore.Qt.AlignmentFlag.AlignRight
+        )
+        btnsLayout.addWidget(
+            self.custom_btn,
             QtCore.Qt.AlignmentFlag.AlignBottom
             | QtCore.Qt.AlignmentFlag.AlignRight
         )

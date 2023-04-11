@@ -18,10 +18,12 @@ from PyQt6.QtGui import (
     QAction,
     QRegularExpressionValidator,
     QFontDatabase,
+    QIcon,
 )
 from PyQt6.QtCore import (
     Qt,
     QRegularExpression,
+    QSize
 )
 from PyQt6.QtWidgets import (
     QMainWindow,
@@ -34,7 +36,7 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QSpacerItem,
     QStackedWidget,
-    QFrame
+    QFrame,
 )
 from model.puzzle import Puzzle
 import sys
@@ -68,6 +70,7 @@ class MainWindow(QMainWindow):
         self.centralWidget = self._buildGameWidget()
         self.landingPage = WelcomePage(self)
 
+        self.options = Dialogs.OptionsDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
@@ -96,12 +99,16 @@ class MainWindow(QMainWindow):
             QSizePolicy.Policy.Minimum
         )
         # Add toolbar to the top of window
-        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
+        # self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
         # Add pages to the stack, showing landingPage initially
         self.stack.addWidget(self.landingPage)
         self.stack.addWidget(self.centralWidget)
         self.stack.setCurrentIndex(0)
         self.setCentralWidget(self.stack)
+        # Connect basic signals
+        self.gameWidget.menuBtn.clicked.connect(self.options.show)
+        self.options.mainMenuBtn.clicked.connect(self.saveDialog.show)
+        self.options.helpBtn.clicked.connect(self.helpDialog.show)
 
     ###########################################################################
     # _buildGameWidget() -> QWidget
@@ -150,22 +157,35 @@ class MainWindow(QMainWindow):
     ###########################################################################
     def _createToolBar(self) -> QToolBar:
         # Create static tool bar
-        toolBar = QToolBar('Tools', self)
+        toolBar = QToolBar('Tools')
         toolBar.setMovable(False)
+        toolBar.setBaseSize(100, 100)
+        toolBar.setStyleSheet(
+            '''
+            border: none;
+            background-color: rgb(200, 200, 200);
+            '''
+        )
 
         # add buttons to tool bar
+        menuAction = QAction('Menu', self)
         newAction = QAction('New', self)
         saveAction = QAction('Save', self)
         self.loadAction = QAction('Load', self)
         helpAction = QAction('Help', self)
         self.hintAction = QAction('Hint', self)
 
+        # Add style
+        menuAction.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
+
         # Make connections to simple actions
         newAction.triggered.connect(self.newDialog.show)
         saveAction.triggered.connect(self.saveDialog.show)
         helpAction.triggered.connect(self.helpDialog.show)
+        self.landingPage.custom_btn.clicked.connect(self.newDialog.show)
 
         # add actions to tool bar
+        toolBar.addAction(menuAction)
         toolBar.addAction(newAction)
         toolBar.addAction(saveAction)
         toolBar.addAction(self.loadAction)
@@ -174,23 +194,30 @@ class MainWindow(QMainWindow):
 
         return toolBar
 
-    ###########################################################################
+    ##########################################################################
     # _createInfoBar()
     #
     # DESCRIPTION:
     #   creates status bar to the right to display user progress and found
     #   words
-    ###########################################################################
+    ##########################################################################
     def _createInfoBar(self) -> QToolBar:
-
         # create static tool
         infoBar = QToolBar('Stats', self)
         infoBar.setMovable(False)
-
         self.statsPanel.setParent(infoBar)
         infoBar.addWidget(self.statsPanel)
-
         return infoBar
+
+    ##########################################################################
+    # _returnToMenu() -> None
+    #
+    # DESCRIPTION:
+    #   Begins wrap up sequence
+    ##########################################################################
+    def _returnToMenu(self) -> None:
+        self.stack.setCurrentIndex(0)
+        self.options.close()
 
 
 ###############################################################################
@@ -236,6 +263,8 @@ class GameWidget(QWidget):
         self.uInput = QLineEdit(self)
         self.hLine = QFrame(self)
         self.cluster = HexCluster(self, letters, keyLett)
+        self.menuBtn = QPushButton(self)
+        self.hintBtn = QPushButton(self)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
         self.entrBtn = QPushButton('Enter', self)
@@ -288,25 +317,41 @@ class GameWidget(QWidget):
         # Set style sheet
         with open("spellingbee/gview/style.css", "r") as file:
             self.setStyleSheet(file.read())
-            
+
         self.setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
         )
 
         # Create layouts and set allignment attributes
+        toolsLayout = QHBoxLayout()
         outerLayout = QVBoxLayout()
         outerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        outerLayout.setContentsMargins(0, 0, 0, 0)
         clusterLayout = QHBoxLayout()
         btnsLayout = QHBoxLayout()
         btnsLayout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         # create spacer item to keep cluster centered
         spacer = QSpacerItem(
-            50,
+            0,
             0,
             QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
+        )
+
+        # Fromat tool buttons
+        self.menuBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
+        self.menuBtn.setStatusTip('Menu')
+        self.menuBtn.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
+        self.menuBtn.setIconSize(QSize(30, 30))
+        self.hintBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
+        self.hintBtn.setStatusTip('Hint')
+        self.hintBtn.setIcon(QIcon('SpellingBee/gview/assets/hint.png'))
+        self.hintBtn.setIconSize(QSize(20, 20))
+        self.hintBtn.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum
         )
 
         # Set formatting attributes of user input field
@@ -325,15 +370,20 @@ class GameWidget(QWidget):
         self.uInput.setValidator(validator)
         # Set size policies
         self.uInput.setSizePolicy(
-            QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.MinimumExpanding
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.Minimum
         )
 
         self.hLine.setFrameShape(QFrame.Shape.HLine)
         self.hLine.setStyleSheet('color: rgb(210, 210, 210);')
+        self.hLine.setFixedHeight(3)
+        self.hLine.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.MinimumExpanding
+        )
 
         self.cluster.setSizePolicy(
-            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
         )
 
@@ -342,14 +392,25 @@ class GameWidget(QWidget):
         self.entrBtn.setFixedSize(90, 40)
 
         # Populate layouts, moving top to bottom
+        toolsLayout.addWidget(
+            self.menuBtn,
+            alignment=Qt.AlignmentFlag.AlignLeft
+        )
+        toolsLayout.addWidget(
+            self.hintBtn,
+            alignment=Qt.AlignmentFlag.AlignRight
+        )
+
+        # outerLayout.addLayout(toolsLayout)
         outerLayout.addWidget(self.uInput)
         outerLayout.addWidget(self.hLine)
-        outerLayout.addSpacerItem(spacer)
+        # outerLayout.addSpacerItem(spacer)
+        outerLayout.addLayout(toolsLayout)
 
-        clusterLayout.addSpacerItem(spacer)
-        clusterLayout.addWidget(self.cluster)
-        clusterLayout.addSpacerItem(spacer)
-
+        clusterLayout.addWidget(
+            self.cluster,
+            alignment=Qt.AlignmentFlag.AlignCenter
+        )
         outerLayout.addLayout(clusterLayout)
         outerLayout.addSpacerItem(spacer)
 
@@ -357,6 +418,7 @@ class GameWidget(QWidget):
         btnsLayout.addWidget(self.shflBtn)
         btnsLayout.addWidget(self.entrBtn)
         outerLayout.addLayout(btnsLayout)
+        outerLayout.addSpacerItem(spacer)
 
         self.setLayout(outerLayout)
 
