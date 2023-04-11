@@ -83,12 +83,12 @@ class NewGame(Command):
 ###############################################################################
 class SaveGame(Command):
     def __init__(
-            self,
-            puzzle: Puzzle,
-            path: str,
-            onlyPuzz: bool,
-            encrypt: bool
-        ) -> None:
+        self,
+        puzzle: Puzzle,
+        path: str,
+        onlyPuzz: bool,
+        encrypt: bool
+    ) -> None:
 
         self._name = '!save'
         self._description = 'Create a new save for the currently active game'
