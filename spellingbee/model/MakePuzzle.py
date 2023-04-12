@@ -1,4 +1,4 @@
-################################################################################
+###############################################################################
 # MakePuzzle.py
 # Author: Jacob Lovegren, Yah'hymbey Baruti-Bey, Francesco Spagnolo
 # Date of Creation: 2-2-2023
@@ -8,11 +8,9 @@
 # (Global, public) functions:
 #   newPuzzle(baseWord : str) -> Puzzle Obj
 #       - Makes a basic puzzle
-################################################################################
-
+###############################################################################
 
 import sqlite3
-from random import randrange
 import puzzle
 import itertools
 import output
@@ -31,7 +29,7 @@ class TooManyKeyLettersException(Exception):
     pass
 
 
-################################################################################
+###############################################################################
 # newPuzzle(baseWord: str) -> Puzzle Obj
 #
 # DESCRIPTION:
@@ -39,8 +37,8 @@ class TooManyKeyLettersException(Exception):
 #
 # PARAMETERS:
 #   baseWord : str
-#     - Takes a baseword that is either an empty string or a pangram and makes a
-#       puzzle from it
+#     - Takes a baseword that is either an empty string or a pangram and makes
+#       a puzzle from it
 #   outty : object
 #     - Output object storing output strings
 #   flag : bool
@@ -55,8 +53,9 @@ class TooManyKeyLettersException(Exception):
 #   BadQueryException
 #     - If check is baseword contains nonalphas
 #       if word is in the database
-################################################################################
-def newPuzzle(baseWord: str, keyLetter: str, outty: output, flag: bool) -> object:
+###############################################################################
+def newPuzzle(baseWord: str, keyLetter: str,
+              outty: output, flag: bool) -> object:
     try:
         uniqueLetters = {}
         if baseWord == "":
@@ -84,11 +83,12 @@ def newPuzzle(baseWord: str, keyLetter: str, outty: output, flag: bool) -> objec
             # query DB for word
             returnTuple = checkDataBase(baseWord.lower())
             # returnTuple will be None if query returns emptyy
-            if returnTuple == None:
+            if returnTuple is None:
                 raise BadQueryException
             uniqueLetters = returnTuple[1]
 
-            # now that the input has been validated, go find the max score for this game
+            # now that the input has been validated,
+            # go find the max score for this game
             conn = sqlite3.connect("spellingbee/model/wordDict.db")
             cursor = conn.cursor()
             cursor.execute(
@@ -112,17 +112,16 @@ def newPuzzle(baseWord: str, keyLetter: str, outty: output, flag: bool) -> objec
         # Generates rank
         newPuzzle.updateRank()
 
-        # outty.setField('Puzzle creation successful.\nLetters: {}\nKeyletter: {}'
-        #               .format(puzzle.getUniqueLetters(), puzzle.getKeyLetter()))
-
         return newPuzzle
-    
+
     # Raise exception for bad puzzle seed
     except BadQueryException:
-        if flag == False:
-            outty.setField("ERROR!: " + baseWord.upper() + " is not a valid word")
+        if flag is False:
+            outty.setField("ERROR!: " + baseWord.upper() +
+                           " is not a valid word")
     except LetterMismatchException:
-        outty.setField("ERROR!: " + keyLetter.upper() + " is not a valid key letter")
+        outty.setField("ERROR!: " + keyLetter.upper() +
+                       " is not a valid key letter")
     except EmptyKeyLetterException:
         outty.setField("ERROR!: " + "Key letter cannot be empty")
     except TooManyKeyLettersException:
@@ -137,7 +136,7 @@ class BadQueryException(Exception):
     pass
 
 
-################################################################################
+###############################################################################
 # findBaseWord() -> tuple
 #
 # DESCRIPTION:
@@ -149,7 +148,7 @@ class BadQueryException(Exception):
 # RETURNS:
 #  resultResult
 #   tuple of (uniqueLetters, keyLetter, score)
-################################################################################
+###############################################################################
 def findBaseWord():
     # SQLite Connections
     wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
@@ -159,8 +158,8 @@ def findBaseWord():
     # Grabs a random baseword from the list
     wordDictC.execute(
         """ SELECT *
-                        FROM allGames 
-                        ORDER BY RANDOM() 
+                        FROM allGames
+                        ORDER BY RANDOM()
                         Limit 1;
                         """
     )
@@ -175,7 +174,7 @@ def findBaseWord():
     return resultResult
 
 
-################################################################################
+###############################################################################
 # checkDataBase(baseWord: str) -> tuple
 #
 # DESCRIPTION:
@@ -188,7 +187,7 @@ def findBaseWord():
 # RETURNS:
 #  returnResult
 #   tuple with query results or false if word not in DB
-################################################################################
+###############################################################################
 def checkDataBase(baseWord: str):
     # SQLite Connections
     wordDict = sqlite3.connect("spellingbee/model/wordDict.db")
@@ -196,7 +195,8 @@ def checkDataBase(baseWord: str):
     # Used to execute SQL commands
     cursor = wordDict.cursor()
 
-    cursor.execute("SELECT *FROM pangrams WHERE fullWord = '" + baseWord + "';")
+    cursor.execute("SELECT *FROM pangrams WHERE fullWord = '" + baseWord +
+                   "';")
     # grab tuple returned from querey
     returnResult = cursor.fetchone()
 
@@ -207,7 +207,7 @@ def checkDataBase(baseWord: str):
     return returnResult
 
 
-################################################################################
+###############################################################################
 # guess(puzzle, input: str, flag : bool, outty : object)
 #
 # DESCRIPTION:
@@ -223,14 +223,17 @@ def checkDataBase(baseWord: str):
 #  outty : object
 #    - output object storing output strings
 #
-################################################################################
+###############################################################################
 def guess(puzzle, input: str, flag: bool, outty: object):
     input = input.lower()
     conn = sqlite3.connect("spellingbee/model/wordDict.db")
     cursor = conn.cursor()
 
     if len(input) > 15:
-        outty.setField("That guess is too long." + "Max length is only 15 characters")
+        outty.setField("Guess is too long...")
+        # outty.setField("That guess is too long." + "Max length is only 15
+        # characters")
+
     # check for every case in the user's guess to give points or output error
     # check for only containing alphabetical characters
     elif not input.isalpha():
@@ -240,28 +243,31 @@ def guess(puzzle, input: str, flag: bool, outty: object):
         # check if it is already found
         outty.setField("input in words list")
         if input in puzzle.getFoundWords():
-            outty.setField(input.upper() + " was already found!")
+            outty.setField(input.upper() + " was already found...")
         else:
             # query the database to see how many points to give
-            query = "select wordScore from dictionary where fullWord = '" + input + "';"
+            query = ("select wordScore from dictionary where fullWord = '"
+                     + input + "';")
             cursor.execute(query)
             puzzle.updateScore(cursor.fetchone()[0])
             puzzle.updateRank()
             puzzle.updateFoundWords(input)
             outty.setField(input.upper() + " is one of the words!")
     elif len(input) < 4:  # if the word is not in the list check the size
-        outty.setField(
-            input.upper() + " is too short!\nGuess need to be at least 4 letters long"
-        )
+        # outty.setField( input.upper() + " is too short!\nGuess need to be at
+        # least 4 letters long")
+        outty.setField(f'{input.upper()} is too short...')
     else:
         # query the database to see if it is a word at all
         query1 = (
-            "select uniqueLetters from dictionary where fullWord = '" + input + "';"
+            "select uniqueLetters from dictionary where fullWord = '" + input
+            + "';"
         )
         cursor.execute(query1)
         response = cursor.fetchone()
-        if response == None:
-            outty.setField(input.upper() + " isnt't a word in the dictionary")
+        if response is None:
+            # outty.setField(input.upper() + " isn't a word in the dictionary")
+            outty.setField(f"{input.upper()} isn't a word...")
         # check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())):
             outty.setField(
@@ -280,7 +286,7 @@ def guess(puzzle, input: str, flag: bool, outty: object):
     conn.close()
 
 
-################################################################################
+###############################################################################
 # getAllWordsFromPangram(puzz : Puzzle Object) -> list
 # DESCRIPTION:
 #   This function generates all the words for a given puzzle.
@@ -292,7 +298,7 @@ def guess(puzzle, input: str, flag: bool, outty: object):
 # RETURNS:
 #   list
 #       - a list of all the possible words for the given puzzle
-################################################################################
+###############################################################################
 def getAllWordsFromPangram(unique, key) -> list:
     # create powerset of letters from baseword
     pSet = list(powerset(unique))
@@ -319,7 +325,7 @@ def getAllWordsFromPangram(unique, key) -> list:
 
     # build out query using joins
     join = """
-            select fullWord from dictionary join validLetters 
+            select fullWord from dictionary join validLetters
             on dictionary.uniqueLetters is validLetters.uniLetts;
             """
     cursor.execute(join)
@@ -336,7 +342,7 @@ def getAllWordsFromPangram(unique, key) -> list:
     return listList
 
 
-################################################################################
+###############################################################################
 # powerset(iterable) -> set
 #
 # DESCRIPTION:
@@ -356,7 +362,7 @@ def getAllWordsFromPangram(unique, key) -> list:
 # RETURNS:
 #   Set
 #       - a powerset of the iterable object
-################################################################################
+###############################################################################
 
 
 def powerset(iterable):
@@ -365,7 +371,7 @@ def powerset(iterable):
     return chain.from_iterable(combinations(s, r) for r in range(len(s) + 1))
 
 
-################################################################################
+###############################################################################
 # sortStrToAlphabetical(unsorted : str) -> str
 #
 # DESCRIPTION:
@@ -378,7 +384,7 @@ def powerset(iterable):
 # RETURNS:
 #   str
 #       -"acklorw"
-################################################################################
+###############################################################################
 def sortStrToAlphabetical(unsorted: str) -> str:
     uniqueLettersList = sorted(set(unsorted))
     # convert list to string

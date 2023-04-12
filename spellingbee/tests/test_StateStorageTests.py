@@ -126,14 +126,14 @@ def completedPuzzle():
 
 @pytest.fixture
 def makeBadFoundWordList():
-    dict = {
+    dictDict = {
         "RequiredLetter": "w",
         "PuzzleLetters": "cehinrw",
         "CurrentPoints": 7,
         "MaxPoints": 269,
         "GuessedWords": [
-            "help me ",
-            "I hate Python"
+            "dickbutt",
+            "bearfucker"
         ],
         "WordList": [
             "chew", "crew", "eeew", "ewer", "hewn", "ween", "weer", "weir",
@@ -147,7 +147,7 @@ def makeBadFoundWordList():
             "whinier", "wincher", "whinnier", "wrencher"
             ]
         }
-    return spellingbee.__setFields(dict)
+    return dictDict
 
 
 @pytest.fixture
@@ -426,6 +426,45 @@ def testCheckLoadBadScore(makeBadScoreGame):
     os.remove(pathToFile)
 
 
+def testCheckCorruptJSONExplorer():
+    with open('badJSON.json', 'w') as fp:
+        json.dump({"makeGarbage": "trying"}, fp)
+    fp.close()
+    path = Path.cwd()
+    pathToFile = (str(path) + '/badJSON.json')
+    output = " contains critical errors that \nprevent the game from "
+    output += "functioning properly\nReturning to game..."
+    spellingbee.loadFromExploer(pathToFile, outty)
+    assert (outty.getField().endswith(output))
+    os.remove(pathToFile)
+
+
+def testCheckCorruptJSONsaveFolder():
+    os.chdir('./saves')
+    with open('badJSON.json', 'w') as fp:
+        json.dump({"makeGarbage": "stilltrying"}, fp)
+    fp.close()
+    os.chdir('..')
+    output = "The file badJSON.json contains critical errors that \n"
+    output += "prevent the game from functioning properly\n"
+    output += "Returning to game..."
+    spellingbee.__Load('badJSON.json', outty)
+    assert (outty.getField() == output)
+
+
+def testCheckGoodFile(puzzleFixture):
+    with open('good.json', 'w') as fp:
+        json.dump(puzzleFixture[1], fp)
+    fp.close()
+    path = Path.cwd()
+    pathToFile = (str(path) + '/good.json')
+    output = " contains critical errors that \nprevent the game from "
+    output += "functioning properly\nReturning to game..."
+    puzz = spellingbee.loadFromExploer(pathToFile, outty)
+    assert (puzz is not None)
+    os.remove(pathToFile)
+
+
 def testCheckLoadBadUniqueLetters(makeBadUniqueLetters):
     path = Path.cwd()
     pathToFile = (str(path) +
@@ -441,13 +480,6 @@ def testCheckLoadBadUniqueLetters(makeBadUniqueLetters):
     os.remove(pathToFile)
 
 
-'''
-def testCheckLoadBadFoundWordList():
-    path = Path.cwd()
-    pathToFile = str(path) +
-        '/spellingbee/tests/checkSavesTestFiles/badFoundWordList.json'
-
-    with open(pathToFile) as file:
-        dict = json.load(file)
-    assert(spellingbee.checkLoad(dict)['GuessedWords'] == [])
-    '''
+def testCheckLoadBadFoundWordList(makeBadFoundWordList):
+    dictDict = spellingbee.checkLoad(makeBadFoundWordList)
+    assert (dictDict['GuessedWords'] == [])

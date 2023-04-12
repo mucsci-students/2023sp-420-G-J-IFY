@@ -11,11 +11,12 @@
 #
 ################################################################################
 
-import sys
+import sys, os
 import math
 from PyQt6.QtCore import (
     Qt,
     QRect,
+    QRectF,
     QPointF,
     QPoint,
     QSize,
@@ -28,14 +29,20 @@ from PyQt6.QtGui import (
     QColor,
     QFont,
     QPolygonF,
+    QPixmap,
+    QPicture,
+    QIcon,
+    QFontDatabase,
 )
 from PyQt6.QtWidgets import (
     QApplication,
     QWidget,
     QSizePolicy,
     QHBoxLayout,
+    QVBoxLayout,
     QAbstractButton,
     QPushButton,
+    QLabel,
 )
 
 ################################################################################
@@ -98,7 +105,7 @@ class HexCluster(QWidget):
             button = HexButton(self, c)
             self.buttons.append(button)
 
-        self.buttons[0].setColor(QColor(247, 218, 33))
+        self.buttons[0].setColor(QColor('#FFCC2F'))
 
     ############################################################################
     # _arrangeButtons()
@@ -190,7 +197,7 @@ class HexButton(QPushButton):
         **kwargs
     ):
         super(HexButton, self).__init__(parent, *args, **kwargs)
-
+        
         self.color = QColor(210, 210, 210)
         self.textColor = QColor(Qt.GlobalColor.black)
         self.text = text
@@ -198,7 +205,7 @@ class HexButton(QPushButton):
         self.width = int(45 * math.sqrt(3))
         self.x = 3
         self.y = 3
-        self.boundingBox = QRect(self.x, self.y, self.width, self.height)
+        self.boundingBox = QRect(self.x, self.y + 1, self.width, self.height)
         self.radius = self.height/2
         self.hexagon = self._calcHex()
         self.setFlat(True)
@@ -351,8 +358,13 @@ class HexButton(QPushButton):
     #     - painter object that draws the text
     ############################################################################
     def _drawText(self, painter : QPainter) -> None:
+        font_id = QFontDatabase.addApplicationFont(
+            os.getcwd()+'/fonts/Comfortaa-VariableFont_wght.ttf'
+        )
+        families = QFontDatabase.applicationFontFamilies(font_id)
+        
         font = QFont()
-        font.setFamily('Helvetica')
+        font.setFamily(families[0])
         font.setBold(True)
         font.setPointSize(25)
         
@@ -395,3 +407,204 @@ class HexButton(QPushButton):
             rads += math.pi/3
 
         return hexagon
+    
+    
+################################################################################
+# class HexLabel()
+#
+# DESCRIPTION:
+#   A custom widget that draws a label within a hexagon
+#
+# ARGUMENTS:
+#   parent : QWidget | None,
+#     - This widgets parent widget
+#   text : str | None,
+#     - The label text
+#   radius : int | None,
+#     - The radius of the hexagon
+#   color : str | None,
+#     - The color of the hexagon (hex value, or QColor)
+#   pos : tuple [int, int] | None
+#     - The positional coordinates for the top left corner of the bounding box
+# ATTRIBUTES:
+#
+# FUNCTIONS:
+################################################################################
+class HexLabel(QWidget):
+    def __init__(
+        self,
+        parent : QWidget | None,
+        text : str='',
+        radius : int=20,
+        pos : tuple[int, int]=(0, 0),
+        *args,
+        **kwargs
+    ):
+        super(HexLabel, self).__init__(parent, *args, **kwargs)
+        
+        self._lbl = QLabel()
+        self._text = text
+        self._x = pos[0]+12
+        self._y = pos[1]+12
+        self._radius = radius
+        self._width = radius * math.sqrt(3)
+        self._height = radius * 2
+        self._hex = calcHex(radius, self._x, self._y)
+        self._color = Qt.GlobalColor.gray
+        self._font = QFont('Helvetica', 12)
+        self._fontColor = Qt.GlobalColor.black
+        self._canvas = QPixmap(int(self._width), int(self._height))
+        
+        self._initUI()
+        
+    def _initUI(self):
+        self._lbl.setFixedSize(
+            int(self._width),
+            int(self._height)
+        )
+        self._lbl.setAlignment(
+            Qt.AlignmentFlag.AlignCenter
+        )
+        #self._lbl.setPixmap(self.paintHex())
+        layout = QVBoxLayout()
+        layout.addWidget(self._lbl)
+        self.setLayout(layout)
+    
+    ############################################################################
+    # _drawHex(painter : QPainter) -> None:
+    #
+    # DESCRIPTION:
+    #   draws a hexagon filled with a pre-defined color
+    #
+    # PARAMS:
+    #   painter : QPainter
+    #     - painter object that paints the hexagon
+    ############################################################################
+    def _drawHex(self, painter : QPainter) -> None:
+        
+        brush = QBrush(Qt.BrushStyle.SolidPattern)
+        brush.setColor(QColor(self._color))
+        pen = QPen(Qt.PenStyle.SolidLine)
+        pen.setColor(QColor(self._color))
+
+        painter.setBrush(brush)
+        painter.setPen(pen)
+        painter.drawPolygon(self._hex)
+        
+        
+    ############################################################################
+    # _drawText(painter : QPainter) -> None
+    #
+    # DESCRIPTION:
+    #   draws the text label in the center of the button
+    #
+    # PARMAS:
+    #   painter : QPainter
+    #     - painter object that draws the text
+    ############################################################################
+    def _drawText(self, painter : QPainter) -> None:
+        font = self._font
+        
+        pen = QPen()
+        pen.setColor(self._fontColor)
+
+        painter.setFont(font)
+        painter.setPen(pen)
+
+        painter.drawText(
+            QRectF(self._x, self._y + 7, self._width, self._height),
+            Qt.AlignmentFlag.AlignCenter,
+            self._text
+        )
+        
+    ############################################################################
+    # setFont(font: QFont) -> None
+    #
+    # DESCRIPTION:
+    #   Sets the label font to provided QFont
+    ############################################################################
+    def setFont(self, font: QFont) -> None:
+        self._font = font
+        #self._lbl.setPixmap(self.paintHex())
+        
+    ############################################################################
+    # setFontColor(color: QColor) -> None
+    #
+    # DESCRIPTION:
+    #   Sets the label font to provided QFont
+    ############################################################################
+    def setFontColor(self, color: QColor) -> None:
+        self._fontColor = color
+        #self._lbl.setPixmap(self.paintHex())
+        
+    ############################################################################
+    # setColor(color: QColor) -> None
+    #
+    # DESCRIPTION:
+    #   Sets the hex color to provided QColor
+    ############################################################################
+    def setColor(self, color: QColor) -> None:
+        self._color = color
+        #self._lbl.setPixmap(self.paintHex())
+        
+    ############################################################################
+    # setText(text: str) -> None
+    #
+    # DESCRIPTION:
+    #   sets the text to provided string
+    ############################################################################
+    def setText(self, text: str) -> None:
+        self._text = text
+        #self._lbl.setPixmap(self.paintHex())
+        
+    ############################################################################
+    # paintEvent(event) -> None
+    # 
+    # DESCRIPTION:
+    #   paints hexagon rather than rectangular button
+    #
+    # PARAMS:
+    #   event : QEvent
+    #     - event signaling repaint of button
+    ############################################################################
+    def paintEvent(self, event) -> QPixmap:
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        self._drawHex(painter)
+        self._drawText(painter)
+        painter.end()
+        
+        
+        
+################################################################################
+# calcHex() -> QPolygonF
+#
+# DESCRIPTION:
+#   Creates a hexagon QPolygonF object by calculating the points of a hex
+#     with a bounding box with side length self.size
+# RETURN:
+#   QPolygonF:
+#     - an equilateral hexagon of size radius
+################################################################################
+def calcHex(radius: int, x, y) -> QPolygonF:
+        
+    hexagon = QPolygonF()
+    # radius is from point to point.
+    # minor radius is from edge to edge and is given by the following
+    minorRad = radius*(math.sqrt(3)/2)
+    
+
+    posX = minorRad + x
+    posY = radius + y
+    rads = math.pi/2
+
+    # calculate and append coords to each corner of the hex
+    for i in range(6):
+        hexagon.append(QPointF(
+            posX + math.cos(rads) * radius,
+            posY + math.sin(rads) * radius
+        ))
+
+        rads += math.pi/3
+
+    return hexagon

@@ -1,21 +1,14 @@
 #!/usr/bin/env
-
-################################################################################
+###############################################################################
 # StatsPanel.py
 # AUTHOR: Isaak Weidman
 # DATE OF CREATION: 02-18-2023
 #
 # CLASSES:
-#   
-#
-# FUNCTIONS:
-#
-#
-################################################################################
-
+#   StatsPanel(QWidget)
+###############################################################################
 from model.puzzle import Puzzle
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QSizePolicy,
     QGridLayout,
@@ -26,7 +19,7 @@ from PyQt6.QtWidgets import (
 )
 
 
-################################################################################
+###############################################################################
 # class StatsPanel()
 #
 # DESCRIPTION:
@@ -43,7 +36,7 @@ from PyQt6.QtWidgets import (
 #     - progress bar displaying % of game completed
 #   foundWords : QTextEdit
 #     - list of all words found by the user
-################################################################################
+###############################################################################
 class StatsPanel(QWidget):
     def __init__(self, parent: QWidget | None, *args, **kwargs) -> None:
         super().__init__(parent, *args, **kwargs)
@@ -56,17 +49,20 @@ class StatsPanel(QWidget):
 
         self.initUI()
 
-
-    ############################################################################
+    ###########################################################################
     # initUI() -> None
     #
     # DESCRIPTION:
     #   initialize attributes and layout
-    ############################################################################
+    ###########################################################################
     def initUI(self) -> None:
+        # Apply style sheet
+        with open("spellingbee/gview/style.css", "r") as file:
+            self.setStyleSheet(file.read())
 
+        self.setFixedWidth(300)
         self.setSizePolicy(
-            QSizePolicy.Policy.Preferred,
+            QSizePolicy.Policy.Minimum,
             QSizePolicy.Policy.MinimumExpanding
         )
 
@@ -129,29 +125,28 @@ class StatsPanel(QWidget):
 
         self.setLayout(layout)
 
-    ############################################################################
+    ###########################################################################
     # update(puzzle : Puzzle) -> None
     #
     # DESCRIPTION:
     #   Update information in stats panel to reflect current state of the game
-    ############################################################################
-    def update(self, puzzle : Puzzle) -> None:
+    ###########################################################################
+    def update(self, puzzle: Puzzle) -> None:
 
         self.level.setText(puzzle.getRank())
 
-        # Calculate percentage as into to display on pBar
+        # Calculate percentage as integer to display on pBar
         self.pBar.setValue(int((puzzle.getScore()/puzzle.getMaxScore())*100))
-    
+
+        # Create formatted string to display score information
         ptsToNxtStr = (
             'Score: {score}\n'
             'Points to next level: {pts}'
         ).format(score=puzzle.getScore(), pts=puzzle.getPointsTilRank())
-    
         self.ptsToNxt.setText(ptsToNxtStr)
 
+        # Build body of found words area
         body = self.header
-
         for word in puzzle.getFoundWords():
             body += f'{word.upper()} \n\n'
-
         self.foundWords.setMarkdown(body)

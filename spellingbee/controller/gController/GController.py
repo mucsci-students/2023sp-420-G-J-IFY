@@ -1,6 +1,6 @@
-################################################################################
+###############################################################################
 # GController.py
-# AUTHOR: Isaak Weidman, Yah'hymbey Baruti Ali-Bey, Francesco Spagnolo 
+# AUTHOR: Isaak Weidman, Yah'hymbey Baruti Ali-Bey, Francesco Spagnolo
 # DATE OF CREATION: 2/25/2023
 #
 # DESCRIPTION:
@@ -12,29 +12,25 @@
 #
 # FUNCTIONS:
 #   connectSignals(keySymbol: str, button)
-################################################################################
+###############################################################################
 
 import sys
 import os
 from os import name, system
 from os import path
-from functools import partial
 from gview.MainWindow import MainWindow
 from model import MakePuzzle, StateStorage, output
-from model.puzzle import Puzzle
-import PyQt6
 import model.hint as hint
-from PyQt6.QtCore import QEvent
 from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox, QDialog, QDialogButtonBox
-from PyQt6.QtWidgets import QVBoxLayout, QTextEdit, QLabel, QGridLayout, QPlainTextEdit
+from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox, QDialog
+from PyQt6.QtWidgets import QVBoxLayout, QPlainTextEdit, QDialogButtonBox
+
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-        
-class GController():
 
+class GController():
     def __init__(self):
 
         self.outty = output.Output()
@@ -42,11 +38,9 @@ class GController():
         self.puzzle.shuffleChars()
         self.window = MainWindow(self.puzzle)
         self.window.show()
-
         self.connectSignals()
 
-
-    ############################################################################
+    ###########################################################################
     # connectSignals(keySymbol: str, button)
     #
     # DESCRIPTION:
@@ -59,74 +53,62 @@ class GController():
     #
     # RETURNS:
     #   None
-    ############################################################################
+    ###########################################################################
     def connectSignals(self):
-        '''
-        # newPuzzle uses default params
-        newDlg.warningBtns.accepted.connect(
-            lambda: self.newPuzzle('', '')
-        )
-        '''
-
         # newPuzzle uses provided params
         self.window.newDialog.btns.accepted.connect(self.newPuzzle)
-        
+
         self.window.centralWidget.entrBtn.clicked.connect(self.guess)
+
         self.window.centralWidget.uInput.returnPressed.connect(self.guess)
-        
+
         self.window.saveDialog.btns.accepted.connect(self.saveGame)
-        
-        #self.window.helpDialog.btns.accepted.connect()
-        
+
         self.window.centralWidget.shflBtn.clicked.connect(self.shuffleLetters)
-        
-        #self.window.loadDialog.accepted.connect(self.loadGame)
-        
-        self.window.centralWidget.delBtn.clicked.connect(self.deleteInput)  
+
+        self.window.centralWidget.delBtn.clicked.connect(self.deleteInput)
 
         self.window.loadAction.triggered.connect(self.loadGame)
 
         self.window.hintAction.triggered.connect(self.hint)
-        
 
-    ################################################################################
+    ###########################################################################
     # newPuzzle(userInput) -> object:
     #
     # DESCRIPTION:
-    #   Prompts for input and directs functionality to create a new puzzle object.
+    #   Prompts for input and directs functionality to create a new puzzle
+    #   object.
     #
     # PARAMETERS:
     #   None
     #
     # RETURNS:
     #   None
-    ################################################################################
+    ###########################################################################
     def newPuzzle(self) -> None:
         dlg = self.window.newDialog
         baseWord = str(dlg.baseWrd.text()).lower()
         keyLetter = str(dlg.keyLett.currentText()).lower()
 
         if len(set(baseWord)) == 7 or (baseWord == '' and keyLetter == ''):
-            #dlg.setMessage('')
-            #print(f'\nBaseword: {baseWord}\n KeyLetter: {keyLetter}\n')
-            retPuzzle = MakePuzzle.newPuzzle(baseWord, keyLetter, self.outty, True)
-            if retPuzzle == None:
+            retPuzzle = MakePuzzle.newPuzzle
+            (baseWord, keyLetter, self.outty, True)
+            if retPuzzle is None:
                 pass
             else:
                 self.puzzle = retPuzzle
                 self.puzzle.shuffleChars()
                 self.window.newGame(self.puzzle)
         else:
-            #dlg.setMessage('Invalid base word')
             pass
         dlg.baseWrd.clear()
         dlg.accept()
-        
-    ################################################################################
+
+    ###########################################################################
     # guess(window: object) -> None
     #
     # DESCRIPTION:
-    #   Checks the database for valid words, already found words and 
+    #   Checks the database for valid words, already found words and
     #   words that do not exist
     #
     # PARAMETERS:
@@ -134,17 +116,17 @@ class GController():
     #
     # RETURNS:
     #   None
-    ################################################################################
+    ###########################################################################
     def guess(self):
         self.window.setStatusTip('')
-        # Connect to text field in view and grab 
+        # Connect to text field in view and grab
         text = self.window.centralWidget.uInput.text()
         self.window.centralWidget.uInput.clear()
-        MakePuzzle.guess(self.puzzle, text, True, self.outty)    
+        MakePuzzle.guess(self.puzzle, text, True, self.outty)
         self.window.statsPanel.update(self.puzzle)
         self.window.setStatus(self.outty.getField())
-    
-    ################################################################################
+
+    ###########################################################################
     # saveGame(Game : object) -> None:
     #
     # DESCRIPTION:
@@ -157,34 +139,35 @@ class GController():
     #
     # RETURNS:
     #   None
-    ################################################################################
+    ###########################################################################
     def saveGame(self) -> None:
         # Takes file name
         dialog = self.window.saveDialog
         fileName = dialog.fileName.text()
         if len(fileName) < 1:
             badSaveNameDlg = QMessageBox(parent=self.window)
-            badSaveNameDlg.setText('Must enter a file name with a length greater than 0.')
+            badSaveNameDlg.setText
+            ('Must enter a file name with a length greater than 0.')
             badSaveNameDlg.show()
         else:
-            path = str(QFileDialog.getExistingDirectory(self.window, "Select Directory"))
+            path = str(QFileDialog.getExistingDirectory(self.window,
+                                                        "Select Directory"))
 
             if dialog.justPuzzle.isChecked():
                 self.handleSave(self.puzzle, fileName, 1, path)
-            else: 
-                self.handleSave(self.puzzle, fileName,  0, path)   
-
+            else:
+                self.handleSave(self.puzzle, fileName, 0, path)
 
             self.window.setStatus(self.outty.getField())
             dialog.accept()
-    
-    ################################################################################
+
+    ###########################################################################
     # handleSave(game : object, num) -> None:
     #
     # DESCRIPTION:
-    #   saves the games state and handles input from the user to determin if they
-    #   want to overwrite a file or not
-    # 
+    #   saves the games state and handles input from the user to determin if
+    #   they want to overwrite a file or not
+    #
     # PARAMETERS:
     #   game : object
     #     - puzzle object storing current game state
@@ -194,50 +177,26 @@ class GController():
     #
     # RETURNS:
     #   None
-    ################################################################################
-    def handleSave(self, game : object, fileName: str ,num : int, folder : str) -> None:
-        saveStatus = False
+    ###########################################################################
+    def handleSave(self, game: object,
+                   fileName: str, num: int, folder: str) -> None:
         self.window.saveDialog.fileName.clear()
         self.window.saveDialog.justPuzzle.setChecked(False)
         folderPath = folder
-        if(path.isfile(folderPath + '/' + fileName + '.json')):
+        if (path.isfile(folderPath + '/' + fileName + '.json')):
             # Run Dialog Window for overwriting existing file
             # Change if to check if user click yes or no
             self.window.owDialog.show()
-            self.window.owDialog.btns.accepted.connect(lambda: self.toOverwrite(num, game, fileName, folderPath))
-            
-        else: 
-            if(num == 0):
+            self.window.owDialog.btns.accepted.connect
+            (lambda: self.toOverwrite(num, game, fileName, folderPath))
+
+        else:
+            if (num == 0):
                 StateStorage.saveFromExplorer(folder, fileName, game, False)
-                saveStatus = True
-            elif(num == 1):
+            elif (num == 1):
                 StateStorage.saveFromExplorer(folder, fileName, game, True)
-                saveStatus = True
-                    #if saveStatus:
-                # Run dialog window for successful save
-                #pass
-            #else:
-                # Run dialog window for failed save
-                #pass
-    
-    ################################################################################
-    # help() -> None
-    #
-    # DESCRIPTION:
-    #   provides a brief description of game rules and generally how to play as well
-    #   as a list of all available commands.
-    #
-    # PARAMETERS:
-    #   None
-    #
-    # RETURNS:
-    #   None
-    ################################################################################
-    def help() -> None:
-        # Display Game Intructions
-        pass
-    
-    ################################################################################
+
+    ###########################################################################
     # shuffleLetters() -> None
     #
     # DESCRIPTION:
@@ -248,15 +207,15 @@ class GController():
     #
     # RETURNS:
     #   None
-    ################################################################################
+    ###########################################################################
     def shuffleLetters(self) -> None:
         centralWidget = self.window.centralWidget
         self.puzzle.shuffleChars()
         letters = [*self.puzzle.getShuffleLetters().upper()]
         centralWidget.setLetters(letters)
         centralWidget.update()
-        
-    ################################################################################
+
+    ###########################################################################
     # loadGame() -> None:
     #
     # DESCRIPTION:
@@ -267,35 +226,21 @@ class GController():
     #
     # RETURNS:
     #   None
-    ################################################################################
+    ###########################################################################
     def loadGame(self) -> None:
-        '''
-        fileName = self.window.loadDialog.uInput.text()
-        os.chdir('./saves')
-        if path.isfile(fileName +'.json'):
-            newGame =  StateStorage.loadPuzzle(fileName, self.outty)
-            
-            if newGame != None:
-                self.puzzle = newGame
-            else:
-                self.window.loadFailed.show()
-        else:
-            self.window.loadFailed.show()
-        os.chdir('..')
-        '''
         fileName = QFileDialog.getOpenFileName(self.window, 'File')[0]
-        #check and make sure game is loading a .json file
+        # check and make sure game is loading a .json file
         if not fileName.endswith('.json'):
             newPuzzle = None
         else:
             newPuzzle = StateStorage.loadFromExploer(fileName, self.outty)
-        if newPuzzle == None:
+        if newPuzzle is None:
             self.window.loadFailed.show()
         else:
             self.puzzle = newPuzzle
             self.window.newGame(self.puzzle)
-    
-    ################################################################################
+
+    ###########################################################################
     # deleteInput() -> None:
     #
     # DESCRIPTION:
@@ -306,11 +251,11 @@ class GController():
     #
     # RETURNS:
     #   None
-    ################################################################################
+    ###########################################################################
     def deleteInput(self):
         self.window.centralWidget.uInput.backspace()
-        
-    ################################################################################
+
+    ###########################################################################
     # toOverwrite() -> None:
     #
     # DESCRIPTION:
@@ -321,17 +266,15 @@ class GController():
     #
     # RETURNS:
     #   None
-    ################################################################################
+    ###########################################################################
     def toOverwrite(self, num, game, fileName, folder):
-        if(num == 0):
+        if (num == 0):
             StateStorage.saveFromExplorer(folder, fileName, game, False)
-            saveStatus = True
-        elif(num == 1):
+        elif (num == 1):
             StateStorage.saveFromExplorer(folder, fileName, game, True)
-            saveStatus = True
         self.window.owDialog.accept()
 
-    ################################################################################
+    ###########################################################################
     # hint(self) -> None:
     #
     # DESCRIPTION:
@@ -343,7 +286,7 @@ class GController():
     #
     # RETURNS:
     #   None
-    ################################################################################
+    ###########################################################################
     def hint(self) -> None:
         # dialog window
         dlg = QDialog(parent=self.window)
@@ -363,22 +306,18 @@ class GController():
         self.clear()
         # List representation of the hint grid
         lst = obj.hint
-        dlg.setGeometry(700,300,600,600)
-     
+        dlg.setGeometry(700, 300, 600, 600)
+
         # Format String containing the Grid
         fStr = self.buildHintGrid(lst, obj)
 
         mDlg.setPlainText(fStr)
-        
+
         dlg.setFont(font)
-        #dlg.setLayout(self.populateHintGrid(dlg, lst))
         dlg.show()
         self.clear()
-        # Execute command
-        # Parse data
-        # Display to user
-    
-    ################################################################################
+
+    ###########################################################################
     # formatHintsHeader(self) -> str:
     #
     # DESCRIPTION:
@@ -391,7 +330,7 @@ class GController():
     # RETURNS:
     #   fStr : str
     #     - Format String that contains the hint grid header
-    ################################################################################
+    ###########################################################################
     def formatHintsHeader(self, hint) -> str:
         fStr = 'Spelling Bee Grid \n\n\n'
         fStr += 'Center Letter is Underlined.\n\n'
@@ -402,13 +341,16 @@ class GController():
             fStr += str(i).capitalize() + ' '
             counter += 1
         fStr += '\n-\n\n'
-        fStr += ('WORDS: ' + str(hint.countWords(self.puzzle)) + ', POINTS: ' + str(self.puzzle.maxScore) + ', PANGRAMS: ' +  
-                 str(hint.numPangrams(self.puzzle)) + ' ('  + str(hint.numPerfectPangram(self.puzzle)) + ' Perfect), BINGO: '+ 
-                 str(self.puzzle.checkBingo())+ '\n\n\n' )
+        fStr += ('WORDS: ' + str(hint.countWords(self.puzzle)) + ', POINTS: ')
+        fStr += (str(self.puzzle.maxScore) + ', PANGRAMS: ')
+        fStr += (str(hint.numPangrams(self.puzzle)) + ' (')
+        fStr += (str(hint.numPerfectPangram(self.puzzle)))
+        fStr += (' Perfect), BINGO: ')
+        fStr += (str(self.puzzle.checkBingo()) + '\n\n\n')
 
         return fStr
-    
-    ################################################################################
+
+    ###########################################################################
     # removeColumn(self, col, lst) -> list[list[int]]:
     #
     # DESCRIPTION:
@@ -422,13 +364,13 @@ class GController():
     #
     # RETURNS:
     #   lst : list[list[int]]
-    ################################################################################
+    ###########################################################################
     def removeColumn(self, col, lst) -> list[list[int]]:
         for i in lst:
             del i[col]
         return lst
 
-    ################################################################################
+    ###########################################################################
     # removeColumn(self, col, lst) -> list[list[int]]:
     #
     # DESCRIPTION:
@@ -437,23 +379,23 @@ class GController():
     # PARAMETERS:
     #   self
     #     - Gcontroller object
-    #   
+    #
     #   lst : List[List[int]]
     #     - List representaion of the hints grid
     #
     # RETURNS:
     #   None
-    ################################################################################
-    def removeZeroColumns(self,lst):
+    ###########################################################################
+    def removeZeroColumns(self, lst):
         count = len(lst[8]) - 1
 
-        for i in reversed(lst[8]) :
+        for i in reversed(lst[8]):
             if i == 0:
                 self.removeColumn(count, lst)
             count += -1
         return lst
 
-    ################################################################################
+    ###########################################################################
     # buildHintGrid(self,lst : hint):
     #
     # DESCRIPTION:
@@ -469,35 +411,30 @@ class GController():
     # RETURNS:
     #   fStr: str
     #      - Format string containing the complete hint grid
-    ################################################################################
-    def buildHintGrid(self,lst, hint) -> str:
+    ###########################################################################
+    def buildHintGrid(self, lst, hint) -> str:
         # Build hint grid
-        fStr =''
+        fStr = ''
         letters = ''
         fStr += self.formatHintsHeader(hint)
         # Builds a string of the unique letters from the 2d list
         letters = self.getLettersFromGrid(lst)
-        
+
         fStr += '    '
 
-        # Print the word lengths from 4 - sigma
-        
-        # fStr += self.formatLengthHeader()
-
         fStr += self.formatHintsGrid(lst, letters)
-        # Print the body of the grid
-        
 
+        # Print the body of the grid
         fStr += "\nTwo Letter List:\n\n"
         fStr += self.formatTwoLetterList(hint)
         return fStr
-        # Return a formated string of the grid
-    
-    ################################################################################
+
+    ###########################################################################
     # getLettersFromGrid(lst) -> str:
     #
     # DESCRIPTION:
-    #   Gets the letters from the 2d list and removes them the returns the letters
+    #   Gets the letters from the 2d list and removes them the returns the
+    #   letters
     #
     # PARAMETERS:
     #   lst : list[list[str]]
@@ -505,32 +442,28 @@ class GController():
     # RETURNS:
     #   letters : str
     #       Letters of the puzzle
-    ################################################################################
+    ###########################################################################
     def getLettersFromGrid(self, lst) -> str:
         letters = ''
         for i in range(9):
             letters += str(lst[i][0]).capitalize()
             lst[i].pop(0)
         return letters
-    
-    def formatHintsGrid(self,lst ,letters) -> str:
-        fStr =' '
 
+    def formatHintsGrid(self, lst, letters) -> str:
+        fStr = ' '
         self.removeZeroColumns(lst)
-        #print lengths
-
         for i in range((len(lst[0]))):
             fStr += f'{lst[0][i]:<4}'
         fStr += '\n\n'
-        for i in range(1,9):
+        for i in range(1, 9):
             fStr += f'{letters[i - 1]}:'
             for y in range(len(lst[0])):
                 fStr += f' {lst[i][y]:>3}'
-                
             fStr += '\n\n'
-        return fStr 
+        return fStr
 
-    ################################################################################
+    ###########################################################################
     # formatTwoLetterList(hint : object) -> str:
     #
     # DESCRIPTION:
@@ -543,9 +476,8 @@ class GController():
     # RETURNS:
     #   fStr : str
     #      - A string that contains the formated string
-    ################################################################################
-    def formatTwoLetterList(self, hint : object) -> str:
-        
+    ###########################################################################
+    def formatTwoLetterList(self, hint: object) -> str:
         hint.twoLetterList(self.puzzle)
         lst = hint.getTwoLetterList()
         count = 0
@@ -571,17 +503,15 @@ class GController():
         # For windows
         if name == 'nt':
             _ = system('cls')
-    
         # For mac and linux(here, os.name is 'posix')
         else:
             _ = system('clear')
 
+
 def main():
-    outty = output.Output()
     app = QApplication([])
-    control = GController()
     sys.exit(app.exec())
-    
+
+
 if __name__ == '__main__':
     main()
-    
