@@ -115,7 +115,6 @@ def _decryptList(key, wordList: list, dict: dict) -> dict:
     newWordList = wordList.split("duo")
     iv = eval(newWordList[0].encode('utf-8'))
     decryptData = eval(newWordList[1].encode('utf-8'))
-        
 
     # Create an AES cipher object using the key and IV
     cipher = AES.new(key, AES.MODE_CBC, iv)
