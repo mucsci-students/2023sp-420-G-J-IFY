@@ -226,6 +226,7 @@ class CLI_A():
     def loadGame(self) -> None:
         fileName = input('Please enter the name of the game you are '
                          'looking for.\n> ')
+        os.chdir('./saves')
         currentPath = os.getcwd() + "\\" + fileName
 
         newGame = cmd.LoadGame(currentPath, fileName, self.outty)
@@ -459,26 +460,27 @@ class CLI_A():
                           'to save for example "Game1"\n> '))
         currentPath = os.getcwd()
         fFileName = fileName + '.json'
+        print(currentPath)
         if (path.isfile(fFileName)):
             print('Would you like to overwrite the file ' + fileName + '?')
             yesOrNo = input('Enter Y for yes or N for no\n> ')
             if (yesOrNo == 'Y'):
                 if (num == 0):
                     save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                    save.executeCLICurrent()
+                    save.executeCLI()
                     saveStatus = True
                 elif (num == 1):
                     save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
-                    save.executeCLIPuzzle()
+                    save.executeCLI()
                     saveStatus = True
         else:
             if (num == 0):
                 save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                save.executeCLICurrent()
+                save.executeCLI()
                 saveStatus = True
             elif (num == 1):
                 save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
-                save.executeCLIPuzzle()
+                save.executeCLI()
                 saveStatus = True
 
         if saveStatus:
