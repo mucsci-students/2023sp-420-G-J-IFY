@@ -86,7 +86,7 @@ def _encryptList(key, wordList: list, dict: dict) -> dict:
     # Encrypt the padded plaintext
     ciphertext = cipher.encrypt(pad(newPlainText, AES.block_size))
     # Grab file info
-    dict["WordList"] = str(cipher.iv) + "#" + str(ciphertext)
+    dict["WordList"] = str(cipher.iv) + "duo" + str(ciphertext)
     dict["SecretWordList"] = dict.pop("WordList")
 
     return dict
@@ -113,16 +113,16 @@ def _encryptList(key, wordList: list, dict: dict) -> dict:
 
 def _decryptList(key, wordList: list, dict: dict) -> dict:
     try:
-        newWordList = wordList.split("#")
+        newWordList = wordList.split("duo")
         iv = eval(newWordList[0].encode('utf-8'))
-        # decryptData = eval(newWordList[1].encode('utf-8'))
+        decryptData = eval(newWordList[1].encode('utf-8'))
+        
 
         # Create an AES cipher object using the key and IV
         cipher = AES.new(key, AES.MODE_CBC, iv)
 
         # Decrypt the ciphertext
-        plaintext = unpad(cipher.decrypt(eval(newWordList[1].encode('utf-8'))),
-                          AES.block_size)
+        plaintext = unpad(cipher.decrypt(decryptData), AES.block_size)
 
         newList = _convertToList(plaintext.decode('utf-8'))
         dict["SecretWordList"] = newList
@@ -174,6 +174,7 @@ def _convertWordListToString(wordList):
 
     # return string
     return (str1.join(wordList))
+
 
 ###############################################################################
 # _convertToList(string: str) -> list:
