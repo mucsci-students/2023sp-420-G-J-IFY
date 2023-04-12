@@ -109,9 +109,11 @@ class SaveGame(Command):
             onlyPuzz=self._onlyPuzz
         )
 
-    def executeCLI(self) -> None:
+    def executeCLIPuzzle(self) -> None:
         StateStorage.savePuzzle(self._puzzle, self._fileName)
 
+    def executeCLICurrent (self) -> None:
+        StateStorage.saveCurrent(self._puzzle, self._fileName)
 ###############################################################################
 # class LoadGame(Command)
 #
