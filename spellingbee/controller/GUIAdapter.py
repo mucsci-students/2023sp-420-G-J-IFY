@@ -114,6 +114,7 @@ class GUI_A():
         # Game State Buttons
         self._window.newDialog.btns.accepted.connect(self._newPuzzle)
         self._window.saveDialog.btns.accepted.connect(self._save)
+        self._window.saveDialog.btns.rejected.connect(self._backToMainWindow)
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
 
@@ -197,18 +198,16 @@ class GUI_A():
     def _save(self) -> None:
         # Open file dialog for user to choose location
         dialog = self._window.saveDialog
-
         saveGame = cmd.SaveGame(
             puzzle=self._puzzle,
             path=dialog.getPath(),
             onlyPuzz=dialog.isOnlyPuzzle(),
             encrypt=dialog.isEncrypted()
         )
-
         saveGame.execute()
-
         dialog.reset()
         dialog.accept()
+        self._window.stack.setCurrentIndex(0)
 
     def overwrite(self, command):
         command.execute()
@@ -470,3 +469,13 @@ class GUI_A():
                 fStr += f'{letters}: {num} '
             count += 1
         return fStr
+
+    ##########################################################################
+    # _backToMainWindow():
+    #
+    # DESCRITPION:
+    #   Closes options menu and returns to main menu
+    ##########################################################################
+    def _backToMainWindow(self):
+        self._window.options.close()
+        self._window.stack.setCurrentIndex(0)
