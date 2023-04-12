@@ -112,23 +112,20 @@ def _encryptList(key, wordList: list, dict: dict) -> dict:
 
 
 def _decryptList(key, wordList: list, dict: dict) -> dict:
-    try:
-        newWordList = wordList.split("duo")
-        iv = eval(newWordList[0].encode('utf-8'))
-        decryptData = eval(newWordList[1].encode('utf-8'))
+    newWordList = wordList.split("duo")
+    iv = eval(newWordList[0].encode('utf-8'))
+    decryptData = eval(newWordList[1].encode('utf-8'))
         
 
-        # Create an AES cipher object using the key and IV
-        cipher = AES.new(key, AES.MODE_CBC, iv)
+    # Create an AES cipher object using the key and IV
+    cipher = AES.new(key, AES.MODE_CBC, iv)
 
-        # Decrypt the ciphertext
-        plaintext = unpad(cipher.decrypt(decryptData), AES.block_size)
+    # Decrypt the ciphertext
+    plaintext = unpad(cipher.decrypt(decryptData), AES.block_size)
 
-        newList = _convertToList(plaintext.decode('utf-8'))
-        dict["SecretWordList"] = newList
-        dict["WordList"] = dict.pop("SecretWordList")
-    except TypeError as e:
-        raise BadTypeExcetion(e)
+    newList = _convertToList(plaintext.decode('utf-8'))
+    dict["SecretWordList"] = newList
+    dict["WordList"] = dict.pop("SecretWordList")
 
     # Grab file info
     return dict
