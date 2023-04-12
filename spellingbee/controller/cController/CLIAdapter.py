@@ -458,7 +458,6 @@ class CLI_A():
         saveStatus = False
         fileName = input(('Please enter the name of the file you would like '
                           'to save for example "Game1"\n> '))
-        os.chdir('./saves')
         currentPath = os.getcwd()
         fFileName = fileName + '.json'
         print(currentPath)
@@ -488,8 +487,6 @@ class CLI_A():
             print('Save Complete!')
         else:
             print('Game could not be saved.')
-
-        os.chdir('..')
 
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
