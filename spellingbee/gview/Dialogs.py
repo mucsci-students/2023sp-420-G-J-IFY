@@ -6,6 +6,7 @@ from PyQt6.QtCore import (
 from PyQt6.QtGui import (
     QFont,
     QRegularExpressionValidator,
+    QPixmap,
 )
 from PyQt6.QtWidgets import (
     QWidget,
@@ -563,3 +564,180 @@ class OptionsDialog(QDialog):
         self.setMaximumSize(self.width(), self.height())
         # Connect close button
         self.backToGameBtn.clicked.connect(self.close)
+
+
+##############################################################################
+# class ShareDialog(QDialog):
+#
+# DESCRIPTION:
+#   shows user a preview of an image that displays the current hive, score,
+#   and rank. User is given the option to choose a save location. Otherwise,
+#   screenshot is saved to desktop.
+##############################################################################
+class ShareDialog(QDialog):
+
+    ##########################################################################
+    # __init__()
+    ##########################################################################
+    def __init__(self, parent: QWidget | None, score: QPixmap, hive: QPixmap):
+        super(ShareDialog, self).__init__(parent)
+        # Declare attributes
+        self._image = self._buildOutWidget(score, hive)
+        self._path = QLineEdit()
+        self._btns = QDialogButtonBox()
+
+        self._initUI()
+
+    ##########################################################################
+    # _initUI() -> None:
+    #
+    # DESCRIPTION:
+    #   initialize UI components
+    ##########################################################################
+    def _initUI(self) -> None:
+        # Define layout:
+        v_layout = QVBoxLayout()
+        # Initialize Attributes and add to layout (top to bottom)
+        # Format image preview
+        self._image.setStyleSheet(
+            '''
+            background-color: #ffffff;
+            border: 1px solid;
+            border-color: rgb(210, 210, 210);
+            border-radius: 15px;
+            '''
+        )
+        v_layout.addWidget(self._image)
+        # Filepath
+        # Default path is ~/user/Desktop. File will be saved as untitled.png
+        # unless otherwise specified
+        self._buildPathInput()
+        v_layout.addWidget(
+            self._path,
+            Qt.AlignmentFlag.AlignCenter
+        )
+        # Buttons
+        self._btns.addButton('Share', QDialogButtonBox.ButtonRole.AcceptRole)
+        self._btns.addButton(QDialogButtonBox.StandardButton.Cancel)
+        v_layout.addWidget(self._btns)
+        # Apply layout
+        self.setLayout(v_layout)
+        # Connections
+        self._btns.accepted.connect(self.accept)
+        self._btns.rejected.connect(self.reject)
+
+    ##########################################################################
+    # _buildOutWidget(score: QPixmap, hive: QPixmap) -> QWidget
+    #
+    # DESCRIPTION:
+    #   arranges the two pixmaps proveded on object creation into a sinlgle
+    #   QWidget object. This allows for exporting the new Widgets pixmap to
+    #   be saved later.
+    #
+    # PARAMS:
+    #   score: QPixmap
+    #     - Image with the users current rank, progress bar, score and score
+    #       to rankup
+    #   hive: QPixmap
+    #     - Image with the hex cluster of buttons used during currently
+    #       active game
+    #
+    # RETURN:
+    #   QWidget
+    #     - The arranged widget that can be displayed to user before export
+    ##########################################################################
+    def _buildOutWidget(self, score: QPixmap, hive: QPixmap) -> QWidget:
+        # Define local attributes
+        v_layout = QVBoxLayout()
+        score_display = QLabel()
+        hive_display = QLabel()
+        # Add pixmaps to widgets
+        score_display.setPixmap(score)
+        hive_display.setPixmap(hive)
+        # Remove style sheet
+        score_display.setStyleSheet('border: none;')
+        hive_display.setStyleSheet('border: none;')
+        # Populate layout
+        v_layout.addWidget(
+            score_display,
+            Qt.AlignmentFlag.AlignCenter
+        )
+        v_layout.addWidget(
+            score_display,
+            Qt.AlignmentFlag.AlignCenter
+        )
+        # Create widget and return
+        out = QWidget()
+        out.setLayout(v_layout)
+        return out
+
+    ##########################################################################
+    # _buildPathInput() -> None:
+    #
+    # DESCRIPTION:
+    #   Initializes the file path text input widget with a default path,
+    #   and a button that opens a file dialog
+    ##########################################################################
+    def _buildPathInput(self) -> None:
+        # Default path is as follows:
+        #   MacOS:      ~/Users/<username>/Desktop/untitled.png
+        #   Windows:    ~/
+        #   Linux:      ~/
+        default_path = f"{os.path.expanduser('~')}/Desktop/untitled.png"
+        self._path.setText(default_path)
+        # Create Icon for action
+        icon = self.style().standardIcon(
+            QStyle.StandardPixmap.SP_DialogOpenButton
+        )
+        # Add action to open file dialog
+        file_dlg_action = self._path.addAction(
+            icon,
+            self._path.ActionPosition.TrailingPosition
+        )
+        file_dlg_action.triggered.connect(self._getSaveFilePath)
+
+    ##########################################################################
+    # _getSaveFilePath() -> None
+    #
+    # DESCRIPTION
+    #   Opens a file dialog and sets _path's text to the user's chosen
+    #   location and filename. By default, dialog opens at Desktop folder.
+    ##########################################################################
+    def _getSaveFilePath(self) -> None:
+        # store tuple returned from file dialog
+        f_path = QFileDialog.getSaveFileName(
+            caption="Save Screenshot",
+            directory=self._path.text(),
+            filter='Image Files (*.PNG)'
+        )
+        # set _paths text to the first index of the tuple, which is the path
+        self._path.setText(f_path[0])
+
+    ##########################################################################
+    # _captureScreenshot() -> QPixmap
+    #
+    # DESCRIPTION:
+    #   overts outWidget into a pixmap to be exported
+    #
+    # RETURN:
+    #   QPixmap
+    #     - An image of the outwidget
+    ##########################################################################
+    def _captureScreenshot(self) -> QPixmap:
+        image = self._image.grab()
+        return image
+
+    ##########################################################################
+    # accept() -> None
+    #
+    # DESCRIPTION:
+    #   saves the result of _captureScreenshot as a .png image at the
+    #   specified file path, with the specified file name.
+    ##########################################################################
+    def accept(self):
+        # Fetch file path
+        file_path = self._path.displayText()
+        # Capture screenshot and save file
+        self._captureScreenshot().save(file_path, 'PNG')
+        # continue with standard accept procedure
+        super().accept()
