@@ -521,6 +521,7 @@ class OptionsDialog(QDialog):
         self.backToGameBtn = QPushButton(self)
         self.leaderboardBtn = QPushButton(self)
         self.helpBtn = QPushButton(self)
+        self.shareBtn = QPushButton(self)
         self.mainMenuBtn = QPushButton(self)
         self._initUI()
 
@@ -551,6 +552,8 @@ class OptionsDialog(QDialog):
         self.leaderboardBtn.setFixedSize(180, 40)
         self.helpBtn.setText('Help')
         self.helpBtn.setFixedSize(180, 40)
+        self.shareBtn.setText('Share')
+        self.shareBtn.setFixedSize(180, 40)
         self.mainMenuBtn.setText('Quit to Main Menu')
         self.mainMenuBtn.setFixedSize(180, 40)
         # Populate the widget
@@ -559,6 +562,7 @@ class OptionsDialog(QDialog):
         layout.addWidget(self.backToGameBtn)
         layout.addWidget(self.leaderboardBtn)
         layout.addWidget(self.helpBtn)
+        layout.addWidget(self.shareBtn)
         layout.addWidget(self.mainMenuBtn)
         self.setLayout(layout)
         self.setMaximumSize(self.width(), self.height())
@@ -595,13 +599,13 @@ class ShareDialog(QDialog):
     #   initialize UI components
     ##########################################################################
     def _initUI(self) -> None:
+        self.setModal(True)
         # Define layout:
         v_layout = QVBoxLayout()
         # Initialize Attributes and add to layout (top to bottom)
         # Format image preview
         self._image.setStyleSheet(
             '''
-            background-color: #ffffff;
             border: 1px solid;
             border-color: rgb(210, 210, 210);
             border-radius: 15px;
@@ -663,7 +667,7 @@ class ShareDialog(QDialog):
             Qt.AlignmentFlag.AlignCenter
         )
         v_layout.addWidget(
-            score_display,
+            hive_display,
             Qt.AlignmentFlag.AlignCenter
         )
         # Create widget and return
@@ -724,6 +728,7 @@ class ShareDialog(QDialog):
     #     - An image of the outwidget
     ##########################################################################
     def _captureScreenshot(self) -> QPixmap:
+        self._image.setStyleSheet('border: none;')
         image = self._image.grab()
         return image
 
