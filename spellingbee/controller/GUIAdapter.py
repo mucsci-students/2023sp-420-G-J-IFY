@@ -15,7 +15,6 @@ import os
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QFileDialog,
-    QMessageBox,
     QApplication,
     QDialog,
     QPlainTextEdit,
@@ -115,6 +114,7 @@ class GUI_A():
         # Game State Buttons
         self._window.newDialog.btns.accepted.connect(self._newPuzzle)
         self._window.saveDialog.btns.accepted.connect(self._save)
+        self._window.saveDialog.btns.rejected.connect(self._backToMainWindow)
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
 
@@ -198,41 +198,16 @@ class GUI_A():
     def _save(self) -> None:
         # Open file dialog for user to choose location
         dialog = self._window.saveDialog
-        fileName = dialog.fileName.text()
-        if len(fileName) < 1:
-            badSaveNameDlg = QMessageBox(parent=self._window)
-            badSaveNameDlg.setText(
-                'Must enter a file name with a length greater than 0.'
-            )
-            badSaveNameDlg.show()
-        else:
-            path = str(QFileDialog.getExistingDirectory(
-                self._window,
-                'Select Directory'
-            ))
-
-            saveGame = cmd.SaveGame(
-                puzzle=self._puzzle,
-                fileName=fileName,
-                path=path,
-                onlyPuzz=self._window.saveDialog.justPuzzle.isChecked()
-            )
-
-            if (os.path.isfile(path + '/' + fileName + '.json')):
-                self._window.owDialog.show()
-                self._window.owDialog.btns.accepted.connect(
-                    lambda: self.overwrite(saveGame)
-                )
-            else:
-                saveGame.execute()
-
-            self._window.saveDialog.fileName.clear()
-            self._window.saveDialog.justPuzzle.setChecked(False)
-
-            self._window.setStatus(self._outty.getField())
-            dialog.accept()
-            self._window.options.close()
-            self._window.stack.setCurrentIndex(0)
+        saveGame = cmd.SaveGame(
+            puzzle=self._puzzle,
+            path=dialog.getPath(),
+            onlyPuzz=dialog.isOnlyPuzzle(),
+            encrypt=dialog.isEncrypted()
+        )
+        saveGame.execute()
+        dialog.reset()
+        dialog.accept()
+        self._window.stack.setCurrentIndex(0)
 
     def overwrite(self, command):
         command.execute()
@@ -494,3 +469,13 @@ class GUI_A():
                 fStr += f'{letters}: {num} '
             count += 1
         return fStr
+
+    ##########################################################################
+    # _backToMainWindow():
+    #
+    # DESCRITPION:
+    #   Closes options menu and returns to main menu
+    ##########################################################################
+    def _backToMainWindow(self):
+        self._window.options.close()
+        self._window.stack.setCurrentIndex(0)

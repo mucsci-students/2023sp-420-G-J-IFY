@@ -1,5 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
+import os
 
 from model import (
     MakePuzzle,
@@ -67,6 +68,7 @@ class NewGame(Command):
         puzzle.shuffleChars()
         return puzzle
 
+
 ###############################################################################
 # class SaveGame(Command)
 #
@@ -79,19 +81,22 @@ class NewGame(Command):
 # FUNCTIONS:
 #
 ###############################################################################
-
-
 class SaveGame(Command):
-    def __init__(self, puzzle: Puzzle, fileName: str, path: str = './saves',
-                 onlyPuzz: bool = False) -> None:
+    def __init__(
+        self,
+        puzzle: Puzzle,
+        path: str,
+        onlyPuzz: bool,
+        encrypt: bool
+    ) -> None:
 
         self._name = '!save'
         self._description = 'Create a new save for the currently active game'
 
         # params
         self._puzzle = puzzle
-        self._fileName = fileName
-        self._path = path
+        self._fileName = os.path.basename(path)
+        self._path = os.path.dirname(path)
         self._onlyPuzz = onlyPuzz
 
     def execute(self) -> None:
