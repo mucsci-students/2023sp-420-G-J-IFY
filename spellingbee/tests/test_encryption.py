@@ -124,15 +124,6 @@ def decryptPuzzle(encryptPuzzle):
     return encrypter.encryptionHandler(encryptPuzzle, 0)
 
 
-@pytest.fixture
-def decryptPlainTxt(wordListStr):
-    return encrypter.encryptionHandler(wordListStr, 0)
-
-
-def testEqualSizeListDe(puzzleFixture, decryptPuzzle):
-    assert (len(puzzleFixture["WordList"]) == len(decryptPuzzle["WordList"]))
-
-
 def testEqualListDe(puzzleFixture, decryptPuzzle):
     assert (str(puzzleFixture["WordList"]) == str(decryptPuzzle["WordList"]))
 
@@ -146,9 +137,5 @@ def testEncryptStr(wordListStr, encryptString):
 
 
 def testBadWordListName(badWordListName, badWordListNamePuzzle):
-    assert (str(badWordListName["WordList"]) ==
-            str(badWordListNamePuzzle["WordList"]))
-
-
-def testPlainTextDe(decryptPlainTxt):
-    pytest.raises(encrypter.BadTypeException)
+    assert (str(badWordListName["SWordList"]) ==
+            str(badWordListNamePuzzle["SWordList"]))

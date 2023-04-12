@@ -38,7 +38,7 @@ def encryptionHandler(dict: dict, toEncrypt: bool) -> dict:
     if _dictKeyChecker(dict, "Author") and (_dictKeyChecker(dict, "WordList")
                                             or
                                             _dictKeyChecker
-                                            (dict, "SecretWordlist")):
+                                            (dict, "SecretWordList")):
         # Set password and plaintext
         password = dict["Author"]
         # Generate a random salt
@@ -87,7 +87,7 @@ def _encryptList(key, wordList: list, dict: dict) -> dict:
     ciphertext = cipher.encrypt(pad(newPlainText, AES.block_size))
     # Grab file info
     dict["WordList"] = str(cipher.iv) + "#" + str(ciphertext)
-    dict["SecretWordList"] = dict.pop["WordList"]
+    dict["SecretWordList"] = dict.pop("WordList")
 
     return dict
 
@@ -115,17 +115,18 @@ def _decryptList(key, wordList: list, dict: dict) -> dict:
     try:
         newWordList = wordList.split("#")
         iv = eval(newWordList[0].encode('utf-8'))
-        decryptData = eval(newWordList[1].encode('utf-8'))
+        # decryptData = eval(newWordList[1].encode('utf-8'))
 
         # Create an AES cipher object using the key and IV
         cipher = AES.new(key, AES.MODE_CBC, iv)
 
         # Decrypt the ciphertext
-        plaintext = unpad(cipher.decrypt(decryptData), AES.block_size)
+        plaintext = unpad(cipher.decrypt(eval(newWordList[1].encode('utf-8'))),
+                          AES.block_size)
 
         newList = _convertToList(plaintext.decode('utf-8'))
         dict["SecretWordList"] = newList
-        dict["WordList"] = dict.pop["SecretWordList"]
+        dict["WordList"] = dict.pop("SecretWordList")
     except TypeError as e:
         raise BadTypeExcetion(e)
 
@@ -147,9 +148,9 @@ def _decryptList(key, wordList: list, dict: dict) -> dict:
 
 
 def _saltGrabber() -> bytes:
-    salt = " "
-    with open("DO_NOT_REMOVE.bin", "wb") as file:
-        salt = file.read()
+    salt = b'p\xf11\x15t\xdbQgc\xf4\xeb\x8d\xe6tu\xc6'
+    # with open("DO_NOT_REMOVE_SALT.bin", "wb") as file:
+    #    salt = file.read()
     return salt
 
 ###############################################################################
