@@ -7,8 +7,7 @@
 # functionality across all files and objects.
 #
 ###############################################################################
-
-from model.encrypter import encrypter
+import encrypter
 import pytest
 
 
