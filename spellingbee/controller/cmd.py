@@ -141,6 +141,7 @@ class LoadGame(Command):
 
     def executeCLI(self) -> object:
         return StateStorage.loadPuzzle(self._fileName, self._outty)
+    
 
 ###############################################################################
 # class Shuffle(Command)
