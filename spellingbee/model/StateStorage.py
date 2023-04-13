@@ -251,7 +251,6 @@ def __checkFileExists(pathToFile):
 def __Load(fileName, outty):
     # Checks if file exists
     try:
-        os.chdir('./saves')
         # Check if user ended their save with the .json filename
         if fileName.endswith(".json"):
             fileName = fileName
@@ -269,8 +268,6 @@ def __Load(fileName, outty):
         # Puts elements in the file in a dictionary
         dict = json.load(file)
 
-        os.chdir('..')
-
         # Check that dict contains valid save data
         dict = checkLoad(dict)
         # If corrupt file happens, throw exception
@@ -287,7 +284,6 @@ def __Load(fileName, outty):
             "The file " + fileName + " does not exist in this directory\n"
             "Returning to game..."
         )
-        os.chdir('..')
     except BadJSONException:  # ###############################################
         outty.setField(
             "The file " + fileName + " contains critical errors that \n"
@@ -493,5 +489,9 @@ def saveFromExplorer(path: str, fileName: str, puzzle: object,
         dict = __makeDict(newObj)
     else:
         dict = __makeDict(puzzle)
-    with open(path + '/' + fileName + '.json', "w") as file:
-        json.dump(dict, file)
+    if not fileName.endswith('.json'):
+        with open(path + '/' + fileName + '.json', "w") as file:
+            json.dump(dict, file)
+    else:
+        with open(path + '/' + fileName, "w") as file:
+            json.dump(dict, file)
