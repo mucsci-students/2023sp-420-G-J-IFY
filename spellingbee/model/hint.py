@@ -380,33 +380,3 @@ class hint:
     def printTwoLetterList(self):
         for rows in self.twoLettList:
             print(rows)
-
-
-# For displaying and testing functionality, remove comments here
-# and play around with any puzzle
-
-# PUZZLES
-# newPuzzle = puzzle.Puzzle("a", "acklorw")  # base test puzzle
-# newPuzzle = puzzle.Puzzle("s", "eflnpsu")
-# newPuzzle = puzzle.Puzzle("n", "cenorsu")
-# newPuzzle = puzzle.Puzzle("p", "cenopty")
-# newPuzzle = puzzle.Puzzle("e", "aeinrst")  # longest puzzle
-# newPuzzle = puzzle.Puzzle("j", "aeijklm")  # shortest puzzle
-# newPuzzle = puzzle.Puzzle("i", "einortv")
-# hints = hint(newPuzzle)
-
-# HINT GRID
-# hints.makeHintGrid(newPuzzle)
-# get = hints.getHintGrid()
-# hints.printHint()
-# print(hints.countWords(newPuzzle))
-
-# TWO LETTER LIST:
-# hints.twoLetterList(newPuzzle)
-# print(hints.getTwoLetterList())
-# hints.printTwoLetterList()
-# print(hints.numTwoLettCombo(newPuzzle))
-
-# PANGRAMS
-# print(hints.numPangrams(newPuzzle))
-# print(hints.numPerfectPangram(newPuzzle))

@@ -17,16 +17,6 @@ import output
 from itertools import chain, combinations
 
 
-class LetterMismatchException(Exception):
-    pass
-
-
-class EmptyKeyLetterException(Exception):
-    pass
-
-
-class TooManyKeyLettersException(Exception):
-    pass
 
 
 ###############################################################################
@@ -136,6 +126,18 @@ class BadQueryException(Exception):
     pass
 
 
+class LetterMismatchException(Exception):
+    pass
+
+
+class EmptyKeyLetterException(Exception):
+    pass
+
+
+class TooManyKeyLettersException(Exception):
+    pass
+
+
 ###############################################################################
 # findBaseWord() -> tuple
 #
@@ -195,7 +197,7 @@ def checkDataBase(baseWord: str):
     # Used to execute SQL commands
     cursor = wordDict.cursor()
 
-    cursor.execute("SELECT *FROM pangrams WHERE fullWord = '" + baseWord +
+    cursor.execute("SELECT * FROM pangrams WHERE fullWord = '" + baseWord +
                    "';")
     # grab tuple returned from querey
     returnResult = cursor.fetchone()
@@ -224,14 +226,14 @@ def checkDataBase(baseWord: str):
 #    - output object storing output strings
 #
 ###############################################################################
-def guess(puzzle, input: str, flag: bool, outty: object):
+def guess(puzzle, input: str, flag: bool, outty: object):              ##### delete flag
     input = input.lower()
     conn = sqlite3.connect("spellingbee/model/wordDict.db")
     cursor = conn.cursor()
 
     if len(input) > 15:
         outty.setField("Guess is too long...")
-        # outty.setField("That guess is too long." + "Max length is only 15
+        # outty.setField("That guess is too long." + "Max length is only 15     # clean up commented out code
         # characters")
 
     # check for every case in the user's guess to give points or output error

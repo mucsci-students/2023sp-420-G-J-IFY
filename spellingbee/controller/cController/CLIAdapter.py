@@ -27,7 +27,7 @@ sys.path.append(parent)
 class CLI_A():
     def __init__(self, puzzle: puzzle.Puzzle, outty: object):
         self.puzzle = puzzle
-        self.outty = outty
+        self.outty = outty # does this fuck with singleton?
 
     ###########################################################################
     # parse(userinput : str, game : object, outty : object) -> object:
@@ -75,7 +75,7 @@ class CLI_A():
             case '!load':
                 self.loadGame()
                 return self.puzzle
-            case '!save-list':
+            case '!save-list':      # kill this
                 self.outty.setField('Implementation Pending...')
             case '!help':
                 self.help()
@@ -157,7 +157,7 @@ class CLI_A():
     #   game : object
     #     - puzzle object storing current game state
     ###########################################################################
-    def printWords(self) -> None:
+    def printWords(self) -> None:                        # don't jus print out the data structure here
         CLI.drawTextBox(
             ['Discovered Words: \ {wrds}'.format
              (wrds=self.puzzle.getFoundWords())], 40, '^')
@@ -260,7 +260,6 @@ class CLI_A():
     #     - puzzle object for the currently active game.
     #   outty : object
     #     - output object storing output strings
-
     ###########################################################################
     def hints(self) -> None:
         hints = cmd.Hint(self.puzzle)
@@ -300,7 +299,6 @@ class CLI_A():
     # Returns:
     #   fStr: str
     #       a format string of the hint grid
-
     ###########################################################################
     def formatHintGrid(self, lst, letters: str) -> str:
         fStr = '     '
@@ -453,7 +451,7 @@ class CLI_A():
     #   outty : object
     #     - output object storing output strings
     ###########################################################################
-    def handleSave(self, num: int) -> None:
+    def handleSave(self, num: int) -> None:                     # comment this out better
         saveStatus = False
         fileName = input(('Please enter the name of the file you would like '
                           'to save for example "Game1"\n> '))

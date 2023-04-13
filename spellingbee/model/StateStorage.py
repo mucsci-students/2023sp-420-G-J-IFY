@@ -16,8 +16,8 @@
 ###############################################################################
 import sys
 import os
-import sqlite3  # For saveGameChecker
-import MakePuzzle  # For saveGameChecker
+import sqlite3
+import MakePuzzle
 import json
 import os.path
 from os import path
