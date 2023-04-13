@@ -493,5 +493,9 @@ def saveFromExplorer(path: str, fileName: str, puzzle: object,
         dict = __makeDict(newObj)
     else:
         dict = __makeDict(puzzle)
-    with open(path + '/' + fileName + '.json', "w") as file:
-        json.dump(dict, file)
+    if not fileName.endswith('.json'):
+        with open(path + '/' + fileName + '.json', "w") as file:
+            json.dump(dict, file)
+    else:
+        with open(path + '/' + fileName, "w") as file:
+            json.dump(dict, file)

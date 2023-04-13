@@ -465,7 +465,7 @@ class CLI_A():
             if (yesOrNo == 'Y'):
                 if (num == 0):
                     save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                    save.executeCLICurrent()
+                    save.exceuteCLICurrent()
                     saveStatus = True
                 elif (num == 1):
                     save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
@@ -474,7 +474,7 @@ class CLI_A():
         else:
             if (num == 0):
                 save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                save.executeCLICurrent()
+                save.exceuteCLICurrent()
                 saveStatus = True
             elif (num == 1):
                 save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
