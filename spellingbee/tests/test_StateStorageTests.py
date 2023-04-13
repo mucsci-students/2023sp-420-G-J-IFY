@@ -480,6 +480,7 @@ def testCheckLoadBadFoundWordList(makeBadFoundWordList):
     dictDict = spellingbee.checkLoad(makeBadFoundWordList)
     assert (dictDict['GuessedWords'] == [])
 
+
 def testExplorerJson(playedPuzzle):
     path = Path.cwd()
     savePath = str(path)

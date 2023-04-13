@@ -111,7 +111,7 @@ class SaveGame(Command):
 
     def executeCLIPuzzle(self) -> None:
         StateStorage.savePuzzle(self._puzzle, self._fileName)
-    
+
     def exceuteCLICurrent(self) -> None:
         StateStorage.saveCurrent(self._puzzle, self._fileName)
 
@@ -144,7 +144,7 @@ class LoadGame(Command):
 
     def executeCLI(self) -> object:
         return StateStorage.loadPuzzle(self._fileName, self._outty)
-    
+
 
 ###############################################################################
 # class Shuffle(Command)

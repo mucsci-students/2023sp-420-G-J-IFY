@@ -268,7 +268,6 @@ def __Load(fileName, outty):
         # Puts elements in the file in a dictionary
         dict = json.load(file)
 
-
         # Check that dict contains valid save data
         dict = checkLoad(dict)
         # If corrupt file happens, throw exception

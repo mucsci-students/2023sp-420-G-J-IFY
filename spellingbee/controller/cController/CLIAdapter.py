@@ -486,7 +486,6 @@ class CLI_A():
         else:
             print('Game could not be saved.')
 
-
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
     #
