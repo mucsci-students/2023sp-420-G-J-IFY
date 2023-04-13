@@ -284,7 +284,6 @@ def testLoad(playedPuzzle):
 
     MakePuzzle.guess(playedPuzzle, 'wall', False, outty)
     spellingbee.saveCurrent(playedPuzzle, fileName)
-    os.replace('./TESTFILE5.json', './saves/TESTFILE5.json')
 
     obj2 = spellingbee.loadPuzzle(fileName, outty)
 
@@ -292,7 +291,7 @@ def testLoad(playedPuzzle):
 
     dict2 = __makeDict(obj2)
     assert (dict1 == dict2)
-    os.remove('./saves/TESTFILE5.json')
+    os.remove('TESTFILE5.json')
     print("testLoadPuzzle1: PASSED")
 
 
@@ -306,10 +305,9 @@ def testLoadWithJson(playedPuzzle):
     fileNameJson = fileName + ".json"
     dict1 = __makeDict(playedPuzzle)
     spellingbee.saveCurrent(playedPuzzle, fileName)
-    os.replace('./TESTFILE5.json', './saves/TESTFILE5.json')
     puzzle = spellingbee.__Load(fileNameJson, outty)
     dict2 = __makeDict(puzzle)
-    path = str(Path.cwd()) + '/saves/' + fileNameJson
+    path = str(Path.cwd()) + '/' + fileNameJson
     os.remove(path)
     assert (dict1 == dict2)
 
@@ -440,11 +438,9 @@ def testCheckCorruptJSONExplorer():
 
 
 def testCheckCorruptJSONsaveFolder():
-    os.chdir('./saves')
     with open('badJSON.json', 'w') as fp:
         json.dump({"makeGarbage": "stilltrying"}, fp)
     fp.close()
-    os.chdir('..')
     output = "The file badJSON.json contains critical errors that \n"
     output += "prevent the game from functioning properly\n"
     output += "Returning to game..."
@@ -483,3 +479,12 @@ def testCheckLoadBadUniqueLetters(makeBadUniqueLetters):
 def testCheckLoadBadFoundWordList(makeBadFoundWordList):
     dictDict = spellingbee.checkLoad(makeBadFoundWordList)
     assert (dictDict['GuessedWords'] == [])
+
+def testExplorerJson(playedPuzzle):
+    path = Path.cwd()
+    savePath = str(path)
+    fileName = 'TestFile2.json'
+    spellingbee.saveFromExplorer(savePath, fileName, playedPuzzle, False)
+    dict = __makeDict(playedPuzzle)
+    assert (checkContents(fileName, dict))
+    removeSave(fileName)
