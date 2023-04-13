@@ -109,6 +109,7 @@ class MainWindow(QMainWindow):
         self.gameWidget.menuBtn.clicked.connect(self.options.show)
         self.options.mainMenuBtn.clicked.connect(self.saveDialog.show)
         self.options.helpBtn.clicked.connect(self.helpDialog.show)
+        self.options.shareBtn.clicked.connect(self._share)
 
     ###########################################################################
     # _buildGameWidget() -> QWidget
@@ -218,6 +219,21 @@ class MainWindow(QMainWindow):
     def _returnToMenu(self) -> None:
         self.stack.setCurrentIndex(0)
         self.options.close()
+
+    ##########################################################################
+    # _share() -> None:
+    #
+    # DESCRIPTION:
+    #   Opens the share dialog with proper pixmaps
+    ##########################################################################
+    def _share(self) -> None:
+        # Get pixmaps
+        stats_pix = self.statsPanel.statsWidget.grab()
+        hex_pix = self.gameWidget.cluster.grab()
+
+        # Create dialog
+        share_dlg = Dialogs.ShareDialog(self, stats_pix, hex_pix)
+        share_dlg.show()
 
 
 ###############################################################################

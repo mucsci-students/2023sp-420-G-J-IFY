@@ -8,7 +8,6 @@
 #   StatsPanel(QWidget)
 ###############################################################################
 from model.puzzle import Puzzle
-from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QSizePolicy,
     QGridLayout,
@@ -44,6 +43,7 @@ class StatsPanel(QWidget):
         self.level = QLabel(self)
         self.pBar = QProgressBar(self)
         self.ptsToNxt = QLabel(self)
+        self.statsWidget = QWidget()
         self.foundWords = QTextEdit(self)
         self.header = '**Found Words:** \n ___\n'
 
@@ -67,9 +67,6 @@ class StatsPanel(QWidget):
         )
 
         # initialize defaults for level
-        font = QFont('Helvetica', 14)
-        font.setBold(True)
-        self.level.setFont(font)
         self.level.setText('Beginner')
         # initialize defaults for pBar
         self.pBar.setValue(0)
@@ -81,7 +78,6 @@ class StatsPanel(QWidget):
         )
 
         # initialize defaults for foundWords:
-        self.foundWords.setFont(QFont('Helvetica', 16))
         self.foundWords.setReadOnly(True)
         self.foundWords.setMarkdown(self.header)
 
@@ -104,16 +100,8 @@ class StatsPanel(QWidget):
 
         # Populate widget
         layout = QGridLayout()
-
-        layout.addWidget(self.level, 0, 0)
-        layout.addWidget(self.pBar, 0, 1)
-        layout.addWidget(
-            self.ptsToNxt,
-            1,
-            0,
-            1,
-            2
-        )
+        self.statsWidget = self._buildStatusWidget()
+        layout.addWidget(self.statsWidget)
         # found Words spans both columns in grid
         layout.addWidget(
             self.foundWords,
@@ -150,3 +138,26 @@ class StatsPanel(QWidget):
         for word in puzzle.getFoundWords():
             body += f'{word.upper()} \n\n'
         self.foundWords.setMarkdown(body)
+
+    ##########################################################################
+    # _buildStatusWidget() -> QWidget:
+    #
+    # DESCRIPTION
+    #   builds a separate widget to display the top portion of the widget
+    ##########################################################################
+    def _buildStatusWidget(self) -> QWidget:
+        widget = QWidget()
+        layout = QGridLayout()
+
+        layout.addWidget(self.level, 0, 0)
+        layout.addWidget(self.pBar, 0, 1)
+        layout.addWidget(
+            self.ptsToNxt,
+            1,
+            0,
+            1,
+            2
+        )
+
+        widget.setLayout(layout)
+        return widget
