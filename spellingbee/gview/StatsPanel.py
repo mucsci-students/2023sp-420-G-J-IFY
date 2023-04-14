@@ -124,7 +124,8 @@ class StatsPanel(QWidget):
         self.level.setText(puzzle.getRank())
 
         # Calculate percentage as integer to display on pBar
-        self.pBar.setValue(int((puzzle.getScore()/puzzle.getMaxScore())*100))
+        self.pBar.setValue(int((puzzle.getScore() /
+                                puzzle.getMaxScore()) * 100))
 
         # Create formatted string to display score information
         ptsToNxtStr = (

@@ -209,7 +209,6 @@ class NewDialog(QDialog):
         self.advBtn.setText('Advanced')
         self.advBtn.setFlat(True)
         self.advBtn.setCursor(Qt.CursorShape.PointingHandCursor)
-        # self.advBtn.setFixedSize(self.advBtn.minimumSizeHint())
         self.advBtn.clicked.connect(lambda: self.display(1))
         # Spacer to move Advanced button to the right
         advLayout.addSpacerItem(
@@ -247,10 +246,8 @@ class NewDialog(QDialog):
         self.backBtn.setText('Back')
         self.backBtn.setFlat(True)
         self.backBtn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.backBtn.setSizePolicy(
-             QSizePolicy.Policy.Fixed,
-             QSizePolicy.Policy.Fixed
-        )
+        self.backBtn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.
+                                   Policy.Fixed)
         self.backBtn.setFixedSize(self.backBtn.minimumSizeHint())
         self.backBtn.clicked.connect(lambda: self.display(0))
         # Spacer to move Advanced button to the right

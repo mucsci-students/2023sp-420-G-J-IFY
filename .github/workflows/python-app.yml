@@ -24,7 +24,7 @@ jobs:
           pip install -r requirements.txt
       - name: Lint with flake8
         run: |
-          flake8 --ignore=W605 spellingbee
+          flake8 --ignore=W503,W504,W605 spellingbee
       - name: Test with pytest
         run: |
           pytest --cov=spellingbee/model --cov-fail-under=100

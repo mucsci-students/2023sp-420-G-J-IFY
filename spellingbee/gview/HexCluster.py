@@ -61,8 +61,7 @@ class HexCluster(QWidget):
             letters: list[str],
             keyLet: str,
             *args,
-            **kwargs
-            ):
+            **kwargs):
         super(HexCluster, self).__init__(parent, *args, **kwargs)
 
         self.buttons: list[HexButton] = []
@@ -109,9 +108,9 @@ class HexCluster(QWidget):
         width = self.buttons[0].width
 
         xpad = 10
-        ypad = int(math.sqrt(xpad**2 - (xpad/2)**2))
+        ypad = int(math.sqrt(xpad**2 - (xpad / 2)**2))
 
-        posx = int(width/2 + xpad/2)
+        posx = int(width / 2 + xpad / 2)
         posy = 0
 
         self.buttons[1].move(posx, posy)
@@ -119,21 +118,21 @@ class HexCluster(QWidget):
         self.buttons[2].move(posx, posy)
 
         posx = 0
-        posy += int((3*height/4) + ypad)
+        posy += int((3 * height / 4) + ypad)
         self.buttons[3].move(posx, posy)
         posx += width + xpad
         self.buttons[0].move(posx, posy)
         posx += width + xpad
         self.buttons[4].move(posx, posy)
 
-        posx = int(width/2 + xpad/2)
-        posy += int((3*height/4) + ypad)
+        posx = int(width / 2 + xpad / 2)
+        posy += int((3 * height / 4) + ypad)
         self.buttons[5].move(posx, posy)
         posx += width + xpad
         self.buttons[6].move(posx, posy)
 
-        self.setMinimumHeight(int(((5/2) * height) + (2.5*ypad)))
-        self.setMinimumWidth(int((3 * width) + (2.5*xpad)))
+        self.setMinimumHeight(int(((5 / 2) * height) + (2.5 * ypad)))
+        self.setMinimumWidth(int((3 * width) + (2.5 * xpad)))
 
 
 ###############################################################################
@@ -195,7 +194,7 @@ class HexButton(QPushButton):
         self.x = 3
         self.y = 3
         self.boundingBox = QRect(self.x, self.y + 1, self.width, self.height)
-        self.radius = self.height/2
+        self.radius = self.height / 2
         self.hexagon = self._calcHex()
         self.setFlat(True)
         self.setText(text)
@@ -246,7 +245,7 @@ class HexButton(QPushButton):
     ###########################################################################
     def setSize(self, size: int) -> None:
         self.height = size
-        self.width = int((self.height/2) * math.sqrt(3))
+        self.width = int((self.height / 2) * math.sqrt(3))
 
     ###########################################################################
     # paintEvent(event) -> None
@@ -339,7 +338,7 @@ class HexButton(QPushButton):
     ###########################################################################
     def _drawText(self, painter: QPainter) -> None:
         font_id = QFontDatabase.addApplicationFont(
-            os.getcwd()+'/fonts/Comfortaa-VariableFont_wght.ttf'
+            os.getcwd() + '/fonts/Comfortaa-VariableFont_wght.ttf'
         )
         families = QFontDatabase.applicationFontFamilies(font_id)
 
@@ -374,16 +373,16 @@ class HexButton(QPushButton):
 
         hexagon = QPolygonF()
 
-        posX = self.width/2 + self.x
-        posY = self.height/2 + self.y
-        rads = math.pi/2
+        posX = self.width / 2 + self.x
+        posY = self.height / 2 + self.y
+        rads = math.pi / 2
 
         for i in range(6):
             hexagon.append(QPointF(
                 posX + math.cos(rads) * self.radius,
                 posY + math.sin(rads) * self.radius
             ))
-            rads += math.pi/3
+            rads += math.pi / 3
 
         return hexagon
 
@@ -423,8 +422,8 @@ class HexLabel(QWidget):
 
         self._lbl = QLabel()
         self._text = text
-        self._x = pos[0]+12
-        self._y = pos[1]+12
+        self._x = pos[0] + 12
+        self._y = pos[1] + 12
         self._radius = radius
         self._width = radius * math.sqrt(3)
         self._height = radius * 2
@@ -561,11 +560,11 @@ def calcHex(radius: int, x, y) -> QPolygonF:
     hexagon = QPolygonF()
     # radius is from point to point.
     # minor radius is from edge to edge and is given by the following
-    minorRad = radius*(math.sqrt(3)/2)
+    minorRad = radius * (math.sqrt(3) / 2)
 
     posX = minorRad + x
     posY = radius + y
-    rads = math.pi/2
+    rads = math.pi / 2
 
     # calculate and append coords to each corner of the hex
     for i in range(6):
@@ -574,6 +573,6 @@ def calcHex(radius: int, x, y) -> QPolygonF:
             posY + math.sin(rads) * radius
         ))
 
-        rads += math.pi/3
+        rads += math.pi / 3
 
     return hexagon
