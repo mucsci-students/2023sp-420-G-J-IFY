@@ -175,7 +175,7 @@ def drawGameBox(game: object, outty: object) -> None:
     tier2 = 'Level: \ {lvl} {pBar}'.format(lvl=game.getRank(),
                                            pBar=drawProgressBar(20, prog))
     tier3 = 'Points needed for next rank: ' + str(game.getPointsTilRank())
-    tier4 = 'Discovered Words: \ {wrds}'.format(wrds=game.getFoundWords())
+    tier4 = 'Discovered Words: \ {wrds}'.format(wrds=game.concatFound())
     tier5 = outty.getField()
     tier6 = drawPuzzle(game.getShuffleLetters().upper())
     tier7 = 'Enter your guess, or type \'!help\' for a list of commands.'

@@ -17,8 +17,6 @@ import output
 from itertools import chain, combinations
 
 
-
-
 ###############################################################################
 # newPuzzle(baseWord: str) -> Puzzle Obj
 #
@@ -226,15 +224,13 @@ def checkDataBase(baseWord: str):
 #    - output object storing output strings
 #
 ###############################################################################
-def guess(puzzle, input: str, flag: bool, outty: object):              ##### delete flag
+def guess(puzzle, input: str, flag: bool, outty: object):
     input = input.lower()
     conn = sqlite3.connect("spellingbee/model/wordDict.db")
     cursor = conn.cursor()
 
     if len(input) > 15:
         outty.setField("Guess is too long...")
-        # outty.setField("That guess is too long." + "Max length is only 15     # clean up commented out code
-        # characters")
 
     # check for every case in the user's guess to give points or output error
     # check for only containing alphabetical characters
@@ -255,9 +251,8 @@ def guess(puzzle, input: str, flag: bool, outty: object):              ##### del
             puzzle.updateRank()
             puzzle.updateFoundWords(input)
             outty.setField(input.upper() + " is one of the words!")
-    elif len(input) < 4:  # if the word is not in the list check the size
-        # outty.setField( input.upper() + " is too short!\nGuess need to be at
-        # least 4 letters long")
+    # if the word is not in the list check the size
+    elif len(input) < 4:
         outty.setField(f'{input.upper()} is too short...')
     else:
         # query the database to see if it is a word at all
@@ -268,7 +263,6 @@ def guess(puzzle, input: str, flag: bool, outty: object):              ##### del
         cursor.execute(query1)
         response = cursor.fetchone()
         if response is None:
-            # outty.setField(input.upper() + " isn't a word in the dictionary")
             outty.setField(f"{input.upper()} isn't a word...")
         # check if the letters contain the center letter
         elif set(response[0]).issubset(set(puzzle.getUniqueLetters())):

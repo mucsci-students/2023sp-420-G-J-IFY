@@ -27,7 +27,7 @@ sys.path.append(parent)
 class CLI_A():
     def __init__(self, puzzle: puzzle.Puzzle, outty: object):
         self.puzzle = puzzle
-        self.outty = outty # does this fuck with singleton?
+        self.outty = outty
 
     ###########################################################################
     # parse(userinput : str, game : object, outty : object) -> object:
@@ -75,8 +75,6 @@ class CLI_A():
             case '!load':
                 self.loadGame()
                 return self.puzzle
-            case '!save-list':      # kill this
-                self.outty.setField('Implementation Pending...')
             case '!help':
                 self.help()
                 return self.puzzle
@@ -157,10 +155,10 @@ class CLI_A():
     #   game : object
     #     - puzzle object storing current game state
     ###########################################################################
-    def printWords(self) -> None:                        # don't jus print out the data structure here
+    def printWords(self) -> None:
         CLI.drawTextBox(
             ['Discovered Words: \ {wrds}'.format
-             (wrds=self.puzzle.getFoundWords())], 40, '^')
+             (wrds=self.puzzle.concatFound())], 40, '^')
 
     ###########################################################################
     # showStatus(game : object) -> None
@@ -437,7 +435,7 @@ class CLI_A():
 
     ###########################################################################
     # handleSave(game : object, num : int, outty : object) -> None:
-    #
+    #                                                 # comment this out better
     # DESCRIPTION:
     #   saves the games state and handles input from the user to determin if
     #   they want to overwrite a file or not
@@ -451,7 +449,7 @@ class CLI_A():
     #   outty : object
     #     - output object storing output strings
     ###########################################################################
-    def handleSave(self, num: int) -> None:                     # comment this out better
+    def handleSave(self, num: int) -> None:
         saveStatus = False
         fileName = input(('Please enter the name of the file you would like '
                           'to save for example "Game1"\n> '))

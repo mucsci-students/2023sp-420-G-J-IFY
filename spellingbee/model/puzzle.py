@@ -85,6 +85,8 @@ import MakePuzzle
 #     - Updates the points til rank based on current max and level
 #   shuffleChars()
 #     - Shuffles the order or shuffle letter list
+#   concatFound()
+#     - Turns found words into single string
 ###############################################################################
 
 class Puzzle:
@@ -537,3 +539,20 @@ class Puzzle:
             ctr += 1
         # Set the shuffleLetters field to the list rejoined to string
         self.setShuffleLetters("".join(letters))
+
+    ###########################################################################
+    # concatFound()
+    #
+    # Description:
+    #   concatenates found words into string
+    #
+    # Parameters:
+    #   None
+    ###########################################################################
+    def concatFound(self):
+        outStr = ""
+        for word in self.getFoundWords():
+            outStr += word.upper() + " "
+        if outStr == "":
+            return "Nothing yet... "
+        return outStr
