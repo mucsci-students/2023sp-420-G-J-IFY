@@ -16,6 +16,9 @@ import itertools
 import output
 from itertools import chain, combinations
 
+# Create output object
+outty = output.Output()
+
 
 ###############################################################################
 # newPuzzle(baseWord: str) -> Puzzle Obj
@@ -42,8 +45,11 @@ from itertools import chain, combinations
 #     - If check is baseword contains nonalphas
 #       if word is in the database
 ###############################################################################
-def newPuzzle(baseWord: str, keyLetter: str,
-              outty: output, flag: bool) -> object:
+def newPuzzle(
+    baseWord: str,
+    keyLetter: str,
+    flag: bool
+) -> object:
     try:
         uniqueLetters = {}
         if baseWord == "":
@@ -224,7 +230,7 @@ def checkDataBase(baseWord: str):
 #    - output object storing output strings
 #
 ###############################################################################
-def guess(puzzle, input: str, flag: bool, outty: object):
+def guess(puzzle, input: str, flag: bool):
     input = input.lower()
     conn = sqlite3.connect("spellingbee/model/wordDict.db")
     cursor = conn.cursor()
