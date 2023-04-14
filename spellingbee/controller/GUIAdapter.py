@@ -209,10 +209,6 @@ class GUI_A():
         dialog.accept()
         self._window.stack.setCurrentIndex(0)
 
-    def overwrite(self, command):
-        command.execute()
-        self._window.owDialog.accept()
-
     ###########################################################################
     # _load() -> None
     #

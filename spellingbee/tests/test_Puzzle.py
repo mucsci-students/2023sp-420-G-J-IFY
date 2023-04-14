@@ -238,3 +238,13 @@ def testRank4(puzzleFixtureHundredScore):
     puzzleFixtureHundredScore.score = 99
     puzzleFixtureHundredScore.updateRank()
     assert (puzzleFixtureHundredScore.rank == 'Genius')
+
+
+def testConcatEmpty(puzzleFixture):
+    assert (puzzleFixture.concatFound() == "Nothing yet...")
+
+
+def testConcatFull(puzzleFixture):
+    list = ["warlock", "wrack", "alcool"]
+    puzzleFixture.setFoundWords(list)
+    assert (puzzleFixture.concatFound() == "WARLOCK WRACK ALCOOL ")

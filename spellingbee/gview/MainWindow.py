@@ -364,7 +364,7 @@ class GameWidget(QWidget):
         self.hintBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.hintBtn.setStatusTip('Hint')
         self.hintBtn.setIcon(QIcon('SpellingBee/gview/assets/hint.png'))
-        self.hintBtn.setIconSize(QSize(20, 20))
+        self.hintBtn.setIconSize(QSize(30, 30))
         self.hintBtn.setSizePolicy(
             QSizePolicy.Policy.Minimum,
             QSizePolicy.Policy.Minimum

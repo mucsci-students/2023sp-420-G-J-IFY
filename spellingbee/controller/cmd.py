@@ -23,7 +23,7 @@ class Command(ABC):
 
     @abstractmethod
     def execute(self) -> None:
-        print("implementation pending")
+        pass
 
     def get_name(self) -> str:
         return self._name

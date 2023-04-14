@@ -75,8 +75,6 @@ class CLI_A():
             case '!load':
                 self.loadGame()
                 return self.puzzle
-            case '!save-list':
-                self.outty.setField('Implementation Pending...')
             case '!help':
                 self.help()
                 return self.puzzle
@@ -160,7 +158,7 @@ class CLI_A():
     def printWords(self) -> None:
         CLI.drawTextBox(
             ['Discovered Words: \ {wrds}'.format
-             (wrds=self.puzzle.getFoundWords())], 40, '^')
+             (wrds=self.puzzle.concatFound())], 40, '^')
 
     ###########################################################################
     # showStatus(game : object) -> None
@@ -260,7 +258,6 @@ class CLI_A():
     #     - puzzle object for the currently active game.
     #   outty : object
     #     - output object storing output strings
-
     ###########################################################################
     def hints(self) -> None:
         hints = cmd.Hint(self.puzzle)
@@ -300,7 +297,6 @@ class CLI_A():
     # Returns:
     #   fStr: str
     #       a format string of the hint grid
-
     ###########################################################################
     def formatHintGrid(self, lst, letters: str) -> str:
         fStr = '     '
@@ -439,7 +435,7 @@ class CLI_A():
 
     ###########################################################################
     # handleSave(game : object, num : int, outty : object) -> None:
-    #
+    #                                                 # comment this out better
     # DESCRIPTION:
     #   saves the games state and handles input from the user to determin if
     #   they want to overwrite a file or not
