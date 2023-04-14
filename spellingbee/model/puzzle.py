@@ -554,5 +554,5 @@ class Puzzle:
         for word in self.getFoundWords():
             outStr += word.upper() + " "
         if outStr == "":
-            return "Nothing yet... "
+            return "Nothing yet..."
         return outStr
