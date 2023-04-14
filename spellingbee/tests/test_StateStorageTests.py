@@ -145,8 +145,8 @@ def makeBadFoundWordList():
             "wincer", "winier", "winner", "wirier", "wrench", "chewier",
             "icewine", "renewer", "weenier", "wencher", "wennier", "wherein",
             "whinier", "wincher", "whinnier", "wrencher"
-            ]
-        }
+        ]
+    }
     return dictDict
 
 
@@ -171,8 +171,8 @@ def makeBadScoreGame():
             "wincer", "winier", "winner", "wirier", "wrench", "chewier",
             "icewine", "renewer", "weenier", "wencher", "wennier", "wherein",
             "whinier", "wincher", "whinnier", "wrencher"
-            ]
-        }
+        ]
+    }
     return spellingbee.__setFields(dict)
 
 
@@ -373,8 +373,8 @@ def testLoadFromExplorer():
 def testFileNotFoundLoad():
     fileNameJson = 'helpme.json'
     spellingbee.__Load('helpme', outty)
-    assert (outty.getField() == ("The file " + fileNameJson +
-                                 " does not exist in this directory\n" +
+    assert (outty.getField() == ("The file " + fileNameJson + ''
+                                 " does not exist in this directory\n"
                                  "Returning to game..."))
 
 
@@ -413,14 +413,14 @@ def testCheckLoadGood(playedPuzzle):
 
 def testCheckLoadBadScore(makeBadScoreGame):
     path = Path.cwd()
-    pathToFile = (str(path) +
+    pathToFile = (str(path) + ''
                   '/spellingbee/tests/checkSavesTestFiles/badScoreGame.json')
     spellingbee.saveFromExplorer('./spellingbee/tests/checkSavesTestFiles',
                                  'badScoreGame', makeBadScoreGame, False)
     with open(pathToFile) as file:
         dict = json.load(file)
-    assert (spellingbee.checkLoad(dict)['MaxPoints'] == 269 and
-            spellingbee.checkLoad(dict)['CurrentPoints'] == 7)
+    assert (spellingbee.checkLoad(dict)['MaxPoints'] == 269 and spellingbee.
+            checkLoad(dict)['CurrentPoints'] == 7)
     os.remove(pathToFile)
 
 
@@ -463,8 +463,7 @@ def testCheckGoodFile(puzzleFixture):
 
 def testCheckLoadBadUniqueLetters(makeBadUniqueLetters):
     path = Path.cwd()
-    pathToFile = (str(path) +
-                  '/spellingbee/tests/checkSavesTestFiles/' +
+    pathToFile = (str(path) + '/spellingbee/tests/checkSavesTestFiles/'
                   'badUniqueLetters.json')
     spellingbee.saveFromExplorer('./spellingbee/tests/checkSavesTestFiles',
                                  'badUniqueLetters', makeBadUniqueLetters,

@@ -137,5 +137,5 @@ def testEncryptStr(wordListStr, encryptString):
 
 
 def testBadWordListName(badWordListName, badWordListNamePuzzle):
-    assert (str(badWordListName["SWordList"]) ==
-            str(badWordListNamePuzzle["SWordList"]))
+    assert (str(badWordListName["SWordList"]) == str(badWordListNamePuzzle
+                                                     ["SWordList"]))
