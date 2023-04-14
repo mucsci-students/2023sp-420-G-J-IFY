@@ -23,7 +23,7 @@ outty = model.output.Output()
 
 @pytest.fixture
 def puzzleFixture():
-    return MakePuzzle.newPuzzle('stainer', 'e', outty, False)
+    return MakePuzzle.newPuzzle('stainer', 'e', False)
 
 
 def testConstructor(puzzleFixture: object):
