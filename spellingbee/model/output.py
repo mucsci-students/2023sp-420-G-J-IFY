@@ -3,8 +3,6 @@
 # Author: Jacob Lovegren
 # Date of Creation: 03-01-2023
 ###############################################################################
-
-
 ###############################################################################
 # class Output()
 # Description:
@@ -20,9 +18,12 @@
 #   getField(self)
 #     - Return the string from field
 ###############################################################################
-class Output:
-    def __init__(self):
-        self.field = ""
+class Output(object):
+
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Output, cls).__new__(cls)
+        return cls.instance
 
     def setField(self, inStr):
         self.field = inStr
