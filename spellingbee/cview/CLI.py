@@ -20,6 +20,9 @@
 ###############################################################################
 
 from os import system, name
+from model.output import Output
+
+outty = Output()
 
 
 ###############################################################################
@@ -164,7 +167,7 @@ def drawPuzzle(letters: list) -> str:
 #   outty : object
 #     - output object storing output string
 ###############################################################################
-def drawGameBox(game: object, outty: object) -> None:
+def drawGameBox(game: object) -> None:
 
     # calculate game progression
     score = game.getScore()
