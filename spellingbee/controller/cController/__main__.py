@@ -1,13 +1,13 @@
 import cview.CLI as CLI
 import model.puzzle as puzzle
 from controller.cController import CLIAdapter
-import model.output as output
+from model.output import Output
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
 
 # Start of game declarations for needed objects and fields
-outty = output.Output()
+outty = Output()
 usrinput = ' '
 notValidIn = True
 puzzle = puzzle.Puzzle('', '')
@@ -34,7 +34,7 @@ while notValidIn:
 
 # after start of game loop, draw new game for first time
 CLI.clear()
-CLI.drawGameBox(puzzle, outty)
+CLI.drawGameBox(puzzle)
 usrinput = prompt('> ', completer=tabComp)
 
 # game loop
@@ -46,7 +46,7 @@ while True:
     if retPuzzle is not None:
         puzzle = retPuzzle
     # draw game box
-    CLI.drawGameBox(puzzle, outty)
+    CLI.drawGameBox(puzzle)
     # reset outty
     outty.setField('')
     # check for end of game flag
