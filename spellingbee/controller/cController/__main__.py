@@ -11,7 +11,7 @@ outty = Output()
 usrinput = ' '
 notValidIn = True
 puzzle = puzzle.Puzzle('', '')
-adapter = CLIAdapter.CLI_A(puzzle, outty)
+adapter = CLIAdapter.CLI_A(puzzle)
 tabComp = WordCompleter(adapter.commandsList)
 
 # inital game loop, loop until valid start is reached

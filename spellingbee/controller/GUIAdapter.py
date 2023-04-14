@@ -131,7 +131,7 @@ class GUI_A():
         # retrieve text and make guess
         txt = self._window.gameWidget.uInput.text()
         # create and execute guess command
-        guess = cmd.Guess(self._puzzle, txt, outty)
+        guess = cmd.Guess(self._puzzle, txt)
         guess.execute()
         # Update view
         self._window.gameWidget.uInput.clear()
@@ -178,7 +178,7 @@ class GUI_A():
 
         # Create new game object so long as it is valid
         if len(set(baseWord)) == 7 or (baseWord == '' and keyLetter == ''):
-            newGame = cmd.NewGame(outty, baseWord, keyLetter)
+            newGame = cmd.NewGame(baseWord, keyLetter)
             self._puzzle = newGame.execute()
             # Update view
             self._window.newGame(self._puzzle)
@@ -226,7 +226,7 @@ class GUI_A():
             filter='GameFiles (*.json)'
         )[0]
         # Create a new puzzle object
-        loadGame = cmd.LoadGame(fileName, '', outty)
+        loadGame = cmd.LoadGame(fileName, '')
         newPuzzle = loadGame.execute()
         # Checks if puzzle was loaded properly
         if newPuzzle is None:

@@ -8,7 +8,9 @@ from model import (
 )
 from model.puzzle import Puzzle
 from model.hint import hint
+from model.output import Output
 
+outty = Output()
 ##############################################################################
 #
 ##############################################################################
@@ -46,7 +48,8 @@ class Command(ABC):
 #
 ###############################################################################
 class NewGame(Command):
-    def __init__(self, outty: object, base: str = '',
+    def __init__(self,
+                 base: str = '',
                  keyLett: str = '') -> None:
         self._name = '!new'
         self._description = (
@@ -55,14 +58,12 @@ class NewGame(Command):
         )
         self._base = base
         self._keyLett = keyLett
-        self._outty = outty
 
     # Executes defined function
     def execute(self) -> Puzzle:
         puzzle = MakePuzzle.newPuzzle(
             baseWord=self._base,
             keyLetter=self._keyLett,
-            outty=self._outty,
             flag=False
         )
         puzzle.shuffleChars()
@@ -130,20 +131,19 @@ class SaveGame(Command):
 
 
 class LoadGame(Command):
-    def __init__(self, path: str, fileName, outty: object) -> None:
+    def __init__(self, path: str, fileName) -> None:
         self._name = '!load'
         self._description = 'Load a previously saved game'
 
         # params
         self._path = path
-        self._outty = outty
         self._fileName = fileName
 
     def execute(self) -> object:
-        return StateStorage.loadFromExploer(self._path, self._outty)
+        return StateStorage.loadFromExploer(self._path)
 
     def executeCLI(self) -> object:
-        return StateStorage.loadPuzzle(self._fileName, self._outty)
+        return StateStorage.loadPuzzle(self._fileName)
 
 
 ###############################################################################
@@ -236,19 +236,17 @@ class Hint(Command):
 
 
 class Guess(Command):
-    def __init__(self, puzzle: Puzzle, word: str, outty: object) -> None:
+    def __init__(self, puzzle: Puzzle, word: str) -> None:
         self._name = '!guess'
         self._description = 'description pending'
 
         # params
         self._puzzle = puzzle
         self._word = word
-        self._outty = outty
 
     def execute(self) -> None:
         MakePuzzle.guess(
             puzzle=self._puzzle,
             input=self._word,
-            flag=False,
-            outty=self._outty
+            flag=False
         )
