@@ -13,11 +13,11 @@
 import sqlite3
 import puzzle
 import itertools
-import output
+from model.output import Output
 from itertools import chain, combinations
 
 # Create output object
-outty = output.Output()
+outty = Output()
 
 
 ###############################################################################
@@ -110,9 +110,8 @@ def newPuzzle(
 
     # Raise exception for bad puzzle seed
     except BadQueryException:
-        if flag is False:
-            outty.setField("ERROR!: " + baseWord.upper() +
-                           " is not a valid word")
+        outty.setField("ERROR!: " + baseWord.upper() +
+                       " is not a valid word")
     except LetterMismatchException:
         outty.setField("ERROR!: " + keyLetter.upper() +
                        " is not a valid key letter")

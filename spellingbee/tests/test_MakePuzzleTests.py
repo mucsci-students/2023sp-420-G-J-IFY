@@ -1,11 +1,12 @@
 # Author: Francesco Spagnolo
 import sys
 import os
-import model.output
+from model.output import Output
 import MakePuzzle as spellingbee
 import pytest
 
-outty = model.output.Output()
+
+outty = Output()
 
 current = os.path.dirname(os.path.realpath(__file__))
 

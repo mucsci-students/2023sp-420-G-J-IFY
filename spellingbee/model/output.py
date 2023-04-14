@@ -23,8 +23,11 @@ class Output(object):
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Output, cls).__new__(cls)
-            cls.instance.field = ''
+            cls.instance._init()
         return cls.instance
+
+    def _init(self):
+        self.field = ''
 
     def setField(self, inStr):
         self.field = inStr
