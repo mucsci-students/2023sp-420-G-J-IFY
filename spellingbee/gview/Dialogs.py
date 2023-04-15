@@ -551,7 +551,7 @@ class OptionsDialog(QDialog):
         self.helpBtn.setFixedSize(180, 40)
         self.shareBtn.setText('Share')
         self.shareBtn.setFixedSize(180, 40)
-        self.mainMenuBtn.setText('Quit to Main Menu')
+        self.mainMenuBtn.setText('Save and quit')
         self.mainMenuBtn.setFixedSize(180, 40)
         # Populate the widget
         layout = QVBoxLayout()
@@ -743,3 +743,22 @@ class ShareDialog(QDialog):
         self._captureScreenshot().save(file_path, 'PNG')
         # continue with standard accept procedure
         super().accept()
+    
+class LeaderBoardDialog(QDialog):
+
+    def __init__(self, parent: QWidget | None):
+        super(LeaderBoardDialog, self).__init__(parent)
+        self.prompt = QLabel("Congrats, join the Highscore list")
+        self.name = QLineEdit()
+        self._btns = QDialogButtonBox()
+
+        self._initUI()
+    
+    def _initUI(self) -> None:
+        layout = QVBoxLayout(self)
+        prompt = QLabel("Congrats, join the Highscore list\n\n Enter your name below")
+        layout.addWidget(prompt)
+        layout.addWidget(self.name)
+        self._btns.addButton('Join', QDialogButtonBox.ButtonRole.AcceptRole)
+        layout.addWidget(self._btns)
+

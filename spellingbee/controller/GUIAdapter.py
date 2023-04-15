@@ -122,6 +122,8 @@ class GUI_A():
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
         self._window.options.leaderboardBtn.clicked.connect(self._leaderboard)
+        self._window.leaderBoardDialog._btns.clicked.connect(self.addScore)
+
     ###########################################################################
     # _guess() -> None
     #
@@ -212,6 +214,7 @@ class GUI_A():
         dialog.reset()
         dialog.accept()
         self._window.stack.setCurrentIndex(0)
+        self._leaderboard(True)
 
     ###########################################################################
     # _load() -> None
@@ -480,7 +483,7 @@ class GUI_A():
         self._window.options.close()
         self._window.stack.setCurrentIndex(0)
 
-    def _leaderboard(self):
+    def _leaderboard(self, canAdd):
         dlg = QDialog(parent= self._window.options)
         layout = QVBoxLayout(dlg)
         grid = QGridLayout()
@@ -515,8 +518,12 @@ class GUI_A():
 
         layout.addLayout(grid) 
         layout.addLayout(layout3)
-
-        closeBtn.clicked.connect(dlg.close)
+        layout.addWidget(closeBtn)
+        if canAdd:
+            if highList == [] or self._puzzle.getScore() > highList[len(highList) - 1][2] or len(highList) < 10:
+                closeBtn.clicked.connect(self.handleHighScore)
+        else:
+            closeBtn.clicked.connect(dlg.close)
         dlg.setLayout(layout)
         dlg.show()
 
@@ -536,4 +543,17 @@ class GUI_A():
                 value = QLabel(f'{j}')
                 value.setAlignment(Qt.AlignmentFlag.AlignHCenter)
                 grid.addWidget(value, count, count2)
+    
+    def handleHighScore(self):
+        dlg = self._window.leaderBoardDialog
+        dlg.parent = self._window
+        dlg.show()
 
+
+    def addScore(self):
+        self._window.leaderBoardDialog.close()
+        name = self._window.leaderBoardDialog.name.text()
+        return highScore.qualify(name,
+                              self._puzzle.getRank(), self._puzzle.getScore(),
+                              self._puzzle.getUniqueLetters(),
+                              self._puzzle.getKeyLetter())
