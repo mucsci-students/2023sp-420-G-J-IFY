@@ -76,7 +76,6 @@ class MainWindow(QMainWindow):
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
-        self.leaderBoardDialog = Dialogs.LeaderBoardDialog(self)
         self.toolBar = self._createToolBar()
 
         self._initUI()

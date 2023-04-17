@@ -1,4 +1,4 @@
-import os
+import os, sys
 from PyQt6.QtCore import (
     Qt,
     QRegularExpression,
@@ -24,7 +24,9 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QComboBox,
     QStyle,
-    QFileDialog
+    QFileDialog,
+    QInputDialog,
+    QApplication
 )
 
 
@@ -743,22 +745,3 @@ class ShareDialog(QDialog):
         self._captureScreenshot().save(file_path, 'PNG')
         # continue with standard accept procedure
         super().accept()
-    
-class LeaderBoardDialog(QDialog):
-
-    def __init__(self, parent: QWidget | None):
-        super(LeaderBoardDialog, self).__init__(parent)
-        self.prompt = QLabel("Congrats, join the Highscore list")
-        self.name = QLineEdit()
-        self._btns = QDialogButtonBox()
-
-        self._initUI()
-    
-    def _initUI(self) -> None:
-        layout = QVBoxLayout(self)
-        prompt = QLabel("Congrats, join the Highscore list\n\n Enter your name below")
-        layout.addWidget(prompt)
-        layout.addWidget(self.name)
-        self._btns.addButton('Join', QDialogButtonBox.ButtonRole.AcceptRole)
-        layout.addWidget(self._btns)
-

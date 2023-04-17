@@ -32,6 +32,7 @@ from model.hint import hint
 from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
 from controller import cmd
+from gview.Leaderboard import Leaderboard
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -122,7 +123,6 @@ class GUI_A():
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
         self._window.options.leaderboardBtn.clicked.connect(self._leaderboard)
-        self._window.leaderBoardDialog._btns.clicked.connect(self.addScore)
 
     ###########################################################################
     # _guess() -> None
@@ -483,51 +483,29 @@ class GUI_A():
         self._window.options.close()
         self._window.stack.setCurrentIndex(0)
 
-    def _leaderboard(self, canAdd):
-        dlg = QDialog(parent= self._window.options)
-        layout = QVBoxLayout(dlg)
-        grid = QGridLayout()
-        layout3 = QVBoxLayout()
+    def _leaderboard(self):
+        lst = [('Gaige', 'QueenBee', 100),
+               ('Gaige', 'QueenBee', 100),
+               ('Gaige', 'QueenBee', 100)]
+        dlg = QDialog(self._window)
+        leaderboardWig = Leaderboard(dlg, lst)
+        btnBox = QDialogButtonBox()
+        btnBox.setStandardButtons(
+            QDialogButtonBox.StandardButton.Ok
+        )
+        layout = QVBoxLayout()
 
-        closeBtn =  QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        highList = self.getInfoFromHighScore()
+        layout.addWidget(leaderboardWig)
+        layout.addWidget(btnBox)
 
-        text = QLabel()
-        text.setText('Highscores')
-        text.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        layout.addWidget(text)
+        dlg.setModal(True)
 
-        nametxt = QLabel('Name')
-        nametxt.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-
-        rankTxt = QLabel('Rank')
-        rankTxt.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-
-        scoreTxt = QLabel('Score')
-        scoreTxt.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-
-        grid.addWidget(nametxt, 1,0)
-        grid.addWidget(rankTxt, 1,1)
-        grid.addWidget(scoreTxt,1,2)
-
-        self.fillHighScores(grid, highList)
-
-        userScore = QLabel('Your Score: ' + str(self._puzzle.getScore()))
-        layout3.addWidget(userScore)
-
-
-        layout.addLayout(grid) 
-        layout.addLayout(layout3)
-        layout.addWidget(closeBtn)
-        if canAdd:
-            if highList == [] or self._puzzle.getScore() > highList[len(highList) - 1][2] or len(highList) < 10:
-                closeBtn.clicked.connect(self.handleHighScore)
-        else:
-            closeBtn.clicked.connect(dlg.close)
         dlg.setLayout(layout)
-        dlg.show()
 
-    
+        dlg.show()
+        
+
+    '''
     def getInfoFromHighScore(self):
         hS = highScore.getHighScore(self._puzzle.getUniqueLetters(), 
                                self._puzzle.getKeyLetter())
@@ -536,24 +514,4 @@ class GUI_A():
                 tup = (i[1],i[2],i[3])
                 lst.append(tup)
         return lst
-    
-    def fillHighScores(self, grid, lst):
-        for count, i in enumerate(lst,2):
-            for count2, j in enumerate(i):
-                value = QLabel(f'{j}')
-                value.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-                grid.addWidget(value, count, count2)
-    
-    def handleHighScore(self):
-        dlg = self._window.leaderBoardDialog
-        dlg.parent = self._window
-        dlg.show()
-
-
-    def addScore(self):
-        self._window.leaderBoardDialog.close()
-        name = self._window.leaderBoardDialog.name.text()
-        return highScore.qualify(name,
-                              self._puzzle.getRank(), self._puzzle.getScore(),
-                              self._puzzle.getUniqueLetters(),
-                              self._puzzle.getKeyLetter())
+        '''
