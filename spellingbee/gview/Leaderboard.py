@@ -38,6 +38,8 @@ from gview.HexCluster import HexLabel
 #
 #   _buildLeaderboard() -> QtWidgets.QWidget:
 #    - fills the layout of the dialog box
+
+
 class Leaderboard(QtWidgets.QWidget):
     def __init__(self, parent: QtWidgets.QWidget | None,
                  leaderboard: list[tuple]):
