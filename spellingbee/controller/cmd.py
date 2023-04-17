@@ -253,10 +253,11 @@ class Guess(Command):
             outty=self._outty
         )
 
+
 class Leaderboard(Command):
     def __init__(self, puzzle: Puzzle) -> None:
         self._puzzle = puzzle
-    
+
     def execute(self) -> list[tuple]:
         # grab hS
         # format to list of [(name, rank, score)]

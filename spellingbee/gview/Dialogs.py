@@ -1,4 +1,4 @@
-import os, sys
+import os
 from PyQt6.QtCore import (
     Qt,
     QRegularExpression,
@@ -25,8 +25,6 @@ from PyQt6.QtWidgets import (
     QComboBox,
     QStyle,
     QFileDialog,
-    QInputDialog,
-    QApplication
 )
 
 

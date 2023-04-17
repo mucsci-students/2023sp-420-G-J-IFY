@@ -13,7 +13,6 @@
 import sys
 import os
 from PyQt6.QtGui import QFont
-from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QFileDialog,
     QApplication,
@@ -21,13 +20,11 @@ from PyQt6.QtWidgets import (
     QPlainTextEdit,
     QVBoxLayout,
     QDialogButtonBox,
-    QGridLayout,
-    QLabel,
+
 )
 from model import (
     output
 )
-from model import highScore
 from model.hint import hint
 from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
@@ -503,15 +500,3 @@ class GUI_A():
         dlg.setLayout(layout)
 
         dlg.show()
-        
-
-    '''
-    def getInfoFromHighScore(self):
-        hS = highScore.getHighScore(self._puzzle.getUniqueLetters(), 
-                               self._puzzle.getKeyLetter())
-        lst = []
-        for i in hS:
-                tup = (i[1],i[2],i[3])
-                lst.append(tup)
-        return lst
-        '''
