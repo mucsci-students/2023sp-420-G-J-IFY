@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import (
     QPlainTextEdit,
     QVBoxLayout,
     QDialogButtonBox,
+
 )
 from model import (
     output
@@ -28,6 +29,7 @@ from model.hint import hint
 from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
 from controller import cmd
+from gview.Leaderboard import Leaderboard
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -117,6 +119,7 @@ class GUI_A():
         self._window.saveDialog.btns.rejected.connect(self._backToMainWindow)
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
+        self._window.options.leaderboardBtn.clicked.connect(self._leaderboard)
 
     ###########################################################################
     # _guess() -> None
@@ -208,6 +211,7 @@ class GUI_A():
         dialog.reset()
         dialog.accept()
         self._window.stack.setCurrentIndex(0)
+        self._leaderboard(True)
 
     ###########################################################################
     # _load() -> None
@@ -475,3 +479,28 @@ class GUI_A():
     def _backToMainWindow(self):
         self._window.options.close()
         self._window.stack.setCurrentIndex(0)
+
+    ##########################################################################
+    # _leaderboard(self) -> None:
+    #
+    # DESCRITPION:
+    #   opens the leaderboard and fills it based on a list of tuples
+    ##########################################################################
+    def _leaderboard(self) -> None:
+        lst = [('Gaige', 'QueenBee', 100),
+               ('Gaige', 'QueenBee', 100),
+               ('Gaige', 'QueenBee', 100)]
+        dlg = QDialog(self._window)
+        leaderboardWig = Leaderboard(dlg, lst)
+        button = btnBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
+        button.accepted.connect(dlg.accept)
+        layout = QVBoxLayout()
+
+        layout.addWidget(leaderboardWig)
+        layout.addWidget(btnBox)
+
+        dlg.setModal(True)
+
+        dlg.setLayout(layout)
+
+        dlg.show()

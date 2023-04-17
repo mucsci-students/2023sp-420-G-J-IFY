@@ -487,7 +487,7 @@ class HexLabel(QWidget):
         painter.setPen(pen)
 
         painter.drawText(
-            QRectF(self._x, self._y + 7, self._width, self._height),
+            QRectF(self._x, self._y, self._width, self._height),
             Qt.AlignmentFlag.AlignCenter,
             self._text
         )
