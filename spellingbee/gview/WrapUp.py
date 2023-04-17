@@ -45,7 +45,6 @@ class WrapUpPage(QtWidgets.QWidget):
         self.exit_btn = QtWidgets.QPushButton()
 
         self._initUI()
-        self.congrats.show()
 
     ###########################################################################
     # _initUI() -> None:
@@ -141,3 +140,12 @@ class WrapUpPage(QtWidgets.QWidget):
         out.setLayout(layout)
 
         return out
+
+    ###########################################################################
+    # _updateLeaderboard(newlb: list[tuple]) -> None
+    #
+    # DESCRIPTION
+    #   updates the shown leaderboard
+    ###########################################################################
+    def _updateLeaderboard(self, newlb: list[tuple]) -> None:
+        self.leader_board = Leaderboard(self, newlb)

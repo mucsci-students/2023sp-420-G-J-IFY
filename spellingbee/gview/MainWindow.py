@@ -13,6 +13,7 @@
 from gview.StatsPanel import StatsPanel
 from gview.HexCluster import HexCluster
 from gview.WelcomePage import WelcomePage
+from gview.WrapUp import WrapUpPage
 from gview import Dialogs
 from PyQt6.QtGui import (
     QAction,
@@ -69,6 +70,7 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget(self)
         self.centralWidget = self._buildGameWidget()
         self.landingPage = WelcomePage(self)
+        self.wrapUpPage = WrapUpPage(self, Puzzle)
 
         self.options = Dialogs.OptionsDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
@@ -103,11 +105,12 @@ class MainWindow(QMainWindow):
         # Add pages to the stack, showing landingPage initially
         self.stack.addWidget(self.landingPage)
         self.stack.addWidget(self.centralWidget)
+        self.stack.addWidget(self.wrapUpPage)
         self.stack.setCurrentIndex(0)
         self.setCentralWidget(self.stack)
         # Connect basic signals
         self.gameWidget.menuBtn.clicked.connect(self.options.show)
-        self.options.mainMenuBtn.clicked.connect(self.saveDialog.show)
+        self.options.mainMenuBtn.clicked.connect(self._wrapUp)
         self.options.helpBtn.clicked.connect(self.helpDialog.show)
         self.options.shareBtn.clicked.connect(self._share)
 
@@ -234,6 +237,17 @@ class MainWindow(QMainWindow):
         # Create dialog
         share_dlg = Dialogs.ShareDialog(self, stats_pix, hex_pix)
         share_dlg.show()
+
+    ###########################################################################
+    # _wrapUp() -> None:
+    #
+    # DESCRIPTION:
+    #   initiates wrap-up sequence
+    ###########################################################################
+    def _wrapUp(self) -> None:
+        self.options.close()
+        self.stack.setCurrentIndex(2)
+        self.wrapUpPage.congrats.show()
 
 
 ###############################################################################
