@@ -110,7 +110,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stack)
         # Connect basic signals
         self.gameWidget.menuBtn.clicked.connect(self.options.show)
-        self.options.mainMenuBtn.clicked.connect(self._wrapUp)
         self.options.helpBtn.clicked.connect(self.helpDialog.show)
         self.options.shareBtn.clicked.connect(self._share)
 

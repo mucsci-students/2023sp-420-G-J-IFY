@@ -149,3 +149,4 @@ class WrapUpPage(QtWidgets.QWidget):
     ###########################################################################
     def _updateLeaderboard(self, newlb: list[tuple]) -> None:
         self.leader_board = Leaderboard(self, newlb)
+        self.update()

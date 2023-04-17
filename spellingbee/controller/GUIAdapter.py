@@ -20,7 +20,7 @@ from PyQt6.QtWidgets import (
     QPlainTextEdit,
     QVBoxLayout,
     QDialogButtonBox,
-
+    QInputDialog
 )
 from model import (
     output
@@ -30,6 +30,7 @@ from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
 from controller import cmd
 from gview.Leaderboard import Leaderboard
+from gview.WrapUp import WrapUpPage
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -120,6 +121,14 @@ class GUI_A():
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
         self._window.options.leaderboardBtn.clicked.connect(self._leaderboard)
+        self._window.options.mainMenuBtn.clicked.connect(self._wrapup)
+        # Wrap up buttons
+        self._window.wrapUpPage.save_btn.clicked.connect(
+            self._window.saveDialog.show
+        )
+        self._window.wrapUpPage.exit_btn.clicked.connect(
+            self._window._returnToMenu
+        )
 
     ###########################################################################
     # _guess() -> None
@@ -211,7 +220,6 @@ class GUI_A():
         dialog.reset()
         dialog.accept()
         self._window.stack.setCurrentIndex(0)
-        self._leaderboard(True)
 
     ###########################################################################
     # _load() -> None
@@ -504,3 +512,31 @@ class GUI_A():
         dlg.setLayout(layout)
 
         dlg.show()
+
+    ##########################################################################
+    # _wrapup()
+    ##########################################################################
+    def _wrapup(self):
+        self._window.options.close()
+        getLb = cmd.Leaderboard(self._puzzle)
+        lb = getLb.execute()
+        print(lb)
+        self._window.wrapUpPage = WrapUpPage(self._window, self._puzzle, lb)
+        self._window.stack.setCurrentIndex(2)
+
+        score = self._puzzle.getScore()
+        lowest = lb[len(lb)-1][2]
+        name = ''
+
+        if (len(lb)) < 10 and (score > lowest):
+            name = QInputDialog.getText(
+                self,
+                'Congrats! You made the top 10!\n',
+                'Enter a name to track your score!'
+            )
+
+        if name != '':
+            updateLb = cmd.SaveScore(name, self._puzzle)
+            updateLb.execute()
+            lb = getLb.execute()
+            self._window.wrapUpPage = WrapUpPage(self._window, self._puzzle, lb)

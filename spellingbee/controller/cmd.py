@@ -8,6 +8,7 @@ from model import (
 )
 from model.puzzle import Puzzle
 from model.hint import hint
+from model import highScore
 
 ##############################################################################
 #
@@ -261,4 +262,28 @@ class Leaderboard(Command):
     def execute(self) -> list[tuple]:
         # grab hS
         # format to list of [(name, rank, score)]
+        lst = [('Gaige', 'QueenBee', 100),
+               ('Gaige', 'QueenBee', 100),
+               ('Gaige', 'QueenBee', 100)]
+        return lst
+
+
+class SaveScore(Command):
+    def __init__(self, name: str, puzzle: Puzzle) -> None:
+        self._name = name
+        self._rank = puzzle.getRank()
+        self._score = puzzle.getScore()
+        self._uniqueLett = puzzle.getUniqueLetters()
+        self._keyLett = puzzle.getKeyLetter()
+
+    def execute(self) -> None:
+        '''
+        highScore.updateHighScore(
+            self._name,
+            self._rank,
+            self._score,
+            self._uniqueLett,
+            self._keyLett
+        )
+        '''
         pass
