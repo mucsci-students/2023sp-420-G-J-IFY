@@ -1,7 +1,43 @@
+###############################################################################
+# Leaderboard.py
+# Author: Gaige Zakroski, Isaak Weidman
+# Date of Creation: 04/16/2023
+#
+# DESCRIPTION:
+#   A custom leaderboard dialog that holds the list of highScores
+#
+# CLASSES:
+#   Leaderboard
+###############################################################################
 from PyQt6 import QtWidgets, QtGui, QtCore
 from gview.HexCluster import HexLabel
 
-
+###############################################################################
+# class Leaderboard(QtWidgets.QWidget)
+#
+# DESCRIPTION:
+#   Leaderboard dialog box of the high scores
+#
+# ARGUMENTS:
+#   parent: QtWidgets.QWidget
+#    - the parent of the dialog box
+#
+#   leaderboard: list[tuple]
+#    - the list of highscores for a given game
+#
+# ATRIBUTES:
+#   header: QtWidgets.QLabel
+#    - header for the leader board dialog box
+#
+#   leaderboad: list[tupel]
+#    - the list of highscores for a given game
+#
+# FUNCTIONS:
+#   _initUI() -> None
+#    - creates and fills the leaderboard dialog box
+#
+#   _buildLeaderboard() -> QtWidgets.QWidget:
+#    - fills the layout of the dialog box
 class Leaderboard(QtWidgets.QWidget):
     def __init__(self, parent: QtWidgets.QWidget | None,
                  leaderboard: list[tuple]):
@@ -11,7 +47,7 @@ class Leaderboard(QtWidgets.QWidget):
         self.leadboard = leaderboard
         self._initUI()
 
-    def _initUI(self):
+    def _initUI(self) -> None:
         with open("spellingbee/gview/style.css", "r") as file:
             self.setStyleSheet(file.read())
 
@@ -27,7 +63,7 @@ class Leaderboard(QtWidgets.QWidget):
         layout.addWidget(wig)
         self.setLayout(layout)
 
-    def _buildLeaderboard(self):
+    def _buildLeaderboard(self) -> QtWidgets.QWidget:
         outWig = QtWidgets.QWidget()
         layout = QtWidgets.QVBoxLayout()
 

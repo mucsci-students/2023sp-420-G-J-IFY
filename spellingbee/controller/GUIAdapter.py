@@ -480,7 +480,13 @@ class GUI_A():
         self._window.options.close()
         self._window.stack.setCurrentIndex(0)
 
-    def _leaderboard(self):
+    ##########################################################################
+    # _leaderboard(self) -> None:
+    #
+    # DESCRITPION:
+    #   opens the leaderboard and fills it based on a list of tuples
+    ##########################################################################
+    def _leaderboard(self) -> None:
         lst = [('Gaige', 'QueenBee', 100),
                ('Gaige', 'QueenBee', 100),
                ('Gaige', 'QueenBee', 100)]
