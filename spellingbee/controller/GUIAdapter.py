@@ -492,10 +492,8 @@ class GUI_A():
                ('Gaige', 'QueenBee', 100)]
         dlg = QDialog(self._window)
         leaderboardWig = Leaderboard(dlg, lst)
-        btnBox = QDialogButtonBox()
-        btnBox.setStandardButtons(
-            QDialogButtonBox.StandardButton.Ok
-        )
+        button = btnBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
+        button.accepted.connect(dlg.accept)
         layout = QVBoxLayout()
 
         layout.addWidget(leaderboardWig)
