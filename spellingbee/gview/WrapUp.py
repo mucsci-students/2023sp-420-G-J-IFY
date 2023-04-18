@@ -39,6 +39,7 @@ class WrapUpPage(QtWidgets.QWidget):
         # Declare attributes
         self.congrats = QtWidgets.QInputDialog(self)
         self.leader_board = Leaderboard(self, leaderboard)
+        self.scroll_area = QtWidgets.QScrollArea()
         self._score = 78
         self._rank = 'beginner'
         self.save_btn = QtWidgets.QPushButton()
@@ -109,13 +110,12 @@ class WrapUpPage(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()
 
         # Leaderboard layout
-        scroll_area = QtWidgets.QScrollArea()
-        scroll_area.setWidget(self.leader_board)
-        scroll_area.setAlignment(
+        self.scroll_area.setWidget(self.leader_board)
+        self.scroll_area.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignHCenter |
             QtCore.Qt.AlignmentFlag.AlignTop
         )
-        layout.addWidget(scroll_area)
+        layout.addWidget(self.scroll_area)
 
         # Current Score
         lbl = QtWidgets.QLabel()
@@ -149,4 +149,5 @@ class WrapUpPage(QtWidgets.QWidget):
     ###########################################################################
     def _updateLeaderboard(self, newlb: list[tuple]) -> None:
         self.leader_board = Leaderboard(self, newlb)
-        self.update()
+        self.leader_board.update()
+        self.scroll_area.setWidget(self.leader_board)

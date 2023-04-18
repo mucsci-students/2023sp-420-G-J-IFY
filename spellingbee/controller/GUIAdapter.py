@@ -521,22 +521,23 @@ class GUI_A():
         getLb = cmd.Leaderboard(self._puzzle)
         lb = getLb.execute()
         print(lb)
-        self._window.wrapUpPage = WrapUpPage(self._window, self._puzzle, lb)
+        self._window.wrapUpPage._updateLeaderboard(lb)
         self._window.stack.setCurrentIndex(2)
 
         score = self._puzzle.getScore()
         lowest = lb[len(lb)-1][2]
         name = ''
 
-        if (len(lb)) < 10 and (score > lowest):
+        if ((len(lb)) < 10) or (score > lowest):
             name = QInputDialog.getText(
-                self,
-                'Congrats! You made the top 10!\n',
-                'Enter a name to track your score!'
+                self._window,
+                'Congrats!',
+                ('You made the top 10!\n'
+                 'Enter a name to track your score!')
             )
 
         if name != '':
             updateLb = cmd.SaveScore(name, self._puzzle)
             updateLb.execute()
             lb = getLb.execute()
-            self._window.wrapUpPage = WrapUpPage(self._window, self._puzzle, lb)
+            self._window.wrapUpPage._updateLeaderboard(lb)
