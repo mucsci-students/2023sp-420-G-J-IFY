@@ -30,7 +30,6 @@ from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
 from controller import cmd
 from gview.Leaderboard import Leaderboard
-from gview.WrapUp import WrapUpPage
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -525,7 +524,11 @@ class GUI_A():
 
         # get users current score and lowest score on leaderboard
         score = self._puzzle.getScore()
-        lowest = lb[len(lb)-1][2]
+        if len(lb) <= 0:
+            lowest = -1
+        else:
+            lowest = lb[len(lb)-1][2]
+
         name = ''
         # Check if user is eligible for leaderboard
         if ((len(lb)) < 10) or (score > lowest):

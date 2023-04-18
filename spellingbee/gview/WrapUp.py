@@ -1,7 +1,6 @@
 from gview.Leaderboard import Leaderboard
 from model.puzzle import Puzzle
 from PyQt6 import QtCore
-from PyQt6 import QtGui
 from PyQt6 import QtWidgets
 
 
@@ -110,6 +109,10 @@ class WrapUpPage(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()
 
         # Leaderboard layout
+        self.leader_board.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+            QtWidgets.QSizePolicy.Policy.MinimumExpanding
+        )
         self.scroll_area.setWidget(self.leader_board)
         self.scroll_area.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignHCenter |

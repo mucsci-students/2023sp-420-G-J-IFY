@@ -443,6 +443,10 @@ class HexLabel(QWidget):
         self._lbl.setAlignment(
             Qt.AlignmentFlag.AlignCenter
         )
+        self.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum
+        )
         layout = QVBoxLayout()
         layout.addWidget(self._lbl)
         self.setLayout(layout)
@@ -491,7 +495,7 @@ class HexLabel(QWidget):
                     self._x,
                     self._y + self._padding,
                     self._width,
-                    self._height
+                    self._height - self._padding
                 )
 
         painter.drawText(
