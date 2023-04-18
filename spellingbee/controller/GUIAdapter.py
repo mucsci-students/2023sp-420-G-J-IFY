@@ -527,7 +527,7 @@ class GUI_A():
         if len(lb) <= 0:
             lowest = -1
         else:
-            lowest = lb[len(lb)-1][2]
+            lowest = lb[len(lb) - 1][2]
 
         name = ''
         # Check if user is eligible for leaderboard
