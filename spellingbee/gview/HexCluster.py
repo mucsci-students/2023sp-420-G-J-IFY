@@ -424,6 +424,7 @@ class HexLabel(QWidget):
         self._text = text
         self._x = pos[0] + 12
         self._y = pos[1] + 12
+        self._padding = 0
         self._radius = radius
         self._width = radius * math.sqrt(3)
         self._height = radius * 2
@@ -486,8 +487,15 @@ class HexLabel(QWidget):
         painter.setFont(font)
         painter.setPen(pen)
 
+        bounds = QRectF(
+                    self._x,
+                    self._y + self._padding,
+                    self._width,
+                    self._height
+                )
+
         painter.drawText(
-            QRectF(self._x, self._y, self._width, self._height),
+            bounds,
             Qt.AlignmentFlag.AlignCenter,
             self._text
         )
@@ -527,6 +535,15 @@ class HexLabel(QWidget):
     ###########################################################################
     def setText(self, text: str) -> None:
         self._text = text
+
+    ###########################################################################
+    # setPadding(amount: int) -> None
+    #
+    # DESCRIPTION:
+    #   sets the vertical padding on label text
+    ###########################################################################
+    def setPadding(self, amount: int) -> None:
+        self._padding = amount
 
     ###########################################################################
     # paintEvent(event) -> None
