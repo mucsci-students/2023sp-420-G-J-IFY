@@ -518,26 +518,48 @@ class GUI_A():
     ##########################################################################
     def _wrapup(self):
         self._window.options.close()
-        getLb = cmd.Leaderboard(self._puzzle)
-        lb = getLb.execute()
-        print(lb)
+        # Get leaderboard from model and change view to WrapUpPage
+        lb = self._getLeaderboard()
         self._window.wrapUpPage._updateLeaderboard(lb)
         self._window.stack.setCurrentIndex(2)
 
+        # get users current score and lowest score on leaderboard
         score = self._puzzle.getScore()
         lowest = lb[len(lb)-1][2]
         name = ''
-
+        # Check if user is eligible for leaderboard
         if ((len(lb)) < 10) or (score > lowest):
-            name = QInputDialog.getText(
+            name, ok_clicked = QInputDialog.getText(
                 self._window,
                 'Congrats!',
                 ('You made the top 10!\n'
                  'Enter a name to track your score!')
             )
+            # update leaderboard to reflect new entry added
+            if ok_clicked:
+                self._updateLeaderboard(name)
+                lb = self._getLeaderboard()
+                self._window.wrapUpPage._updateLeaderboard(lb)
 
-        if name != '':
-            updateLb = cmd.SaveScore(name, self._puzzle)
-            updateLb.execute()
-            lb = getLb.execute()
-            self._window.wrapUpPage._updateLeaderboard(lb)
+    ##########################################################################
+    # _getLeaderboard()
+    #
+    # DESCRIPTION
+    #   Returns the leaderboard for current game
+    ##########################################################################
+    def _getLeaderboard(self) -> list[tuple]:
+        getLb = cmd.Leaderboard(self._puzzle)
+        return getLb.execute()
+
+    ##########################################################################
+    # _updateLeaderboard()
+    #
+    # DESCRIPTION
+    #   Returns the leaderboard for current game
+    ##########################################################################
+    def _updateLeaderboard(self, name: str):
+        # check if name is an empty string.
+        if not name:
+            name = 'Player'
+        saveScore = cmd.SaveScore(name, self._puzzle)
+        saveScore.execute()
