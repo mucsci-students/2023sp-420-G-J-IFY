@@ -16,6 +16,8 @@ import os
 import puzzle
 from cview import CLI
 from os import path
+import encrypter
+import highScore
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -433,6 +435,10 @@ class CLI_A():
                 # recursively calls until valid input provided.
                 self.parse('!exit')
 
+
+    def leaderboard():
+        pass
+    
     ###########################################################################
     # handleSave(game : object, num : int, outty : object) -> None:
     #                                                 # comment this out better
@@ -455,6 +461,9 @@ class CLI_A():
                           'to save for example "Game1"\n> '))
         currentPath = os.getcwd()
         fFileName = fileName + '.json'
+        self.checkEncrypt()
+        self.checkHighScore()
+
         if (path.isfile(fFileName)):
             print('Would you like to overwrite the file ' + fileName + '?')
             yesOrNo = input('Enter Y for yes or N for no\n> ')
@@ -499,6 +508,80 @@ class CLI_A():
         self.showStatus()
         self.outty.setField(("Congratulations!!!! You "
                              "have found all of the words for this puzzle!"))
+
+    ###########################################################################
+    # checkEncrypt() -> None:
+    #
+    # DESCRIPTION:
+    #   Prompts user for confirmation to encrypt the word list, then
+    #   encrypts the list if yes, otherwise nothing is done.
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
+    def checkEncrypt(self) -> None:
+        print('Would you like to encrypt the word list? [Y/N]')
+        encryptYorN = input('> ').upper()
+        match encryptYorN:
+            case 'Y':
+                # self.puzzle.setAllWordList(encrypter.encryptionHandler(
+                # self.puzzle.getAllWords, 0))
+                pass
+            case 'N':
+                return
+            case _:
+                self.outty.setField('Input Invalid')
+                # Recursively calls until valid input provided.
+                self.checkEncrypt()
+
+    ###########################################################################
+    # checkHighScore() -> None:
+    #
+    # DESCRIPTION:
+    #   Prompts user to submit their score to the leaderboard if their score
+    #   is a top 10 score.
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
+    def checkHighScore(self) -> None:
+        # Check if it qualifies first
+        leaderboard = highScore.getHighScore(self.puzzle.getUniqueLetters(),
+                                             self.puzzle.getKeyLetter())
+        # If leaderboard is empty
+        if len(leaderboard) == 0:
+            pass
+        # If there are less than 10 scores
+        elif len(leaderboard) < 10:
+            pass
+        # If the last element is less than the current score
+        elif leaderboard[-1][3] < self.puzzle.getScore():
+            pass
+        else: return
+        # Then ask if they want to enter
+        print('Your score is a top 10 score! Would you like to be on the '
+              + 'leaderboard? [Y/N]')
+        leaderboardCheck = input('> ').upper()
+        match leaderboardCheck:
+            case 'Y':
+                # Enter score in the database
+                name = input("What is the name that you'd like to enter?\n")
+                highScore.qualify(name, self.puzzle.getRank(),
+                                  self.puzzle.getScore(),
+                                  self.puzzle.getUniqueLetters(),
+                                  self.puzzle.getKeyLetter())
+            case 'N':
+                return
+            case _:
+                self.outty.setField('Input Invalid')
+                # Recursively calls until valid input provided.
+                self.checkHighScore()
 
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
