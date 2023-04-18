@@ -53,7 +53,7 @@ class Leaderboard(QtWidgets.QWidget):
         with open("spellingbee/gview/style.css", "r") as file:
             self.setStyleSheet(file.read())
 
-        layout = QtWidgets.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout() 
 
         self.header.setText('Leaderboard')
         self.header.setAlignment(
@@ -62,7 +62,7 @@ class Leaderboard(QtWidgets.QWidget):
 
         layout.addWidget(self.header)
         wig = self._buildLeaderboard()
-        wig.setFixedSize(300, 700)  
+        wig.setFixedSize(300, 700)
         layout.addWidget(wig)
         scrollArea = QtWidgets.QScrollArea()
         scrollArea.setWidgetResizable(True)
