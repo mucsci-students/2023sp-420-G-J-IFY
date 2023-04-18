@@ -494,9 +494,7 @@ class GUI_A():
     #   opens the leaderboard and fills it based on a list of tuples
     ##########################################################################
     def _leaderboard(self) -> None:
-        lst = [('Gaige', 'QueenBee', 100),
-               ('Gaige', 'QueenBee', 100),
-               ('Gaige', 'QueenBee', 100)]
+        lst = self._getLeaderboard()
         dlg = QDialog(self._window)
         leaderboardWig = Leaderboard(dlg, lst)
         button = btnBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)

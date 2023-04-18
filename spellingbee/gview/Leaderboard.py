@@ -62,7 +62,22 @@ class Leaderboard(QtWidgets.QWidget):
 
         layout.addWidget(self.header)
         wig = self._buildLeaderboard()
+        wig.setFixedSize(300, 700)  
         layout.addWidget(wig)
+        scrollArea = QtWidgets.QScrollArea()
+        scrollArea.setWidgetResizable(True)
+        scrollArea.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+
+        # set the layout of the scroll area widget
+        scrollWidget = QtWidgets.QWidget()
+        scrollWidget.setLayout(layout)
+        scrollArea.setWidget(scrollWidget)
+
+        # set the Leaderboard widget as the child of the scroll area widget
+        scroll_area_layout = QtWidgets.QVBoxLayout()
+        scroll_area_layout.addWidget(scrollArea)
+        self.setLayout(scroll_area_layout)
         self.setLayout(layout)
 
     def _buildLeaderboard(self) -> QtWidgets.QWidget:
