@@ -110,7 +110,7 @@ class Leaderboard(QtWidgets.QWidget):
                 rowLayout.addWidget(dashWig)
 
             layout.addLayout(rowLayout)
-            # layout.addWidget(hLine)
+            layout.addWidget(hLine)
 
         outWig.setLayout(layout)
 

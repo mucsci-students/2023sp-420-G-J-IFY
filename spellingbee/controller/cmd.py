@@ -8,6 +8,7 @@ from model import (
 )
 from model.puzzle import Puzzle
 from model.hint import hint
+from model import highScore
 
 ##############################################################################
 #
@@ -215,6 +216,7 @@ class Hint(Command):
             'twoLetLst': hints.getTwoLetterList()
         }
 
+
 ###############################################################################
 # class Guess(Command)
 #
@@ -233,8 +235,6 @@ class Hint(Command):
 #   execute() -> None:
 #       exectutes the attached function call to make a guess
 ###############################################################################
-
-
 class Guess(Command):
     def __init__(self, puzzle: Puzzle, word: str, outty: object) -> None:
         self._name = '!guess'
@@ -254,6 +254,12 @@ class Guess(Command):
         )
 
 
+###############################################################################
+# class Leaderboard(Command)
+#
+# DESCRIPTION
+#   returns the leaderboard for this game
+###############################################################################
 class Leaderboard(Command):
     def __init__(self, puzzle: Puzzle) -> None:
         self._puzzle = puzzle
@@ -261,4 +267,36 @@ class Leaderboard(Command):
     def execute(self) -> list[tuple]:
         # grab hS
         # format to list of [(name, rank, score)]
-        pass
+        lst = highScore.getHighScore(
+            self._puzzle.getUniqueLetters(),
+            self._puzzle.getKeyLetter()
+        )
+        lb = []
+        for row in lst:
+            lb.append((row[1], row[2], row[3]))
+
+        return lb
+
+
+###############################################################################
+# SaveScore(name: str, puzzle: Puzzle)
+#
+# DESCRIPTION
+#   adds a new high score to the database
+###############################################################################
+class SaveScore(Command):
+    def __init__(self, name: str, puzzle: Puzzle) -> None:
+        self._name = name
+        self._rank = puzzle.getRank()
+        self._score = puzzle.getScore()
+        self._uniqueLett = puzzle.getUniqueLetters()
+        self._keyLett = puzzle.getKeyLetter()
+
+    def execute(self) -> None:
+        highScore.qualify(
+            self._name,
+            self._rank,
+            self._score,
+            self._uniqueLett,
+            self._keyLett
+        )
