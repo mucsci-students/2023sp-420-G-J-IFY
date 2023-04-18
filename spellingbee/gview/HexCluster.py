@@ -492,11 +492,11 @@ class HexLabel(QWidget):
         painter.setPen(pen)
 
         bounds = QRectF(
-                    self._x,
-                    self._y + self._padding,
-                    self._width,
-                    self._height - self._padding
-                )
+            self._x,
+            self._y + self._padding,
+            self._width,
+            self._height - self._padding
+        )
 
         painter.drawText(
             bounds,
