@@ -53,7 +53,7 @@ class Leaderboard(QtWidgets.QWidget):
         with open("spellingbee/gview/style.css", "r") as file:
             self.setStyleSheet(file.read())
 
-        layout = QtWidgets.QVBoxLayout() 
+        layout = QtWidgets.QVBoxLayout()
 
         self.header.setText('Leaderboard')
         self.header.setAlignment(
