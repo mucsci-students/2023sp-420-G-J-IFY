@@ -92,7 +92,7 @@ class CLI_A():
                         'Command not recognized. '
                         'Type \"!help\" for a list '
                         'of valid commands...'
-                        )
+                    )
                     return self.puzzle
 
                 elif not usrinput.isalpha():
