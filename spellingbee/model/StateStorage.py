@@ -23,11 +23,14 @@ import os.path
 from os import path
 import model
 from pathlib import Path
+from model.output import Output
 import encrypter
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
+
+outty = Output.getInstance()
 
 
 ###############################################################################
@@ -183,8 +186,8 @@ def savePuzzle(saveStateObj, fileName):
 #   outty : object
 #      - Output object storing output strings
 ###############################################################################
-def loadPuzzle(fileName, outty):
-    return __Load(fileName, outty)
+def loadPuzzle(fileName):
+    return __Load(fileName)
 
 
 ###############################################################################
@@ -249,7 +252,7 @@ def __checkFileExists(pathToFile):
 #  FileNotFoundError
 #     - File that is trying to be loaded does not exist
 ###############################################################################
-def __Load(fileName, outty):
+def __Load(fileName):
     # Checks if file exists
     try:
         # Check if user ended their save with the .json filename
@@ -305,7 +308,7 @@ def __Load(fileName, outty):
 # RETURNS:
 #   None
 ###############################################################################
-def loadFromExploer(path: Path, outty):
+def loadFromExploer(path: Path):
     try:
         f = open(path)
 
@@ -330,7 +333,7 @@ def loadFromExploer(path: Path, outty):
         )
 
 
-def encryptedLoad(path: Path, outty):
+def encryptedLoad(path: Path):
     try:
         f = open(path)
 

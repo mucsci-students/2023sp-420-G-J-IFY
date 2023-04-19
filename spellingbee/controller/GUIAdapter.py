@@ -22,9 +22,7 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QInputDialog
 )
-from model import (
-    output
-)
+from model.output import Output
 from model.hint import hint
 from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
@@ -34,6 +32,9 @@ from gview.Leaderboard import Leaderboard
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
+
+# Create output
+outty = Output.getInstance()
 
 
 ###############################################################################
@@ -77,10 +78,9 @@ sys.path.append(parent)
 #   - getLettersFromGrid(self, lst: list[list[int]]) -> str:
 ###############################################################################
 class GUI_A():
-    def __init__(self, puzzle: Puzzle, outty: output.Output):
+    def __init__(self, puzzle: Puzzle):
         self._puzzle = puzzle
         self._puzzle.shuffleChars()
-        self._outty = outty
         self._window = None
 
     ###########################################################################
@@ -142,13 +142,13 @@ class GUI_A():
         # retrieve text and make guess
         txt = self._window.gameWidget.uInput.text()
         # create and execute guess command
-        guess = cmd.Guess(self._puzzle, txt, self._outty)
+        guess = cmd.Guess(self._puzzle, txt)
         guess.execute()
         # Update view
         self._window.gameWidget.uInput.clear()
         self._window.statsPanel.update(self._puzzle)
         # Display info
-        self._window.setStatus(self._outty.getField())
+        self._window.setStatus(outty.getField())
 
     ###########################################################################
     # _shuffle() -> None
@@ -189,7 +189,7 @@ class GUI_A():
 
         # Create new game object so long as it is valid
         if len(set(baseWord)) == 7 or (baseWord == '' and keyLetter == ''):
-            newGame = cmd.NewGame(self._outty, baseWord, keyLetter)
+            newGame = cmd.NewGame(baseWord, keyLetter)
             self._puzzle = newGame.execute()
             # Update view
             self._window.newGame(self._puzzle)
@@ -237,7 +237,7 @@ class GUI_A():
             filter='GameFiles (*.json)'
         )[0]
         # Create a new puzzle object
-        loadGame = cmd.LoadGame(fileName, '', self._outty)
+        loadGame = cmd.LoadGame(fileName, '')
         newPuzzle = loadGame.execute()
         # Checks if puzzle was loaded properly
         if newPuzzle is None:

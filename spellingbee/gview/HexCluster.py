@@ -61,7 +61,8 @@ class HexCluster(QWidget):
             letters: list[str],
             keyLet: str,
             *args,
-            **kwargs):
+            **kwargs
+    ):
         super(HexCluster, self).__init__(parent, *args, **kwargs)
 
         self.buttons: list[HexButton] = []
@@ -370,7 +371,6 @@ class HexButton(QPushButton):
     #     - an equilateral hexagon of size radius
     ###########################################################################
     def _calcHex(self) -> QPolygonF:
-
         hexagon = QPolygonF()
 
         posX = self.width / 2 + self.x

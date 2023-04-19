@@ -7,10 +7,10 @@ import string
 import random
 import sys
 import os
-import model.output
 import StateStorage as spellingbee
 import json
 from model.puzzle import Puzzle
+from model.output import Output
 import MakePuzzle
 from pathlib import Path
 current = os.path.dirname(os.path.realpath(__file__))
@@ -20,7 +20,7 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 # Globals
-outty = model.output.Output()
+outty = Output.getInstance()
 list = []
 
 
@@ -157,10 +157,10 @@ def puzzleFixture2():
 @pytest.fixture
 def playedPuzzle(puzzleFixture):
     obj = puzzleFixture[0]
-    MakePuzzle.guess(obj, "warlock", False, outty)
-    MakePuzzle.guess(obj, "warlock", False, outty)
-    MakePuzzle.guess(obj, "wrack", False, outty)
-    MakePuzzle.guess(obj, "alcool", False, outty)
+    MakePuzzle.guess(obj, "warlock", False)
+    MakePuzzle.guess(obj, "warlock", False)
+    MakePuzzle.guess(obj, "wrack", False)
+    MakePuzzle.guess(obj, "alcool", False)
     return obj
 
 
@@ -172,7 +172,7 @@ def saverObj(playedPuzzle):
 @pytest.fixture
 def completedPuzzle():
     obj = makeShortestGame()
-    MakePuzzle.guess(obj, 'kamotiq', False, outty)
+    MakePuzzle.guess(obj, 'kamotiq', False)
     return obj
 
 
@@ -316,7 +316,7 @@ def testOverwriteSave2():
 def testOverwriteSave3(playedPuzzle):
     fileName = 'TESTFILE4'
     fileNameJson = fileName + ".json"
-    MakePuzzle.guess(playedPuzzle, 'acock', False, outty)
+    MakePuzzle.guess(playedPuzzle, 'acock', False)
     spellingbee.saveCurrent(playedPuzzle, fileName)
     assert (checkIfExists(fileNameJson))
 
@@ -334,10 +334,10 @@ def testOverwriteSave4(playedPuzzle):
 def testLoad(playedPuzzle):
     fileName = "TESTFILE5"
 
-    MakePuzzle.guess(playedPuzzle, 'wall', False, outty)
+    MakePuzzle.guess(playedPuzzle, 'wall', False)
     spellingbee.saveCurrent(playedPuzzle, fileName)
 
-    obj2 = spellingbee.loadPuzzle(fileName, outty)
+    obj2 = spellingbee.loadPuzzle(fileName)
 
     dict1 = __makeDict(playedPuzzle)
 
@@ -357,7 +357,7 @@ def testLoadWithJson(playedPuzzle):
     fileNameJson = fileName + ".json"
     dict1 = __makeDict(playedPuzzle)
     spellingbee.saveCurrent(playedPuzzle, fileName)
-    puzzle = spellingbee.__Load(fileNameJson, outty)
+    puzzle = spellingbee.__Load(fileNameJson)
     dict2 = __makeDict(puzzle)
     path = str(Path.cwd()) + '/' + fileNameJson
     os.remove(path)
@@ -368,7 +368,7 @@ def testLoadNoFile(playedPuzzle):
     fileName = 'him'
     fileNameJson = fileName + '.json'
     spellingbee.saveCurrent(playedPuzzle, fileNameJson)
-    spellingbee.__Load(fileNameJson, outty)
+    spellingbee.__Load(fileNameJson)
     assert (outty.field != '')
 
 
@@ -424,7 +424,7 @@ def testLoadFromExplorer():
 
 def testFileNotFoundLoad():
     fileNameJson = 'helpme.json'
-    spellingbee.__Load('helpme', outty)
+    spellingbee.__Load('helpme')
     assert (outty.getField() == ("The file " + fileNameJson + ''
                                  " does not exist in this directory\n"
                                  "Returning to game..."))
@@ -433,7 +433,7 @@ def testFileNotFoundLoad():
 def testCorruptGameLoadFromExplorer():
     path = Path.cwd()
     pathToFile = str(path) + '/spellingbee/tests/TestFile.json'
-    spellingbee.loadFromExploer(pathToFile, outty)
+    spellingbee.loadFromExploer(pathToFile)
     pytest.raises(AssertionError)
 
 
@@ -484,7 +484,7 @@ def testCheckCorruptJSONExplorer():
     pathToFile = (str(path) + '/badJSON.json')
     output = " contains critical errors that \nprevent the game from "
     output += "functioning properly\nReturning to game..."
-    spellingbee.loadFromExploer(pathToFile, outty)
+    spellingbee.loadFromExploer(pathToFile)
     assert (outty.getField().endswith(output))
     os.remove(pathToFile)
 
@@ -496,7 +496,7 @@ def testCheckCorruptJSONsaveFolder():
     output = "The file badJSON.json contains critical errors that \n"
     output += "prevent the game from functioning properly\n"
     output += "Returning to game..."
-    spellingbee.__Load('badJSON.json', outty)
+    spellingbee.__Load('badJSON.json')
     assert (outty.getField() == output)
 
 
@@ -508,7 +508,7 @@ def testCheckGoodFile(puzzleFixture):
     pathToFile = (str(path) + '/good.json')
     output = " contains critical errors that \nprevent the game from "
     output += "functioning properly\nReturning to game..."
-    puzz = spellingbee.loadFromExploer(pathToFile, outty)
+    puzz = spellingbee.loadFromExploer(pathToFile)
     assert (puzz is not None)
     os.remove(pathToFile)
 
@@ -599,10 +599,10 @@ def testEncryptionCurrent(playedPuzzle):
     pathz = Path.cwd()
     savePath = str(pathz)
     strat.executeStrategy(savePath, 'ImHiM', playedPuzzle, False)
-    obj = MakePuzzle.newPuzzle('warlock', 'a', outty, False)
+    obj = MakePuzzle.newPuzzle('warlock', 'a', False)
     strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
     strat.executeStrategy(savePath, 'ImHiM.json', obj, False)
-    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json', outty)
+    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json')
     assert (him.allWordList == obj.allWordList)
 
 
@@ -611,17 +611,17 @@ def testEncryptionPuzzle(playedPuzzle):
     pathz = Path.cwd()
     savePath = str(pathz)
     strat.executeStrategy(savePath, 'ImHiM', playedPuzzle, True)
-    obj = MakePuzzle.newPuzzle('warlock', 'a', outty, False)
+    obj = MakePuzzle.newPuzzle('warlock', 'a', False)
     strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
     strat.executeStrategy(savePath, 'ImHiM.json', obj, False)
-    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json', outty)
+    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json')
     assert (him.getFoundWords() == [])
 
 
 def testEncryptLoadNofile():
     pathz = Path.cwd()
     savePath = str(pathz)
-    spellingbee.encryptedLoad(savePath + './cool', outty)
+    spellingbee.encryptedLoad(savePath + './cool')
     assert (outty.getField() == "The file " + savePath + './cool' +
             " does not exist in this directory\n"
             "Returning to game...")
@@ -633,7 +633,7 @@ def testEncryptLoadBadFile():
     with open('badJSON.json', 'w') as fp:
         json.dump({"makeGarbage": "stilltrying"}, fp)
     fp.close()
-    spellingbee.encryptedLoad(savePath + '/badJSON.json', outty)
+    spellingbee.encryptedLoad(savePath + '/badJSON.json')
     assert (outty.getField() == "The file " + savePath + '/badJSON.json' +
             " contains critical errors that \n"
             "prevent the game from functioning properly\n"
