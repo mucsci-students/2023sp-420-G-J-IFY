@@ -372,7 +372,7 @@ def testLoadFromExplorer():
 
 def testFileNotFoundLoad():
     fileNameJson = 'helpme.json'
-    spellingbee.__Load('helpme', outty)
+    spellingbee.__Load('helpme')
     assert (outty.getField() == ("The file " + fileNameJson + ''
                                  " does not exist in this directory\n"
                                  "Returning to game..."))
