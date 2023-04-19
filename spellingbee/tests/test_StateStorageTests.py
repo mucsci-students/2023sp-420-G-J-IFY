@@ -7,10 +7,10 @@ import string
 import random
 import sys
 import os
-import model.output
 import StateStorage as spellingbee
 import json
 from model.puzzle import Puzzle
+from model.output import Output
 import MakePuzzle
 from pathlib import Path
 current = os.path.dirname(os.path.realpath(__file__))
@@ -20,7 +20,7 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 # Globals
-outty = model.output.Output()
+outty = Output.getInstance()
 list = []
 
 

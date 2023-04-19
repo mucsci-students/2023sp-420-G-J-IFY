@@ -23,7 +23,7 @@ import os.path
 from os import path
 import model
 from pathlib import Path
-from output import Output
+from model.output import Output
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)

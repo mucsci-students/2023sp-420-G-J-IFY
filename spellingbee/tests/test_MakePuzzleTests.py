@@ -6,7 +6,7 @@ import MakePuzzle as spellingbee
 import pytest
 
 
-outty = Output()
+outty = Output.getInstance()
 
 current = os.path.dirname(os.path.realpath(__file__))
 

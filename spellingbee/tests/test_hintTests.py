@@ -10,11 +10,11 @@
 
 import hint
 import pytest
-import model.output
+from model.output import Output
 import MakePuzzle
 
 
-outty = model.output.Output()
+outty = Output.getInstance()
 
 
 ###############################################################################
