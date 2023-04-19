@@ -91,10 +91,6 @@ class SaveGame(Command):
         onlyPuzz: bool,
         encrypt: bool
     ) -> None:
-
-        self._name = '!save'
-        self._description = 'Create a new save for the currently active game'
-
         # params
         self._puzzle = puzzle
         self._filePath = filePath
@@ -117,6 +113,7 @@ class SaveGame(Command):
                 self._onlyPuzz
             )
 
+
 ###############################################################################
 # class LoadGame(Command)
 #
@@ -129,22 +126,13 @@ class SaveGame(Command):
 # FUNCTIONS:
 #
 ###############################################################################
-
-
 class LoadGame(Command):
-    def __init__(self, path: str, fileName) -> None:
-        self._name = '!load'
-        self._description = 'Load a previously saved game'
-
+    def __init__(self, filePath: str) -> None:
         # params
-        self._path = path
-        self._fileName = fileName
+        self._filePath = filePath
 
     def execute(self) -> object:
-        return StateStorage.loadFromExploer(self._path)
-
-    def executeCLI(self) -> object:
-        return StateStorage.loadPuzzle(self._fileName)
+        return StateStorage.load(self._filePath)
 
 
 ###############################################################################
