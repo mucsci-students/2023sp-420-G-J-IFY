@@ -22,7 +22,7 @@
 from os import system, name
 from model.output import Output
 
-outty = Output()
+outty = Output.getInstance()
 
 
 ###############################################################################

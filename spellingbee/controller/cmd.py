@@ -10,7 +10,7 @@ from model.puzzle import Puzzle
 from model.hint import hint
 from model.output import Output
 
-outty = Output()
+outty = Output.getInstance()
 ##############################################################################
 #
 ##############################################################################

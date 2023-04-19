@@ -32,7 +32,7 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 # Create output
-outty = Output()
+outty = Output.getInstance()
 
 
 ###############################################################################

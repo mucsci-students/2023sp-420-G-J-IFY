@@ -7,7 +7,7 @@ from prompt_toolkit.completion import WordCompleter
 
 
 # Start of game declarations for needed objects and fields
-outty = Output()
+outty = Output.getInstance()
 usrinput = ' '
 notValidIn = True
 puzzle = puzzle.Puzzle('', '')

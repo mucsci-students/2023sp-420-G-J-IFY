@@ -17,7 +17,7 @@ from model.output import Output
 from itertools import chain, combinations
 
 # Create output object
-outty = Output()
+outty = Output.getInstance()
 
 
 ###############################################################################

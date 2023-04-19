@@ -18,16 +18,21 @@
 #   getField(self)
 #     - Return the string from field
 ###############################################################################
-class Output(object):
+class Output:
+    __instance = None
 
-    def __new__(cls):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(Output, cls).__new__(cls)
-            cls.instance._init()
-        return cls.instance
+    @staticmethod
+    def getInstance():
+        if Output.__instance is None:
+            Output()
+        return Output.__instance
 
-    def _init(self):
-        self.field = ''
+    def __init__(self):
+        if Output.__instance is not None:
+            raise Exception('Multiple instances of Output is disallowed')
+        else:
+            Output.__instance = self
+            self.field = ''
 
     def setField(self, inStr):
         self.field = inStr

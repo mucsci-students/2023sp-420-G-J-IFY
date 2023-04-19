@@ -29,7 +29,7 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-outty = Output()
+outty = Output.getInstance()
 ###############################################################################
 # class NotInDBException(Exception)
 # Description:

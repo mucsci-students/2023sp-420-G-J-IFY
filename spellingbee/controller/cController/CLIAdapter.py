@@ -24,7 +24,7 @@ parent = os.path.dirname(current)
 
 sys.path.append(parent)
 
-outty = Output()
+outty = Output.getInstance()
 
 
 class CLI_A():
