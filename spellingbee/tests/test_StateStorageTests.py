@@ -70,6 +70,17 @@ def __makeDict(saveStateObj):
     return dict
 
 
+def __makeDict2(saveStateObj):
+    dict = {'Author': 'GJIFY',
+            'RequiredLetter': saveStateObj.getKeyLetter(),
+            'PuzzleLetters': saveStateObj.getUniqueLetters(),
+            'CurrentPoints': saveStateObj.getScore(),
+            'MaxPoints': saveStateObj.getMaxScore(),
+            'GuessedWords': saveStateObj.getFoundWords(),
+            'WordList': saveStateObj.getAllWords()}
+    return dict
+
+
 def removeSave(fileName):
     path = str(Path.cwd()) + '/' + fileName
     os.remove(path)
@@ -108,6 +119,42 @@ def puzzleFixture():
 
 
 @pytest.fixture
+def puzzleFixture2():
+    dict = {"Author": "GJIFY",
+            "RequiredLetter": "a", "PuzzleLetters": "acklorw",
+            "CurrentPoints": 0, "MaxPoints": 323, "GuessedWords": [],
+            "WordList": ["acro", "alar", "alow", "arak", "arco", "awol",
+                         "caca", "calk", "call", "calo", "cark", "carl",
+                         "carr", "claw", "coal", "coca", "cola", "craw",
+                         "kaka", "kola", "kora", "lack", "lall", "lark",
+                         "loca", "okra", "olla", "oral", "orca", "orra",
+                         "rack", "roar", "wack", "walk", "wall", "wark",
+                         "wawl", "acock", "alack", "allow", "arrow",
+                         "cacao",
+                         "calla", "carol", "clack", "claro", "cloak",
+                         "coala",
+                         "cocoa", "coral", "craal", "crack", "crawl",
+                         "croak",
+                         "karoo", "koala", "kraal", "local", "loral",
+                         "wacko",
+                         "walla", "wrack", "alcool", "arrack", "calcar",
+                         "callow", "carack", "cloaca", "coccal", "collar",
+                         "corral", "karroo", "wallow", "caracal",
+                         "caracol",
+                         "carrack", "cloacal", "corolla", "oarlock",
+                         "warlock",
+                         "warwork", "callaloo", "caracara", "rackwork",
+                         "wallaroo"]
+            }
+    obj = Puzzle('a', 'warlock')
+
+    obj.uniqueLett = dict["PuzzleLetters"]
+    obj.allWordList = dict["WordList"]
+    obj.maxScore = dict["MaxPoints"]
+    return (obj, dict)
+
+
+@pytest.fixture
 def playedPuzzle(puzzleFixture):
     obj = puzzleFixture[0]
     MakePuzzle.guess(obj, "warlock", False)
@@ -115,6 +162,11 @@ def playedPuzzle(puzzleFixture):
     MakePuzzle.guess(obj, "wrack", False)
     MakePuzzle.guess(obj, "alcool", False)
     return obj
+
+
+@pytest.fixture
+def saverObj(playedPuzzle):
+    return spellingbee.Saver(playedPuzzle)
 
 
 @pytest.fixture
@@ -488,3 +540,101 @@ def testExplorerJson(playedPuzzle):
     dict = __makeDict(playedPuzzle)
     assert (checkContents(fileName, dict))
     removeSave(fileName)
+
+
+def testExecuteSaveFromExplorerCurrent(playedPuzzle):
+    path = Path.cwd()
+    savePath = str(path)
+    fileName = 'TestFile2'
+    strat = spellingbee.Saver(spellingbee.saveFromExplorerStrategy())
+    strat.executeStrategy(savePath, fileName, playedPuzzle, False)
+    dict = __makeDict2(playedPuzzle)
+    assert (checkContents(fileName + '.json', dict))
+
+
+def testExecuteSaveFromExplorerPuzzle(playedPuzzle, puzzleFixture2):
+    path = Path.cwd()
+    savePath = str(path)
+    fileName = 'TestFile2.json'
+    strat = spellingbee.Saver(spellingbee.saveFromExplorerStrategy())
+    strat.executeStrategy(savePath, fileName, playedPuzzle, True)
+    dict = puzzleFixture2[1]
+    assert (checkContents(fileName, dict))
+    removeSave('TestFile2.json')
+
+
+def testExecuteSaveCurrent(playedPuzzle):
+    strat = spellingbee.Saver(spellingbee.saveCurrentStrategy())
+    strat.executeStrategy(None, 'TESTFILE2.json', playedPuzzle, None)
+    dict = __makeDict(playedPuzzle)
+    with open("TESTFILE2.json.json") as file:
+        dict = json.load(file)
+    assert (checkContents('TESTFILE2.json.json', dict))
+    removeSave('TESTFILE2.json.json')
+
+
+def testExecuteSavePuzzle(playedPuzzle, puzzleFixture2):
+    strat = spellingbee.Saver(spellingbee.savePuzzleStrategy())
+    strat.executeStrategy(None, 'bigFile.json', playedPuzzle, True)
+    dict = puzzleFixture2[1]
+    assert (checkContents('bigFile.json', dict))
+    removeSave('bigFile.json')
+
+
+def testExecuteSavePuzzle2(playedPuzzle, puzzleFixture2):
+    strat = spellingbee.Saver(spellingbee.savePuzzleStrategy())
+    strat.executeStrategy(None, 'bigFile', playedPuzzle, True)
+    dict = puzzleFixture2[1]
+    assert (checkContents('bigFile.json', dict))
+    removeSave('bigFile.json')
+
+
+def testStrategyContr():
+    with pytest.raises(NotImplementedError):
+        spellingbee.Strategy().exectute('him', 'imHim', None, None)
+
+
+def testEncryptionCurrent(playedPuzzle):
+    strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
+    pathz = Path.cwd()
+    savePath = str(pathz)
+    strat.executeStrategy(savePath, 'ImHiM', playedPuzzle, False)
+    obj = MakePuzzle.newPuzzle('warlock', 'a', outty, False)
+    strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
+    strat.executeStrategy(savePath, 'ImHiM.json', obj, False)
+    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json', outty)
+    assert (him.allWordList == obj.allWordList)
+
+
+def testEncryptionPuzzle(playedPuzzle):
+    strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
+    pathz = Path.cwd()
+    savePath = str(pathz)
+    strat.executeStrategy(savePath, 'ImHiM', playedPuzzle, True)
+    obj = MakePuzzle.newPuzzle('warlock', 'a', outty, False)
+    strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
+    strat.executeStrategy(savePath, 'ImHiM.json', obj, False)
+    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json', outty)
+    assert (him.getFoundWords() == [])
+
+
+def testEncryptLoadNofile():
+    pathz = Path.cwd()
+    savePath = str(pathz)
+    spellingbee.encryptedLoad(savePath + './cool', outty)
+    assert (outty.getField() == "The file " + savePath + './cool' +
+            " does not exist in this directory\n"
+            "Returning to game...")
+
+
+def testEncryptLoadBadFile():
+    pathz = Path.cwd()
+    savePath = str(pathz)
+    with open('badJSON.json', 'w') as fp:
+        json.dump({"makeGarbage": "stilltrying"}, fp)
+    fp.close()
+    spellingbee.encryptedLoad(savePath + '/badJSON.json', outty)
+    assert (outty.getField() == "The file " + savePath + '/badJSON.json' +
+            " contains critical errors that \n"
+            "prevent the game from functioning properly\n"
+            "Returning to game...")

@@ -24,6 +24,7 @@ from os import path
 import model
 from pathlib import Path
 from model.output import Output
+import encrypter
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -332,6 +333,32 @@ def loadFromExploer(path: Path):
         )
 
 
+def encryptedLoad(path: Path, outty):
+    try:
+        f = open(path)
+
+        dict = json.load(f)
+        dict = encrypter.encryptionHandler(dict, False)
+        dict = checkLoad(dict)
+        if dict is None:
+            raise BadJSONException
+        obj = __setFields(dict)
+        return obj
+    except FileNotFoundError:
+        # If fileName does not exist then a FileNotFoundError is
+        # raised saying the file does not exist
+        outty.setField(
+            "The file " + path + " does not exist in this directory\n"
+            "Returning to game..."
+        )
+    except BadJSONException:
+        outty.setField(
+            "The file " + path + " contains critical errors that \n"
+            "prevent the game from functioning properly\n"
+            "Returning to game..."
+        )
+
+
 ###############################################################################
 # allLower(my_list : list(str)) -> list(str)
 #
@@ -498,3 +525,95 @@ def saveFromExplorer(path: str, fileName: str, puzzle: object,
     else:
         with open(path + '/' + fileName, "w") as file:
             json.dump(dict, file)
+
+
+class Strategy:
+    def exectute(self, path: str | None, fileName: str,
+                 puzzle: object, onlyPuzz: bool | None):
+        raise NotImplementedError
+
+    def _makeDict(self, saveStateObj):
+        dict = {
+            "Author": "GJIFY",
+            "RequiredLetter": saveStateObj.getKeyLetter(),
+            "PuzzleLetters": saveStateObj.getUniqueLetters(),
+            "CurrentPoints": saveStateObj.getScore(),
+            "MaxPoints": saveStateObj.getMaxScore(),
+            "GuessedWords": saveStateObj.getFoundWords(),
+            "WordList": saveStateObj.getAllWords(),
+        }
+        return dict
+
+    def _Save(self, dict, fileName):
+        with open(fileName, "w") as file:
+            json.dump(dict, file)
+        cwd = Path.cwd()
+        saveCur = cwd / fileName
+        if path.exists(saveCur):
+            os.replace(saveCur, saveCur)
+
+
+class savePuzzleStrategy(Strategy):
+    def exectute(self, path: str | None, fileName: str, puzzle: object,
+                 onlyPuzz: bool | None):
+        newObj = model.Puzzle(puzzle.getKeyLetter(),
+                              puzzle.getUniqueLetters())
+        newObj.setMaxScore(puzzle.getMaxScore())
+        newObj.setAllWordList(puzzle.getAllWords())
+        newObj.updateRank()
+
+        dict = self._makeDict(newObj)
+        if fileName.endswith('.json'):
+            self._Save(dict, fileName)
+        else:
+            self._Save(dict, fileName + ".json")
+
+
+class saveCurrentStrategy(Strategy):
+    def exectute(self, path: str | None, fileName: str, puzzle: object,
+                 onlyPuzz: bool | None):
+        self._Save(self._makeDict(puzzle), fileName + ".json")
+
+
+class saveFromExplorerStrategy(Strategy):
+    def exectute(self, path: str | None, fileName: str, puzzle: object,
+                 onlyPuzz: bool | None):
+        if onlyPuzz:
+            newObj = model.Puzzle(puzzle.getKeyLetter(),
+                                  puzzle.getUniqueLetters())
+            newObj.setMaxScore(puzzle.getMaxScore())
+            newObj.setAllWordList(puzzle.getAllWords())
+            newObj.updateRank()
+            dict = self._makeDict(newObj)
+        else:
+            dict = self._makeDict(puzzle)
+        if not fileName.endswith('.json'):
+            self._Save(dict, fileName + '.json')
+        else:
+            self._Save(dict, fileName)
+
+
+class encryptedSaveStrategy(Strategy):
+    def exectute(self, path: str | None, fileName: str, puzzle: object,
+                 onlyPuzz: bool | None):
+        dict = self._makeDict(puzzle)
+        encryptedDict = encrypter.encryptionHandler(dict, True)
+        if onlyPuzz:
+            encryptedDict['GuessedWords'] = []
+            encryptedDict['CurrentScore'] = 0
+        if not fileName.endswith('.json'):
+            with open(path + '/' + fileName + '.json', "w") as file:
+                json.dump(encryptedDict, file)
+        else:
+            with open(path + '/' + fileName, "w") as file:
+                json.dump(encryptedDict, file)
+
+
+class Saver:
+    def __init__(self, strategy: Strategy):
+        # makes a copy of the current puzzle
+        self.strategy = strategy
+
+    def executeStrategy(self, path: str | None, fileName: str, puzzle: object,
+                        onlyPuzz: bool | None):
+        self.strategy.exectute(path, fileName, puzzle, onlyPuzz)
