@@ -1,6 +1,5 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-import os
 
 from model import (
     MakePuzzle,
@@ -12,9 +11,6 @@ from model.output import Output
 from model import highScore
 
 outty = Output.getInstance()
-##############################################################################
-#
-##############################################################################
 
 
 class Command(ABC):
@@ -147,8 +143,6 @@ class LoadGame(Command):
 # FUNCTIONS:
 #
 ###############################################################################
-
-
 class Shuffle(Command):
     def __init__(self, receiver: Puzzle) -> None:
         self._name = '!shuffle'
@@ -159,6 +153,7 @@ class Shuffle(Command):
 
     def execute(self) -> None:
         self._receiver.shuffleChars()
+
 
 ###############################################################################
 # class Hint(Command):
@@ -172,8 +167,6 @@ class Shuffle(Command):
 # FUNCTIONS:
 #
 ###############################################################################
-
-
 class Hint(Command):
     def __init__(self, puzzle: object) -> None:
         self._name = '!hint'
