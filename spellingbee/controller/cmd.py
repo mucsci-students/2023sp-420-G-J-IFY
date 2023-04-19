@@ -87,7 +87,7 @@ class SaveGame(Command):
     def __init__(
         self,
         puzzle: Puzzle,
-        path: str,
+        filePath: str,
         onlyPuzz: bool,
         encrypt: bool
     ) -> None:
@@ -97,25 +97,25 @@ class SaveGame(Command):
 
         # params
         self._puzzle = puzzle
-        self._fileName = os.path.basename(path)
-        self._path = os.path.dirname(path)
+        self._filePath = filePath
         self._onlyPuzz = onlyPuzz
+        self._encrypt = encrypt
 
     def execute(self) -> None:
-
-        # pass responsibility off to State Storage
-        StateStorage.saveFromExplorer(
-            path=self._path,
-            fileName=self._fileName,
-            puzzle=self._puzzle,
-            onlyPuzz=self._onlyPuzz
-        )
-
-    def executeCLIPuzzle(self) -> None:
-        StateStorage.savePuzzle(self._puzzle, self._fileName)
-
-    def exceuteCLICurrent(self) -> None:
-        StateStorage.saveCurrent(self._puzzle, self._fileName)
+        if self._encrypt:
+            strat = StateStorage.Saver(StateStorage.encryptedSaveStrategy())
+            strat.executeStrategy(
+                self._filePath,
+                self._puzzle,
+                self._onlyPuzz
+            )
+        else:
+            strat = StateStorage.Saver(StateStorage.savePuzzleStrategy())
+            strat.executeStrategy(
+                self._filePath,
+                self._puzzle,
+                self._onlyPuzz
+            )
 
 ###############################################################################
 # class LoadGame(Command)
