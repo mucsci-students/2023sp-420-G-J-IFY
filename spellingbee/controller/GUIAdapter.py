@@ -22,7 +22,7 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QInputDialog,
     QScrollArea
-    )
+)
 from model import (
     output
 )
