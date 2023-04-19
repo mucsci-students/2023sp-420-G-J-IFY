@@ -212,7 +212,7 @@ class GUI_A():
         dialog = self._window.saveDialog
         saveGame = cmd.SaveGame(
             puzzle=self._puzzle,
-            path=dialog.getPath(),
+            filePath=dialog.getPath(),
             onlyPuzz=dialog.isOnlyPuzzle(),
             encrypt=dialog.isEncrypted()
         )
