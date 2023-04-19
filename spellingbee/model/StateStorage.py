@@ -30,6 +30,8 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 outty = Output.getInstance()
+
+
 ###############################################################################
 # class NotInDBException(Exception)
 # Description:
