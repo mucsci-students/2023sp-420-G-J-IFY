@@ -54,6 +54,7 @@ class WelcomePage(QtWidgets.QWidget):
         self.title.setFont(title_font)
         self.title.setFontColor(title_f_color)
         self.title.setColor(title_color)
+        self.title.setPadding(7)
         self.sub_title.setFont(sub_font)
         # Define btn sizes
         self.new_btn.setFixedSize(200, 45)

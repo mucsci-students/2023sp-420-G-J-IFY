@@ -17,7 +17,7 @@ from PyQt6.QtCore import (
     Qt,
     QRect,
     QRectF,
-    QPointF,
+    QPointF
 )
 from PyQt6.QtGui import (
     QMouseEvent,
@@ -109,9 +109,9 @@ class HexCluster(QWidget):
         width = self.buttons[0].width
 
         xpad = 10
-        ypad = int(math.sqrt(xpad**2 - (xpad/2)**2))
+        ypad = int(math.sqrt(xpad**2 - (xpad / 2)**2))
 
-        posx = int(width/2 + xpad/2)
+        posx = int(width / 2 + xpad / 2)
         posy = 0
 
         self.buttons[1].move(posx, posy)
@@ -119,21 +119,21 @@ class HexCluster(QWidget):
         self.buttons[2].move(posx, posy)
 
         posx = 0
-        posy += int((3*height/4) + ypad)
+        posy += int((3 * height / 4) + ypad)
         self.buttons[3].move(posx, posy)
         posx += width + xpad
         self.buttons[0].move(posx, posy)
         posx += width + xpad
         self.buttons[4].move(posx, posy)
 
-        posx = int(width/2 + xpad/2)
-        posy += int((3*height/4) + ypad)
+        posx = int(width / 2 + xpad / 2)
+        posy += int((3 * height / 4) + ypad)
         self.buttons[5].move(posx, posy)
         posx += width + xpad
         self.buttons[6].move(posx, posy)
 
-        self.setMinimumHeight(int(((5/2) * height) + (2.5*ypad)))
-        self.setMinimumWidth(int((3 * width) + (2.5*xpad)))
+        self.setMinimumHeight(int(((5 / 2) * height) + (2.5 * ypad)))
+        self.setMinimumWidth(int((3 * width) + (2.5 * xpad)))
 
 
 ###############################################################################
@@ -195,7 +195,7 @@ class HexButton(QPushButton):
         self.x = 3
         self.y = 3
         self.boundingBox = QRect(self.x, self.y + 1, self.width, self.height)
-        self.radius = self.height/2
+        self.radius = self.height / 2
         self.hexagon = self._calcHex()
         self.setFlat(True)
         self.setText(text)
@@ -246,7 +246,7 @@ class HexButton(QPushButton):
     ###########################################################################
     def setSize(self, size: int) -> None:
         self.height = size
-        self.width = int((self.height/2) * math.sqrt(3))
+        self.width = int((self.height / 2) * math.sqrt(3))
 
     ###########################################################################
     # paintEvent(event) -> None
@@ -274,7 +274,6 @@ class HexButton(QPushButton):
     ###########################################################################
     def mousePressEvent(self, e: QMouseEvent) -> None:
         self.radius -= 2
-        # self.setColor(Qt.GlobalColor.green)
         return super().mousePressEvent(e)
 
     ###########################################################################
@@ -285,7 +284,6 @@ class HexButton(QPushButton):
     ###########################################################################
     def mouseReleaseEvent(self, e: QMouseEvent) -> None:
         self.radius += 2
-        # self.setColor(Qt.GlobalColor.white)
         return super().mouseReleaseEvent(e)
 
     ###########################################################################
@@ -341,7 +339,7 @@ class HexButton(QPushButton):
     ###########################################################################
     def _drawText(self, painter: QPainter) -> None:
         font_id = QFontDatabase.addApplicationFont(
-            os.getcwd()+'/fonts/Comfortaa-VariableFont_wght.ttf'
+            os.getcwd() + '/fonts/Comfortaa-VariableFont_wght.ttf'
         )
         families = QFontDatabase.applicationFontFamilies(font_id)
 
@@ -375,17 +373,16 @@ class HexButton(QPushButton):
     def _calcHex(self) -> QPolygonF:
         hexagon = QPolygonF()
 
-        posX = self.width/2 + self.x
-        posY = self.height/2 + self.y
-        rads = math.pi/2
+        posX = self.width / 2 + self.x
+        posY = self.height / 2 + self.y
+        rads = math.pi / 2
 
         for i in range(6):
             hexagon.append(QPointF(
                 posX + math.cos(rads) * self.radius,
                 posY + math.sin(rads) * self.radius
             ))
-
-            rads += math.pi/3
+            rads += math.pi / 3
 
         return hexagon
 
@@ -425,8 +422,9 @@ class HexLabel(QWidget):
 
         self._lbl = QLabel()
         self._text = text
-        self._x = pos[0]+12
-        self._y = pos[1]+12
+        self._x = pos[0] + 12
+        self._y = pos[1] + 12
+        self._padding = 0
         self._radius = radius
         self._width = radius * math.sqrt(3)
         self._height = radius * 2
@@ -435,7 +433,6 @@ class HexLabel(QWidget):
         self._font = QFont('Helvetica', 12)
         self._fontColor = Qt.GlobalColor.black
         self._canvas = QPixmap(int(self._width), int(self._height))
-
         self._initUI()
 
     def _initUI(self):
@@ -445,6 +442,10 @@ class HexLabel(QWidget):
         )
         self._lbl.setAlignment(
             Qt.AlignmentFlag.AlignCenter
+        )
+        self.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum
         )
         layout = QVBoxLayout()
         layout.addWidget(self._lbl)
@@ -490,8 +491,15 @@ class HexLabel(QWidget):
         painter.setFont(font)
         painter.setPen(pen)
 
+        bounds = QRectF(
+            self._x,
+            self._y + self._padding,
+            self._width,
+            self._height - self._padding
+        )
+
         painter.drawText(
-            QRectF(self._x, self._y + 7, self._width, self._height),
+            bounds,
             Qt.AlignmentFlag.AlignCenter,
             self._text
         )
@@ -533,6 +541,15 @@ class HexLabel(QWidget):
         self._text = text
 
     ###########################################################################
+    # setPadding(amount: int) -> None
+    #
+    # DESCRIPTION:
+    #   sets the vertical padding on label text
+    ###########################################################################
+    def setPadding(self, amount: int) -> None:
+        self._padding = amount
+
+    ###########################################################################
     # paintEvent(event) -> None
     #
     # DESCRIPTION:
@@ -561,15 +578,14 @@ class HexLabel(QWidget):
 #     - an equilateral hexagon of size radius
 ###############################################################################
 def calcHex(radius: int, x, y) -> QPolygonF:
-
     hexagon = QPolygonF()
     # radius is from point to point.
     # minor radius is from edge to edge and is given by the following
-    minorRad = radius*(math.sqrt(3)/2)
+    minorRad = radius * (math.sqrt(3) / 2)
 
     posX = minorRad + x
     posY = radius + y
-    rads = math.pi/2
+    rads = math.pi / 2
 
     # calculate and append coords to each corner of the hex
     for i in range(6):
@@ -578,6 +594,6 @@ def calcHex(radius: int, x, y) -> QPolygonF:
             posY + math.sin(rads) * radius
         ))
 
-        rads += math.pi/3
+        rads += math.pi / 3
 
     return hexagon
