@@ -21,12 +21,32 @@
 class Output:
     __instance = None
 
+    ###########################################################################
+    # getInstance() -> Output
+    #
+    # DESCRIPTION:
+    #   If there is not yet an existing instance of Output, a new one is
+    #     created and returned. Otherwise the existing instance is returned
+    ###########################################################################
     @staticmethod
-    def getInstance():
+    def getInstance() -> object:
         if Output.__instance is None:
             Output()
         return Output.__instance
 
+    ###########################################################################
+    # __init__()
+    #
+    # DESCRIPTION:
+    #   If there is already an existing instance of Output, an exception is
+    #     thrown with message 'Multiple instances of Output is disallowed'
+    #     Otherwise the instance becomes self.
+    #
+    # RAISES
+    #   Exception
+    #     - constructor is called after an instance of Output is already
+    #         created
+    ###########################################################################
     def __init__(self):
         if Output.__instance is not None:
             raise Exception('Multiple instances of Output is disallowed')
@@ -34,8 +54,20 @@ class Output:
             Output.__instance = self
             self.field = ''
 
-    def setField(self, inStr):
+    ###########################################################################
+    # setField(inStr: str) -> None
+    #
+    # DESCRIPTION
+    #   sets the stored string field to proveded inStr
+    ###########################################################################
+    def setField(self, inStr: str) -> None:
         self.field = inStr
 
-    def getField(self):
+    ###########################################################################
+    # getField() -> str
+    #
+    # DESCRIPTION
+    #   returns the stored string field
+    ###########################################################################
+    def getField(self) -> str:
         return self.field
