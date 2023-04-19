@@ -77,7 +77,6 @@ class Leaderboard(QtWidgets.QWidget):
         # set the Leaderboard widget as the child of the scroll area widget
         scroll_area_layout = QtWidgets.QVBoxLayout()
         scroll_area_layout.addWidget(scrollArea)
-        self.setLayout(scroll_area_layout)
         self.setLayout(layout)
 
     def _buildLeaderboard(self) -> QtWidgets.QWidget:

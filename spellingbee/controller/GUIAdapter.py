@@ -20,8 +20,9 @@ from PyQt6.QtWidgets import (
     QPlainTextEdit,
     QVBoxLayout,
     QDialogButtonBox,
-    QInputDialog
-)
+    QInputDialog,
+    QScrollArea
+    )
 from model import (
     output
 )
@@ -496,17 +497,22 @@ class GUI_A():
     def _leaderboard(self) -> None:
         lst = self._getLeaderboard()
         dlg = QDialog(self._window)
+
         leaderboardWig = Leaderboard(dlg, lst)
         button = btnBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
         button.accepted.connect(dlg.accept)
-        layout = QVBoxLayout()
 
-        layout.addWidget(leaderboardWig)
+        scroll = QScrollArea()
+        scroll.setWidget(leaderboardWig)
+        scroll.setWidgetResizable(True)
+
+        layout = QVBoxLayout()
+        layout.addWidget(scroll)
         layout.addWidget(btnBox)
 
-        dlg.setModal(True)
-
         dlg.setLayout(layout)
+        dlg.setFixedSize(370, 500)
+        dlg.setModal(True)
 
         dlg.show()
 
