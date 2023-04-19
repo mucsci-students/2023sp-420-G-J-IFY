@@ -333,7 +333,7 @@ def loadFromExploer(path: Path):
         )
 
 
-def encryptedLoad(path: Path, outty):
+def encryptedLoad(path: Path):
     try:
         f = open(path)
 

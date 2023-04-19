@@ -599,10 +599,10 @@ def testEncryptionCurrent(playedPuzzle):
     pathz = Path.cwd()
     savePath = str(pathz)
     strat.executeStrategy(savePath, 'ImHiM', playedPuzzle, False)
-    obj = MakePuzzle.newPuzzle('warlock', 'a', outty, False)
+    obj = MakePuzzle.newPuzzle('warlock', 'a', False)
     strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
     strat.executeStrategy(savePath, 'ImHiM.json', obj, False)
-    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json', outty)
+    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json')
     assert (him.allWordList == obj.allWordList)
 
 
@@ -611,17 +611,17 @@ def testEncryptionPuzzle(playedPuzzle):
     pathz = Path.cwd()
     savePath = str(pathz)
     strat.executeStrategy(savePath, 'ImHiM', playedPuzzle, True)
-    obj = MakePuzzle.newPuzzle('warlock', 'a', outty, False)
+    obj = MakePuzzle.newPuzzle('warlock', 'a', False)
     strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
     strat.executeStrategy(savePath, 'ImHiM.json', obj, False)
-    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json', outty)
+    him = spellingbee.encryptedLoad(savePath + '/ImHiM.json')
     assert (him.getFoundWords() == [])
 
 
 def testEncryptLoadNofile():
     pathz = Path.cwd()
     savePath = str(pathz)
-    spellingbee.encryptedLoad(savePath + './cool', outty)
+    spellingbee.encryptedLoad(savePath + './cool')
     assert (outty.getField() == "The file " + savePath + './cool' +
             " does not exist in this directory\n"
             "Returning to game...")
@@ -633,7 +633,7 @@ def testEncryptLoadBadFile():
     with open('badJSON.json', 'w') as fp:
         json.dump({"makeGarbage": "stilltrying"}, fp)
     fp.close()
-    spellingbee.encryptedLoad(savePath + '/badJSON.json', outty)
+    spellingbee.encryptedLoad(savePath + '/badJSON.json')
     assert (outty.getField() == "The file " + savePath + '/badJSON.json' +
             " contains critical errors that \n"
             "prevent the game from functioning properly\n"
