@@ -523,7 +523,7 @@ class GUI_A():
         self._window.options.close()
         # Get leaderboard from model and change view to WrapUpPage
         lb = self._getLeaderboard()
-        self._window.wrapUpPage._updateLeaderboard(lb)
+        self._window.wrapUpPage._updateLeaderboard(lb, self._puzzle)
         self._window.stack.setCurrentIndex(2)
 
         # get users current score and lowest score on leaderboard
@@ -546,7 +546,7 @@ class GUI_A():
             if ok_clicked:
                 self._updateLeaderboard(name)
                 lb = self._getLeaderboard()
-                self._window.wrapUpPage._updateLeaderboard(lb)
+                self._window.wrapUpPage._updateLeaderboard(lb, self._puzzle)
 
     ##########################################################################
     # _getLeaderboard()

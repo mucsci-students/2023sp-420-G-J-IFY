@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget(self)
         self.centralWidget = self._buildGameWidget()
         self.landingPage = WelcomePage(self)
-        self.wrapUpPage = WrapUpPage(self, Puzzle)
+        self.wrapUpPage = WrapUpPage(self, puzzle)
 
         self.options = Dialogs.OptionsDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
