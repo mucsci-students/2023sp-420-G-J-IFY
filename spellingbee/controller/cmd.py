@@ -1,6 +1,5 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-import os
 
 from model import (
     MakePuzzle,
@@ -12,9 +11,6 @@ from model.output import Output
 from model import highScore
 
 outty = Output.getInstance()
-##############################################################################
-#
-##############################################################################
 
 
 class Command(ABC):
@@ -87,35 +83,32 @@ class SaveGame(Command):
     def __init__(
         self,
         puzzle: Puzzle,
-        path: str,
+        filePath: str,
         onlyPuzz: bool,
         encrypt: bool
     ) -> None:
-
-        self._name = '!save'
-        self._description = 'Create a new save for the currently active game'
-
         # params
         self._puzzle = puzzle
-        self._fileName = os.path.basename(path)
-        self._path = os.path.dirname(path)
+        self._filePath = filePath
         self._onlyPuzz = onlyPuzz
+        self._encrypt = encrypt
 
     def execute(self) -> None:
+        if self._encrypt:
+            strat = StateStorage.Saver(StateStorage.encryptedSaveStrategy())
+            strat.executeStrategy(
+                self._filePath,
+                self._puzzle,
+                self._onlyPuzz
+            )
+        else:
+            strat = StateStorage.Saver(StateStorage.savePuzzleStrategy())
+            strat.executeStrategy(
+                self._filePath,
+                self._puzzle,
+                self._onlyPuzz
+            )
 
-        # pass responsibility off to State Storage
-        StateStorage.saveFromExplorer(
-            path=self._path,
-            fileName=self._fileName,
-            puzzle=self._puzzle,
-            onlyPuzz=self._onlyPuzz
-        )
-
-    def executeCLIPuzzle(self) -> None:
-        StateStorage.savePuzzle(self._puzzle, self._fileName)
-
-    def exceuteCLICurrent(self) -> None:
-        StateStorage.saveCurrent(self._puzzle, self._fileName)
 
 ###############################################################################
 # class LoadGame(Command)
@@ -129,22 +122,13 @@ class SaveGame(Command):
 # FUNCTIONS:
 #
 ###############################################################################
-
-
 class LoadGame(Command):
-    def __init__(self, path: str, fileName) -> None:
-        self._name = '!load'
-        self._description = 'Load a previously saved game'
-
+    def __init__(self, filePath: str) -> None:
         # params
-        self._path = path
-        self._fileName = fileName
+        self._filePath = filePath
 
     def execute(self) -> object:
-        return StateStorage.loadFromExploer(self._path)
-
-    def executeCLI(self) -> object:
-        return StateStorage.loadPuzzle(self._fileName)
+        return StateStorage.load(self._filePath)
 
 
 ###############################################################################
@@ -159,8 +143,6 @@ class LoadGame(Command):
 # FUNCTIONS:
 #
 ###############################################################################
-
-
 class Shuffle(Command):
     def __init__(self, receiver: Puzzle) -> None:
         self._name = '!shuffle'
@@ -171,6 +153,7 @@ class Shuffle(Command):
 
     def execute(self) -> None:
         self._receiver.shuffleChars()
+
 
 ###############################################################################
 # class Hint(Command):
@@ -184,8 +167,6 @@ class Shuffle(Command):
 # FUNCTIONS:
 #
 ###############################################################################
-
-
 class Hint(Command):
     def __init__(self, puzzle: object) -> None:
         self._name = '!hint'

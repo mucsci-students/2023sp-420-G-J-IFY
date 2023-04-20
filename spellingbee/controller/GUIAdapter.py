@@ -212,7 +212,7 @@ class GUI_A():
         dialog = self._window.saveDialog
         saveGame = cmd.SaveGame(
             puzzle=self._puzzle,
-            path=dialog.getPath(),
+            filePath=dialog.getPath(),
             onlyPuzz=dialog.isOnlyPuzzle(),
             encrypt=dialog.isEncrypted()
         )
@@ -238,7 +238,7 @@ class GUI_A():
             filter='GameFiles (*.json)'
         )[0]
         # Create a new puzzle object
-        loadGame = cmd.LoadGame(fileName, '')
+        loadGame = cmd.LoadGame(fileName)
         newPuzzle = loadGame.execute()
         # Checks if puzzle was loaded properly
         if newPuzzle is None:
