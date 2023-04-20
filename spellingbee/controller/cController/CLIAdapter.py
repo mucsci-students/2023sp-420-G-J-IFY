@@ -17,7 +17,6 @@ import puzzle
 from cview import CLI
 from model.output import Output
 from os import path
-import encrypter
 import highScore
 
 current = os.path.dirname(os.path.realpath(__file__))
