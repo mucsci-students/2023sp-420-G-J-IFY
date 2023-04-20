@@ -203,7 +203,7 @@ class CLI_A():
     #     - output object storing output strings
     ###########################################################################
     def saveGame(self) -> None:
-        self.handleSave(0)
+        self.handleSave(False)
 
     ###########################################################################
     # savePuzzle(game : object) -> None:
@@ -467,8 +467,10 @@ class CLI_A():
         
         count = 0
         for i in leaderboard:
-            fstr += f'{count+1:<7} {leaderboard[count][1]:<11}'
-            fstr += f'{leaderboard[count][2]:<14} {leaderboard[count][3]}\n'
+            fstr += (
+                f'{count+1:<7} {leaderboard[count][1]:<11}'
+                f'{leaderboard[count][2]:<14} {leaderboard[count][3]}\n'
+            )
             count += 1
 
         print(fstr)
@@ -490,46 +492,33 @@ class CLI_A():
     #   outty : object
     #     - output object storing output strings
     ###########################################################################
-    def handleSave(self, num: int) -> None:
+    def handleSave(self, num: bool) -> None:
         saveStatus = False
         fileName = input(('Please enter the name of the file you would like '
                           'to save for example "Game1"\n> '))
-        currentPath = os.getcwd()
-        fFileName = fileName + '.json'
-        if self.checkEncrypt() == True:
-            # Encrypt
-            pass
-        else:
-            pass
+        filePath = str(os.getcwd()) + '\\' + fileName
+        encrypt = self.checkEncrypt()
         
         self.checkHighScore()
 
-        if (path.isfile(fFileName)):
-            print('Would you like to overwrite the file ' + fileName + '?')
-            yesOrNo = input('Enter Y for yes or N for no\n> ')
-            if (yesOrNo == 'Y'):
-                if (num == 0):
-                    save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                    save.execute()
-                    saveStatus = True
-                elif (num == 1):
-                    save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
-                    save.execute()
-                    saveStatus = True
+        if (path.isfile(filePath)):
+            yesOrNo = input('Would you like to overwrite the file '
+                            + fileName + '?'+
+                            ' [Y/N]\n> ')
+            print(filePath)
+            if (yesOrNo == 'N'):
+                save = cmd.SaveGame(self.puzzle, filePath, num, encrypt)
+                save.execute()
+                saveStatus = True
         else:
-            if (num == 0):
-                save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                save.execute()
-                saveStatus = True
-            elif (num == 1):
-                save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
-                save.execute()
-                saveStatus = True
+            save = cmd.SaveGame(self.puzzle, filePath, num, encrypt)
+            save.execute()
+            saveStatus = True
 
         if saveStatus:
             print('Save Complete!')
         else:
-            print('Game could not be saved.')
+            print(f'Game could not be saved. Path: {filePath}')
 
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
@@ -613,7 +602,7 @@ class CLI_A():
         match leaderboardCheck:
             case 'Y':
                 # Enter score in the database
-                name = input("What is the name that you'd like to enter?\n")
+                name = self.validateName()
                 highScore.qualify(name, self.puzzle.getRank(),
                                   self.puzzle.getScore(),
                                   self.puzzle.getUniqueLetters(),
@@ -625,6 +614,29 @@ class CLI_A():
                 # Recursively calls until valid input provided.
                 self.checkHighScore()
 
+    ###########################################################################
+    # validateName() -> str:
+    #
+    # DESCRIPTION:
+    #   Helper function to validate name input.
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   Name : str
+    #       Returns validated name
+    ###########################################################################
+    def validateName(self) -> str:
+        name = input("What is the name that you'd like to enter?\n> ")
+        if len(name) >= 10:
+            print("\nName must be 10 characters\n")
+            name = self.validateName()
+        elif not name.isalpha():
+            print("\nName must not contain non-alphabetical characters\n")
+            name = self.validateName()
+        return name
+    
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
     #
