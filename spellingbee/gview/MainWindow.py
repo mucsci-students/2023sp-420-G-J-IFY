@@ -38,6 +38,7 @@ from PyQt6.QtWidgets import (
     QSpacerItem,
     QStackedWidget,
     QFrame,
+    QLabel
 )
 from model.puzzle import Puzzle
 import sys
@@ -70,7 +71,7 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget(self)
         self.centralWidget = self._buildGameWidget()
         self.landingPage = WelcomePage(self)
-        self.wrapUpPage = WrapUpPage(self, Puzzle)
+        self.wrapUpPage = WrapUpPage(self, puzzle)
 
         self.options = Dialogs.OptionsDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
@@ -149,8 +150,7 @@ class MainWindow(QMainWindow):
     #   Displays text to the user when they make a guess
     ###########################################################################
     def setStatus(self, text: str) -> None:
-        self.gameWidget.uInput.clearFocus()
-        self.gameWidget.uInput.setPlaceholderText(text)
+        self.gameWidget.uOutput.setText(text)
 
     ###########################################################################
     # _createToolBar() -> QToolBar:
@@ -293,6 +293,7 @@ class GameWidget(QWidget):
         self.hLine = QFrame(self)
         self.cluster = HexCluster(self, letters, keyLett)
         self.menuBtn = QPushButton(self)
+        self.uOutput = QLabel(self)
         self.hintBtn = QPushButton(self)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
@@ -373,7 +374,7 @@ class GameWidget(QWidget):
         self.menuBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.menuBtn.setStatusTip('Menu')
         self.menuBtn.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
-        self.menuBtn.setIconSize(QSize(30, 30))
+        self.menuBtn.setIconSize(QSize(40, 40))
         self.hintBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.hintBtn.setStatusTip('Hint')
         self.hintBtn.setIcon(QIcon('SpellingBee/gview/assets/hint.png'))
@@ -411,6 +412,17 @@ class GameWidget(QWidget):
             QSizePolicy.Policy.MinimumExpanding
         )
 
+        # Set formatting for user output
+        self.uOutput.setAlignment(
+            Qt.AlignmentFlag.AlignTop |
+            Qt.AlignmentFlag.AlignHCenter
+        )
+        self.uOutput.setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.MinimumExpanding
+        )
+
+        # Formatting for cluster
         self.cluster.setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
@@ -425,6 +437,7 @@ class GameWidget(QWidget):
             self.menuBtn,
             alignment=Qt.AlignmentFlag.AlignLeft
         )
+        toolsLayout.addWidget(self.uOutput)
         toolsLayout.addWidget(
             self.hintBtn,
             alignment=Qt.AlignmentFlag.AlignRight

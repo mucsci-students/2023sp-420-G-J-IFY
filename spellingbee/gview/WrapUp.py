@@ -39,8 +39,10 @@ class WrapUpPage(QtWidgets.QWidget):
         self.congrats = QtWidgets.QInputDialog(self)
         self.leader_board = Leaderboard(self, leaderboard)
         self.scroll_area = QtWidgets.QScrollArea()
-        self._score = 78
-        self._rank = 'beginner'
+        self._score = puzzle.getScore()
+        self._rank = puzzle.getRank()
+        self._score_lbl = QtWidgets.QLabel()
+        self._rank_lbl = QtWidgets.QLabel()
         self.save_btn = QtWidgets.QPushButton()
         self.exit_btn = QtWidgets.QPushButton()
 
@@ -128,16 +130,16 @@ class WrapUpPage(QtWidgets.QWidget):
 
         # Score layout
         hlayout = QtWidgets.QHBoxLayout()
-        score_lbl = QtWidgets.QLabel()
-        score_lbl.setText(f"Score: {self._score}")
-        score_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        hlayout.addWidget(score_lbl)
+        self._score_lbl = QtWidgets.QLabel()
+        self._score_lbl.setText(f"Score: {self._score}")
+        self._score_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        hlayout.addWidget(self._score_lbl)
 
         # Rank Layout
-        rank_lbl = QtWidgets.QLabel()
-        rank_lbl.setText(f"Rank: {self._rank}")
-        rank_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        hlayout.addWidget(rank_lbl)
+        self._rank_lbl = QtWidgets.QLabel()
+        self._rank_lbl.setText(f"Rank: {self._rank}")
+        self._rank_lbl.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        hlayout.addWidget(self._rank_lbl)
         layout.addLayout(hlayout)
 
         out.setLayout(layout)
@@ -150,7 +152,9 @@ class WrapUpPage(QtWidgets.QWidget):
     # DESCRIPTION
     #   updates the shown leaderboard
     ###########################################################################
-    def _updateLeaderboard(self, newlb: list[tuple]) -> None:
+    def _updateLeaderboard(self, newlb: list[tuple], puzzle: Puzzle) -> None:
         self.leader_board = Leaderboard(self, newlb)
         self.leader_board.update()
+        self._score_lbl.setText(str(puzzle.getScore()))
+        self._rank_lbl.setText(puzzle.getRank())
         self.scroll_area.setWidget(self.leader_board)
