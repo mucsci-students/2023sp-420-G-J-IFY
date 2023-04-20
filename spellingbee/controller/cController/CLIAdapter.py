@@ -77,6 +77,9 @@ class CLI_A():
             case '!load':
                 self.loadGame()
                 return self.puzzle
+            case '!leaderboard':
+                self.leaderboard()
+                return self.puzzle
             case '!help':
                 self.help()
                 return self.puzzle
@@ -435,8 +438,23 @@ class CLI_A():
                 # recursively calls until valid input provided.
                 self.parse('!exit')
 
-
+    ###########################################################################
+    # leaderboard(puzzle: object, outty: object) -> None
+    #
+    # DESCRIPTION:
+    #   Prints the  current leaderboard to the user
+    #
+    # PARAMETERS:
+    #   puzzle : object
+    #     - puzzle object for the currently active game.
+    #   outty : object
+    #     - output object storing output strings
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
     def leaderboard():
+        fstr = ''
         pass
     
     ###########################################################################
@@ -461,7 +479,12 @@ class CLI_A():
                           'to save for example "Game1"\n> '))
         currentPath = os.getcwd()
         fFileName = fileName + '.json'
-        self.checkEncrypt()
+        if self.checkEncrypt() == True:
+            # Encrypt
+            pass
+        else:
+            pass
+        
         self.checkHighScore()
 
         if (path.isfile(fFileName)):
@@ -522,16 +545,16 @@ class CLI_A():
     # RETURNS:
     #   None
     ###########################################################################
-    def checkEncrypt(self) -> None:
+    def checkEncrypt(self) -> bool:
+        flag = False
         print('Would you like to encrypt the word list? [Y/N]')
         encryptYorN = input('> ').upper()
         match encryptYorN:
             case 'Y':
-                # self.puzzle.setAllWordList(encrypter.encryptionHandler(
-                # self.puzzle.getAllWords, 0))
-                pass
+                flag = True
+                return flag
             case 'N':
-                return
+                return flag
             case _:
                 self.outty.setField('Input Invalid')
                 # Recursively calls until valid input provided.
@@ -606,6 +629,7 @@ class CLI_A():
             '!save',
             '!savePuzzle',
             '!load',
+            '!leaderboard'
             '!help',
             '!exit',
             '!hint'
