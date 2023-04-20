@@ -238,7 +238,7 @@ class GUI_A():
             filter='GameFiles (*.json)'
         )[0]
         # Create a new puzzle object
-        loadGame = cmd.LoadGame(fileName, '')
+        loadGame = cmd.LoadGame(fileName)
         newPuzzle = loadGame.execute()
         # Checks if puzzle was loaded properly
         if newPuzzle is None:
