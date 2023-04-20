@@ -248,3 +248,17 @@ def testConcatFull(puzzleFixture):
     list = ["warlock", "wrack", "alcool"]
     puzzleFixture.setFoundWords(list)
     assert (puzzleFixture.concatFound() == "WARLOCK WRACK ALCOOL ")
+
+
+def testUpdateScoreFinished(puzzleFixture):
+    puzzleFixture.setMaxScore(100)
+    puzzleFixture.setScore(puzzleFixture.getMaxScore())
+    puzzleFixture.updateRank()
+    assert (puzzleFixture.getRank() == "Queen Bee")
+
+
+def testUpdateScore1(puzzleFixture):
+    puzzleFixture.setMaxScore(100)
+    puzzleFixture.setScore(11)
+    puzzleFixture.updateRank()
+    assert (puzzleFixture.getRank() == "Good")

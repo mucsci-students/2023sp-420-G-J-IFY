@@ -15,6 +15,7 @@ import sys
 import os
 import puzzle
 from cview import CLI
+from model.output import Output
 from os import path
 import encrypter
 import highScore
@@ -25,11 +26,12 @@ parent = os.path.dirname(current)
 
 sys.path.append(parent)
 
+outty = Output.getInstance()
+
 
 class CLI_A():
-    def __init__(self, puzzle: puzzle.Puzzle, outty: object):
+    def __init__(self, puzzle: puzzle.Puzzle):
         self.puzzle = puzzle
-        self.outty = outty
 
     ###########################################################################
     # parse(userinput : str, game : object, outty : object) -> object:
@@ -66,7 +68,7 @@ class CLI_A():
                 return self.puzzle
             case '!shuffle':
                 self.puzzle.shuffleChars()
-                self.outty.setField('Shuffling letters...')
+                outty.setField('Shuffling letters...')
                 return self.puzzle
             case '!save':
                 self.saveGame()
@@ -91,19 +93,23 @@ class CLI_A():
                 return self.puzzle
             case _:
                 if usrinput.startswith('!'):
-                    self.outty.setField('Command not recognized. '
-                                        'Type \"!help\" for a list '
-                                        'of valid commands...')
+                    outty.setField(
+                        'Command not recognized. '
+                        'Type \"!help\" for a list '
+                        'of valid commands...'
+                    )
                     return self.puzzle
 
                 elif not usrinput.isalpha():
-                    self.outty.setField('Input not accepted:\n\t~Guesses '
-                                        'should only contain alphabetical '
-                                        'characters.')
+                    outty.setField(
+                        'Input not accepted:\n\t~Guesses '
+                        'should only contain alphabetical '
+                        'characters.'
+                    )
                     return self.puzzle
 
                 else:
-                    guess = cmd.Guess(self.puzzle, usrinput, self.outty)
+                    guess = cmd.Guess(self.puzzle, usrinput)
                     guess.execute()
                     return self.puzzle
 
@@ -130,11 +136,11 @@ class CLI_A():
         if word != '':
             keyLetter = input("Enter a letter from your word "
                               "to use as the key letter\n> ")
-        out = cmd.NewGame(self.outty, word.lower(), keyLetter.lower())
+        out = cmd.NewGame(word.lower(), keyLetter.lower())
         self.puzzle = out.execute()
-        if self.outty.getField().startswith("ERROR"):
-            print(self.outty.getField())
-            self.outty.setField('')
+        if outty.getField().startswith("ERROR"):
+            print(outty.getField())
+            outty.setField('')
 
     ###########################################################################
     # printPuzzle(game : object) -> None:
@@ -231,7 +237,7 @@ class CLI_A():
                          'looking for.\n> ')
         currentPath = os.getcwd() + "\\" + fileName
 
-        newGame = cmd.LoadGame(currentPath, fileName, self.outty)
+        newGame = cmd.LoadGame(currentPath, fileName)
         newGame = newGame.executeCLI()
         if newGame is not None:
             self.puzzle = newGame
@@ -429,12 +435,12 @@ class CLI_A():
         usrinput = input('> ').upper()
         match usrinput:
             case 'Y':
-                self.outty.setField("Thank you for playing!")
+                outty.setField("Thank you for playing!")
                 quit()
             case 'N':
                 return
             case _:
-                self.outty.setField('Input Invalid')
+                outty.setField('Input Invalid')
                 # recursively calls until valid input provided.
                 self.parse('!exit')
 
@@ -529,8 +535,10 @@ class CLI_A():
     ###########################################################################
     def finalGame(self) -> None:
         self.showStatus()
-        self.outty.setField(("Congratulations!!!! You "
-                             "have found all of the words for this puzzle!"))
+        outty.setField((
+            "Congratulations!!!! You "
+            "have found all of the words for this puzzle!"
+        ))
 
     ###########################################################################
     # checkEncrypt() -> None:

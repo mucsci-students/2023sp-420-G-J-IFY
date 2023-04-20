@@ -20,18 +20,22 @@ from PyQt6.QtWidgets import (
     QPlainTextEdit,
     QVBoxLayout,
     QDialogButtonBox,
+    QInputDialog,
+    QScrollArea
 )
-from model import (
-    output
-)
+from model.output import Output
 from model.hint import hint
 from model.puzzle import Puzzle
 from gview.MainWindow import MainWindow
 from controller import cmd
+from gview.Leaderboard import Leaderboard
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
+
+# Create output
+outty = Output.getInstance()
 
 
 ###############################################################################
@@ -75,10 +79,9 @@ sys.path.append(parent)
 #   - getLettersFromGrid(self, lst: list[list[int]]) -> str:
 ###############################################################################
 class GUI_A():
-    def __init__(self, puzzle: Puzzle, outty: output.Output):
+    def __init__(self, puzzle: Puzzle):
         self._puzzle = puzzle
         self._puzzle.shuffleChars()
-        self._outty = outty
         self._window = None
 
     ###########################################################################
@@ -117,6 +120,15 @@ class GUI_A():
         self._window.saveDialog.btns.rejected.connect(self._backToMainWindow)
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
+        self._window.options.leaderboardBtn.clicked.connect(self._leaderboard)
+        self._window.options.mainMenuBtn.clicked.connect(self._wrapup)
+        # Wrap up buttons
+        self._window.wrapUpPage.save_btn.clicked.connect(
+            self._window.saveDialog.show
+        )
+        self._window.wrapUpPage.exit_btn.clicked.connect(
+            self._window._returnToMenu
+        )
 
     ###########################################################################
     # _guess() -> None
@@ -131,13 +143,13 @@ class GUI_A():
         # retrieve text and make guess
         txt = self._window.gameWidget.uInput.text()
         # create and execute guess command
-        guess = cmd.Guess(self._puzzle, txt, self._outty)
+        guess = cmd.Guess(self._puzzle, txt)
         guess.execute()
         # Update view
         self._window.gameWidget.uInput.clear()
         self._window.statsPanel.update(self._puzzle)
         # Display info
-        self._window.setStatus(self._outty.getField())
+        self._window.setStatus(outty.getField())
 
     ###########################################################################
     # _shuffle() -> None
@@ -178,7 +190,7 @@ class GUI_A():
 
         # Create new game object so long as it is valid
         if len(set(baseWord)) == 7 or (baseWord == '' and keyLetter == ''):
-            newGame = cmd.NewGame(self._outty, baseWord, keyLetter)
+            newGame = cmd.NewGame(baseWord, keyLetter)
             self._puzzle = newGame.execute()
             # Update view
             self._window.newGame(self._puzzle)
@@ -200,7 +212,7 @@ class GUI_A():
         dialog = self._window.saveDialog
         saveGame = cmd.SaveGame(
             puzzle=self._puzzle,
-            path=dialog.getPath(),
+            filePath=dialog.getPath(),
             onlyPuzz=dialog.isOnlyPuzzle(),
             encrypt=dialog.isEncrypted()
         )
@@ -226,7 +238,7 @@ class GUI_A():
             filter='GameFiles (*.json)'
         )[0]
         # Create a new puzzle object
-        loadGame = cmd.LoadGame(fileName, '', self._outty)
+        loadGame = cmd.LoadGame(fileName)
         newPuzzle = loadGame.execute()
         # Checks if puzzle was loaded properly
         if newPuzzle is None:
@@ -475,3 +487,86 @@ class GUI_A():
     def _backToMainWindow(self):
         self._window.options.close()
         self._window.stack.setCurrentIndex(0)
+
+    ##########################################################################
+    # _leaderboard(self) -> None:
+    #
+    # DESCRITPION:
+    #   opens the leaderboard and fills it based on a list of tuples
+    ##########################################################################
+    def _leaderboard(self) -> None:
+        lst = self._getLeaderboard()
+        dlg = QDialog(self._window)
+
+        leaderboardWig = Leaderboard(dlg, lst)
+        button = btnBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
+        button.accepted.connect(dlg.accept)
+
+        scroll = QScrollArea()
+        scroll.setWidget(leaderboardWig)
+        scroll.setWidgetResizable(True)
+
+        layout = QVBoxLayout()
+        layout.addWidget(scroll)
+        layout.addWidget(btnBox)
+
+        dlg.setLayout(layout)
+        dlg.setFixedSize(370, 500)
+        dlg.setModal(True)
+
+        dlg.show()
+
+    ##########################################################################
+    # _wrapup()
+    ##########################################################################
+    def _wrapup(self):
+        self._window.options.close()
+        # Get leaderboard from model and change view to WrapUpPage
+        lb = self._getLeaderboard()
+        self._window.wrapUpPage._updateLeaderboard(lb)
+        self._window.stack.setCurrentIndex(2)
+
+        # get users current score and lowest score on leaderboard
+        score = self._puzzle.getScore()
+        if len(lb) <= 0:
+            lowest = -1
+        else:
+            lowest = lb[len(lb) - 1][2]
+
+        name = ''
+        # Check if user is eligible for leaderboard
+        if ((len(lb)) < 10) or (score > lowest):
+            name, ok_clicked = QInputDialog.getText(
+                self._window,
+                'Congrats!',
+                ('You made the top 10!\n'
+                 'Enter a name to track your score!')
+            )
+            # update leaderboard to reflect new entry added
+            if ok_clicked:
+                self._updateLeaderboard(name)
+                lb = self._getLeaderboard()
+                self._window.wrapUpPage._updateLeaderboard(lb)
+
+    ##########################################################################
+    # _getLeaderboard()
+    #
+    # DESCRIPTION
+    #   Returns the leaderboard for current game
+    ##########################################################################
+    def _getLeaderboard(self) -> list[tuple]:
+        getLb = cmd.Leaderboard(self._puzzle)
+        return getLb.execute()
+
+    ##########################################################################
+    # _updateLeaderboard()
+    #
+    # DESCRIPTION
+    #   Returns the leaderboard for current game
+    ##########################################################################
+    def _updateLeaderboard(self, name: str):
+        # check if name is an empty string.
+        if not name:
+            name = 'Player'
+        saveScore = cmd.SaveScore(name, self._puzzle)
+        saveScore.execute()

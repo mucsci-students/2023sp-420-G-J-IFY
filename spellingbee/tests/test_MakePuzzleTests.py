@@ -1,11 +1,12 @@
 # Author: Francesco Spagnolo
 import sys
 import os
-import model.output
+from model.output import Output
 import MakePuzzle as spellingbee
 import pytest
 
-outty = model.output.Output()
+
+outty = Output.getInstance()
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -16,74 +17,73 @@ sys.path.append(parent)
 
 @pytest.fixture
 def puzzleFixture():
-    return spellingbee.newPuzzle('friends', 'i', outty, False)
+    return spellingbee.newPuzzle('friends', 'i', False)
 
 
 @pytest.fixture
 def blankPuzzleFixture():
-    return spellingbee.newPuzzle('', '', outty, False)
+    return spellingbee.newPuzzle('', '', False)
 
 
 @pytest.fixture
 def nonAlphaPuzzleFixture():
-    return spellingbee.newPuzzle(':123@#$', '2', outty, False)
+    return spellingbee.newPuzzle(':123@#$', '2', False)
 
 
 @pytest.fixture
 def badPuzzleFixture():
-    return spellingbee.newPuzzle('grimer', 'g', outty, False)
+    return spellingbee.newPuzzle('grimer', 'g', False)
 
 
 @pytest.fixture
 def badKeyLettPuzzleFixture():
-    return spellingbee.newPuzzle('warlock', '', outty, False)
+    return spellingbee.newPuzzle('warlock', '', False)
 
 
 @pytest.fixture
 def extraKeyLettPuzzleFixture():
-    return spellingbee.newPuzzle('warlock', 'wa', outty, False)
+    return spellingbee.newPuzzle('warlock', 'wa', False)
 
 
 @pytest.fixture
 def wrongKeyLettPuzzleFixture():
-    return spellingbee.newPuzzle('warlock', 'e', outty, False)
+    return spellingbee.newPuzzle('warlock', 'e', False)
 
 
 @pytest.fixture
 def guessFixture(puzzleFixture):
-    spellingbee.guess(puzzleFixture, 'friend', False, outty)
+    spellingbee.guess(puzzleFixture, 'friend', False)
     return puzzleFixture
 
 
 @pytest.fixture
 def shortGuessFixture(puzzleFixture):
-    spellingbee.guess(puzzleFixture, "end", False, outty)
+    spellingbee.guess(puzzleFixture, "end", False)
 
 
 @pytest.fixture
 def longGuessFixture(puzzleFixture):
-    spellingbee.guess(puzzleFixture, "thisguessistoolongforourgame", False,
-                      outty)
+    spellingbee.guess(puzzleFixture, "thisguessistoolongforourgame", False)
 
 
 @pytest.fixture
 def nonalphaGuessFixture(puzzleFixture):
-    spellingbee.guess(puzzleFixture, ":123", False, outty)
+    spellingbee.guess(puzzleFixture, ":123", False)
 
 
 @pytest.fixture
 def nonsenseGuessFixture(puzzleFixture):
-    spellingbee.guess(puzzleFixture, "notaword", False, outty)
+    spellingbee.guess(puzzleFixture, "notaword", False)
 
 
 @pytest.fixture
 def missingCenterGuessFixture(puzzleFixture):
-    spellingbee.guess(puzzleFixture, "fenders", False, outty)
+    spellingbee.guess(puzzleFixture, "fenders", False)
 
 
 @pytest.fixture
 def wrongLettersGuessFixture(puzzleFixture):
-    spellingbee.guess(puzzleFixture, "benders", False, outty)
+    spellingbee.guess(puzzleFixture, "benders", False)
 
 
 # test to see if blank puzzle is generated correctly

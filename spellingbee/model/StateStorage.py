@@ -20,13 +20,16 @@ import sqlite3
 import MakePuzzle
 import json
 import os.path
-from os import path
 import model
 from pathlib import Path
+from model.output import Output
+import encrypter
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
+
+outty = Output.getInstance()
 
 
 ###############################################################################
@@ -51,30 +54,6 @@ class NotInDBException(Exception):
 ###############################################################################
 class BadJSONException(Exception):
     pass
-
-
-###############################################################################
-# __Save(dict: dict, fileName: str)
-#
-# DESCRIPTION:
-#   Stores a dictionary to a json file under the name fileName.
-#
-# PARAMETERS:
-#  dict : dict
-#   Dictionary that will be saved to a json
-#  filename: str
-#   String that contains the file name that will be saved.
-#
-# RETURNS:
-#   None
-###############################################################################
-def __Save(dict, fileName):
-    with open(fileName, "w") as file:
-        json.dump(dict, file)
-    cwd = Path.cwd()
-    saveCur = cwd / fileName
-    if path.exists(saveCur):
-        os.replace(saveCur, saveCur)
 
 
 ###############################################################################
@@ -132,77 +111,6 @@ def __setFields(dict):
 
 
 ###############################################################################
-# savePuzzle(saveStateObj: obj, fileName: str)
-#
-# DESCRIPTION:
-#   Saves a blank game no matter if ther was progress already established,
-#   the function only saves the puzzle no other game state.
-#   If the file does not exist with the specified fileName then a new file
-#   will be created using that name.
-#   If the file does exist with the specified fileName then the old file
-#   will be overwritten
-#   If dict has a length that is not 1 and doesnt contain the element
-#   'puzzleLetters' an error is raised
-#
-# PRECONDITION:
-#      - Dict the puzzle of x amount of letters. dict must not include any
-# found words, rank.
-#
-# PARAMETERS:
-#  saveStateObj: obj
-#     - A saveState object
-#  fileName: str
-#     - String that contains the file name that will be saved
-###############################################################################
-def savePuzzle(saveStateObj, fileName):
-    # Creates dict to be saved
-    newObj = model.Puzzle(saveStateObj.getKeyLetter(),
-                          saveStateObj.getUniqueLetters())
-    newObj.setMaxScore(saveStateObj.getMaxScore())
-    newObj.setAllWordList(saveStateObj.getAllWords())
-    newObj.updateRank()
-
-    dict = __makeDict(newObj)
-    __Save(dict, fileName + ".json")
-
-
-###############################################################################
-# loadPuzzle(fileName: str, outty : object) -> obj
-#
-# DESCRIPTION:
-#   Loads the puzzle given a file name
-#
-# PARAMETERS:
-#   fileName: str
-#      - Name of the file you are loading
-#
-# RETURNS:
-#   __Load(fileName)
-#      - Loaded puzzle obj
-#   outty : object
-#      - Output object storing output strings
-###############################################################################
-def loadPuzzle(fileName, outty):
-    return __Load(fileName, outty)
-
-
-###############################################################################
-# saveCurrent(puzzle: obj, fileName: str)
-#
-# DESCRIPTION:
-#   Saves a current iteration of the puzzle
-#
-# PARAMETERS:
-#   puzzle: obj
-#      - Object you want to be saved
-#   fileName: str
-#      - Name of the file you are loading
-###############################################################################
-def saveCurrent(puzzle, fileName):
-    __Save(__makeDict(puzzle), fileName + ".json")
-
-
-###############################################################################
 # __checkFileExists(pathToFile: str) -> bool
 #
 # DESCRIPTION:
@@ -229,70 +137,6 @@ def __checkFileExists(pathToFile):
 
 
 ###############################################################################
-# __Load(fileName: str, outty : object) -> Obj
-#
-# DESCRIPTION:
-#   Loads the file and creates a dictionary that will be returned
-#
-# PARAMETERS:
-#   fileName : str
-#     - The name of the file ex 'help'
-#   outty : object
-#     - output object storing output strings
-#
-# RETURNS:
-#  obj
-#     - A dictionary that contains all the game data
-#
-# RAISES:
-#  FileNotFoundError
-#     - File that is trying to be loaded does not exist
-###############################################################################
-def __Load(fileName, outty):
-    # Checks if file exists
-    try:
-        # Check if user ended their save with the .json filename
-        if fileName.endswith(".json"):
-            fileName = fileName
-        else:
-            fileName = fileName + ".json"
-        # Create a path to the current directory
-        path1 = Path(Path.cwd())
-        # Append the file in question to the path
-        a = path1 / fileName
-        __checkFileExists(a)
-
-        # Opens file
-        file = open(fileName)
-
-        # Puts elements in the file in a dictionary
-        dict = json.load(file)
-
-        # Check that dict contains valid save data
-        dict = checkLoad(dict)
-        # If corrupt file happens, throw exception
-        if dict is None:
-            raise BadJSONException  # #########################################
-
-        obj = __setFields(dict)
-
-        return obj
-    except FileNotFoundError:
-        # If fileName does not exist then a FileNotFoundError is
-        # raised saying the file does not exist
-        outty.setField(
-            "The file " + fileName + " does not exist in this directory\n"
-            "Returning to game..."
-        )
-    except BadJSONException:  # ###############################################
-        outty.setField(
-            "The file " + fileName + " contains critical errors that \n"
-            "prevent the game from functioning properly\n"
-            "Returning to game..."
-        )
-
-
-###############################################################################
 # LoadFromExplorer(pathTOFile, outty)
 #
 # DESCRIPTION:
@@ -304,11 +148,13 @@ def __Load(fileName, outty):
 # RETURNS:
 #   None
 ###############################################################################
-def loadFromExploer(path: Path, outty):
+def load(path: Path):
     try:
         f = open(path)
 
         dict = json.load(f)
+        if "SecretWordList" in dict:
+            dict = encrypter.encryptionHandler(dict, False)
         dict = checkLoad(dict)
         if dict is None:
             raise BadJSONException
@@ -495,3 +341,126 @@ def saveFromExplorer(path: str, fileName: str, puzzle: object,
     else:
         with open(path + '/' + fileName, "w") as file:
             json.dump(dict, file)
+
+
+class Strategy:
+    def exectute(self, path: str | None,
+                 puzzle: object, onlyPuzz: bool | None):
+        raise NotImplementedError
+
+    def _makeDict(self, saveStateObj):
+        dict = {
+            "Author": "GJIFY",
+            "RequiredLetter": saveStateObj.getKeyLetter(),
+            "PuzzleLetters": saveStateObj.getUniqueLetters(),
+            "CurrentPoints": saveStateObj.getScore(),
+            "MaxPoints": saveStateObj.getMaxScore(),
+            "GuessedWords": saveStateObj.getFoundWords(),
+            "WordList": saveStateObj.getAllWords(),
+        }
+        return dict
+
+
+class savePuzzleStrategy(Strategy):
+    ###########################################################################
+    # execute(path : string, fileName : str,
+    # puzzle : object, onlyPuzz : bool) -> None:
+    #
+    # DESCRIPTION:
+    #   This function saves a puzzle either with current progress or
+    # just the puzzle its self
+    #
+    # PARAMETERS:
+    #   path : str
+    #      - Path to the folder where the save needs to go
+    #   fileName: str
+    #      - Name of the file
+    #   puzzle : object
+    #      - The game object that needs to be saved
+    #   onlyPuzz: bool
+    #      - A flag true if we are to only save the puzzle with no progress
+    # and false if we are ton save the current state
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
+    def exectute(self, filePath: str | None, puzzle: object,
+                 onlyPuzz: bool | None):
+        if onlyPuzz:
+            newObj = model.Puzzle(puzzle.getKeyLetter(),
+                                  puzzle.getUniqueLetters())
+            newObj.setMaxScore(puzzle.getMaxScore())
+            newObj.setAllWordList(puzzle.getAllWords())
+            newObj.updateRank()
+            dict = self._makeDict(newObj)
+        else:
+            dict = self._makeDict(puzzle)
+        with open(filePath, "w") as file:
+            json.dump(dict, file)
+
+
+class encryptedSaveStrategy(Strategy):
+    ###########################################################################
+    # execute(path : string, fileName : str,
+    # puzzle : object, onlyPuzz : bool) -> None:
+    #
+    # DESCRIPTION:
+    #   This function saves a puzzle either with current progress or
+    # just the puzzle its self and encrypts the word list
+    #
+    # PARAMETERS:
+    #
+    #   path : str
+    #      - Path to the folder where the save needs to go
+    #   fileName: str
+    #      - Name of the file
+    #   puzzle : object
+    #      - The game object that needs to be saved
+    #   onlyPuzz: bool
+    #      - A flag true if we are to only save the puzzle with no progress
+    # and false if we are ton save the current state
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
+    def exectute(self, filePath: str | None, puzzle: object,
+                 onlyPuzz: bool | None):
+        dict = self._makeDict(puzzle)
+        encryptedDict = encrypter.encryptionHandler(dict, True)
+        if onlyPuzz:
+            encryptedDict['GuessedWords'] = []
+            encryptedDict['CurrentScore'] = 0
+        with open(filePath, "w") as file:
+            json.dump(encryptedDict, file)
+
+
+class Saver:
+    def __init__(self, strategy: Strategy):
+        # makes a copy of the current puzzle
+        self.strategy = strategy
+
+    ###########################################################################
+    # executeStrategy(self, path: str | None, fileName: str, puzzle: object,
+    #                 onlyPuzz: bool | None):
+    #
+    # DESCRIPTION:
+    #   exectutes a strategy
+    #
+    # PARAMETERS:
+    #
+    #   path : str
+    #      - Path to the folder where the save needs to go
+    #   fileName: str
+    #      - Name of the file
+    #   puzzle : object
+    #      - The game object that needs to be saved
+    #   onlyPuzz: bool
+    #      - A flag true if we are to only save the puzzle with no progress
+    # and false if we are ton save the current state
+    #
+    # RETURNS:
+    #   NONE
+    ###########################################################################
+    def executeStrategy(self, filePath: str | None, puzzle: object,
+                        onlyPuzz: bool | None):
+        self.strategy.exectute(filePath, puzzle, onlyPuzz)

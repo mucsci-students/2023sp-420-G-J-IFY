@@ -13,8 +13,11 @@
 import sqlite3
 import puzzle
 import itertools
-import output
+from model.output import Output
 from itertools import chain, combinations
+
+# Create output object
+outty = Output.getInstance()
 
 
 ###############################################################################
@@ -42,8 +45,11 @@ from itertools import chain, combinations
 #     - If check is baseword contains nonalphas
 #       if word is in the database
 ###############################################################################
-def newPuzzle(baseWord: str, keyLetter: str,
-              outty: output, flag: bool) -> object:
+def newPuzzle(
+    baseWord: str,
+    keyLetter: str,
+    flag: bool
+) -> object:
     try:
         uniqueLetters = {}
         if baseWord == "":
@@ -104,9 +110,8 @@ def newPuzzle(baseWord: str, keyLetter: str,
 
     # Raise exception for bad puzzle seed
     except BadQueryException:
-        if flag is False:
-            outty.setField("ERROR!: " + baseWord.upper() +
-                           " is not a valid word")
+        outty.setField("ERROR!: " + baseWord.upper() +
+                       " is not a valid word")
     except LetterMismatchException:
         outty.setField("ERROR!: " + keyLetter.upper() +
                        " is not a valid key letter")
@@ -224,7 +229,7 @@ def checkDataBase(baseWord: str):
 #    - output object storing output strings
 #
 ###############################################################################
-def guess(puzzle, input: str, flag: bool, outty: object):
+def guess(puzzle, input: str, flag: bool):
     input = input.lower()
     conn = sqlite3.connect("spellingbee/model/wordDict.db")
     cursor = conn.cursor()

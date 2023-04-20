@@ -24,7 +24,7 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QComboBox,
     QStyle,
-    QFileDialog
+    QFileDialog,
 )
 
 
@@ -551,7 +551,7 @@ class OptionsDialog(QDialog):
         self.helpBtn.setFixedSize(180, 40)
         self.shareBtn.setText('Share')
         self.shareBtn.setFixedSize(180, 40)
-        self.mainMenuBtn.setText('Quit to Main Menu')
+        self.mainMenuBtn.setText('Save and quit')
         self.mainMenuBtn.setFixedSize(180, 40)
         # Populate the widget
         layout = QVBoxLayout()
