@@ -237,7 +237,7 @@ class CLI_A():
                          'looking for.\n> ')
         currentPath = os.getcwd() + "\\" + fileName
 
-        newGame = cmd.LoadGame(fileName)
+        newGame = cmd.LoadGame(currentPath)
         newGame = newGame.execute()
         if newGame is not None:
             self.puzzle = newGame
@@ -462,9 +462,9 @@ class CLI_A():
     def leaderboard(self):
         leaderboard = highScore.getHighScore(self.puzzle.getUniqueLetters(),
                                              self.puzzle.getKeyLetter())
-        fstr = f'Leaderboard:\n\n'
-        fstr += f'Place   Name       Rank        Score\n'
-        
+        fstr = 'Leaderboard:\n\n'
+        fstr += 'Place   Name       Rank        Score\n'
+
         count = 0
         for i in leaderboard:
             fstr += (
@@ -475,7 +475,7 @@ class CLI_A():
 
         print(fstr)
         input("Press enter to return to game")
-    
+
     ###########################################################################
     # handleSave(game : object, num : int, outty : object) -> None:
     #                                                 # comment this out better
@@ -496,17 +496,17 @@ class CLI_A():
         saveStatus = False
         fileName = input(('Please enter the name of the file you would like '
                           'to save for example "Game1"\n> '))
-        filePath = str(os.getcwd()) + '\\' + fileName
+        filePath = str(os.getcwd()) + '\\' + fileName + '.json'
         encrypt = self.checkEncrypt()
-        
+
         self.checkHighScore()
 
         if (path.isfile(filePath)):
             yesOrNo = input('Would you like to overwrite the file '
-                            + fileName + '?'+
+                            + fileName + '?' +
                             ' [Y/N]\n> ')
             print(filePath)
-            if (yesOrNo == 'N'):
+            if (yesOrNo == 'Y'):
                 save = cmd.SaveGame(self.puzzle, filePath, num, encrypt)
                 save.execute()
                 saveStatus = True
@@ -594,7 +594,8 @@ class CLI_A():
         # If the last element is less than the current score
         elif leaderboard[-1][3] < self.puzzle.getScore():
             pass
-        else: return
+        else:
+            return
         # Then ask if they want to enter
         print('Your score is a top 10 score! Would you like to be on the '
               + 'leaderboard? [Y/N]')
@@ -636,7 +637,7 @@ class CLI_A():
             print("\nName must not contain non-alphabetical characters\n")
             name = self.validateName()
         return name
-    
+
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
     #
