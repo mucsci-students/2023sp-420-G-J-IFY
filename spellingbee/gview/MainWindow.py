@@ -38,6 +38,7 @@ from PyQt6.QtWidgets import (
     QSpacerItem,
     QStackedWidget,
     QFrame,
+    QLabel
 )
 from model.puzzle import Puzzle
 import sys
@@ -149,8 +150,7 @@ class MainWindow(QMainWindow):
     #   Displays text to the user when they make a guess
     ###########################################################################
     def setStatus(self, text: str) -> None:
-        self.gameWidget.uInput.clearFocus()
-        self.gameWidget.uInput.setPlaceholderText(text)
+        self.gameWidget.uOutput.setText(text)
 
     ###########################################################################
     # _createToolBar() -> QToolBar:
@@ -293,6 +293,7 @@ class GameWidget(QWidget):
         self.hLine = QFrame(self)
         self.cluster = HexCluster(self, letters, keyLett)
         self.menuBtn = QPushButton(self)
+        self.uOutput = QLabel(self)
         self.hintBtn = QPushButton(self)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
@@ -411,6 +412,17 @@ class GameWidget(QWidget):
             QSizePolicy.Policy.MinimumExpanding
         )
 
+        # Set formatting for user output
+        self.uOutput.setAlignment(
+            Qt.AlignmentFlag.AlignTop |
+            Qt.AlignmentFlag.AlignHCenter
+        )
+        self.uOutput.setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.MinimumExpanding
+        )
+
+        # Formatting for cluster
         self.cluster.setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
@@ -425,6 +437,7 @@ class GameWidget(QWidget):
             self.menuBtn,
             alignment=Qt.AlignmentFlag.AlignLeft
         )
+        toolsLayout.addWidget(self.uOutput)
         toolsLayout.addWidget(
             self.hintBtn,
             alignment=Qt.AlignmentFlag.AlignRight
