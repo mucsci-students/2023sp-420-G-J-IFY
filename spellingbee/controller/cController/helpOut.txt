@@ -31,6 +31,9 @@
 |----------------------------------------------------------|
 | !load        | Load a previously saved game              |
 |----------------------------------------------------------|
+| !leaderboard | Display the leaderboard with the top 10   |
+|              | scores for this puzzle                    |
+|----------------------------------------------------------|
 | !help        | Show the list of all available commands   |
 |              | with a brief description                  |
 |----------------------------------------------------------|

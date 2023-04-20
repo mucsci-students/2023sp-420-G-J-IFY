@@ -17,6 +17,7 @@ import puzzle
 from cview import CLI
 from model.output import Output
 from os import path
+import highScore
 
 current = os.path.dirname(os.path.realpath(__file__))
 
@@ -76,6 +77,9 @@ class CLI_A():
                 return self.puzzle
             case '!load':
                 self.loadGame()
+                return self.puzzle
+            case '!leaderboard':
+                self.leaderboard()
                 return self.puzzle
             case '!help':
                 self.help()
@@ -198,7 +202,7 @@ class CLI_A():
     #     - output object storing output strings
     ###########################################################################
     def saveGame(self) -> None:
-        self.handleSave(0)
+        self.handleSave(False)
 
     ###########################################################################
     # savePuzzle(game : object) -> None:
@@ -232,8 +236,8 @@ class CLI_A():
                          'looking for.\n> ')
         currentPath = os.getcwd() + "\\" + fileName
 
-        newGame = cmd.LoadGame(currentPath, fileName)
-        newGame = newGame.executeCLI()
+        newGame = cmd.LoadGame(currentPath)
+        newGame = newGame.execute()
         if newGame is not None:
             self.puzzle = newGame
         else:
@@ -440,6 +444,38 @@ class CLI_A():
                 self.parse('!exit')
 
     ###########################################################################
+    # leaderboard(puzzle: object, outty: object) -> None
+    #
+    # DESCRIPTION:
+    #   Prints the  current leaderboard to the user
+    #
+    # PARAMETERS:
+    #   puzzle : object
+    #     - puzzle object for the currently active game.
+    #   outty : object
+    #     - output object storing output strings
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
+    def leaderboard(self):
+        leaderboard = highScore.getHighScore(self.puzzle.getUniqueLetters(),
+                                             self.puzzle.getKeyLetter())
+        fstr = 'Leaderboard:\n\n'
+        fstr += 'Place   Name       Rank        Score\n'
+
+        count = 0
+        for i in leaderboard:
+            fstr += (
+                f'{count+1:<7} {leaderboard[count][1]:<11}'
+                f'{leaderboard[count][2]:<14} {leaderboard[count][3]}\n'
+            )
+            count += 1
+
+        print(fstr)
+        input("Press enter to return to game")
+
+    ###########################################################################
     # handleSave(game : object, num : int, outty : object) -> None:
     #                                                 # comment this out better
     # DESCRIPTION:
@@ -455,38 +491,33 @@ class CLI_A():
     #   outty : object
     #     - output object storing output strings
     ###########################################################################
-    def handleSave(self, num: int) -> None:
+    def handleSave(self, num: bool) -> None:
         saveStatus = False
         fileName = input(('Please enter the name of the file you would like '
                           'to save for example "Game1"\n> '))
-        currentPath = os.getcwd()
-        fFileName = fileName + '.json'
-        if (path.isfile(fFileName)):
-            print('Would you like to overwrite the file ' + fileName + '?')
-            yesOrNo = input('Enter Y for yes or N for no\n> ')
+        filePath = str(os.getcwd()) + '/' + fileName + '.json'
+        encrypt = self.checkEncrypt()
+
+        self.checkHighScore()
+
+        if (path.isfile(filePath)):
+            yesOrNo = input('Would you like to overwrite the file '
+                            + fileName + '?' +
+                            ' [Y/N]\n> ')
+            print(filePath)
             if (yesOrNo == 'Y'):
-                if (num == 0):
-                    save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                    save.exceuteCLICurrent()
-                    saveStatus = True
-                elif (num == 1):
-                    save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
-                    save.executeCLIPuzzle()
-                    saveStatus = True
+                save = cmd.SaveGame(self.puzzle, filePath, num, encrypt)
+                save.execute()
+                saveStatus = True
         else:
-            if (num == 0):
-                save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                save.exceuteCLICurrent()
-                saveStatus = True
-            elif (num == 1):
-                save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
-                save.executeCLIPuzzle()
-                saveStatus = True
+            save = cmd.SaveGame(self.puzzle, filePath, num, encrypt)
+            save.execute()
+            saveStatus = True
 
         if saveStatus:
             print('Save Complete!')
         else:
-            print('Game could not be saved.')
+            print(f'Game could not be saved. Path: {filePath}')
 
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
@@ -507,6 +538,104 @@ class CLI_A():
             "Congratulations!!!! You "
             "have found all of the words for this puzzle!"
         ))
+
+    ###########################################################################
+    # checkEncrypt() -> None:
+    #
+    # DESCRIPTION:
+    #   Prompts user for confirmation to encrypt the word list, then
+    #   encrypts the list if yes, otherwise nothing is done.
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
+    def checkEncrypt(self) -> bool:
+        flag = False
+        print('Would you like to encrypt the word list? [Y/N]')
+        encryptYorN = input('> ').upper()
+        match encryptYorN:
+            case 'Y':
+                flag = True
+                return flag
+            case 'N':
+                return flag
+            case _:
+                self.outty.setField('Input Invalid')
+                # Recursively calls until valid input provided.
+                self.checkEncrypt()
+
+    ###########################################################################
+    # checkHighScore() -> None:
+    #
+    # DESCRIPTION:
+    #   Prompts user to submit their score to the leaderboard if their score
+    #   is a top 10 score.
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
+    def checkHighScore(self) -> None:
+        # Check if it qualifies first
+        leaderboard = highScore.getHighScore(self.puzzle.getUniqueLetters(),
+                                             self.puzzle.getKeyLetter())
+        # If leaderboard is empty
+        if len(leaderboard) == 0:
+            pass
+        # If there are less than 10 scores
+        elif len(leaderboard) < 10:
+            pass
+        # If the last element is less than the current score
+        elif leaderboard[-1][3] < self.puzzle.getScore():
+            pass
+        else:
+            return
+        # Then ask if they want to enter
+        print('Your score is a top 10 score! Would you like to be on the '
+              + 'leaderboard? [Y/N]')
+        leaderboardCheck = input('> ').upper()
+        match leaderboardCheck:
+            case 'Y':
+                # Enter score in the database
+                name = self.validateName()
+                highScore.qualify(name, self.puzzle.getRank(),
+                                  self.puzzle.getScore(),
+                                  self.puzzle.getUniqueLetters(),
+                                  self.puzzle.getKeyLetter())
+            case 'N':
+                return
+            case _:
+                self.outty.setField('Input Invalid')
+                # Recursively calls until valid input provided.
+                self.checkHighScore()
+
+    ###########################################################################
+    # validateName() -> str:
+    #
+    # DESCRIPTION:
+    #   Helper function to validate name input.
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   Name : str
+    #       Returns validated name
+    ###########################################################################
+    def validateName(self) -> str:
+        name = input("What is the name that you'd like to enter?\n> ")
+        if len(name) >= 10:
+            print("\nName must be 10 characters\n")
+            name = self.validateName()
+        elif not name.isalpha():
+            print("\nName must not contain non-alphabetical characters\n")
+            name = self.validateName()
+        return name
 
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
@@ -531,6 +660,7 @@ class CLI_A():
             '!save',
             '!savePuzzle',
             '!load',
+            '!leaderboard',
             '!help',
             '!exit',
             '!hint'
