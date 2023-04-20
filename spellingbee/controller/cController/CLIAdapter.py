@@ -495,7 +495,7 @@ class CLI_A():
         saveStatus = False
         fileName = input(('Please enter the name of the file you would like '
                           'to save for example "Game1"\n> '))
-        filePath = str(os.getcwd()) + '\\' + fileName + '.json'
+        filePath = str(os.getcwd()) + '/' + fileName + '.json'
         encrypt = self.checkEncrypt()
 
         self.checkHighScore()
