@@ -374,7 +374,7 @@ class GameWidget(QWidget):
         self.menuBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.menuBtn.setStatusTip('Menu')
         self.menuBtn.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
-        self.menuBtn.setIconSize(QSize(30, 30))
+        self.menuBtn.setIconSize(QSize(40, 40))
         self.hintBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.hintBtn.setStatusTip('Hint')
         self.hintBtn.setIcon(QIcon('SpellingBee/gview/assets/hint.png'))
