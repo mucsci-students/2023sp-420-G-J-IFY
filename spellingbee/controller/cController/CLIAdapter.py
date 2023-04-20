@@ -237,8 +237,8 @@ class CLI_A():
                          'looking for.\n> ')
         currentPath = os.getcwd() + "\\" + fileName
 
-        newGame = cmd.LoadGame(currentPath, fileName)
-        newGame = newGame.executeCLI()
+        newGame = cmd.LoadGame(fileName)
+        newGame = newGame.execute()
         if newGame is not None:
             self.puzzle = newGame
         else:
@@ -459,9 +459,20 @@ class CLI_A():
     # RETURNS:
     #   None
     ###########################################################################
-    def leaderboard():
-        fstr = ''
-        pass
+    def leaderboard(self):
+        leaderboard = highScore.getHighScore(self.puzzle.getUniqueLetters(),
+                                             self.puzzle.getKeyLetter())
+        fstr = f'Leaderboard:\n\n'
+        fstr += f'Place   Name       Rank        Score\n'
+        
+        count = 0
+        for i in leaderboard:
+            fstr += f'{count+1:<7} {leaderboard[count][1]:<11}'
+            fstr += f'{leaderboard[count][2]:<14} {leaderboard[count][3]}\n'
+            count += 1
+
+        print(fstr)
+        input("Press enter to return to game")
     
     ###########################################################################
     # handleSave(game : object, num : int, outty : object) -> None:
@@ -499,20 +510,20 @@ class CLI_A():
             if (yesOrNo == 'Y'):
                 if (num == 0):
                     save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                    save.exceuteCLICurrent()
+                    save.execute()
                     saveStatus = True
                 elif (num == 1):
                     save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
-                    save.executeCLIPuzzle()
+                    save.execute()
                     saveStatus = True
         else:
             if (num == 0):
                 save = cmd.SaveGame(self.puzzle, fileName, currentPath, 0)
-                save.exceuteCLICurrent()
+                save.execute()
                 saveStatus = True
             elif (num == 1):
                 save = cmd.SaveGame(self.puzzle, fileName, currentPath, 1)
-                save.executeCLIPuzzle()
+                save.execute()
                 saveStatus = True
 
         if saveStatus:
@@ -637,7 +648,7 @@ class CLI_A():
             '!save',
             '!savePuzzle',
             '!load',
-            '!leaderboard'
+            '!leaderboard',
             '!help',
             '!exit',
             '!hint'
