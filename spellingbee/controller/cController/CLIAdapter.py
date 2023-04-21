@@ -16,9 +16,9 @@ import os
 import puzzle
 from cview import CLI
 from model.output import Output
-from os import path
+from os import path, name, system
 import highScore
-
+import __main__ as main
 current = os.path.dirname(os.path.realpath(__file__))
 
 parent = os.path.dirname(current)
@@ -80,6 +80,7 @@ class CLI_A():
                 return self.puzzle
             case '!leaderboard':
                 self.leaderboard()
+                input("Press enter to return to game")
                 return self.puzzle
             case '!help':
                 self.help()
@@ -89,6 +90,9 @@ class CLI_A():
                 return self.puzzle
             case '!exit':
                 self.exit()
+                return self.puzzle
+            case '!saveAndQuit':
+                self.saveAndQuit()
                 return self.puzzle
             case _:
                 if usrinput.startswith('!'):
@@ -234,7 +238,10 @@ class CLI_A():
     def loadGame(self) -> None:
         fileName = input('Please enter the name of the game you are '
                          'looking for.\n> ')
-        currentPath = os.getcwd() + "\\" + fileName
+        if not fileName.endswith('.json'):
+            fileName += '.json'
+
+        currentPath = os.getcwd() + "/" + fileName
 
         newGame = cmd.LoadGame(currentPath)
         newGame = newGame.execute()
@@ -430,7 +437,7 @@ class CLI_A():
     #   prompts user for confirmation, then quits the game.
     ###########################################################################
     def exit(self) -> None:
-        print('Are you sure? all unsaved progress will be lost. [Y/N]')
+        print('Are you sure you want to exit? [Y/N]')
         usrinput = input('> ').upper()
         match usrinput:
             case 'Y':
@@ -473,7 +480,6 @@ class CLI_A():
             count += 1
 
         print(fstr)
-        input("Press enter to return to game")
 
     ###########################################################################
     # handleSave(game : object, num : int, outty : object) -> None:
@@ -495,10 +501,10 @@ class CLI_A():
         saveStatus = False
         fileName = input(('Please enter the name of the file you would like '
                           'to save for example "Game1"\n> '))
+        if not fileName.endswith('.json'):
+            fileName += '.json'
         filePath = str(os.getcwd()) + '/' + fileName + '.json'
         encrypt = self.checkEncrypt()
-
-        self.checkHighScore()
 
         if (path.isfile(filePath)):
             yesOrNo = input('Would you like to overwrite the file '
@@ -628,6 +634,7 @@ class CLI_A():
     #       Returns validated name
     ###########################################################################
     def validateName(self) -> str:
+        print()
         name = input("What is the name that you'd like to enter?\n> ")
         if len(name) >= 10:
             print("\nName must be 10 characters\n")
@@ -635,7 +642,57 @@ class CLI_A():
         elif not name.isalpha():
             print("\nName must not contain non-alphabetical characters\n")
             name = self.validateName()
+        print()
         return name
+
+    ###########################################################################
+    # saveAndQuit(self) -> None:
+    #
+    # DESCRIPTION:
+    #   asks the user if they want to quit and save their progress. this will 
+    #   also prompt the user to save their progress if they wish and display
+    #   the leaderboard for the current fame and prompt the user if they are
+    #   elegible to join the leaderboad
+    #
+    # PARAMETERS:
+    #   None
+    #
+    # RETURNS:
+    #   None
+    ###########################################################################
+    def saveAndQuit(self) -> None:
+        # display leaderboard for current game
+        self.checkHighScore()
+
+        # prompt user to join leaderboard if they are elegible to join
+        # the leaderboard
+        self.leaderboard()
+
+        # then prompt user to save game if they wish
+        while True:
+            print('Would you like to save the current game [Y/N]\n')
+            bool = input('> ')
+            if bool.upper() == 'Y':
+                self.handleSave(False)
+                break
+            elif bool.upper() == 'N':
+                break
+            else:
+                print('Invalid input try again')
+
+        # bring user back to the start page
+        self.clear()
+        main.main(self.puzzle)
+
+    def clear(self):
+
+        # for windows
+        if name == 'nt':
+            _ = system('cls')
+
+        # for mac and linux(here, os.name is 'posix')
+        else:
+            _ = system('clear')
 
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
@@ -663,6 +720,7 @@ class CLI_A():
             '!leaderboard',
             '!help',
             '!exit',
+            '!saveAndQuit',
             '!hint'
         ]
         return commands
