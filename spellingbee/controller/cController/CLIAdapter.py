@@ -649,7 +649,7 @@ class CLI_A():
     # saveAndQuit(self) -> None:
     #
     # DESCRIPTION:
-    #   asks the user if they want to quit and save their progress. this will 
+    #   asks the user if they want to quit and save their progress. this will
     #   also prompt the user to save their progress if they wish and display
     #   the leaderboard for the current fame and prompt the user if they are
     #   elegible to join the leaderboad
