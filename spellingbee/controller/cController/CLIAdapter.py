@@ -114,7 +114,7 @@ class CLI_A():
                 else:
                     guess = cmd.Guess(self.puzzle, usrinput)
                     guess.execute()
-                    if self.puzzle.finishedFlag == True:
+                    if self.puzzle.finishedFlag is True:
                         pass
                     return self.puzzle
 
