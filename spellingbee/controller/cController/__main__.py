@@ -53,7 +53,8 @@ def main(puzzle):
         outty.setField('')
         # check for end of game flag
         if puzzle.getFinishedFlag():
-            adapter.finalGame()
+            CLI.clear()
+            adapter.endGame()
         # wait for user's next input
         usrinput = prompt('> ', completer=tabComp)
 

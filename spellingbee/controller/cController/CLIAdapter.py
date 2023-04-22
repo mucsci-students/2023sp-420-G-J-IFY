@@ -114,6 +114,8 @@ class CLI_A():
                 else:
                     guess = cmd.Guess(self.puzzle, usrinput)
                     guess.execute()
+                    if self.puzzle.finishedFlag == True:
+                        pass
                     return self.puzzle
 
     ###########################################################################
@@ -693,6 +695,12 @@ class CLI_A():
         # for mac and linux(here, os.name is 'posix')
         else:
             _ = system('clear')
+
+    def endGame(self):
+        input('Congratulations you made it to Queen Bee. ' +
+              'Press enter to continue.\n')
+        print()
+        self.saveAndQuit()
 
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
