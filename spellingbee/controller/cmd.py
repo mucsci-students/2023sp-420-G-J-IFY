@@ -63,7 +63,7 @@ class NewGame(Command):
             keyLetter=self._keyLett,
             flag=False
         )
-        if puzzle != None:
+        if puzzle is not None:
             puzzle.shuffleChars()
         return puzzle
 
