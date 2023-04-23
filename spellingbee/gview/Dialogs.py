@@ -151,17 +151,11 @@ class NewDialog(QDialog):
         # until this dialog is either accepted or rejected.
         self.setModal(True)
         # Declare attributes
-        self.stack = QStackedWidget(self)
-        self.warningMsg = QLabel(self)
-        self.advBtn = QPushButton(self)
-        self.backBtn = QPushButton(self)
         self.baseWrd = QLineEdit(self)
         self.keyLett = QComboBox(self)
         self.btns = QDialogButtonBox(self)
         # initialize display
         self._initUI()
-        # display first page on stack
-        self.display(0)
 
     ##########################################################################
     # _initUI() -> None
@@ -169,12 +163,9 @@ class NewDialog(QDialog):
     def _initUI(self) -> None:
         layout = QVBoxLayout()
         # Create pages
-        warning = self._initWarningPage()
         advanced = self._initAdvNewPage()
         # Add pages to stack
-        self.stack.addWidget(warning)
-        self.stack.addWidget(advanced)
-        layout.addWidget(self.stack)
+        layout.addWidget(advanced)
         # Set standard buttons
         self.btns.setStandardButtons(
             QDialogButtonBox.StandardButton.Ok
@@ -186,49 +177,12 @@ class NewDialog(QDialog):
         self.setLayout(layout)
 
     ##########################################################################
-    # _initWarningPage() -> QWidget
-    ##########################################################################
-    def _initWarningPage(self) -> QWidget:
-        page = QWidget(self)
-        layout = QVBoxLayout()
-        advLayout = QHBoxLayout()
-        # Warning message setup and formatting
-        self.warningMsg.setText(
-            'Are you sure? All unsaved progress will be lost.'
-        )
-        self.warningMsg.setWordWrap(True)
-        self.warningMsg.setSizePolicy(
-            QSizePolicy.Policy.MinimumExpanding,
-            QSizePolicy.Policy.MinimumExpanding
-        )
-        # Advanced button setup and formatting
-        font = QFont('Comfortaa')
-        font.setUnderline(True)
-        self.advBtn.setStyleSheet("color: blue;")
-        self.advBtn.setFont(font)
-        self.advBtn.setText('Advanced')
-        self.advBtn.setFlat(True)
-        self.advBtn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.advBtn.clicked.connect(lambda: self.display(1))
-        # Spacer to move Advanced button to the right
-        advLayout.addSpacerItem(
-            QSpacerItem(5, 0, QSizePolicy.Policy.MinimumExpanding)
-        )
-        advLayout.addWidget(self.advBtn)
-        # Populate the widget
-        layout.addWidget(self.warningMsg)
-        layout.addLayout(advLayout)
-        page.setLayout(layout)
-        return page
-
-    ##########################################################################
     # _initAdvNewPage() -> QWidget
     ##########################################################################
     def _initAdvNewPage(self) -> QWidget:
         # Create page attributes
         page = QWidget(self)
         layout = QVBoxLayout()
-        backLayout = QHBoxLayout()
         form = QFormLayout()
         # Set validator to only accept alphas
         regex = QRegularExpression(
@@ -241,24 +195,9 @@ class NewDialog(QDialog):
         # Format backBtn and place to the right
         font = QFont()
         font.setUnderline(True)
-        self.backBtn.setStyleSheet("color: blue; border: none")
-        self.backBtn.setFont(font)
-        self.backBtn.setText('Back')
-        self.backBtn.setFlat(True)
-        self.backBtn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.backBtn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.
-                                   Policy.Fixed)
-        self.backBtn.setFixedSize(self.backBtn.minimumSizeHint())
-        self.backBtn.clicked.connect(lambda: self.display(0))
-        # Spacer to move Advanced button to the right
-        backLayout.addSpacerItem(
-            QSpacerItem(5, 0, QSizePolicy.Policy.MinimumExpanding)
-        )
-        backLayout.addWidget(self.backBtn)
         form.addRow('Baseword:', self.baseWrd)
         form.addRow('Key Letter:', self.keyLett)
         layout.addLayout(form)
-        layout.addLayout(backLayout)
         page.setLayout(layout)
         return page
 
@@ -272,21 +211,11 @@ class NewDialog(QDialog):
             self.keyLett.addItem(lett.upper())
 
     ##########################################################################
-    # display(i : int=0) -> None
-    #
-    # DESCRIPTION:
-    #   changes the currently visible layout
-    ##########################################################################
-    def display(self, i: int = 0) -> None:
-        self.stack.setCurrentIndex(i)
-
-    ##########################################################################
     # reject() -> None
     ##########################################################################
     def reject(self) -> None:
         self.baseWrd.clear()
         self.keyLett.clear()
-        self.display(0)
         super().reject()
 
     ##########################################################################
@@ -295,7 +224,6 @@ class NewDialog(QDialog):
     def accept(self) -> None:
         self.baseWrd.clear()
         self.keyLett.clear()
-        self.display(0)
         super().accept()
 
 
