@@ -743,3 +743,46 @@ class ShareDialog(QDialog):
         self._captureScreenshot().save(file_path, 'PNG')
         # continue with standard accept procedure
         super().accept()
+
+
+##############################################################################
+# QueenBeeDialog(QDialog)
+#
+# DESCRIPTION:
+#   opens when the player has finished a game. User is provided two options.
+#     they can either end the game, or they can share their score, then end
+#     the game.
+##############################################################################
+class QueenBeeDialog(QDialog):
+    def __init__(self, parent: QWidget | None = None):
+        super(QueenBeeDialog, self).__init__(parent)
+
+        self._message = QLabel(self)
+        self._buttons = QDialogButtonBox(self)
+        self._closeBtn = QPushButton(self)
+        self._shareBtn = QPushButton(self)
+
+        self.__initUI()
+
+    def __initUI(self):
+        self.setModal(True)
+        self._message.setText(
+            'Congratulations!\n'
+            'You are the Queen Bee!'
+        )
+        # initialize dialog buttons
+        self._shareBtn.setText('Share')
+        self._buttons.addButton(
+            self._shareBtn,
+            QDialogButtonBox.ButtonRole.ActionRole
+        )
+        self._closeBtn.setText('Close')
+        self._buttons.addButton(
+            self._closeBtn,
+            QDialogButtonBox.ButtonRole.AcceptRole
+        )
+
+        layout = QVBoxLayout()
+        layout.addWidget(self._message)
+        layout.addWidget(self._buttons)
+        self.setLayout(layout)

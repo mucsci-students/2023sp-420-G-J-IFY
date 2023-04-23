@@ -118,6 +118,10 @@ class GUI_A():
         self._window.newDialog.btns.accepted.connect(self._newPuzzle)
         self._window.saveDialog.btns.accepted.connect(self._save)
         self._window.saveDialog.btns.rejected.connect(self._backToMainWindow)
+        self._window.qbDialog._buttons.accepted.connect(self._wrapup)
+        self._window.qbDialog._shareBtn.clicked.connect(
+            self._window._share
+        )
         self._window.loadAction.triggered.connect(self._load)
         self._window.hintAction.triggered.connect(self._hint)
         self._window.options.leaderboardBtn.clicked.connect(self._leaderboard)
@@ -150,6 +154,9 @@ class GUI_A():
         self._window.statsPanel.update(self._puzzle)
         # Display info
         self._window.setStatus(outty.getField())
+        # Check if QueenBeeStatus is reached
+        if self._puzzle.getFinishedFlag():
+            self._window.qbDialog.show()
 
     ###########################################################################
     # _shuffle() -> None
@@ -520,7 +527,12 @@ class GUI_A():
     # _wrapup()
     ##########################################################################
     def _wrapup(self):
-        self._window.options.close()
+        # Close necessary dialogs
+        if self._window.qbDialog.isVisible():
+            self._window.qbDialog.close()
+        if self._window.options.isVisible():
+            self._window.options.close()
+
         # Get leaderboard from model and change view to WrapUpPage
         lb = self._getLeaderboard()
         self._window.wrapUpPage._updateLeaderboard(lb, self._puzzle)
