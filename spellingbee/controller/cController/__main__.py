@@ -27,7 +27,12 @@ def main(puzzle):
                          ' save, type "!load"'], 40, '^')
         usrinput = prompt('> ', completer=WordCompleter(['!new', '!load',
                                                         '!exit']))
-        puzzle = adapter.parse(usrinput)
+        if usrinput == '!new' or usrinput == '!load' or usrinput == '!exit':
+            puzzle = adapter.parse(usrinput)
+        else:
+            print("INVALID COMMAND")
+            puzzle = None
+
         # check and see if bad puzzle object was returned somewhere
         if puzzle is None:
             notValidIn = True
