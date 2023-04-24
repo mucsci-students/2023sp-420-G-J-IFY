@@ -9,6 +9,9 @@
 ###############################################################################
 import model.encrypter as encrypter
 import pytest
+from model.output import Output
+
+outty = Output.getInstance()
 
 
 @pytest.fixture
@@ -100,6 +103,28 @@ def wordListStr():
 
 
 @pytest.fixture
+def badWordListEncryption():
+    dict = {"Author": "GJIFY", "RequiredLetter": "a", "PuzzleLetters":
+            "acklorw", "CurrentPoints": 0, "MaxPoints": 323, "GuessedWords":
+            [], "SecretWordList": ""
+            }
+
+    return dict
+
+
+@pytest.fixture
+def badWordListEncryptionTwo():
+    dict = {"Author": "GJIFY", "RequiredLetter": "d",
+            "PuzzleLetters": "degiluv", "CurrentPoints": 0,
+            "MaxPoints": 538, "GuessedWords": [],
+            "SecretWordList":
+                "b'\\xb4\\xb2\\xf4@D\\xe2\\x0b<Hj\\" +
+                "x0b&.7+\\x94'duob'^\\xb2\\xda4F'"}
+
+    return dict
+
+
+@pytest.fixture
 def encryptPuzzle(puzzleFixture):
     return encrypter.encryptionHandler(puzzleFixture, 1)
 
@@ -124,6 +149,16 @@ def decryptPuzzle(encryptPuzzle):
     return encrypter.encryptionHandler(encryptPuzzle, 0)
 
 
+@pytest.fixture
+def decryptBadPuzzle(badWordListEncryption):
+    return encrypter.encryptionHandler(badWordListEncryption, 0)
+
+
+@pytest.fixture
+def decryptBadPuzzleTwo(badWordListEncryptionTwo):
+    return encrypter.encryptionHandler(badWordListEncryptionTwo, 0)
+
+
 def testEqualListDe(puzzleFixture, decryptPuzzle):
     assert (str(puzzleFixture["WordList"]) == str(decryptPuzzle["WordList"]))
 
@@ -139,3 +174,11 @@ def testEncryptStr(wordListStr, encryptString):
 def testBadWordListName(badWordListName, badWordListNamePuzzle):
     assert (str(badWordListName["SWordList"]) == str(badWordListNamePuzzle
                                                      ["SWordList"]))
+
+
+def testBadEncrytions(decryptBadPuzzle):
+    assert (outty.getField() == "ERROR!: Bad List Encryption")
+
+
+def testBadEncrytionsTwo(decryptBadPuzzleTwo):
+    assert (outty.getField() == "ERROR!: Bad Encryption")
