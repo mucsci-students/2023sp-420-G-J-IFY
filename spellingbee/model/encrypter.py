@@ -13,6 +13,9 @@
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Util.Padding import pad, unpad
+from model.output import Output
+
+outty = Output.getInstance()
 
 ###############################################################################
 # encryptionHandler(dict : dict, toEncrypt: bool) -> dict:
@@ -35,24 +38,30 @@ from Crypto.Util.Padding import pad, unpad
 
 
 def encryptionHandler(dict: dict, toEncrypt: bool) -> dict:
-    if _dictKeyChecker(dict, "Author") and (_dictKeyChecker(dict, "WordList")
-                                            or
-                                            _dictKeyChecker
-                                            (dict, "SecretWordList")):
-        # Set password and plaintext
-        password = dict["Author"]
-        # Generate a random salt
-        salt = _saltGrabber()
-        # Derive a key from the password and salt using PBKDF2
-        key = PBKDF2(password, salt, dkLen=32)
+    try:
+        if _dictKeyChecker(dict, "Author") and (_dictKeyChecker
+                                                (dict, "WordList")
+                                                or
+                                                _dictKeyChecker
+                                                (dict, "SecretWordList")):
+            # Set password and plaintext
+            password = dict["Author"]
+            # Generate a random salt
+            salt = _saltGrabber()
+            # Derive a key from the password and salt using PBKDF2
+            key = PBKDF2(password, salt, dkLen=32)
 
-        if toEncrypt:
-            # Call dictionary checker
-            if _wordListTypeCheck(dict, "List"):
-                dict = _encryptList(key, dict["WordList"], dict)
-        elif not toEncrypt:
-            if _wordListTypeCheck(dict, "String"):
-                dict = _decryptList(key, dict["SecretWordList"], dict)
+            if toEncrypt:
+                # Call dictionary checker
+                if _wordListTypeCheck(dict, "List"):
+                    dict = _encryptList(key, dict["WordList"], dict)
+            elif not toEncrypt:
+                if _wordListTypeCheck(dict, "String"):
+                    dict = _decryptList(key, dict["SecretWordList"], dict)
+    except SyntaxError:
+        outty.setField("ERROR!: Bad List Encryption")
+    except ValueError:
+        outty.setField("ERROR!: Bad Encryption")
 
     return dict
 
@@ -239,7 +248,3 @@ def _wordListTypeCheck(dict: dict, typeCheck: str) -> bool:
             return type(dict["WordList"]) is list
         case "String":
             return type(dict["SecretWordList"]) is str
-
-
-class BadTypeExcetion(Exception):
-    pass
