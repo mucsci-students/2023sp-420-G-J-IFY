@@ -1,17 +1,20 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 
-from model import(
+from model import (
     MakePuzzle,
     StateStorage
 )
 from model.puzzle import Puzzle
 from model.hint import hint
+from model.output import Output
+from model import highScore
 
-################################################################################
-#
-################################################################################
+outty = Output.getInstance()
+
+
 class Command(ABC):
+
     @abstractmethod
     def __init__(self) -> None:
         self._name = None
@@ -19,7 +22,7 @@ class Command(ABC):
 
     @abstractmethod
     def execute(self) -> None:
-        print("implementation pending")
+        pass
 
     def get_name(self) -> str:
         return self._name
@@ -29,7 +32,7 @@ class Command(ABC):
 
 
 # Concrete Commands:
-################################################################################
+##############################################################################
 # class NewGame(Command):
 #
 # DESCRIPTION:
@@ -40,9 +43,11 @@ class Command(ABC):
 #
 # FUNCTIONS:
 #
-################################################################################
+###############################################################################
 class NewGame(Command):
-    def __init__(self, outty: object, base: str='', keyLett: str='') -> None:
+    def __init__(self,
+                 base: str = '',
+                 keyLett: str = '') -> None:
         self._name = '!new'
         self._description = (
             'Generates a new puzzle from a base word with exactly 7 unique'
@@ -50,20 +55,20 @@ class NewGame(Command):
         )
         self._base = base
         self._keyLett = keyLett
-        self._outty = outty
 
     # Executes defined function
     def execute(self) -> Puzzle:
         puzzle = MakePuzzle.newPuzzle(
             baseWord=self._base,
             keyLetter=self._keyLett,
-            outty=self._outty,
             flag=False
         )
-        puzzle.shuffleChars()
+        if puzzle is not None:
+            puzzle.shuffleChars()
         return puzzle
-    
-################################################################################
+
+
+###############################################################################
 # class SaveGame(Command)
 #
 # DESCRIPTION:
@@ -74,39 +79,39 @@ class NewGame(Command):
 #
 # FUNCTIONS:
 #
-################################################################################
+###############################################################################
 class SaveGame(Command):
     def __init__(
-            self,
-            puzzle: Puzzle,
-            fileName: str,
-            path: str='./saves',
-            onlyPuzz: bool=False
-        ) -> None:
-
-        self._name = '!save'
-        self._description = 'Create a new save for the currently active game'
-
+        self,
+        puzzle: Puzzle,
+        filePath: str,
+        onlyPuzz: bool,
+        encrypt: bool
+    ) -> None:
         # params
         self._puzzle = puzzle
-        self._fileName = fileName
-        self._path = path
+        self._filePath = filePath
         self._onlyPuzz = onlyPuzz
+        self._encrypt = encrypt
 
     def execute(self) -> None:
+        if self._encrypt:
+            strat = StateStorage.Saver(StateStorage.encryptedSaveStrategy())
+            strat.executeStrategy(
+                self._filePath,
+                self._puzzle,
+                self._onlyPuzz
+            )
+        else:
+            strat = StateStorage.Saver(StateStorage.savePuzzleStrategy())
+            strat.executeStrategy(
+                self._filePath,
+                self._puzzle,
+                self._onlyPuzz
+            )
 
-        # pass responsibility off to State Storage
-        StateStorage.saveFromExplorer(
-            path=self._path,
-            fileName=self._fileName,
-            puzzle=self._puzzle,
-            onlyPuzz=self._onlyPuzz
-        )
-    def executeCLI(self) -> None:
-        
-        StateStorage.savePuzzle(self._puzzle, self._fileName)
-    
-################################################################################
+
+###############################################################################
 # class LoadGame(Command)
 #
 # DESCRIPTION:
@@ -117,24 +122,17 @@ class SaveGame(Command):
 #
 # FUNCTIONS:
 #
-################################################################################
+###############################################################################
 class LoadGame(Command):
-    def __init__(self, path: str, fileName, outty: object) -> None:
-        self._name = '!load'
-        self._description = 'Load a previously saved game'
-
+    def __init__(self, filePath: str) -> None:
         # params
-        self._path = path
-        self._outty = outty
-        self._fileName = fileName
+        self._filePath = filePath
 
     def execute(self) -> object:
-        return StateStorage.loadFromExploer(self._path, self._outty)
-    
-    def executeCLI(self) -> object:
-        return StateStorage.loadPuzzle(self._fileName, self._outty)
-    
-################################################################################
+        return StateStorage.load(self._filePath)
+
+
+###############################################################################
 # class Shuffle(Command)
 #
 # DESCRIPTION:
@@ -145,7 +143,7 @@ class LoadGame(Command):
 #
 # FUNCTIONS:
 #
-################################################################################
+###############################################################################
 class Shuffle(Command):
     def __init__(self, receiver: Puzzle) -> None:
         self._name = '!shuffle'
@@ -157,7 +155,8 @@ class Shuffle(Command):
     def execute(self) -> None:
         self._receiver.shuffleChars()
 
-################################################################################
+
+###############################################################################
 # class Hint(Command):
 #
 # DESCRIPTION:
@@ -168,7 +167,7 @@ class Shuffle(Command):
 #
 # FUNCTIONS:
 #
-################################################################################
+###############################################################################
 class Hint(Command):
     def __init__(self, puzzle: object) -> None:
         self._name = '!hint'
@@ -186,20 +185,21 @@ class Hint(Command):
 
         shuffleLetts = self._puzzle.getShuffleLetters()
         keyLett = shuffleLetts[0].upper()
-        rest = ' '.join(shuffleLetts[1 : len(shuffleLetts)]).upper()
+        rest = ' '.join(shuffleLetts[1: len(shuffleLetts)]).upper()
 
         return {
-            'letters' : f'\u0332{keyLett}\u0332 {rest}',
-            'numWords' : hints.countWords(self._puzzle),
-            'points' : self._puzzle.maxScore,
-            'numPan' : hints.numPangrams(self._puzzle),
-            'numPerf' : hints.numPerfectPangram(self._puzzle),
-            'bingo' : self._puzzle.checkBingo(),
-            'matrix' : hints.getHintGrid(),
-            'twoLetLst' : hints.getTwoLetterList()
+            'letters': f'\u0332{keyLett}\u0332 {rest}',
+            'numWords': hints.countWords(self._puzzle),
+            'points': self._puzzle.maxScore,
+            'numPan': hints.numPangrams(self._puzzle),
+            'numPerf': hints.numPerfectPangram(self._puzzle),
+            'bingo': self._puzzle.checkBingo(),
+            'matrix': hints.getHintGrid(),
+            'twoLetLst': hints.getTwoLetterList()
         }
 
-################################################################################
+
+###############################################################################
 # class Guess(Command)
 #
 # DESCRIPTION:
@@ -216,21 +216,67 @@ class Hint(Command):
 # FUNCTIONS:
 #   execute() -> None:
 #       exectutes the attached function call to make a guess
-################################################################################
+###############################################################################
 class Guess(Command):
-    def __init__(self, puzzle: Puzzle, word: str, outty: object) -> None:
+    def __init__(self, puzzle: Puzzle, word: str) -> None:
         self._name = '!guess'
         self._description = 'description pending'
 
         # params
         self._puzzle = puzzle
         self._word = word
-        self._outty = outty
 
     def execute(self) -> None:
         MakePuzzle.guess(
             puzzle=self._puzzle,
             input=self._word,
-            flag=False,
-            outty=self._outty
+            flag=False
+        )
+
+
+###############################################################################
+# class Leaderboard(Command)
+#
+# DESCRIPTION
+#   returns the leaderboard for this game
+###############################################################################
+class Leaderboard(Command):
+    def __init__(self, puzzle: Puzzle) -> None:
+        self._puzzle = puzzle
+
+    def execute(self) -> list[tuple]:
+        # grab hS
+        # format to list of [(name, rank, score)]
+        lst = highScore.getHighScore(
+            self._puzzle.getUniqueLetters(),
+            self._puzzle.getKeyLetter()
+        )
+        lb = []
+        for row in lst:
+            lb.append((row[1], row[2], row[3]))
+
+        return lb
+
+
+###############################################################################
+# SaveScore(name: str, puzzle: Puzzle)
+#
+# DESCRIPTION
+#   adds a new high score to the database
+###############################################################################
+class SaveScore(Command):
+    def __init__(self, name: str, puzzle: Puzzle) -> None:
+        self._name = name
+        self._rank = puzzle.getRank()
+        self._score = puzzle.getScore()
+        self._uniqueLett = puzzle.getUniqueLetters()
+        self._keyLett = puzzle.getKeyLetter()
+
+    def execute(self) -> None:
+        highScore.qualify(
+            self._name,
+            self._rank,
+            self._score,
+            self._uniqueLett,
+            self._keyLett
         )

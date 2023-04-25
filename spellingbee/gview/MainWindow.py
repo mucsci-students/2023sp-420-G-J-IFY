@@ -1,6 +1,5 @@
 #!/usr/bin/env
-
-################################################################################
+###############################################################################
 # MainWindow.py
 # Author: Isaak Weidman
 # Date of Creation: 02-18-2023
@@ -8,136 +7,189 @@
 # CLASSES:
 #   MainWindow()
 #
-# FUNCTIONS:
-#
-#
-################################################################################
+#   GameWidget()
+###############################################################################
 
-import sys, os
-filePath = os.path.dirname(__file__)
-sys.path.append(filePath)
-
-from model.puzzle import Puzzle
-from StatsPanel import StatsPanel
-from HexCluster import HexCluster
-import Dialogs
+from gview.StatsPanel import StatsPanel
+from gview.HexCluster import HexCluster
+from gview.WelcomePage import WelcomePage
+from gview.WrapUp import WrapUpPage
+from gview import Dialogs
 from PyQt6.QtGui import (
     QAction,
-    QFont,
     QRegularExpressionValidator,
-    QValidator,
-    QKeyEvent,
+    QFontDatabase,
+    QIcon,
 )
 from PyQt6.QtCore import (
     Qt,
     QRegularExpression,
-    QEvent,
+    QSize
 )
 from PyQt6.QtWidgets import (
-    QApplication,
     QMainWindow,
     QSizePolicy,
     QToolBar,
-    QStatusBar,
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
     QPushButton,
-    QLabel,
     QLineEdit,
     QSpacerItem,
-    QFileDialog,
+    QStackedWidget,
+    QFrame,
+    QLabel
 )
+from model.puzzle import Puzzle
+import sys
+import os
+filePath = os.path.dirname(__file__)
+sys.path.append(filePath)
 
-################################################################################
+
+###############################################################################
 # class MainWindow()
 #
 # DESCRIPTION:
 #   represents the main window of the application, handles overall layout
 #
 # ARGUMENTS:
-#   *args : 
-#
-#   **kwargs :
-#
-#
-################################################################################
+#   puzzle: Puzzle
+#     - the puzzle object the window is initialized with
+###############################################################################
 class MainWindow(QMainWindow):
-    def __init__(self, puzzle : Puzzle, *args, **kwargs):
+    def __init__(self, puzzle: Puzzle, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-        
-        self.statsPanel = StatsPanel(self)
 
-        self.centralWidget = GameWidget(
-            self, 
+        self.gameWidget = GameWidget(
+            self,
             puzzle.getShuffleLetters().upper(),
             puzzle.getKeyLetter()
         )
-        self.setCentralWidget(self.centralWidget)
+        self.statsPanel = StatsPanel(self)
 
-        self.statusBar = QStatusBar(self)
-        self.status = QLabel(self.statusBar)
-        self.statusBar.addWidget(self.status)
-        self.setStatusBar(self.statusBar)
-        #self.welcomeDialog = Dialogs.WelcomeDialog(self)
+        self.stack = QStackedWidget(self)
+        self.centralWidget = self._buildGameWidget()
+        self.landingPage = WelcomePage(self)
+        self.wrapUpPage = WrapUpPage(self, puzzle)
+
+        self.options = Dialogs.OptionsDialog(self)
         self.newDialog = Dialogs.NewDialog(self)
-        #self.loadDialog = QFileDialog(self)
         self.loadFailed = Dialogs.LoadFailedDialog(self)
         self.saveDialog = Dialogs.SaveDialog(self)
         self.owDialog = Dialogs.SaveOverwriteDialog(self)
         self.helpDialog = Dialogs.HelpDialog(self)
-
-        #self.loadDialog.rejected.connect(self.loadDialog.reject)
-
+        self.qbDialog = Dialogs.QueenBeeDialog(self)
         self.toolBar = self._createToolBar()
-        self.infoBar = self._createInfoBar()
 
+        self._initUI()
+
+    ###########################################################################
+    # _initUI(self) -> None:
+    #
+    # DESCRIPTION:
+    #   Initializes the ui to its default state
+    ###########################################################################
+    def _initUI(self) -> None:
+        # Add custom font to database
+        QFontDatabase.addApplicationFont(
+            os.getcwd() + '/fonts/Comfortaa-VariableFont_wght.ttf'
+        )
+        # Set basic window geometry
         self.setWindowTitle('Spelling Bee')
-        self.setMinimumSize(700, 400)
+        self.setMinimumSize(800, 500)
         self.setSizePolicy(
             QSizePolicy.Policy.Minimum,
             QSizePolicy.Policy.Minimum
         )
+        # Add toolbar to the top of window
+        # self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
+        # Add pages to the stack, showing landingPage initially
+        self.stack.addWidget(self.landingPage)
+        self.stack.addWidget(self.centralWidget)
+        self.stack.addWidget(self.wrapUpPage)
+        self.stack.setCurrentIndex(0)
+        self.setCentralWidget(self.stack)
+        # Connect basic signals
+        self.gameWidget.menuBtn.clicked.connect(self.options.show)
+        self.options.helpBtn.clicked.connect(self.helpDialog.show)
+        self.options.shareBtn.clicked.connect(self._share)
 
-        self.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
-        self.addToolBar(Qt.ToolBarArea.RightToolBarArea, self.infoBar)
+    ###########################################################################
+    # _buildGameWidget() -> QWidget
+    #
+    # DESCRIPTION:
+    #   Builds and returns the main game widget with the gameplay controls
+    #   on the left and status information on the right
+    ###########################################################################
+    def _buildGameWidget(self) -> QWidget:
+        layout = QHBoxLayout()
+        layout.addWidget(self.gameWidget)
+        layout.addWidget(self.statsPanel)
+        widget = QWidget()
+        widget.setLayout(layout)
+        return widget
 
+    ###########################################################################
+    # _newGame() -> None:
+    #
+    # DESCRIPTION:
+    #   Updates the userinterface when a new puzzle is chosen.
+    ###########################################################################
     def newGame(self, puzzle: Puzzle) -> None:
-
-        self.centralWidget.cluster.setLetters(puzzle.getShuffleLetters().upper())
+        self.gameWidget.cluster.setLetters(puzzle.getShuffleLetters().upper())
         self.statsPanel.update(puzzle)
-        self.centralWidget.newGame(puzzle.getShuffleLetters().upper())
-        self.status.clear()
+        self.gameWidget.newGame(puzzle.getShuffleLetters().upper())
+        self.setStatus('')
+        self.stack.setCurrentIndex(1)
+        self.gameWidget.uInput.setFocus()
 
-    def setStatus(self, text):
-        self.status.setText(text)
+    ###########################################################################
+    # setStatus(self, text: str) -> None:
+    #
+    # DESCRIPTION:
+    #   Displays text to the user when they make a guess
+    ###########################################################################
+    def setStatus(self, text: str) -> None:
+        self.gameWidget.uOutput.setText(text)
 
-
-    ############################################################################
-    # _createToolBar()
+    ###########################################################################
+    # _createToolBar() -> QToolBar:
     #
     # DESCRIPTION:
     #   creates toolbar buttons and actions
-    ############################################################################
+    ###########################################################################
     def _createToolBar(self) -> QToolBar:
-
         # Create static tool bar
-        toolBar = QToolBar('Tools', self)
+        toolBar = QToolBar('Tools')
         toolBar.setMovable(False)
+        toolBar.setBaseSize(100, 100)
+        toolBar.setStyleSheet(
+            '''
+            border: none;
+            background-color: rgb(200, 200, 200);
+            '''
+        )
 
         # add buttons to tool bar
+        menuAction = QAction('Menu', self)
         newAction = QAction('New', self)
         saveAction = QAction('Save', self)
         self.loadAction = QAction('Load', self)
         helpAction = QAction('Help', self)
         self.hintAction = QAction('Hint', self)
 
+        # Add style
+        menuAction.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
+
+        # Make connections to simple actions
         newAction.triggered.connect(self.newDialog.show)
         saveAction.triggered.connect(self.saveDialog.show)
-        #loadAction.triggered.connect(self.loadDialog.show)
         helpAction.triggered.connect(self.helpDialog.show)
+        self.landingPage.custom_btn.clicked.connect(self.newDialog.show)
 
         # add actions to tool bar
+        toolBar.addAction(menuAction)
         toolBar.addAction(newAction)
         toolBar.addAction(saveAction)
         toolBar.addAction(self.loadAction)
@@ -146,27 +198,59 @@ class MainWindow(QMainWindow):
 
         return toolBar
 
-
-    ############################################################################
+    ##########################################################################
     # _createInfoBar()
     #
     # DESCRIPTION:
-    #   creates status bar to the right to display user progress and found words
-    ############################################################################
+    #   creates status bar to the right to display user progress and found
+    #   words
+    ##########################################################################
     def _createInfoBar(self) -> QToolBar:
-
         # create static tool
         infoBar = QToolBar('Stats', self)
         infoBar.setMovable(False)
-
         self.statsPanel.setParent(infoBar)
         infoBar.addWidget(self.statsPanel)
+        return infoBar
 
-        return infoBar 
+    ##########################################################################
+    # _returnToMenu() -> None
+    #
+    # DESCRIPTION:
+    #   Begins wrap up sequence
+    ##########################################################################
+    def _returnToMenu(self) -> None:
+        self.stack.setCurrentIndex(0)
+        self.options.close()
+
+    ##########################################################################
+    # _share() -> None:
+    #
+    # DESCRIPTION:
+    #   Opens the share dialog with proper pixmaps
+    ##########################################################################
+    def _share(self) -> None:
+        # Get pixmaps
+        stats_pix = self.statsPanel.statsWidget.grab()
+        hex_pix = self.gameWidget.cluster.grab()
+
+        # Create dialog
+        share_dlg = Dialogs.ShareDialog(self, stats_pix, hex_pix)
+        share_dlg.show()
+
+    ###########################################################################
+    # _wrapUp() -> None:
+    #
+    # DESCRIPTION:
+    #   initiates wrap-up sequence
+    ###########################################################################
+    def _wrapUp(self) -> None:
+        self.options.close()
+        self.stack.setCurrentIndex(2)
+        self.wrapUpPage.congrats.show()
 
 
-
-################################################################################
+###############################################################################
 # class GameWidget:
 #
 # DESCRIPTION:
@@ -193,21 +277,25 @@ class MainWindow(QMainWindow):
 #     - button used to submit uInput text as a guess
 #   letters : list[str]
 #     - List of key letters
-################################################################################
+###############################################################################
 class GameWidget(QWidget):
     def __init__(
-            self, 
-            parent: QWidget, 
-            letters: list[str], 
+            self,
+            parent: QWidget,
+            letters: list[str],
             keyLett: str,
-            *args, 
+            *args,
             **kwargs
-        ):
+    ):
         super(GameWidget, self).__init__(parent, *args, **kwargs)
 
         # Declare primary attributes
         self.uInput = QLineEdit(self)
+        self.hLine = QFrame(self)
         self.cluster = HexCluster(self, letters, keyLett)
+        self.menuBtn = QPushButton(self)
+        self.uOutput = QLabel(self)
+        self.hintBtn = QPushButton(self)
         self.delBtn = QPushButton('Delete', self)
         self.shflBtn = QPushButton('Shuffle', self)
         self.entrBtn = QPushButton('Enter', self)
@@ -221,13 +309,13 @@ class GameWidget(QWidget):
 
         self._initUI()
 
-    ############################################################################
+    ###########################################################################
     # newGame(letters : list[str])
-    # 
+    #
     # DESCRIPTIONS:
     #   updates all applicable widgets to reflect the state of the new game.
-    ############################################################################
-    def newGame(self, letters : list[str]) -> None:
+    ###########################################################################
+    def newGame(self, letters: list[str]) -> None:
         self.letters = letters
 
         # Create new validator for uInput
@@ -240,47 +328,67 @@ class GameWidget(QWidget):
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)
 
-    ############################################################################
+    ###########################################################################
     # setLetters (newLetters : list[str])
     #
     # DESCRIPTION:
     #   change the key letters
-    ############################################################################
+    ###########################################################################
     def setLetters(self, newletters: list[str]) -> None:
         self.letters = newletters
         self.cluster.setLetters(self.letters)
 
-
-    ############################################################################
+    ###########################################################################
     # _initUI
-    #  
+    #
     # DESCRIPTION:
     #   initialize layout of widgets and set important attributes
-    ############################################################################
+    ###########################################################################
     def _initUI(self):
+        # Set style sheet
+        with open("spellingbee/gview/style.css", "r") as file:
+            self.setStyleSheet(file.read())
+
+        self.setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.MinimumExpanding
+        )
 
         # Create layouts and set allignment attributes
+        toolsLayout = QHBoxLayout()
         outerLayout = QVBoxLayout()
         outerLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        outerLayout.setContentsMargins(0, 0, 0, 0)
         clusterLayout = QHBoxLayout()
         btnsLayout = QHBoxLayout()
         btnsLayout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         # create spacer item to keep cluster centered
         spacer = QSpacerItem(
-            50,
+            0,
             0,
             QSizePolicy.Policy.MinimumExpanding,
             QSizePolicy.Policy.MinimumExpanding
         )
-        
+
+        # Fromat tool buttons
+        self.menuBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
+        self.menuBtn.setStatusTip('Menu')
+        self.menuBtn.setIcon(QIcon('SpellingBee/gview/assets/menu.png'))
+        self.menuBtn.setIconSize(QSize(40, 40))
+        self.hintBtn.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
+        self.hintBtn.setStatusTip('Hint')
+        self.hintBtn.setIcon(QIcon('SpellingBee/gview/assets/hint.png'))
+        self.hintBtn.setIconSize(QSize(30, 30))
+        self.hintBtn.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum
+        )
+
         # Set formatting attributes of user input field
         self.uInput.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.uInput.setFrame(False)
-        font = QFont("Arial", 30)
-        font.setBold(True)
-        self.uInput.setFont(font)
-        self.uInput.setStyleSheet("background : rgba(0, 0, 0, 0)")
+        self.uInput.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         # regular expression that only allows key letters, upper and lower.
         # ex. [W|A|R|L|O|C|K]+|[w|a|r|l|o|c|k]+
@@ -291,53 +399,88 @@ class GameWidget(QWidget):
         # Create and set uInput validator
         validator = QRegularExpressionValidator(regex)
         self.uInput.setValidator(validator)
-
         # Set size policies
         self.uInput.setSizePolicy(
-            QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.MinimumExpanding
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.Minimum
         )
 
-        self.cluster.setSizePolicy(
+        self.hLine.setFrameShape(QFrame.Shape.HLine)
+        self.hLine.setStyleSheet('color: rgb(210, 210, 210);')
+        self.hLine.setFixedHeight(3)
+        self.hLine.setSizePolicy(
             QSizePolicy.Policy.Minimum,
             QSizePolicy.Policy.MinimumExpanding
         )
 
+        # Set formatting for user output
+        self.uOutput.setAlignment(
+            Qt.AlignmentFlag.AlignTop |
+            Qt.AlignmentFlag.AlignHCenter
+        )
+        self.uOutput.setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.MinimumExpanding
+        )
+
+        # Formatting for cluster
+        self.cluster.setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding,
+            QSizePolicy.Policy.MinimumExpanding
+        )
+
+        self.delBtn.setFixedSize(90, 40)
+        self.shflBtn.setFixedSize(90, 40)
+        self.entrBtn.setFixedSize(90, 40)
+
         # Populate layouts, moving top to bottom
+        toolsLayout.addWidget(
+            self.menuBtn,
+            alignment=Qt.AlignmentFlag.AlignLeft
+        )
+        toolsLayout.addWidget(self.uOutput)
+        toolsLayout.addWidget(
+            self.hintBtn,
+            alignment=Qt.AlignmentFlag.AlignRight
+        )
+
+        # outerLayout.addLayout(toolsLayout)
         outerLayout.addWidget(self.uInput)
+        outerLayout.addWidget(self.hLine)
+        # outerLayout.addSpacerItem(spacer)
+        outerLayout.addLayout(toolsLayout)
 
-        outerLayout.addSpacerItem(spacer)
-        
-        clusterLayout.addSpacerItem(spacer)
-        clusterLayout.addWidget(self.cluster)
-        clusterLayout.addSpacerItem(spacer)
+        clusterLayout.addWidget(
+            self.cluster,
+            alignment=Qt.AlignmentFlag.AlignCenter
+        )
         outerLayout.addLayout(clusterLayout)
-
         outerLayout.addSpacerItem(spacer)
 
         btnsLayout.addWidget(self.delBtn)
         btnsLayout.addWidget(self.shflBtn)
         btnsLayout.addWidget(self.entrBtn)
         outerLayout.addLayout(btnsLayout)
+        outerLayout.addSpacerItem(spacer)
 
         self.setLayout(outerLayout)
 
-
-    ############################################################################
+    ###########################################################################
     # _onHexClicked
-    # 
+    #
     # DESCRIPTION:
-    #   Catch signal from cluster and update uInput text field to reflect signal
-    ############################################################################
+    #   Catch signal from cluster and update uInput text field to reflect
+    #   signal
+    ###########################################################################
     def _onHexClicked(self):
         sender = self.sender()
         self.uInput.setText(f'{self.uInput.text()}{sender.text}')
 
-    ############################################################################
+    ###########################################################################
     # _onUInputEdited(self, txt):
-    #  
+    #
     # DESCRIPTION:
     #   force input text to uppercase
-    ############################################################################
+    ###########################################################################
     def _onUInputEdited(self, txt):
         self.uInput.setText(txt.upper())

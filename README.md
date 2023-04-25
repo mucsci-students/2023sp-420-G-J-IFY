@@ -27,6 +27,7 @@ Installation instructions can be found on the [official python site.](https://ww
 - prompt_toolkit 3.0.38
 - pytest-cov 4.0.0
 - coverage 7.2.2
+- pycryptodome 3.17
 
 ## Installation
 
@@ -66,7 +67,6 @@ Windows:
 ```
 pip install -r requirements.txt
 ```
-
 MacOS/Linux
 ```
 pip3 install -r requirements.txt
@@ -100,39 +100,85 @@ python3 spellingbee --cli
 
 ### Running the tests
 
+To run the tests, enter the following command
 ```
 pytest
 ```
 
 ### Running the tests with code coverage
 
+To run the tests and check code coverage of the model, enter
+the following command
 ```
 pytest --cov=spellingbee/model
 ```
 
-## Design Patterns
+To generate a coverage report of the model, after running the above command,
+enter the following
+```
+coverage report -m
+```
+
+## Creational Design Patterns
 
 ### MVC
 
-Organized out into applicable folders, our project has all of our backend business logic stored in `2023sp-420-g-j-ify/SpellingBee/model`
+Organized out into applicable folders, our project has all of our backend 
+business logic stored in `2023sp-420-g-j-ify/SpellingBee/model`
 
-For the visual representation of the game's underlying logic, we have two classes, `2023sp-420-g-j-ify/cview/cli.py` and `2023sp-420-g-j-ify/gview/MainWindow.py`.
+For the visual representation of the game's underlying logic, we have two 
+classes, `2023sp-420-g-j-ify/cview/cli.py` and 
+`2023sp-420-g-j-ify/gview/MainWindow.py`.
 
-Finally, to bridge the gap between the model and the two views, we have a combination of `2023sp-420-g-j-ify/controller/GUIAdapter.py`, `2023sp-420-g-j-ify/controller/CLIAdapter.py`, and `2023sp-420-g-j-ify/controller/cmd.py` that act as the controller.
+Finally, to bridge the gap between the model and the two views, we have a 
+combination of `2023sp-420-g-j-ify/controller/GUIAdapter.py`, 
+`2023sp-420-g-j-ify/controller/CLIAdapter.py`, and 
+`2023sp-420-g-j-ify/controller/cmd.py` that act as the controller.
+
+### Singleton
+
+The output object is used to store information to be displayed to the user 
+playing either the CLI or GUI version of the game. Since this object needs to 
+be accessed in any file and only one copy should exist, we implemented 
+singleton to prevent another to be created. Stored in 
+`2023sp-420-g-j-ify/SpellingBee/model/output.py`.
+
+The object is created in `spellingbee/controller/cController/__main__.py` for
+the CLI and in `spellingbee/controller/GUIAdapter.py` for the GUI.
+
 
 ## Behavioral Patterns
 
-### Command
+### Strategy
 
-To implement a command pattern, we created `2023sp-420-g-j-ify/controller/cmd.py` that contains a collection of classes that are used to execute commonly used commands. Many of those classes are directly accessed in the CLI through "!" commands, and those same commands are accessed by the GUI through its buttons.
+The game requires a mix of saving options, which led to a confusing mix of 
+fucntion calls that largely did the same thing. We implemented a strategy to
+reduce the complexity of function calls. Strategy class is stored in 
+`spellingbee/model/StateStorage.py`
 
-### Adapter
+### Command 
 
-In order to improve our code reusability, we needed to employ two adapters, `2023sp-420-g-j-ify/controller/GUIAdapter.py` and `2023sp-420-g-j-ify/controller/CLIAdapter.py`, to allow both views to use the commands added in `cmd.py`. These adapters allow the entire model to be completely independent of the view.
+To implement a command pattern, we created 
+`2023sp-420-g-j-ify/controller/cmd.py` that contains a collection of classes 
+that are used to execute commonly used commands. Many of those classes are 
+directly accessed in the CLI through "!" commands, and those same commands are 
+accessed by the GUI through its buttons.
 
-### Chain of Responsibility
+### Decorator
 
-As requests are are made by the user (either through "!" commands in the CLI or button presses in the GUI), the request is passed along a chain of different modules, being processed and prepared for the model. The combination of both views, their adapters, the command pattern and the model all make up the totality of our chain of responsibility.
+In order to improve our code reusability, we needed to employ two decorators, 
+`2023sp-420-g-j-ify/controller/GUIAdapter.py` and 
+`2023sp-420-g-j-ify/controller/CLIAdapter.py`, to allow both views to use the 
+commands added in `cmd.py`. These decorators allow the entire model to be 
+completely independent of the view.
+
+### Iterator
+
+We have lots of lists in our program, and need to be able to work through them
+quickly and simply. An iterator pattern was implemented for just that purpose.
+An example can be found in `spellingbee/controller/cController/CLIAdapter.py`
+in the removeColumn funciton.
+
 
 ## Authors
 
@@ -163,6 +209,15 @@ As requests are are made by the user (either through "!" commands in the CLI or 
 - 2.0.0
   - Initial GUI release
 
+- 3.0.0
+  - Launch of hints feature
+
+- 4.0.0
+  - Launch of local high score
+  - Launch of encrypted saves
+  - updates to GUI and CLI
+
 ## License
 
-This project is licensed under the `MIT` License - see the `LICENSE.md` file for details.
+This project is licensed under the `MIT` License - see the `LICENSE.md` 
+file for details.

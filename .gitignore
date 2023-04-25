@@ -110,6 +110,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
+venv/
 build/
 develop-eggs/
 dist/
@@ -164,3 +165,4 @@ src/data/saves
 
 #all json files
 *.json
+spellingbee/model/highScore.db
