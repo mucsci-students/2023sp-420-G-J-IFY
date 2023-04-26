@@ -505,7 +505,7 @@ class CLI_A():
                           'to save for example "Game1"\n> '))
         if not fileName.endswith('.json'):
             fileName += '.json'
-        filePath = str(os.getcwd()) + '/' + fileName + '.json'
+        filePath = str(os.getcwd()) + '/' + fileName
         encrypt = self.checkEncrypt()
 
         if (path.isfile(filePath)):

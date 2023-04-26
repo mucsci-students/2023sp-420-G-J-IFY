@@ -302,47 +302,6 @@ def checkLoad(dictDict):
     return dictDict
 
 
-###############################################################################
-# saveFromExplorer(path : string, fileName : str,
-# puzzle : object, onlyPuzz : bool) -> None:
-#
-# DESCRIPTION:
-#   This function saves a puzzle either with current progress or
-# just the puzzle its self
-#
-# PARAMETERS:
-#
-#   path : str
-#      - Path to the folder where the save needs to go
-#   fileName: str
-#      - Name of the file
-#   puzzle : object
-#      - The game object that needs to be saved
-#   onlyPuzz: bool
-#      - A flag true if we are to only save the puzzle with no progress
-# and false if we are ton save the current state
-#
-# RETURNS:
-#   None
-###############################################################################
-def saveFromExplorer(path: str, fileName: str, puzzle: object,
-                     onlyPuzz: bool) -> None:
-    if onlyPuzz:
-        newObj = model.Puzzle(puzzle.getKeyLetter(), puzzle.getUniqueLetters())
-        newObj.setMaxScore(puzzle.getMaxScore())
-        newObj.setAllWordList(puzzle.getAllWords())
-        newObj.updateRank()
-        dict = __makeDict(newObj)
-    else:
-        dict = __makeDict(puzzle)
-    if not fileName.endswith('.json'):
-        with open(path + '/' + fileName + '.json', "w") as file:
-            json.dump(dict, file)
-    else:
-        with open(path + '/' + fileName, "w") as file:
-            json.dump(dict, file)
-
-
 class Strategy:
     def exectute(self, path: str | None,
                  puzzle: object, onlyPuzz: bool | None):
