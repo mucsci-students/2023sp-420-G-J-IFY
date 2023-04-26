@@ -57,33 +57,6 @@ class BadJSONException(Exception):
 
 
 ###############################################################################
-# __makeDict(saveStateObj: obj) -> dict
-#
-# DESCRIPTION:
-#   Takes a saveState objects fields and puts them into a dictionary to make
-#   saving easier
-#
-# PARAMETERS:
-#   saveStateObj: obj
-#     - A saveState object
-#
-# RETURNS:
-#   dict
-#     - Returns a dictionary of all fields of a saveState object
-###############################################################################
-def __makeDict(saveStateObj):
-    dict = {
-        "RequiredLetter": saveStateObj.getKeyLetter(),
-        "PuzzleLetters": saveStateObj.getUniqueLetters(),
-        "CurrentPoints": saveStateObj.getScore(),
-        "MaxPoints": saveStateObj.getMaxScore(),
-        "GuessedWords": saveStateObj.getFoundWords(),
-        "WordList": saveStateObj.getAllWords(),
-    }
-    return dict
-
-
-###############################################################################
 # __setFields(dict: dict) -> obj
 #
 # DESCRIPTION:
