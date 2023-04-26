@@ -444,6 +444,7 @@ class OptionsDialog(QDialog):
         self.leaderboardBtn = QPushButton(self)
         self.helpBtn = QPushButton(self)
         self.shareBtn = QPushButton(self)
+        self.saveBtn = QPushButton(self)
         self.mainMenuBtn = QPushButton(self)
         self._initUI()
 
@@ -476,7 +477,9 @@ class OptionsDialog(QDialog):
         self.helpBtn.setFixedSize(180, 40)
         self.shareBtn.setText('Share')
         self.shareBtn.setFixedSize(180, 40)
-        self.mainMenuBtn.setText('Save and quit')
+        self.saveBtn.setText('Save')
+        self.saveBtn.setFixedSize(180, 40)
+        self.mainMenuBtn.setText('End Game')
         self.mainMenuBtn.setFixedSize(180, 40)
         # Populate the widget
         layout = QVBoxLayout()
@@ -485,6 +488,7 @@ class OptionsDialog(QDialog):
         layout.addWidget(self.leaderboardBtn)
         layout.addWidget(self.helpBtn)
         layout.addWidget(self.shareBtn)
+        layout.addWidget(self.saveBtn)
         layout.addWidget(self.mainMenuBtn)
         self.setLayout(layout)
         self.setMaximumSize(self.width(), self.height())
