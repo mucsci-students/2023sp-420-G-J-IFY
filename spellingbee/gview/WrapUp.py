@@ -79,19 +79,19 @@ class WrapUpPage(QtWidgets.QWidget):
         # Save_btn
         self.save_btn.setText("Save and Exit")
         self.save_btn.setFixedSize(200, 45)
-        vlayout.addWidget(self.save_btn)
+        # vlayout.addWidget(self.save_btn)
         vlayout.setAlignment(
             self.save_btn,
             QtCore.Qt.AlignmentFlag.AlignBottom
         )
 
         # exit_btn
-        self.exit_btn.setText("Exit Without Saving")
+        self.exit_btn.setText("Continue to Main Menu")
         self.exit_btn.setFixedSize(200, 45)
         vlayout.addWidget(self.exit_btn)
         vlayout.setAlignment(
             self.exit_btn,
-            QtCore.Qt.AlignmentFlag.AlignTop
+            QtCore.Qt.AlignmentFlag.AlignCenter
         )
 
         layout.addLayout(vlayout)
