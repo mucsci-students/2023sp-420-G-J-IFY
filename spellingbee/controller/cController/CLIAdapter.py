@@ -571,7 +571,7 @@ class CLI_A():
             case 'N':
                 return flag
             case _:
-                self.outty.setField('Input Invalid')
+                outty.setField('Input Invalid')
                 # Recursively calls until valid input provided.
                 self.checkEncrypt()
 
