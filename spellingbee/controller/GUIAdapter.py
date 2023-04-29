@@ -226,7 +226,8 @@ class GUI_A():
         saveGame.execute()
         dialog.reset()
         dialog.accept()
-        self._window.stack.setCurrentIndex(0)
+        if self._window.stack.currentIndex() == 2:
+            self._window.stack.setCurrentIndex(0)
 
     ###########################################################################
     # _load() -> None
@@ -493,7 +494,8 @@ class GUI_A():
     ##########################################################################
     def _backToMainWindow(self):
         self._window.options.close()
-        self._window.stack.setCurrentIndex(0)
+        if self._window.stack.currentIndex() == 2:
+            self._window.stack.setCurrentIndex(0)
 
     ##########################################################################
     # _leaderboard(self) -> None:
