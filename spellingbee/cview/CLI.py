@@ -175,14 +175,21 @@ def drawGameBox(game: object) -> None:
     prog = score / max
 
     tier1 = 'Welcome to Spelling Bee! \ Presented by G(J)IFY'
-    tier2 = 'Level: \ {lvl} {pBar}'.format(lvl=game.getRank(),
-                                           pBar=drawProgressBar(20, prog))
-    tier3 = 'Points needed for next rank: ' + str(game.getPointsTilRank())
-    tier4 = 'Discovered Words: \ {wrds}'.format(wrds=game.concatFound())
-    tier5 = outty.getField()
-    tier6 = drawPuzzle(game.getShuffleLetters().upper())
-    tier7 = 'Enter your guess, or type \'!help\' for a list of commands.'
-    drawTextBox([tier1, tier2, tier3, tier4, tier5, tier6, tier7], 40, '^')
+    tier2 = (
+        'Level: \ {lvl} {pBar} \ '
+        'Score: {score} \ '
+        'Points needed for next rank: {pToNext}'
+    ).format(
+        lvl=game.getRank(),
+        pBar=drawProgressBar(20, prog),
+        score=str(game.getScore()),
+        pToNext=str(game.getPointsTilRank())
+    )
+    tier3 = 'Discovered Words: \ {wrds}'.format(wrds=game.concatFound())
+    tier4 = outty.getField()
+    tier5 = drawPuzzle(game.getShuffleLetters().upper())
+    tier6 = 'Enter your guess, or type \'!help\' for a list of commands.'
+    drawTextBox([tier1, tier2, tier3, tier4, tier5, tier6], 40, '^')
 
 
 ###############################################################################
