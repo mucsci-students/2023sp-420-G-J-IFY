@@ -53,45 +53,45 @@ class CLI_A():
     ###########################################################################
     def parse(self, usrinput: str) -> object:
         match usrinput:
-            case '!new':
+            case 'NewGame':
                 self.newPuzzle()
                 return self.puzzle
-            case '!puzzle':
+            case 'ShowPuzzle':
                 self.printPuzzle()
                 return self.puzzle
-            case '!found-words':
+            case 'ShowFoundWords':
                 self.printWords()
                 return self.puzzle
-            case '!status':
+            case 'ShowStatus':
                 self.showStatus()
                 return self.puzzle
-            case '!shuffle':
+            case 'ShuffleLetters':
                 self.puzzle.shuffleChars()
                 outty.setField('Shuffling letters...')
                 return self.puzzle
-            case '!save':
+            case 'SaveGame':
                 self.saveGame()
                 return self.puzzle
-            case '!savePuzzle':
+            case 'SavePuzzle':
                 self.savePuzzle()
                 return self.puzzle
-            case '!load':
+            case 'LoadGame':
                 self.loadGame()
                 return self.puzzle
-            case '!leaderboard':
+            case 'ShowLeaderboard':
                 self.leaderboard()
                 input("Press enter to return to game")
                 return self.puzzle
-            case '!help':
+            case 'ShowHelp':
                 self.help()
                 return self.puzzle
-            case '!hint':
+            case 'ShowHints':
                 self.hints()
                 return self.puzzle
-            case '!exit':
+            case 'QuitToDesktop':
                 self.exit()
                 return self.puzzle
-            case '!saveAndQuit':
+            case 'SaveAndQuit':
                 self.saveAndQuit()
                 return self.puzzle
             case _:
@@ -716,18 +716,18 @@ class CLI_A():
     ###########################################################################
     def commandsList(self) -> list:
         commands = [
-            '!new',
-            '!puzzle',
-            '!found-words',
-            '!status',
-            '!shuffle',
-            '!save',
-            '!savePuzzle',
-            '!load',
-            '!leaderboard',
-            '!help',
-            '!exit',
-            '!saveAndQuit',
-            '!hint'
+            'NewGame',
+            'LoadGame',
+            'SaveGame',
+            'SavePuzzle',
+            'ShowHelp',
+            'ShowStatus',
+            'ShowHints',
+            'ShowLeaderboard',
+            'ShowFoundWords',
+            'ShowPuzzle',
+            'SuffleLetters',
+            'QuitToDesktop',
+            'SaveAndQuit'
         ]
         return commands

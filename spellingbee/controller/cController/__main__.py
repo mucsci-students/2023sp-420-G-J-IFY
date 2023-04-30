@@ -23,11 +23,11 @@ def main(puzzle):
             print(outty.getField())
         CLI.drawTextBox(['Welcome to Spelling Bee! \ '
                          'Presented by G(J)IFY',
-                         'To start a new game, type "!new". To load a previous'
-                         ' save, type "!load"'], 40, '^')
-        usrinput = prompt('> ', completer=WordCompleter(['!new', '!load',
-                                                        '!exit']))
-        if usrinput == '!new' or usrinput == '!load' or usrinput == '!exit':
+                         'To start a new game, type "NewGame". To load a'
+                         ' previous save, type "LoadGame"'], 40, '^')
+        usrinput = prompt('> ', completer=WordCompleter(['NewGame', 'LoadGame',
+                                                        'QuitToDesktop']))
+        if usrinput in ['NewGame', 'LoadGame', 'QuitToDesktop']:
             puzzle = adapter.parse(usrinput)
         else:
             print("INVALID COMMAND")
