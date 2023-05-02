@@ -668,19 +668,7 @@ class CLI_A():
         # prompt user to join leaderboard if they are elegible to join
         # the leaderboard
         self.leaderboard()
-
-        # then prompt user to save game if they wish
-        while True:
-            print('Would you like to save the current game [Y/N]\n')
-            bool = input('> ')
-            if bool.upper() == 'Y':
-                self.handleSave(False)
-                break
-            elif bool.upper() == 'N':
-                break
-            else:
-                print('Invalid input try again')
-
+        input('Press enter to continue')
         # bring user back to the start page
         self.clear()
         main.main(self.puzzle)
