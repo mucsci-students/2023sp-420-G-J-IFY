@@ -10,6 +10,7 @@ from prompt_toolkit.completion import WordCompleter
 outty = Output.getInstance()
 
 # When game is entered, display welcome text
+CLI.clear()
 CLI.drawTextBox(['Welcome to Spelling Bee! \ '
                  'Presented by G(J)IFY'], 40, '^')
 
@@ -38,6 +39,7 @@ def main(puzzle):
                          '> quitToDesktop'], 40, '<')
         usrinput = prompt('> ', completer=WordCompleter(startLoopCommands))
         if usrinput in startLoopCommands:
+            CLI.clear()
             puzzle = adapter.parse(usrinput)
         else:
             print("INVALID COMMAND")

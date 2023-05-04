@@ -75,6 +75,7 @@ class CLI_A():
             case 'showLeaderboard':
                 self.leaderboard()
                 input("Press enter to return to game")
+                CLI.clear()
                 return self.puzzle
             case 'showHelp':
                 self.help()
@@ -217,6 +218,7 @@ class CLI_A():
         print(fileContents)
         f.close()
         input("Press enter to return to the game: ")
+        CLI.clear()
 
     ###########################################################################
     # hints(puzzle: object, outty: object) -> None
@@ -256,6 +258,7 @@ class CLI_A():
         finalView += '\n\n'
         print(finalView)
         input("Press enter to return to game")
+        CLI.clear()
 
     ###########################################################################
     # formatHintGrid(game:object) -> str
@@ -395,7 +398,7 @@ class CLI_A():
         usrinput = input('> ').upper()
         match usrinput:
             case 'Y':
-                outty.setField("Thank you for playing!")
+                print("Thank you for playing!")
                 quit()
             case 'N':
                 return None
