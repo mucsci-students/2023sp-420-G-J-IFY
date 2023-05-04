@@ -9,6 +9,9 @@ from prompt_toolkit.completion import WordCompleter
 # Start of game declarations for needed objects and fields
 outty = Output.getInstance()
 
+# When game is entered, display welcome text
+CLI.drawTextBox(['Welcome to Spelling Bee! \ '
+                 'Presented by G(J)IFY'], 40, '^')
 
 def main(puzzle):
 
@@ -28,9 +31,8 @@ def main(puzzle):
     while notValidIn:
         if outty.getField() != '':
             print(outty.getField())
-        CLI.drawTextBox(['Welcome to Spelling Bee! \ '
-                         'Presented by G(J)IFY'], 40, '^')
-        CLI.drawTextBox(['Enter a command to get started: \ '
+
+        CLI.drawTextBox(['Enter a command: \ '
                          '> newGame \ '
                          '> loadGame \ '
                          '> quitToDesktop'], 40, '<')
