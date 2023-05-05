@@ -184,7 +184,7 @@ def drawGameBox(game: object) -> None:
         lvl=game.getRank(),
         pBar=drawProgressBar(20, prog),
         score=str(game.getScore()),
-        prog = str(int(prog * 100)),
+        prog=str(int(prog * 100)),
         pToNext=str(game.getPointsTilRank())
     )
     tier3 = 'Discovered Words: \ {wrds}'.format(wrds=game.concatFound())

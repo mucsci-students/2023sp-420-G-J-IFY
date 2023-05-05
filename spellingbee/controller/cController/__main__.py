@@ -14,18 +14,17 @@ CLI.clear()
 CLI.drawTextBox(['Welcome to Spelling Bee! \ '
                  'Presented by G(J)IFY'], 40, '^')
 
-def main(puzzle):
 
+def main(puzzle):
     usrinput = ' '
     notValidIn = True
     adapter = CLIAdapter.CLI_A(puzzle)
     puzzle = None
-    #tabComp = WordCompleter(adapter.commandsList)
 
     startLoopCommands = ['newGame', 'loadGame', 'quitToDesktop']
 
-    mainLoopCommands = ['shuffleLetters', 'showHints', 'showHelp',   
-                        'showFoundWords', 'showLeaderboard', 
+    mainLoopCommands = ['shuffleLetters', 'showHints', 'showHelp',
+                        'showFoundWords', 'showLeaderboard',
                         'saveGame', 'saveBlankGame', 'endGame']
 
     # inital game loop, loop until valid start is reached
@@ -54,7 +53,7 @@ def main(puzzle):
     # after start of game loop, draw new game for first time
     CLI.clear()
     CLI.drawGameBox(puzzle)
-    usrinput = prompt('> ', completer = WordCompleter(mainLoopCommands))
+    usrinput = prompt('> ', completer=WordCompleter(mainLoopCommands))
 
     # game loop
     while True:
@@ -77,7 +76,8 @@ def main(puzzle):
             CLI.clear()
             adapter.endGame()
         # wait for user's next input
-        usrinput = prompt('> ', completer = WordCompleter(mainLoopCommands))
+        usrinput = prompt('> ', completer=WordCompleter(mainLoopCommands))
+
 
 if __name__ == '__main__':
     main(puzzle)

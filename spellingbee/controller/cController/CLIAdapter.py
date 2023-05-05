@@ -563,9 +563,9 @@ class CLI_A():
             # Enter score in the database
             name = self.validateName()
             highScore.qualify(name, self.puzzle.getRank(),
-                                self.puzzle.getScore(),
-                                self.puzzle.getUniqueLetters(),
-                                self.puzzle.getKeyLetter())
+                              self.puzzle.getScore(),
+                              self.puzzle.getUniqueLetters(),
+                              self.puzzle.getKeyLetter())
         else:
             return
 
@@ -617,7 +617,7 @@ class CLI_A():
         # the leaderboard
         self.leaderboard()
 
-        input ("Press enter to continue...")
+        input("Press enter to continue...")
 
         # bring user back to the start page
         self.clear()
