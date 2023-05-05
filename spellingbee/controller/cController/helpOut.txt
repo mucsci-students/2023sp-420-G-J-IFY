@@ -2,40 +2,31 @@
 |                       How to Play                        |
 |----------------------------------------------------------|
 | Simply type a word after   |  To enter a command, simply |
-| the'> ' prompt and press   |  type '!' followed by the   |
-| enter to submit a guess    |  you wish to use            |
+| the '> ' prompt and press  |  type the command, or hit   |
+| enter to submit a guess    |  TAB to cycle through them  |
 |----------------------------------------------------------|
 |                    Available Commands                    |
 |----------------------------------------------------------|
-| Command      | Description                               |
+|     Command     |             Description                |
 |----------------------------------------------------------|
-| !new         | Generates a new puzzle from a base word   |
-|              | with exactly 7 unique characters, or an   |
-|              | auto-generated base word                  |
+| shuffleLetters  | Shuffle the order of the active puzzle |
+|                 | for a fresh view                       |
 |----------------------------------------------------------|
-| !puzzle      | Prints the current puzzle to the screen   |
+| showHints       | Displays some helpful hints to solve   |
+|                 | the puzzle                             |
 |----------------------------------------------------------|
-| !found-words | Displays the list of all discovered words |
+| showFoundWords  | Displays the list of all               |
+|                 | discovered words                       |
 |----------------------------------------------------------|
-| !status      | Prints your achieved level for the        |
-|              | active game                               |
+| showLeaderboard | Display the leaderboard with the       |
+|                 | top 10 scores for this puzzle          |
 |----------------------------------------------------------|
-| !shuffle     | Shuffle the order of the active puzzle    |
-|              | for a fresh view                          |
+| saveGame        | Create a new save for the current game |
 |----------------------------------------------------------|
-| !save        | Create a new save for the current game    |
+| saveBlankGame   | Create a new save for a blank version  |
+|                 | of the game (does not include any      |
+|                 | progress from current session)         |
 |----------------------------------------------------------|
-| !savePuzzle  | Create a new save for a blank version of  |
-|              | the game (does not include any progress   |
-|              | from current session)                     |
-|----------------------------------------------------------|
-| !load        | Load a previously saved game              |
-|----------------------------------------------------------|
-| !leaderboard | Display the leaderboard with the top 10   |
-|              | scores for this puzzle                    |
-|----------------------------------------------------------|
-| !help        | Show the list of all available commands   |
-|              | with a brief description                  |
-|----------------------------------------------------------|
-| !exit        | Exit the game                             |
+| endGame         | Exits the current game to main menu.   |
+|                 | Checks if you make the leaderboard     |
 ------------------------------------------------------------

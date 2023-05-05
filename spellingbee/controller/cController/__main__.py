@@ -9,25 +9,36 @@ from prompt_toolkit.completion import WordCompleter
 # Start of game declarations for needed objects and fields
 outty = Output.getInstance()
 
+# When game is entered, display welcome text
+CLI.clear()
+CLI.drawTextBox(['Welcome to Spelling Bee! \ '
+                 'Presented by G(J)IFY'], 40, '^')
+
 
 def main(puzzle):
-
     usrinput = ' '
     notValidIn = True
     adapter = CLIAdapter.CLI_A(puzzle)
-    tabComp = WordCompleter(adapter.commandsList)
+    puzzle = None
+
+    startLoopCommands = ['newGame', 'loadGame', 'quitToDesktop']
+
+    mainLoopCommands = ['shuffleLetters', 'showHints', 'showHelp',
+                        'showFoundWords', 'showLeaderboard',
+                        'saveGame', 'saveBlankGame', 'endGame']
 
     # inital game loop, loop until valid start is reached
     while notValidIn:
         if outty.getField() != '':
             print(outty.getField())
-        CLI.drawTextBox(['Welcome to Spelling Bee! \ '
-                         'Presented by G(J)IFY',
-                         'To start a new game, type "NewGame". To load a'
-                         ' previous save, type "LoadGame"'], 40, '^')
-        usrinput = prompt('> ', completer=WordCompleter(['NewGame', 'LoadGame',
-                                                        'QuitToDesktop']))
-        if usrinput in ['NewGame', 'LoadGame', 'QuitToDesktop']:
+
+        CLI.drawTextBox(['Enter a command: \ '
+                         '> newGame \ '
+                         '> loadGame \ '
+                         '> quitToDesktop'], 40, '<')
+        usrinput = prompt('> ', completer=WordCompleter(startLoopCommands))
+        if usrinput in startLoopCommands:
+            CLI.clear()
             puzzle = adapter.parse(usrinput)
         else:
             print("INVALID COMMAND")
@@ -42,16 +53,20 @@ def main(puzzle):
     # after start of game loop, draw new game for first time
     CLI.clear()
     CLI.drawGameBox(puzzle)
-    usrinput = prompt('> ', completer=tabComp)
+    usrinput = prompt('> ', completer=WordCompleter(mainLoopCommands))
 
     # game loop
     while True:
         CLI.clear()
-        # parse user input
-        retPuzzle = adapter.parse(usrinput)
-        # check to see if return puzzle was None (error occuered)
-        if retPuzzle is not None:
-            puzzle = retPuzzle
+        # check that command is valid command for game
+        if usrinput not in startLoopCommands:
+            # parse user input
+            retPuzzle = adapter.parse(usrinput)
+            # check to see if return puzzle was None (error occuered)
+            if retPuzzle is not None:
+                puzzle = retPuzzle
+        else:
+            outty.setField('INVALID COMMAND')
         # draw game box
         CLI.drawGameBox(puzzle)
         # reset outty
@@ -61,7 +76,7 @@ def main(puzzle):
             CLI.clear()
             adapter.endGame()
         # wait for user's next input
-        usrinput = prompt('> ', completer=tabComp)
+        usrinput = prompt('> ', completer=WordCompleter(mainLoopCommands))
 
 
 if __name__ == '__main__':

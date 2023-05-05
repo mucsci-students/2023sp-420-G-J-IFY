@@ -53,64 +53,50 @@ class CLI_A():
     ###########################################################################
     def parse(self, usrinput: str) -> object:
         match usrinput:
-            case 'NewGame':
+            case 'newGame':
                 self.newPuzzle()
                 return self.puzzle
-            case 'ShowPuzzle':
-                self.printPuzzle()
-                return self.puzzle
-            case 'ShowFoundWords':
+            case 'showFoundWords':
                 self.printWords()
                 return self.puzzle
-            case 'ShowStatus':
-                self.showStatus()
-                return self.puzzle
-            case 'ShuffleLetters':
+            case 'shuffleLetters':
                 self.puzzle.shuffleChars()
                 outty.setField('Shuffling letters...')
                 return self.puzzle
-            case 'SaveGame':
+            case 'saveGame':
                 self.saveGame()
                 return self.puzzle
-            case 'SavePuzzle':
+            case 'saveBlankGame':
                 self.savePuzzle()
                 return self.puzzle
-            case 'LoadGame':
+            case 'loadGame':
                 self.loadGame()
                 return self.puzzle
-            case 'ShowLeaderboard':
+            case 'showLeaderboard':
                 self.leaderboard()
                 input("Press enter to return to game")
+                CLI.clear()
                 return self.puzzle
-            case 'ShowHelp':
+            case 'showHelp':
                 self.help()
                 return self.puzzle
-            case 'ShowHints':
+            case 'showHints':
                 self.hints()
                 return self.puzzle
-            case 'QuitToDesktop':
+            case 'quitToDesktop':
                 self.exit()
-                return self.puzzle
-            case 'SaveAndQuit':
-                self.saveAndQuit()
-                return self.puzzle
+                return None
+            case 'endGame':
+                self.endQuit()
+                return None
             case _:
-                if usrinput.startswith('!'):
-                    outty.setField(
-                        'Command not recognized. '
-                        'Type \"!help\" for a list '
-                        'of valid commands...'
-                    )
-                    return self.puzzle
-
-                elif not usrinput.isalpha():
+                if not usrinput.isalpha():
                     outty.setField(
                         'Input not accepted:\n\t~Guesses '
                         'should only contain alphabetical '
                         'characters.'
                     )
                     return self.puzzle
-
                 else:
                     guess = cmd.Guess(self.puzzle, usrinput)
                     guess.execute()
@@ -135,7 +121,7 @@ class CLI_A():
     ###########################################################################
     def newPuzzle(self) -> object:
         print('Please enter a base word with exactly 7 unique '
-              'characters. \n For auto-generated base word, press enter.')
+              'characters.\nFor auto-generated base word, press enter.')
         word = input('> ')
         keyLetter = ''
         if word != '':
@@ -146,20 +132,6 @@ class CLI_A():
         if outty.getField().startswith("ERROR"):
             print(outty.getField())
             outty.setField('')
-
-    ###########################################################################
-    # printPuzzle(game : object) -> None:
-    #
-    # DESCRIPTION:
-    #   prints puzzle data in a neatly formatted box
-    #
-    # PRAMETERS:
-    #   game : object
-    #     - puzzle object storing current game state
-    ###########################################################################
-    def printPuzzle(self) -> None:
-        CLI.drawTextBox([CLI.drawPuzzle
-                         (self.puzzle.getShuffleLetters().upper())], 40, '^')
 
     ###########################################################################
     # printWords(game : object) ->
@@ -175,25 +147,6 @@ class CLI_A():
         CLI.drawTextBox(
             ['Discovered Words: \ {wrds}'.format
              (wrds=self.puzzle.concatFound())], 40, '^')
-
-    ###########################################################################
-    # showStatus(game : object) -> None
-    #
-    # DESCRIPTION:
-    #   prints the current user rank, score, a progress bar and percent
-    #   progress in a neatly formatted text box.
-    #
-    # PARAMETERS:
-    #   game : object
-    #     - puzzle object storing the current game state.
-    ###########################################################################
-    def showStatus(self) -> None:
-        score = self.puzzle.getScore()
-        max = self.puzzle.getMaxScore()
-        prog = score / max
-        bar = self.puzzle.getRank() + ' ' + CLI.drawProgressBar(20, prog)
-        stats = 'Score: {} \ Progress: {}%'.format(score, int(prog * 100))
-        CLI.drawTextBox(['Level: \ ' + bar + ' \ ' + stats], 40, '^')
 
     ###########################################################################
     # saveGame(Game : object) -> None:
@@ -265,6 +218,7 @@ class CLI_A():
         print(fileContents)
         f.close()
         input("Press enter to return to the game: ")
+        CLI.clear()
 
     ###########################################################################
     # hints(puzzle: object, outty: object) -> None
@@ -304,6 +258,7 @@ class CLI_A():
         finalView += '\n\n'
         print(finalView)
         input("Press enter to return to game")
+        CLI.clear()
 
     ###########################################################################
     # formatHintGrid(game:object) -> str
@@ -443,14 +398,13 @@ class CLI_A():
         usrinput = input('> ').upper()
         match usrinput:
             case 'Y':
-                outty.setField("Thank you for playing!")
+                print("Thank you for playing!")
                 quit()
             case 'N':
-                return
+                return None
             case _:
-                outty.setField('Input Invalid')
-                # recursively calls until valid input provided.
-                self.parse('!exit')
+                print('Input Invalid')
+                return None
 
     ###########################################################################
     # leaderboard(puzzle: object, outty: object) -> None
@@ -541,7 +495,6 @@ class CLI_A():
     #     - output object storing output strings
     ###########################################################################
     def finalGame(self) -> None:
-        self.showStatus()
         outty.setField((
             "Congratulations!!!! You "
             "have found all of the words for this puzzle!"
@@ -606,20 +559,15 @@ class CLI_A():
         print('Your score is a top 10 score! Would you like to be on the '
               + 'leaderboard? [Y/N]')
         leaderboardCheck = input('> ').upper()
-        match leaderboardCheck:
-            case 'Y':
-                # Enter score in the database
-                name = self.validateName()
-                highScore.qualify(name, self.puzzle.getRank(),
-                                  self.puzzle.getScore(),
-                                  self.puzzle.getUniqueLetters(),
-                                  self.puzzle.getKeyLetter())
-            case 'N':
-                return
-            case _:
-                self.outty.setField('Input Invalid')
-                # Recursively calls until valid input provided.
-                self.checkHighScore()
+        if leaderboardCheck.startswith('Y'):
+            # Enter score in the database
+            name = self.validateName()
+            highScore.qualify(name, self.puzzle.getRank(),
+                              self.puzzle.getScore(),
+                              self.puzzle.getUniqueLetters(),
+                              self.puzzle.getKeyLetter())
+        else:
+            return
 
     ###########################################################################
     # validateName() -> str:
@@ -661,7 +609,7 @@ class CLI_A():
     # RETURNS:
     #   None
     ###########################################################################
-    def saveAndQuit(self) -> None:
+    def endQuit(self) -> None:
         # display leaderboard for current game
         self.checkHighScore()
 
@@ -669,17 +617,7 @@ class CLI_A():
         # the leaderboard
         self.leaderboard()
 
-        # then prompt user to save game if they wish
-        while True:
-            print('Would you like to save the current game [Y/N]\n')
-            bool = input('> ')
-            if bool.upper() == 'Y':
-                self.handleSave(False)
-                break
-            elif bool.upper() == 'N':
-                break
-            else:
-                print('Invalid input try again')
+        input("Press enter to continue...")
 
         # bring user back to the start page
         self.clear()
@@ -716,18 +654,16 @@ class CLI_A():
     ###########################################################################
     def commandsList(self) -> list:
         commands = [
-            'NewGame',
-            'LoadGame',
-            'SaveGame',
-            'SavePuzzle',
-            'ShowHelp',
-            'ShowStatus',
-            'ShowHints',
-            'ShowLeaderboard',
-            'ShowFoundWords',
-            'ShowPuzzle',
-            'SuffleLetters',
-            'QuitToDesktop',
-            'SaveAndQuit'
+            'newGame',
+            'loadGame',
+            'saveGame',
+            'saveBlankGame',
+            'showHelp',
+            'showHints',
+            'showLeaderboard',
+            'showFoundWords',
+            'shuffleLetters',
+            'quitToDesktop',
+            'endGame'
         ]
         return commands
