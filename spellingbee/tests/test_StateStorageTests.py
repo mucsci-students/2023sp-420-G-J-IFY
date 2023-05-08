@@ -270,26 +270,6 @@ def testCorruptGameLoadFromExplorer():
     pytest.raises(AssertionError)
 
 
-def testSaveFromExplorer(playedPuzzle):
-    path = Path.cwd()
-    savePath = str(path)
-    fileName = 'TestFile2'
-    spellingbee.saveFromExplorer(savePath, fileName, playedPuzzle, False)
-    dict = __makeDict(playedPuzzle)
-    assert (checkContents(fileName + '.json', dict))
-    removeSave(fileName + '.json')
-
-
-def testSaveFromExplorerPuzzleOnly(playedPuzzle, puzzleFixture):
-    path = Path.cwd()
-    savePath = str(path)
-    fileName = 'TestFile2'
-    spellingbee.saveFromExplorer(savePath, fileName, playedPuzzle, True)
-    dict = puzzleFixture[1]
-    assert (checkContents(fileName + '.json', dict))
-    removeSave(fileName + '.json')
-
-
 def testCheckLoadGood(playedPuzzle):
     dict1 = __makeDict(playedPuzzle)
     dict2 = spellingbee.checkLoad(__makeDict(playedPuzzle))
@@ -300,8 +280,8 @@ def testCheckLoadBadScore(makeBadScoreGame):
     path = Path.cwd()
     pathToFile = (str(path) + ''
                   '/spellingbee/tests/checkSavesTestFiles/badScoreGame.json')
-    spellingbee.saveFromExplorer('./spellingbee/tests/checkSavesTestFiles',
-                                 'badScoreGame', makeBadScoreGame, False)
+    strat = spellingbee.Saver(spellingbee.encryptedSaveStrategy())
+    strat.executeStrategy(pathToFile, makeBadScoreGame, False)
     with open(pathToFile) as file:
         dict = json.load(file)
     assert (spellingbee.checkLoad(dict)['MaxPoints'] == 269 and spellingbee.
@@ -350,9 +330,8 @@ def testCheckLoadBadUniqueLetters(makeBadUniqueLetters):
     path = Path.cwd()
     pathToFile = (str(path) + '/spellingbee/tests/checkSavesTestFiles/'
                   'badUniqueLetters.json')
-    spellingbee.saveFromExplorer('./spellingbee/tests/checkSavesTestFiles',
-                                 'badUniqueLetters', makeBadUniqueLetters,
-                                 False)
+    strat = spellingbee.Saver(spellingbee.savePuzzleStrategy())
+    strat.executeStrategy(pathToFile, makeBadUniqueLetters, False)
     with open(pathToFile) as file:
         dict = json.load(file)
 
@@ -363,16 +342,6 @@ def testCheckLoadBadUniqueLetters(makeBadUniqueLetters):
 def testCheckLoadBadFoundWordList(makeBadFoundWordList):
     dictDict = spellingbee.checkLoad(makeBadFoundWordList)
     assert (dictDict['GuessedWords'] == [])
-
-
-def testExplorerJson(playedPuzzle):
-    path = Path.cwd()
-    savePath = str(path)
-    fileName = 'TestFile2.json'
-    spellingbee.saveFromExplorer(savePath, fileName, playedPuzzle, False)
-    dict = __makeDict(playedPuzzle)
-    assert (checkContents(fileName, dict))
-    removeSave(fileName)
 
 
 def testExecuteSaveFromExplorerCurrent(playedPuzzle):

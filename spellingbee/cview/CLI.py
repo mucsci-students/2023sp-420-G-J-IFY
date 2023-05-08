@@ -99,7 +99,7 @@ def drawTextBox(message: list[str], width: int, align: str) -> None:
             txtBox += '║{:{}{}}║\n'.format(line, align, width - 2)
 
     # Finally, add floor of text box
-    txtBox += floor + '\n'
+    txtBox += floor
 
     # Print final product.
     print(txtBox)
@@ -175,14 +175,23 @@ def drawGameBox(game: object) -> None:
     prog = score / max
 
     tier1 = 'Welcome to Spelling Bee! \ Presented by G(J)IFY'
-    tier2 = 'Level: \ {lvl} {pBar}'.format(lvl=game.getRank(),
-                                           pBar=drawProgressBar(20, prog))
-    tier3 = 'Points needed for next rank: ' + str(game.getPointsTilRank())
-    tier4 = 'Discovered Words: \ {wrds}'.format(wrds=game.concatFound())
-    tier5 = outty.getField()
-    tier6 = drawPuzzle(game.getShuffleLetters().upper())
-    tier7 = 'Enter your guess, or type \'!help\' for a list of commands.'
-    drawTextBox([tier1, tier2, tier3, tier4, tier5, tier6, tier7], 40, '^')
+    tier2 = (
+        '{lvl} {pBar} \ '
+        'Score: {score} \ '
+        'Progress: {prog}% \ '
+        'Points til Rankup: {pToNext}'
+    ).format(
+        lvl=game.getRank(),
+        pBar=drawProgressBar(20, prog),
+        score=str(game.getScore()),
+        prog=str(int(prog * 100)),
+        pToNext=str(game.getPointsTilRank())
+    )
+    tier3 = 'Discovered Words: \ {wrds}'.format(wrds=game.concatFound())
+    tier4 = outty.getField()
+    tier5 = drawPuzzle(game.getShuffleLetters().upper())
+    tier6 = 'Enter your guess, or type \'showHelp\' for a list of commands.'
+    drawTextBox([tier1, tier2, tier3, tier4, tier5, tier6], 40, '^')
 
 
 ###############################################################################

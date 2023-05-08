@@ -114,6 +114,7 @@ class MainWindow(QMainWindow):
         self.gameWidget.menuBtn.clicked.connect(self.options.show)
         self.options.helpBtn.clicked.connect(self.helpDialog.show)
         self.options.shareBtn.clicked.connect(self._share)
+        self.options.saveBtn.clicked.connect(self.saveDialog.show)
 
     ###########################################################################
     # _buildGameWidget() -> QWidget
