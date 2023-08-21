@@ -637,7 +637,7 @@ class CLI_A():
         input('Congratulations you made it to Queen Bee. ' +
               'Press enter to continue.\n')
         print()
-        self.saveAndQuit()
+        self.endQuit()
 
     ###########################################################################
     # finalGame(finishedPuzzle : object, outty : object) -> None
