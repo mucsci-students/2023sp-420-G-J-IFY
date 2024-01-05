@@ -3,4 +3,4 @@ pyqt6 == 6.4.2
 prompt_toolkit == 3.0.38
 pytest-cov == 4.0.0
 coverage == 7.2.2
-pycryptodome == 3.17
+pycryptodome == 3.19.1
